@@ -1,0 +1,138 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+{% endblock %} 
+{% block body %}
+<body>
+<div class="container-fluid">
+<div class="jumbotron">
+<img style="float: right;" src="{{ asset('logo.png') }}"/>
+{% if Transfer.title is not empty %}
+    <h1>{{ Transfer.title }}</h1>
+{% else %}
+    <h1>?!</h1>
+{% endif %}
+{% if Transfer.description is not empty %}
+  <p>{{ Transfer.description }}</p>
+{% endif %}
+</div>
+{% if Partner is not empty %}
+<h2>{{ "Partner" | trans }}: {{ Partner.title }}</h2>
+{% else %}
+<h2>Partenaire</h2>
+{% endif %}
+<blockquote>
+{{ Partner.description }}
+</blockquote>
+
+{% if Schedule is empty %}
+    <h2><s>{{ "Schedule" | trans }}</s></h2>
+{% else %}    
+<h2>{{ "Schedule" | trans }}: {{ Schedule.name }}</h2>
+<blockquote>
+  <p>{{ Schedule.description }}</p>
+</blockquote>
+<table class="table table-striped table-bordered table-condensed">
+    <tr><th class="col-md-2">{{ "Name" | trans }}</th><td class="col-md-8">{{ Schedule.name }}</td></tr>
+{% if Schedule.hours != '*' %}    
+    <tr><th>{{ "Hours" | trans }}</th><td>{{ Schedule.hours }}</td></tr>
+{%endif %}
+{% if Schedule.minutes != '*' %}    
+    <tr><th>{{ "Minutes" | trans }}</th><td>{{ Schedule.minutes }}</td></tr>
+{%endif %}
+{% if Schedule.week_days != '*' %}    
+    <tr><th>{{ "Days of week" | trans }}</th><td>{{ Schedule.week_days }}</td></tr>
+{%endif %}
+{% if Schedule.month_days != '*' %}    
+    <tr><th>{{ "Days of month" | trans }}</th><td>{{ Schedule.month_days }}</td></tr>
+{%endif %}
+{% if Schedule.months != '*' %}    
+    <tr><th>{{ "Months" | trans }}</th><td>{{ Schedule.months }}</td></tr>
+{%endif %}
+{% if Schedule.years != '*' %}    
+    <tr><th>{{ "Years" | trans }}</th><td>{{ Schedule.years }}</td></tr>
+{%endif %}
+</table>
+{% endif %}
+
+<h2>{{ "Diagram" | trans }}</h2>
+<img src="{{ url('svg_MFT_transfer_uml') }}?id={{ Transfer.id }}&output=png" alt="{{ Transfer.title }}" class="img-responsive">
+
+<h2>{{ "Operations" | trans }}</h2>
+
+{% for Step,Operation in Operations %}
+<h3>{{ Operation.ordering }}/{{ Transfer.steps }} - {{ Operation.title }}</h3>
+{% if Operation.description is not empty %}
+<blockquote>
+<p>{{ Operation.description }}</p>
+</blockquote>
+{% endif %}
+{% if Operation.parameters is not empty %}
+<h4>{{ "Options" | trans }} : {{ Operation.parameters.title }}</h4>
+<p>{{ Operation.parameters.description }}</p>
+<ul>
+{% if Operation.parameters.transactional == 1 %}
+    <li>{{ "transactional" | trans }}</li>
+{% endif %}
+{% if Operation.parameters.polling == 1 %}
+    <li>{{ "polling" | trans }}</li>
+    <dl>
+        <dd>{{ "polling_interval" | trans }}</dd><dt>{{  Operation.parameters.polling_interval }}</dt>
+        <dd>{{ "polling_timeout" | trans }}</dd><dt>{{  Operation.parameters.polling_timeout }}</dt>
+    </dl>
+{% endif %}
+{% if Operation.parameters.pre_command == 1 %}
+    <li>{{ "pre_command" | trans }}
+        <p><pre>{{ Operation.parameters.pre_command_str }}</pre></p>
+    </li>
+{% endif %}
+{% if Operation.parameters.remove_files == 1 %}
+    <li>{{ "remove_files" | trans }}</li>
+{% endif %}
+{% if Operation.parameters.post_command == 1 %}
+    <li>{{ "post_command" | trans }}
+        <p><pre>{{ Operation.parameters.post_command_str }}</pre></p>
+    </li>
+{% endif %}
+{% if Operation.parameters.mail_on_error == 1 %}
+    <li>{{ "mail_on_error" | trans }}</li>
+    <dl>
+        <dd>{{ "To" | trans }}</dd><dt>{{  Operation.parameters.mail_on_error_to }}</dt>
+        <dd>{{ "Subject" | trans }}</dd><dt>{{  Operation.parameters.mail_on_error_subject }}</dt>
+    </dl>
+{% endif %}
+</ul>
+</table>
+{% endif %}
+<br/>
+{% if Operation is not empty %}
+<h4>{{ "Connections" | trans }} {{ Operation.source.title }} -> {{ Operation.target.title }}</h4>
+<table class="table table-striped table-bordered table-condensed">
+    <tr><th class="col-md-2"></th><th class="col-md-4">{{ "Source" | trans }}</th><th class="col-md-4">{{ "Target" | trans }}</th></tr>
+    <tr><th>{{ "Name" | trans }}</th><td>{{ Operation.source.title }}</td><td>{{ Operation.target.title }}</td></tr>
+    <tr><th>{{ "Host" | trans }}</th><td>{{ Operation.source.host }}</td><td>{{ Operation.target.host }}</td></tr>
+    <tr><th>{{ "Interface" | trans }}</th><td>{{ Operation.source.interface }}</td><td>{{ Operation.target.interface }}</td></tr>
+    <tr><th>{{ "Protocol" | trans }}</th><td>{{ Operation.source.protocol }}</td><td>{{ Operation.target.protocol }}</td></tr>
+    <tr><th>{{ "Login" | trans }}</th><td>{{ Operation.source.login }}</td><td>{{ Operation.target.login }}</td></tr>
+    <tr><th>{{ "Path" | trans }}</th><td>{{ Operation.source_path }}</td><td>{{ Operation.target_path }}</td></tr>
+    <tr><th>{{ "Files" | trans }}</th><td>{{ Operation.source_files }}</td><td>{{ Operation.target_files }}</td></tr>
+</table>
+{% endif %}
+<!--
+<table class="table table-striped table-bordered table-condensed">
+    <tr><th class="col-md-2">{{ "Name" | trans }}</th><td class="col-md-8">{{  Operation.name }}</td></tr>
+    <tr><th>{{ "Step" | trans }}</th><td>{{ Step }}</td></tr>
+    <tr><th>{{ "Env" | trans }}</th><td>{{ Operation.env }}</td></tr>
+</table>
+-->
+{% endfor %}
+</script>
+</body>
+{% endblock %}
+{% block cron %}{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('bundles/ariiats/js/jquery.tablesorter.min.js') }}"></script>
+<title>{{ request.job }}</title>
+<style>
+img {
+    height: 100%;
+    width: auto;
+}
+</style>
+{% endblock %} 
+{% block body %}
+<div class="container-fluid">
+<div class="jumbotron">
+<img style="float: right;" src="{{ asset('logo.png') }}"/>
+<h1>{{ request.job }}</h1>
+  <table>
+      {% if request.status!='.*' %}<tr><th>{{ "Status" | trans }}:&nbsp;</th><td>{{ request.status }}</td></th>{% endif %}
+      {% if request.codes!='.*' %}<tr><th>{{ "Exit code" | trans }}:&nbsp;</th><td>{{ request.codes }}</td></th>{% endif %}
+  </table>
+</div>
+{% if result is not empty %}
+<div class="progress">
+  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="{{ result.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ result.percent }}%">
+    <span class="sr-only">{{ result.percent }}%</span>
+  </div>
+</div>
+  <h2>{{ result.pattern }}</h2>
+<dl class="dl-horizontal">
+      <dt>Status</dt><dd>{{ result.status }}</dd>
+      {% if result.exit_code!='.*' and result.exit_code!=''%}<dt>Codes</dt><dd>{{ result.exit_code }}</dd>{% endif %}
+  </dl>
+  <h3>{{ "Message" | trans }}</h3>
+  <dl class="dl-horizontal">
+      <dt>From</dt><dd>{{ result.msg_from }}</dd>
+      <dt>To</dt><dd>{{ result.msg_to }}</dd>
+      {% if result.msg_cc!='' %}<dt>Cc</dt><dd>{{ result.msg_cc }}</dd>{% endif %}
+  </dl>
+    <h3>{{ "Instructions" | trans }}</h3>
+  <blockquote>{{ result.to_do | raw }}</blockquote>
+{% else %}
+<div class="alert alert-danger" role="alert">
+  <a href="#" class="alert-link">{{ "Aucune instruction" }}</a>
+</div>
+{% endif %}
+</div>
+{% endblock %}

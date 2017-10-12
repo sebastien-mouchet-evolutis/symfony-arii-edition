@@ -1,0 +1,143 @@
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+var job_name = "{{job_name}}";
+
+dhtmlxEvent(window,"load",function(){     
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").setWidth(400); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+/*
+    myTab = globalLayout.cells("a").attachTabbar();
+    myTab.addTab("jobs","{{ "Jobs" | trans }}","100px", null, true);
+    myTab.addTab("events","{{ "Events" | trans }}","100px");
+*/
+    formData = [
+       { type: "settings", position: "label-left", labelWidth: 100, inputWidth: 240, labelAlign: "right", position: "label-left" },
+        {type: "hidden", name: 'id' },       
+        {type: "input", name: 'name', label:'{{ 'Name' | trans }}', value: '{{job_name}}' },
+        {type: "input", name: 'description', label:'{{ 'Description' | trans }}', rows: 4 },
+        {type: "input", name: 'command', label:'{{ 'Commande' | trans }}', rows: 4  },
+        {type: "button", name: 'submit', value:'{{ 'Search' | trans }}', inputLeft: 100  }
+    ];
+    
+    myForm = globalLayout.cells("a").attachForm(formData);
+    myForm.enableLiveValidation(true);
+    globalLayout.cells("b").hideHeader();
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.selMultiRows = true;
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Job" | trans }},{{ "Description" | trans }},{{ "Command" | trans }}");
+    myGrid.attachHeader("#text_filter,#text_filter,#text_filter");
+    myGrid.setInitWidths("*,*,*");
+    myGrid.setColAlign("left,left,left");
+    myGrid.setColTypes("ro,ro,ro");
+    myGrid.setColSorting("str,str,str");
+    myGrid.init();    
+    globalLayout.cells("b").progressOn();
+    myGrid.load("{{ url('xml_Report_search_grid') }}?job_name="+encodeURIComponent(job_name),function(){
+        globalLayout.cells("b").progressOff();
+    });
+        
+    myToolbar = globalLayout.cells("b").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.loadStruct("{{ url('xml_Report_search_toolbar') }}", function() {
+    });
+    myToolbar.attachEvent( "onClick", function(id, value) {
+    });
+
+    myForm.attachEvent("onButtonClick", function(id){
+        if (id!= 'submit') return true;
+        globalLayout.cells("b").progressOn();
+        myGrid.load("{{ url('xml_Report_search_grid') }}"
+                +"?job_name="+encodeURIComponent(this.getItemValue('name'))
+                +"&description="+encodeURIComponent(this.getItemValue('description'))
+                +"&command="+encodeURIComponent(this.getItemValue('command')), function(){
+            globalLayout.cells("b").progressOff();
+        });  
+    });
+
+    myTabbar = globalLayout.cells("c").attachTabbar();
+    myTabbar.addTab("history","{{ "Historique" | trans }}","120px",null,true);
+    myTabbar.addTab("definition","{{ "Definition" | trans }}","120px");      
+
+    historyLayout = myTabbar.cells("history").attachLayout("2U");  
+    
+    historyLayout.cells("a").setText("{{ "Data" | trans }}");    
+    historyLayout.cells("b").setText("{{ "Graph" | trans }}");
+    historyLayout.cells("a").setWidth(450);
+    globalLayout.cells("c").collapse();
+    
+    myData = historyLayout.cells("a").attachGrid();
+    myData.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myData.setHeader("{{ "Start" | trans }},{{ "End" | trans }},{{ "Status" | trans }}");
+    myData.attachHeader("#text_filter,#text_filter,#select_filter");
+    myData.setInitWidths("150,150,*");
+    myData.setColAlign("right,right,right");
+    myData.setColTypes("ro,ro,ro");
+    myData.setColSorting("date,date,str");
+    myData.enableAlterCss("","");
+    myData.init();
+
+    myChart = historyLayout.cells("b").attachChart( {
+        view: "line",
+        xValue: "#day#",
+        yValue: "#duration#",
+        color: "#color#",
+        tooltip: "#date#<br/>#time#</br><b>#duration#s</b></br>#month#",
+        item:{
+            borderColor: "#color#" ,
+            color: "#color#",
+            type: 'r'
+        },
+        yAxis:{
+            title: "{{ "Duration" | trans }} (s)"            
+        },
+        xAxis:{
+            lines: false,
+            title: "{{ "Start time" | trans }}",
+            template: function (obj) {
+                if (obj.year!='')
+                    return '][('+obj.year+')';
+                else if (obj.month!='')
+                    return obj.month;
+                return;
+            }
+        }
+    });
+    myChart.attachEvent("onItemClick", function(id){
+        myData.selectRowById(id);
+    });
+    myData.attachEvent("onRowDblClicked", function (id) {
+    });
+   
+    myGrid.attachEvent("onRowDblClicked", function (id) {
+        last = id;
+        historyLayout.cells("a").progressOn();
+        historyLayout.cells("b").progressOn();
+        globalLayout.cells("c").expand();
+        myData.load("{{ url('xml_Report_search_history') }}?id="+id,function() {     
+            myChart.clearAll();
+            // myChart.parse(myData,"dhtmlxgrid"); Impossible de recuperer les ids
+            historyLayout.cells("a").progressOff();
+            myChart.load("{{ url('xml_Report_search_chart') }}?id="+id,function() {
+                historyLayout.cells("b").progressOff();
+            });
+        });
+    });
+
+    
+});
+</script>
+{% endblock %}

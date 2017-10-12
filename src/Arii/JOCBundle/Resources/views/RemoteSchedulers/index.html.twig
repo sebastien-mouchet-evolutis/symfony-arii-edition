@@ -1,0 +1,118 @@
+{# src/Arii/JOCBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiJOCBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var max_history = 0; // pas d'historique
+var chained = 0; // que des standalone
+var only_warning = 1; // que les problemes
+var update=30;
+var autorefresh;
+
+dhtmlxEvent(window,"load",function(){ 
+    
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");
+    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("c").setHeight(220); 
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("b").hideHeader();
+    globalLayout.cells("c").hideHeader();
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_JOC_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setHeight(300);
+
+    myDonut =  globalLayout.cells("a").attachChart({
+            view:"donut",
+            container:"pie_chart_container",
+            value:"#JOBS#",
+            label:"",
+            tooltip: "#STATUS#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "#JOBS#",
+            shadow: 0,
+            legend:{
+                  width: 0,
+                  template: "#STATUS#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+    myDonut.load( "{{ url('xml_JOC_remote_schedulers_pie') }}" );
+{% if is_granted('ROLE_OPERATOR') %}
+    myGridToolbar = globalLayout.cells("b").attachToolbar();
+    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.loadStruct("{{ url('xml_JOC_remote_schedulers_toolbar') }}");
+    myGridToolbar.attachEvent( "onClick", function(id, value) {
+        switch (id) {
+            case "refresh":
+                GridRefresh();
+            break;
+            default:
+                alert(id);
+        }
+    });
+    myGridToolbar.attachEvent("onStateChange",function(id,state){
+        dhtmlxAjax.get("{{ url('arii_JOC_toolbar') }}?"+id+"="+state,function(loader){
+            GlobalRefresh();
+        });
+    });
+{% endif %}
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.selMultiRows = true;
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Supervisor" | trans }},{{ "Spooler" | trans }},{{ "Hostname" | trans }},{{ "IP address" | trans }},{{ "Port" | trans }},{{ "Version" | trans }}");
+    myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#numeric_filter,#text_filter");
+    myGrid.setInitWidths("200,*,300,120,100,100");
+    myGrid.setColAlign("left,left,left,right,right,right");
+    myGrid.setColTypes("ro,ro,ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,str,str,numeric,str");
+    myGrid.load( "{{ url('xml_JOC_remote_schedulers_grid') }}" );
+    myGrid.enableLightMouseNavigation( true );
+    myGrid.init();
+    
+    globalLayout.cells("c").hideHeader();
+    
+    myForm = globalLayout.cells("c").attachForm();
+    myForm.loadStruct("{{ url('json_JOC_remote_schedulers_form') }}");
+
+    myGrid.attachEvent("onRowDblClicked", function(id){        
+        globalLayout.cells("c").progressOn();
+        myForm.load("{{ url('xml_JOC_remote_scheduler_form') }}?id="+id, function () {
+            globalLayout.cells("c").progressOff();
+        });
+    });
+});
+    
+function GridRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    myGrid.load("{{ url('xml_JOC_remote_schedulers_grid') }}", function () {
+        myDonut.load( "{{ url('xml_JOC_remote_schedulers_pie') }}" );
+    });
+}
+
+function GlobalRefresh() {
+    GridRefresh();
+}
+
+</script>
+{% endblock %}

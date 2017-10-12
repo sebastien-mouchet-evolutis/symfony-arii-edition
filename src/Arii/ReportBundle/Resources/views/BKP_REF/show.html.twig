@@ -1,0 +1,76 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>BKP_REF</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Db_env</th>
+                <td>{{ entity.dbenv }}</td>
+            </tr>
+            <tr>
+                <th>Db_type</th>
+                <td>{{ entity.dbtype }}</td>
+            </tr>
+            <tr>
+                <th>Db_system</th>
+                <td>{{ entity.dbsystem }}</td>
+            </tr>
+            <tr>
+                <th>Db_name</th>
+                <td>{{ entity.dbname }}</td>
+            </tr>
+            <tr>
+                <th>Db_instance</th>
+                <td>{{ entity.dbinstance }}</td>
+            </tr>
+            <tr>
+                <th>Db_group</th>
+                <td>{{ entity.dbgroup }}</td>
+            </tr>
+            <tr>
+                <th>Path_source</th>
+                <td>{{ entity.pathsource }}</td>
+            </tr>
+            <tr>
+                <th>Path_destination</th>
+                <td>{{ entity.pathdestination }}</td>
+            </tr>
+            <tr>
+                <th>Deleted</th>
+                <td>{{ entity.deleted|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Sinked</th>
+                <td>{{ entity.sinked|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Updated</th>
+                <td>{{ entity.updated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Db_desc</th>
+                <td>{{ entity.dbdesc }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('bkp_ref') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('bkp_ref_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="iso-8859-1"?> 
+<!-- Two chained jobs: The second job throws an error and lets orders wait for this job being unstopped -->
+<job stop_on_error="yes" title="Simple Chained Job No. 2" order="yes">
+  <script language="shell"><![CDATA[ 
+    echo executing simple job no. 2 
+    exit 5
+  ]]></script>
+</job>

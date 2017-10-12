@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job  order="yes" stop_on_error="no" title="Lancement de la chaine B si Success ou C si Error">
+    <settings >
+        <log_level ><![CDATA[debug9]]></log_level>
+    </settings>
+
+    <script  language="shell">
+        <![CDATA[
+echo Lancement de la chaine B (ou C si exit != 0)
+        ]]>
+    </script>
+
+    <run_time />
+
+    <commands  on_exit_code="success">
+        <order  job_chain="/Exemples/Processus paralleles/ChaineB" replace="yes" id="Processus.Go:ChaineB" title="Lancement de la chaine B si Success">
+            <params />
+        </order>
+    </commands>
+
+    <commands  on_exit_code="error">
+        <order  job_chain="/Exemples/Processus paralleles/ChaineC" replace="yes" id="Processus.Go:ChaineC" title="Lancement de la chaine C si failure">
+            <params />
+        </order>
+    </commands>
+</job>

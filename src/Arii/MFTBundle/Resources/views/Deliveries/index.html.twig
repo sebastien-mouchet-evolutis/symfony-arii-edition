@@ -1,0 +1,327 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiMFTBundle::layout.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+var only_warning = 0;
+var update = 60;
+var autorefresh;
+var transfer=-1;
+dhtmlxEvent(window,"load",function(){
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_MFT_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    
+    myTransfers = globalLayout.cells("a").attachGrid();
+    myTransfers.selMultiRows = true;
+    myTransfers.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myTransfers.setHeader("{{ "Title" | trans }},{{ "Partner" | trans }},{{ "Description" | trans }}");
+    myTransfers.attachHeader("#text_filter,#select_filter,#text_filter");
+    myTransfers.setInitWidths("*,100,0");
+    myTransfers.setColAlign("left,left,left");
+    myTransfers.setColTypes("ro,ro,ro");
+    myTransfers.setColSorting("str,str,str");
+    myTransfers.init();
+    myTransfers.load("{{ url('xml_MFT_transfers_list') }}");
+    
+    myGridMenu = new dhtmlXMenuObject(null);
+    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.renderAsContextMenu();
+    myGridMenu.loadStruct("{{ url('xml_MFT_parameters_grid_menu') }}");
+
+    myGridbar = globalLayout.cells("b").attachTabbar();
+    myGridbar.addTab("grid","{{ "Information" | trans }}","100px",null,true);
+    myGridbar.addTab("chart","{{ "Runtime" | trans }}","100px");
+    
+    myGrid = myGridbar.cells("grid").attachGrid();
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Name" | trans }},{{ "Title" | trans }},{{ "Run" | trans }},{{ "Step" | trans }},{{ "Try" | trans }},{{ "Status" | trans }},{{ "Message" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Duration" | trans }},{{ "Source" | trans }},{{ "Target" | trans }},{{ "Files" | trans }},{{ "Count" | trans }},{{ "Size" | trans }},{{ "Transfered" | trans }},{{ "Failed" | trans }},{{ "Skipped" | trans }},{{ "Last error" | trans }}");
+    myGrid.attachHeader("#text_filter,#text_filter,#numeric_filter,#numeric_filter,#numeric_filter,#select_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#numeric_filter,#numeric_filter,#numeric_filter,#numeric_filter,#text_filter");
+    myGrid.setInitWidths("200,200,50,50,50,100,0,150,150,50,*,50,50,50,50,50,50,50,*");
+    myGrid.setColAlign("left,left,right,right,right,left,left,left,right,right,left,right,right,right,right,right,right,right,left");
+    myGrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro");
+    myGrid.setColSorting("date,date,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,str");
+    myGrid.enableContextMenu(myGridMenu);
+    myGrid.init();
+    // time
+    myGrid.setColumnHidden(8,true);
+    myGrid.setColumnHidden(9,true);
+    
+    // files 
+    myGrid.setColumnHidden(10,true);
+    myGrid.setColumnHidden(11,true);
+    myGrid.setColumnHidden(12,true);
+
+    // stats
+    myGrid.setColumnHidden(14,true);
+    myGrid.setColumnHidden(15,true);
+    myGrid.setColumnHidden(16,true);
+    myGrid.setColumnHidden(17,true);
+    
+    myGrid.load( "{{ url('xml_MFT_deliveries_grid') }}?only_warning="+only_warning+"&transfer="+transfer);
+    myGrid.attachEvent("onRowDblClicked",TransferDetail );
+
+    myTransfers.attachEvent("onRowDblClicked", function(id) {
+        transfer = id;
+        globalLayout.cells("b").progressOn();
+        myGrid.load( "{{ url('xml_MFT_deliveries_grid') }}?only_warning="+only_warning+"&transfer_id="+transfer, function() {
+            globalLayout.cells("b").progressOff();
+        });
+    });
+
+    myGridToolbar = myGridbar.cells("grid").attachToolbar();
+    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.loadStruct( "{{ url('xml_MFT_deliveries_toolbar') }}");
+    myGridToolbar.attachEvent("onClick",function(itemid){
+         switch (itemid) {
+            case 'refresh':
+                globalLayout.cells("b").progressOn();
+                GlobalRefresh();
+                break;
+            case "print":
+                myGrid.printView();
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+    myGridToolbar.attachEvent("onStateChange",function(itemid, state){
+         switch (itemid) {
+            case 'time':
+                myGrid.setColumnHidden(8,!state);      
+                myGrid.setColumnHidden(9,!state);      
+                break;
+            case 'files':
+                myGrid.setColumnHidden(10,!state);
+                myGrid.setColumnHidden(11,!state);
+                myGrid.setColumnHidden(12,!state);
+                break;
+            case 'status':
+                myGrid.setColumnHidden(14,!state);
+                myGrid.setColumnHidden(15,!state);
+                myGrid.setColumnHidden(16,!state);
+                myGrid.setColumnHidden(17,!state);
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+    
+    myGridMenu.attachEvent("onClick", function (menuitemId, type) {
+        var data = myGrid.contextID.split("_");
+        var rId = data[0];
+        var cInd = data[1];
+//        job = myGrid.cells(rId,1).getValue();
+        switch (menuitemId) {
+           case "new":
+                myForm.clear();
+                break;
+           case "delete":
+                dhtmlx.confirm({
+                title: "{{ "Delete" | trans }}",
+                type: "confirm-error",
+                text: "{{ "Are you sure ?" | trans }}",
+                callback: function(answer) { 
+                    if (answer) {      
+                        globalLayout.progressOn();
+                        dhx4.ajax.get("{{ url('html_MFT_delivery_delete') }}?id="+rId,function(loader){
+                            if(loader.xmlDoc.responseText==="success"){
+                                globalLayout.cells("b").progressOn();
+                                GridRefresh();
+                            } 
+                            else {
+                                alert(loader.xmlDoc.responseText);
+                            }
+                            globalLayout.progressOff();
+                        });
+                    }
+                },
+                cancel: "{{ "No" | trans }}",
+                ok: "{{ "Yes" | trans }}" });
+            break;
+            default:
+                alert("inconnu ! "+menuitemId);    
+        }
+        return true;
+    });
+ 
+    myTabbar = globalLayout.cells("c").attachTabbar();
+    myTabbar.addTab("transmission","{{ "Transmissions" | trans }}","200px", null, true);
+    myTabbar.addTab("log","{{ "Logs" | trans }}","200px");
+
+    detailLayout = myTabbar.cells("transmission").attachLayout("2U"); 
+    detailLayout.cells("a").hideHeader();
+    detailLayout.cells("a").setWidth(300);
+    detailLayout.cells("b").hideHeader();
+    
+    globalLayout.cells("c").setHeight(300); 
+    globalLayout.cells("c").collapse(); 
+    globalLayout.cells("c").setText("{{ "Detail" | trans }}"); 
+      
+    myDonut =  detailLayout.cells("a").attachChart({
+            view:"donut",
+            container:"pie_chart_container",
+            value:"#STATUS#",
+            label:"",
+            tooltip: "#TEXT#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "#STATUS#",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#TEXT#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+ 
+    myTransmissions = detailLayout.cells("b").attachGrid();
+    myTransmissions.setHeader("{{ "Operation" | trans }},{{ "Source file" | trans }},{{ "Start" | trans }},{{ "End" | trans }},{{ "Status" | trans }},{{ "Size" | trans }},{{ "MD5" | trans }}");
+    myTransmissions.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#numeric_filter,#text_filter");
+    myTransmissions.setInitWidths("0,*,150,150,100,80,250");
+    myTransmissions.setColAlign("left,left,right,left,left,right,left");
+    myTransmissions.setColTypes("ro,ro,ro,ro,ro,ro,ro");
+    myTransmissions.setColSorting("str,str,date,date,str,int,str");
+    myTransmissions.init();
+    // myHistory.enableAlterCss("even_row","odd_row");
+
+    myBarChart =  myGridbar.cells("chart").attachChart({
+            view:"stackedBarH",
+            container:"chartDiv",
+            value:"#S10#",
+            label:"#S10#",
+            color:"#58dccd",
+            barWidth:60,
+            alpha:0.8,
+            xAxis:{
+            },
+            yAxis:{
+                    lines:true,
+                    template:"#run#"
+            },
+            legend:{
+                    values:[{text:"Récupération Requêtes",color:"#58dccd"},{text:"Envoi",color:"#a7ee70"},{text:"30",color:"#36abee"},{text:"40",color:"#36abee"}],
+                    valign:"top",
+                    align:"center",
+                    width:90,
+                    layout:"x"
+            }
+    });
+    
+    myBarChart.addSeries({
+        value:"#S20#",
+        label:"#S20#",
+        color:"#a7ee70"
+     });
+    myBarChart.addSeries({
+        value:"#S30#",
+        label:"#S30#",
+        color:"#36abee"
+     });
+    myBarChart.addSeries({
+        value:"#S40#",
+        label:"#S40#",
+        color:"#36abee"
+     });
+
+    myBarChart.load( "{{ url('xml_MFT_deliveries_stackedbars') }}?transfer_id=182" );
+    myBarChart.attachEvent("onItemClick", function(id, event){
+                        var target = event.target||event.srcElement;
+                        alert(target.getAttribute("userdata"));
+      });
+    myGridMenu.attachEvent("onClick", function (menuitemId, type) {
+        var data = myGrid.contextID.split("_");
+        var rId = data[0];
+        var cInd = data[1];
+//        job = myGrid.cells(rId,1).getValue();
+        switch (menuitemId) {
+           case "new":
+                myForm.clear();
+                break;
+           case "delete":
+                dhtmlx.confirm({
+                title: "{{ "Delete" | trans }}",
+                type: "confirm-error",
+                text: "{{ "Are you sure ?" | trans }}",
+                callback: function(answer) { 
+                    if (answer) {      
+                        globalLayout.progressOn();
+                        dhx4.ajax.get("{{ url('html_MFT_delivery_delete') }}?id="+rId,function(loader){
+                            if(loader.xmlDoc.responseText==="success"){
+                                globalLayout.cells("b").progressOn();
+                                GridRefresh();
+                            } 
+                            else {
+                                alert(loader.xmlDoc.responseText);
+                            }
+                            globalLayout.progressOff();
+                        });
+                    }
+                },
+                cancel: "{{ "No" | trans }}",
+                ok: "{{ "Yes" | trans }}" });
+            break;
+            default:
+                alert("inconnu ! "+menuitemId);    
+        }
+        return true;
+    });
+    
+    autorefresh = setInterval( "GridRefresh()",update*1000);
+});
+
+function GlobalRefresh() {
+    clearInterval( autorefresh );
+    GridRefresh();
+    autorefresh = setInterval( "GridRefresh()", update*1000 );
+}
+
+function GridRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    myGrid.load("{{ url('xml_MFT_deliveries_grid') }}?time="+seconds+"&only_warning="+only_warning+"&transfer="+transfer, function(){    
+        globalLayout.cells("b").progressOff();
+        myGrid.refreshFilters();
+        myGrid.filterByAll();
+    });
+}
+
+function onShowMenu(rowId, celInd, grid) {
+return true;
+}
+
+function TransferDetail(id) {
+    globalLayout.cells("c").expand(); 
+    globalLayout.cells("c").progressOn();
+        // mise a jour de la toolbar
+        myTransmissions.clearAll();
+        myTransmissions.load("{{ url('xml_MFT_transmissions_grid') }}?delivery_id="+id+"&run="+myGrid.cells(id,2).getValue()+"&try="+myGrid.cells(id,4).getValue(), function() {
+            myDonut.load( "{{ url('xml_MFT_deliveries_pie') }}?delivery_id="+id );
+            myTabbar.cells("log").attachURL("{{ url('html_MFT_delivery_log') }}?id="+id);
+            globalLayout.cells("c").progressOff();
+        } );  
+}
+</script>
+{% endblock %}

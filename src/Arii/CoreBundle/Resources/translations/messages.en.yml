@@ -1,0 +1,875 @@
+#A_____________________________________________
+About Arii: About Arii
+About me: About me
+Account: Account
+Act.: Act.
+Action: Action
+Add: Add
+Add connection: Add connection
+Add filter: Add filter
+Add order: Add order
+Add repository: Add repository
+Address: Address
+Add right: Add right
+Add Site: Add Site
+Add site on Company: Add site on Company
+Add spooler: Add spooler
+Add team: Add team
+Add user: Add user
+Administration: Administration
+Admin Map: Admin Map
+Advanced Search: Advanced Search
+Agenda: Schedule
+Alarms: Alarms
+All: All
+Allowed Host: Allowed Host
+Answer OK: Answer OK
+Answer: Answer
+Are you sure ?: Are you sure ?
+Attach Filter on Team: Attach Filter on Team
+Aujourd'hui: Today
+Authentication: Authentication
+Automatic download: Automatic download
+Available: Available
+#B_____________________________________________
+Backup server: Backup server
+Backup Spooler: Backup Spooler
+Base de données: Database
+Basic Info: Basic Info
+Batch Installer: Batch Installer
+Begin: Begin
+Bitmap image (PNG): Bitmap image (PNG)
+Blocked: Blocked
+Bundles: Bundles
+#C_____________________________________________
+Calendar: Calendar
+Cancel: Cancel
+Category: Category
+Chain: Chain
+Chains: Chains
+Change command: Change command
+Change password: Change password
+Chart: Chart
+Check for update: Check for update
+Check spooler: Check spooler
+City: City
+cluster_options: Cluster options
+Code: Code
+Comment: Comment
+Comments: Comments
+Commercial: Commercial
+Components: Components
+Config file: Configuration file
+Configuration: Configuration
+connection.category.note: Select category for this connection
+Connection: Connection
+connection.description.note: Describe this connection
+"Connection failed %protocol%://%host%:%port%! Please make sure the JobScheduler have started!": "Connection failed %protocol%://%host%:%port%! Please make sure the JobScheduler have started and is joinable !"
+connection.host.note: Name this server
+Connection Info: Connection Info
+connection.interface.note: connection.interface.note
+connection.interface.note: Describe this interface
+connection.login.note: Enter your login
+connection.message.delete: Do you really want to suppress this connection ?
+connection.message.save: Connection recorded
+connection.port.note: Enter the used port
+Connections: Connections
+connection.title.note: Give a title
+Connect on spooler: Connect on spooler
+Connector: Connector
+Connexions: Connections
+Continue: Continue
+Continue spooler: Continue spooler
+Convert: Convert
+Count: Count
+Country code: Country code
+Country: Country
+Created.by: Created by
+created: created
+Created: Created
+Create table: Create table
+Creation: Creation
+Cron adapter: Cron adapter
+Cron converter: Cron converter
+Cron System: Cron System
+Current: Current
+Curved: Curved
+Custom: Custom
+custom_filter: Custom filter
+#D_____________________________________________
+dashboard.Admin: Administration
+dashboard.Cloud: Cloud
+dashboard.Event: Event manager
+dashboard.GVZ: Job Map
+dashboard.Home: Home
+dashboard.JID: Dashboard
+dashboard.JOC: Monitoring
+dashboard.JOE: Job Editor
+dashboard.MFT: File transfers
+dashboard.Simile: Simile
+dashboard.Time: Time calculation
+Database Connection: Database Connection
+database: database
+Database: Database
+Databases: Databases
+Data: Data
+Date: Date
+date.d: d
+date.m: m
+date.reference: reference date
+date.y: y
+Day: Day
+days: days
+DB Connection: DB Connection
+DBDRIVER.CHANGE: Database driver indicated in parameter file cannot be used with Arii.
+DBDRIVER.ERROR: Unknown driver
+Delay: Delay
+Delete Connection: Delete Connection
+Delete: Delete
+Delete Filter: Delete Filter
+Delete package: Delete package
+Delete repository: Delete repository
+Delete Repository: Delete Repository
+Delete right: Delete right
+Delete site: Delete site
+Delete spooler: Delete spooler
+Delete team: Delete team
+Delete user: Delete user
+Description: Description
+Detail: Detail
+Détails: Details
+Diagnostic: Diagnostic
+Dir: Dir
+Directory: Directory
+Dossier: Folder
+dow.Friday: Friday
+dow.Monday: Monday
+Download: Download
+dow.Saturday: Saturday
+dow.Sunday: Sunday
+dow.Thursday: Thursday
+dow.Tuesday: Tuesday
+dow.Wednesday: Wednesday
+Do you confirm ?: Do you confirm ?
+Do you really want to delete this connection ?: Do you really want to delete this connection ?
+Do you really want to delete this filter ?: Do you really want to delete this filter ?
+Do you really want to delete this queue ?: Do you really want to delete this queue ?
+Do you really want to delete this team ?: Do you really want to delete this team ?
+Do you really want to delete this user ?: Do you really want to delete this user ?
+Do you really want to synchronize this folder ?: Do you really want to synchronize this folder ?
+Draft: Draft
+Driver: Driver
+DSPJOB: DSPJOB
+DSPJOBLOG: DSPJOBLOG
+Duration: Duration
+#E_____________________________________________
+Edit connection: Edit connection
+Edit: Edit
+Edit Filter: Edit Filter
+Edit order: Edit order
+Edit permission: Edit permission
+Edit repository: Edit repository
+Edit right: Edit right
+Edit rights: Edit rights
+Edit site: Edit site
+Edit spooler: Edit spooler
+Edit team: Edit team
+Edit user: Edit user
+Email: Email
+EM: EM
+en cours: in progress
+End: End
+End state: End state
+End time: End time
+Enqueue: Enqueue
+Env: Env
+Error: Error
+ERROR !: ERROR !
+Error message: Error message
+E-S: E-S
+Etat: Etat
+Event: Event
+events: events
+Events: Events
+events.list: events list
+events.pie: events pie
+events.timeline: events timeline
+Executed: Executed
+Execution: Execution
+Executions per hour: Executions per hour
+Exit Code: Exit Code
+Exit: Exit
+#F_____________________________________________
+Failed: Failed
+Favorite: Favorite
+Favorites: Favorites
+File content: File content
+File: File
+FILE: FILE
+Filename: Filename
+File not found: File not found
+File removed: File removed
+Files: Files
+File size: File size
+File successfully generated: File successfully generated
+File Transfer: File Transfer
+File Transfers: File Transfers
+Fill the form and generate the file.: Fill the form and generate the file.
+Filter deleted: Filter deleted
+Filter: Filter
+Filter management: Filter management
+Filter saved: Filter saved
+Filters: Filters
+First name: First name
+First Name: First Name
+Folder: Folder
+Folders: Folders
+Fonction: Fonction
+Forecast: Forecast
+Found records: Found records
+Free text: Free text
+from: from
+From: From
+Full day: Full day
+#G_____________________________________________
+General: General
+Generate file: Generate file
+Global administration: Global administration
+GNU General Public License 2.0: GNU General Public License 2.0
+Go to past: Go to past
+GPL: GPL
+Graph: Graphic
+Graph monitor: Graphical monitor
+Graph supervisor: Graphic supervisor
+#H_____________________________________________
+Heartbeat: Heartbeat
+h: h
+High availability: High availability
+history: history
+History: History
+history.list: history list
+history.pie: history pie
+history.timeline: history timeline
+Home: Home
+Host: Host
+HOST: HOST
+Hostname: Hostname
+hour: hour
+Hour: Hour
+HTTP Port: HTTP Port
+HTTPS Port: HTTPS Port
+#I_____________________________________________
+I accept the terms of the GPL v2 licence agreement: I accept the terms of the GPL v2 licence agreement
+Ico.: Ico.
+Id: Id
+Information: Information
+Informations: Informations
+Installation: Installation
+install_date: installation date
+Install Info: Install Info
+install_path: install path 
+Install path: Install path
+Interface: Interface
+IP address: IP address
+IP ADDRESS: IP ADDRESS
+IP: IP
+ISO: ISO
+#J_____________________________________________
+JDBC driver: JDBC driver
+Jetty Http Connection: Jetty Http Connection
+Jetty: Jetty
+job_chain: job chain
+jobchain: jobchain
+Job chain: Job chain
+Job Chain: Job Chain
+job_chains: job chains
+Job chains: Job chains
+Job detail: Job detail
+Job events: Job events
+Job history: Job history
+Job information: Job information
+job: job
+Job: Job
+Job log: Job log
+Job name: Job name
+Job purged: Job purged
+JobScheduler Commercial License: JobScheduler Commercial License
+jobs: jobs
+Jobs: Jobs
+Jobs per hour: Jobs per hour
+JOBS.STOPPED: Task in state STOPPED
+Job status: Job status
+JOBS.TO_UNSTOP: This task cannot start until a command "UNSTOP" hasn't been sent.
+Jour: day
+#K_____________________________________________
+Kill job: Kill job
+Kill: Kill
+Kill task: Kill task
+#L_____________________________________________
+lang.en: English
+lang.fr: French
+Last error: Last error
+Last executions: Last executions
+Last Login: Last Login
+Last name: Last name
+Last update: Last update
+Latitude: Latitude
+Launch scheduler: Launch scheduler
+Legend: Legend
+Licence key: Licence key
+Licence: Licence
+Licence mode: Licence mode
+Line: Line
+List: List
+Live: Live
+Load balancing: Load balancing
+Local name: Local name
+Location: Location
+Lock: Lock
+Locks: Locks
+Login: Login
+Log: Log
+Logout: Logout
+Logs: Logs
+Log time: Log time
+Longitude: Longitude
+Lot: Lot
+#M_____________________________________________
+Mail Bcc: Mail Bcc
+Mail Cc: Mail Cc
+Mail Connection: Mail Connection
+Mail from: Mail from
+Mail: Mail
+Mail on Error: Mail on Error
+Mail on Success: Mail on Success
+Mail on Warning: Mail on Warning
+Mail Server: Mail Server
+Mail to: Mail to
+Main menu: Main menu
+Management: Management
+Mandator: Mandator
+Map: Map 
+MariaDB driver: MariaDB driver
+Max: Max
+MD5: MD5
+Media: Media
+Menu: Menu
+Message: Message
+messages.list: messages list
+Messages: Messages
+messages.pie: messages pie
+messages.timeline: messages timeline
+minute: minute
+minutes: minutes
+Modified.by: Modified by
+Modified: Modified
+Modify order: Modify order
+module.Admin: Administration
+module.Archive: Archiving
+module.ATS: Autosys
+module.BPM: Process Monitoring
+Module: Bundle
+module.Cloud: Cloud
+module.Config: Installation
+module.DS: Schedule
+module.Event: Event manager
+module.Gallery: Gallery
+module.GIT: GIT
+module.GVZ: Job Map
+module.Home: Home
+module.Hub: Deployment
+module.I5: ISeries
+module.Input: Input
+module.JID: Monitoring
+module.JOC: Job operations
+module.JOE: Job editor
+module.MFT: File transfers
+module.Notifier: Notifications
+module.Public: Information
+module.Report: Reports
+module.Run: Runbook
+Modules: Bundles
+module.Simile: Simile
+module.TC: Timecode
+module.Time: Timecode
+module.Tools: Tools
+Monitoring: Surveillance
+Monitor: Suivi
+month.10: October
+month.11: November
+month.12: December
+month.1: January
+month.2: February
+month.3: March
+month.4: April
+month.5: May
+month.6: June
+month.7: July
+month.8: August
+month.9: September
+month: month
+Month: Month
+months: months
+My.account: My account
+My filters: My filters
+MySQL driver: MySQL driver
+#N_____________________________________________
+Name: Name
+Need Help ?: Need Help ?
+Network: Network
+Never: Never
+New connection: New connection
+New event: New event
+New: New
+New package: New package
+New parameter: New parameter
+New password: New password
+New repository: New repository
+New right: New right
+New site: New site
+New Site: New Site
+New spooler: New spooler
+Next day: Next day
+Next: Next
+Next Page: Next Page
+Next start: Next start
+Next start time: Next start time
+Next tasks: Next tasks
+No cron found !: No cron found !
+No database: No database
+Node: Node
+Nodes: Nodes
+No job selected !: No job selected !
+None: None
+No: No
+No Records Found: No Records Found
+Notifications: Notifications
+Not uploaded: Not uploaded
+now: now
+Number: Number
+#O_____________________________________________
+Objects: Objects
+on Error: on Error
+on Success: on Success
+on this team ?: on this team ?
+on Warning: on Warning
+Operating System: Operating System
+Operation: Operation
+Operations: Operations
+Opér: Oper.
+Order detail: Order detail
+Ordered job: Ordered job
+Ordered jobs: Ordered jobs
+Order history: Order history
+Order ID: Order ID
+Order log: Order log
+order: order
+Order: Order
+Order purged: Order purged
+orders.list: orders list
+Orders: Orders
+orders.pie: orders pie
+Orders status: Orders status
+Order status: Order status
+orders.timeline: orders Timeline
+Ortho: Ortho
+os_target: os target
+Output: Output
+Overview: Overview
+#P_____________________________________________
+Package: Package
+Packages: Packages
+Parameter: Parameter
+Parameters file: Parameters file
+Parameters: Parameters
+Partner: Partner
+Password: Password
+Password updated: Password updated
+Paste: Paste
+Path: Path
+Pause spooler: Pause spooler
+PDF: PDF
+Period: Period
+Picture: Picture
+PID: PID
+planned.list: planned list
+planned.pie: planned pie
+planned: planned
+Planned: Planned
+Planned schedule: Planned schedule
+planned.timeline: planned Timeline
+Planning: Planning
+Plan: Schedule
+Please type in all the required fields!: Please type in all the required fields!
+Poly line: Poly line
+Pool: Pool
+Portal: Portal
+Port: Port
+Previous day: Previous day
+Previous Page: Previous Page
+Primary server: Primary server
+Printer format: Printer format
+Prio.: Prio.
+process_classes: Process classes
+process_class: Process class
+Process class: Process class
+Processed: Processed
+Processing: Processing
+Process: Process
+Profile: Profile
+Profile updated: Profile updated
+Project: Project
+Protocol: Protocol
+Purge job: Purge job
+Purge order: Purge order
+Purge task: Purge task
+#Q_____________________________________________
+Queue: Queue
+Quick info: Quick info
+#R_____________________________________________
+Record deleted: Record deleted
+Record updated: Record updated
+Reference date: Reference date
+Reference: Reference
+Refresh data: Refresh data
+Refreshing: Refreshing
+Refresh: Refresh
+Remote Access: Remote Access
+Remote: Remote
+Remote scheduler: Remote scheduler
+Remote schedulers: Remote schedulers
+Remove filter: Remove filter
+Remove setback: Remove setback
+Repeat: Repeat
+Reporting: Reporting
+Report: Report
+Repositories: Repositories
+repository.db.note:    Please specify a database for this repository
+repository.db.tooltip: Please specify a database for this repository
+repository.description:
+repository.description.note:    Please type in the description for this repository
+repository.description.tooltip: Please type in the description for this repository
+repository.message.delete:  Do you really want to delete this repository ?
+repository.message.save:    Repository saved.
+repository.name.note:    Please give a name of the repository
+repository.name.tooltip: Please give a name of the repository
+repository: repository
+Repository: Repository
+repository.timezone.note:    Please select the time zone for this repository
+repository.timezone.tooltip: Please select the time zone for this repository
+Reset order: Reset order
+Reset Order: Reset Order
+Restart order: Restart orde
+Restart spooler: Restart spooler
+Results: Results
+Resume order: Resume order
+Right_R: Read
+Right_W: Write
+Right_X: Execute
+ROLE_ADMIN: Administrator
+ROLE_BUILDER: Builder
+ROLE_DEVELOPER: Developer
+ROLE_MANAGER: Manager
+ROLE_OPERATOR: Operator
+Role: Role
+Roles: Roles
+ROLE_SYSADMIN: Sys. Admin.
+ROLE_USER: User
+rows per page: rows per page
+R: R
+Rss feed: Rss feed
+Rule: Rule
+Rules: Rules
+Runing: Running
+Run times: Run times
+#S_____________________________________________
+Save changes: Save changes
+Saved: Saved
+Save new password: Save new password
+Save: Save
+scheduler_id: Scheduler id
+Schedule: Schedule
+schedules: schedules
+Schema: Schema
+seconds: seconds
+Security: Security
+Send mail: Send mail
+Server installation: Server installation
+Servers management: Servers management
+Servers: Servers
+Session: Session
+Settings: Settings
+Severity: Severity
+short_dow.1: Mon
+short_dow.2: Tue
+short_dow.3: Wed
+short_dow.4: Thu
+short_dow.5: Fri
+short_dow.6: Sat
+short_dow.7: Sun
+short_dow.Friday: Fri.
+short_dow.Monday: Mon.
+short_dow.Saturday: Sat.
+short_dow.Sunday: Sun.
+short_dow.Thursday: Thu.
+short_dow.Tuesday: Tue.
+short_dow.Wednesday: Wed.
+Shortlinks: Shortcuts
+short_month.10: Oct.
+short_month.11: Nov.
+short_month.12: Dec.
+short_month.1: Jan.
+short_month.2: Feb.
+short_month.3: Mar.
+short_month.4: Apr.
+short_month.5: May
+short_month.6: June
+short_month.7: July
+short_month.8: Aug.
+short_month.9: Sep.
+Show spooler: Show spooler
+Show times: Show times
+Silent install: Silent install
+site.address.note: site.address.note
+site.city.note: note about city site
+site.country_code.note: __site.country_code.note
+site.description.note:    Please type in the description for this site
+site.description.tooltip: Please type in the description for this site
+site.latitude.note: __site.latitude.note
+site.longitude.note: __site.longitude.note
+site.message.delete:  Do you really want to delete this site ?
+site.message.save:    Site saved.
+site.name.note:    __site.name.note
+Site Name: Site Name
+site.name.tooltip: Please name the site
+Site: Site
+Sites: Sites
+site.timezone.note:    __site.timezone.note
+site.timezone.tooltip: Please select the time zone for this site
+site.zipcode.note: description of the zip code
+size.b: b
+Size (bytes): Size (bytes)
+size.Kb: Kb
+size.Mb: Mb
+Size: Size
+Skip node: Skip node
+Skipped: Skipped
+Source dir: Source dir
+Source filename: Source filename
+Source file: Source file
+Source host: Source host
+Source IP: Source IP
+Source: Source
+Source user: Source user
+Specify the ip address of the host: Specify the ip address of the host
+spooler.all: all spoolers
+spooler.backup.note: note about the backup spooler
+spooler.connection.note: Please specify an access connection for the spooler
+spooler.connection: spooler connection
+spooler.connection.tooltip: Please specify an access connection for the spooler
+spooler.database.note:    Please specify a database for the spooler
+Spooler Deleted: Spooler Deleted
+Spooler Description: Spooler Description
+spooler.event.note:    Check is this spooler is an event manager
+spooler.events.note: note about this event
+Spooler ID: Spooler ID
+spooler.mail.note:    Please specify a mail server for the spooler
+spooler.message.delete:  Do you really want to delete this connection ?
+spooler.name.note:    Please name the spooler
+Spooler Name: Spooler Name
+spooler.remote.note: Please specify this remote spooler
+Spooler Saved: Spooler Saved
+spooler.site.note:    Please specify a site for the spooler
+Spooler: Spooler
+spooler: spooler
+Spoolers: Spoolers
+spooler.supervisor.note:    Please choose a supervisor for the spooler
+spooler.transfer.note:    Please specify a connection for file transfer 
+spooler.version.note:    Specify the version of this spooler
+SQL: SQL
+S-syst: S-syst
+Standalone jobs: Standalone jobs
+Standalone server: Standalone server
+standalone: standalone
+Start day: Start day
+Start job: Start job
+Start order: Start order
+Start: Start
+Start state: Start state
+Start task: Start task
+Start time: Start time
+Startup: Startup
+States: States
+state: state
+State: State
+status_date: statut date
+status: status
+Status: Status
+Stendhalien job: Standalone job
+Steps purged: Steps purged
+Steps: Steps
+Step: Step
+Stop chain: Stop chain
+Stop job chain: Stop job chain
+Stop job: Stop job
+Stop node: Stop node
+Stop task: Stop task
+summary.Admin: Management of the scheduling environments and configurations
+summary.Archive: Data transfers to a storage database
+summary.ATS: Autosys tasks history
+summary.Config: Installation of the portal
+summary.DS: Tasks forecast and executions verification  
+summary.Event: Event manager for tasks orchestration 
+summary.Gallery: Pictures and Videos publication
+summary.GIT: Versions manager
+summary.GVZ: Graphical views of scheduling object
+summary.Hub: Connection with different network nodes
+summary.I5: Iseries tasks history
+summary.Input: Tasks generation based on Excel file
+summary.JID: Tasks history
+summary.JOC: Synchronisation with remote schedulers
+summary.JOE: Conception of scheduling objects
+summary.MFT: Management and monitoring of file transfers
+summary.Notifier: Supervision and notifications of the process errors
+summary.Report: Tools for publishing exploitation reports
+summary.Run: Commands automation
+summary.Time: Complex dates calculation 
+summary.Tools: Toolbox for installation and configuration of schedulers, tasks conception ...
+Supervisor: Supervisor
+Suspend order: Suspend order
+Synchronize: Synchronize
+System monitoring: System monitoring
+System: System
+#T_____________________________________________
+Target dir: Target dir
+Target file: Target file
+Target host: Target host
+Target: Target
+Task: Task
+team.description.note: Please give a short description of this team
+Team Management: Team Management
+team.message.delete:  Do you really want to delete this team ?
+team.message.save:    Team saved.
+Team must be empty!: Team must be empty!
+Team Name: Team Name
+Team: Team
+team.title.note:    Please give a title to this team
+Test Zone: Test Zone
+text.Admin: Management of the scheduling environments, configurations and objects (users, engines, connections ...).
+text.Archive: Data storage allows database purge and keeps data for statistics.
+text.ATS: Interface for CA’s « Workload Automation Autosys Edition" product.
+text.Config: ARII installation and configuration.
+text.DS: Tasks forecast and executions verification in an anticipated calendar using the informations provided by CreateDaysSchedule and CheckDaysSchedule jobs.
+text.Event: Events rules management for the orchestration of schedulers and third-party applications.
+text.Gallery: Import, sort and publish pictures and videos.
+text.GIT: Manage versions on local or remote directory.
+text.GVZ: Graphical views of scheduling object by interpretation of XML files for conception or audit of jobs chain.
+text.Hub: Exchanges management between Arii and network components.
+text.I5: Managing interface for Iseries jobs.
+text.Input: Easy generation of tasks, based on models or Excel files.
+text.JID: Follows the schedulers tasks history using the informations they send to databases.
+text.JOC: Data synchronisation with remote schedulers for global and realtime view of executions.
+text.JOE: Assistance to conception and deployment of scheduling objects on remote schedulers.
+text.MFT: Management and monitoring of file transfers executed by Jade or through the schedulers.
+text.Notifier: Notification configuration for process supervision.
+text.Report: Use of publishing tools to formate reports in PDF.
+text.Run: This bundle provides an interface to Rundeck engine.
+text.Time: Schedules management based on calculation rules.
+text.Tools: Toolbox to install and configure schedulers.These tools are available without any connection to databases or to schedulers engines.
+time.h: h
+Timeline: Timeline
+Timeline.: Timeline.
+time.m: m
+Timeout (s): Timeout (s)
+time.s: s
+Timestamp: Timestamp
+Time: Time
+Timezone: Time zone
+Time Zone: Time Zone
+Title: Title
+Today: Today
+To do list: To do list
+To first Page: To first Page
+To last Page: To last Page
+Tomorrow: Tomorrow
+Tools: Tools
+to: to
+To: To
+Trace: Trace
+Traitements: Tasks
+Transfered: Transfered
+Transfers: Transfers
+Transmissions: Transmissions
+T-Rép: T-Rep
+Type: Type
+#U_____________________________________________
+% UC: % UC
+UC: UC
+Uloader: download zone
+Unit.: Unit.
+Unknown error !: Unknown error !
+Unskip node: Unskip node
+Unstop chain: Unstop chain
+Unstop job chain: Unstop job chain
+Unstop job: Unstop job
+Unstop node: Unstop node
+Unstop task: Unstop task
+Unstop: Unstop
+until: until
+Updated: Updated
+Update: Update
+Upload canceled: Upload canceled
+Uploader: Uploader
+Upload failed: Upload failed
+Upload: Upload
+Use database: Use database
+User change: User change
+User guide: User guide
+user.mail.note:    Enter your validate Email Address here. This field can not be empty
+user.mail.tooltip: Enter you validate Email here
+User Management: User Management
+user.message.delete:  Do you really want to delete this user ?
+user.message.save:    User saved.
+user.name.note:    Enter your login username here, this field can not be empty.
+user.name.note: __user.name.note
+user.name.tooltip: Enter your login username here
+user.name.tooltip: __user.name.tooltip
+Username: User name
+User Name: User Name
+user_path: User path
+User path: User path
+User saved: User saved
+Users management: Users management
+Users: Users
+User: User
+#V_____________________________________________
+Validate error: Validate error
+Value: Value
+Vectoriel file (SVG): Vectoriel file (SVG)
+version: version
+Version: Version
+Ver.: Ver.
+View: View
+#W_____________________________________________
+Wait: Wait
+Web site: Web site
+weeks: weeks
+week: week
+Week: Week
+Workspace: Workspace
+W: W
+#X_____________________________________________
+XLS: XLS
+XML Export: XML Export
+XML View: XML View
+X: X
+#Y_____________________________________________
+year: year
+Year: Year
+Yesterday: Yesterday
+Yes: Yes
+You have to correct the following field: You have to correct the following field
+#Z_____________________________________________
+Zip code: Zip code
+ZIP Code: ZIP Code
+Zone: Zone

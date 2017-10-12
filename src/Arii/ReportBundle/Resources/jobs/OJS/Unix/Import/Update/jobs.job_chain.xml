@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+ 
+<job_chain  orders_recoverable="yes" visible="yes" title="Mise à jour" max_orders="3">
+
+    <job_chain_node  state="RUL" job="jobrul" next_state="DAY" error_state="!RUL" on_error="suspend"/>	
+
+    <job_chain_node  state="DAY" job="jobday" next_state="MONTH" error_state="!DAY" on_error="suspend"/>	
+
+    <job_chain_node  state="MONTH" job="jobmonth" next_state="SUCCESS" error_state="!MONTH" on_error="suspend"/>	
+
+    <job_chain_node  state="!RUL"/>
+	
+    <job_chain_node  state="!DAY"/>
+
+    <job_chain_node  state="!MONTH"/>
+
+    <job_chain_node  state="SUCCESS"/>
+	
+</job_chain>

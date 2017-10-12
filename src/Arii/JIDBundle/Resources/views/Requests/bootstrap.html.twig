@@ -1,0 +1,51 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<!-- <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script> -->
+{% endblock %} 
+{% block body %}
+<body>
+<div class="container-fluid">
+<div class="jumbotron">
+  <h1>{{ result.title | trans }}</h1>
+  <p>{{ result.description | trans }}</p>
+</div>
+  
+<div class="table-responsive">
+{% if result.count > 0 %}
+  <table class="table">
+      <tr><td>#</td>
+    {% for cell in result.columns %}
+        <th>{{ cell | trans }}</th>
+    {% endfor %}
+    </tr>
+    {% for id,line in result.lines %}
+        {% if line.status is defined %}
+        <tr class="{% if line.status == 'SUCCESS' %}success{% endif %}{% if line.status == 'RUNNING' %}warning{% endif %}{% if line.status == 'FAILURE' %}danger{% endif %}{% if line.status == 'ON_ICE' %}info{% endif %}{% if line.status == 'ON_HOLD' %}info{% endif %}">
+        {% else %}
+        <tr>
+        {% endif %}        
+        <th>{{ id }}</th>
+        {% for cell in line.cells %}  
+            <td>{{ cell | raw }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+  </table>
+{% else %}
+<div class="alert alert-success" role="alert">
+{{ "No result" | trans }}
+</div>
+{% endif %}
+{% if result.sql.oracle is defined %}
+    <h2>{{ "SQL request" | trans }}</h2>
+    <pre>{{ result.sql.oracle }} </pre>
+{% endif %}
+</div>
+</div>    
+</body>
+{% endblock %}

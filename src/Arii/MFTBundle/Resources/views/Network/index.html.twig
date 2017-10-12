@@ -1,0 +1,50 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiMFTBundle::layout.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('vis/dist/vis.css') }}">
+<script src="{{ asset('vis/dist/vis.js') }}" type="text/javascript"></script>    
+{% endblock %} 
+{% block body %}
+ <title>Network | Setting the random seed</title>
+
+  <style type="text/css">
+    #mynetwork {
+      width: 600px;
+      height: 400px;
+      border: 1px solid lightgray;
+    }
+
+    p {
+      max-width:600px;
+    }
+  </style>
+</head>
+<body>
+<script type="text/javascript">
+  // create an array with nodes
+  var nodes = new vis.DataSet([
+    {id: 1, label: 'Teleinvest', shape: 'ellipse', color: 'lightblue' },
+    {id: 2, label: 'ExperSoft', shape: 'circle', color: 'lightblue'},
+    {id: 3, label: 'Octo', shape: 'ellipse', color: 'lightblue' },
+    {id: 4, label: 'Provatis', shape: 'ellipse', color: 'lightblue' },
+    {id: 5, label: 'Groupe Mutuel', shape: 'ellipse', color: 'lightblue' }
+  ]);
+
+  // create an array with edges
+  var edges = new vis.DataSet([
+    {from: 1, to: 2},
+    {from: 2, to: 4},
+    {from: 2, to: 5}
+  ]);
+
+  // create a network
+  var container = document.body;
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {layout:{randomSeed:2}};
+  var network = new vis.Network(container, data, options);
+</script>
+{% endblock %}

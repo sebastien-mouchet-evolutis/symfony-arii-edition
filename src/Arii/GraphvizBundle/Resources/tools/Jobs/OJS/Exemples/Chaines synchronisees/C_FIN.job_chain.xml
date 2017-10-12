@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job_chain  orders_recoverable="yes" visible="yes" title="FIN">
+    <job_chain_node  state="FIN" job="J_FIN" next_state="C_FIN_SUCCESS" error_state="C_FIN_ERROR"/>
+
+    <job_chain_node  state="C_FIN_SUCCESS"/>
+
+    <job_chain_node  state="C_FIN_ERROR"/>
+</job_chain>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job  order="yes" stop_on_error="no" title="TaskB3">
+    <script  language="shell">
+        <![CDATA[
+echo here is job %SCHEDULER_JOB_NAME%
+set /a number=%random% %%20 +1
+echo "%SCHEDULER_JOB_NAME% :sleeping for %number% seconds....."
+ping 127.0.0.1 -n %number% > nul
+        ]]>
+    </script>
+
+    <run_time />
+</job>

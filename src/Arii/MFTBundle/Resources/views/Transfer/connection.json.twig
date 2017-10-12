@@ -1,0 +1,70 @@
+[
+    {   
+        type:"settings",
+        position:   "label-left", 
+        labelAlign: "right", 
+        labelWidth: 100,
+        inputWidth: 300,
+        offsetLeft: 10 
+    },
+    {   type:"input",    
+        name: "TITLE", 
+        label:"{{ "Title" | trans}}",
+        required: true
+    },
+    {  type: "select",
+       name: "CATEGORY_ID",
+       label: "{{ "Category"| trans }}",
+       connector: "{{ url('xml_Admin_categories_select') }}"
+    },
+    {   type:"input",    
+        name: "DESCRIPTION", 
+        label:"{{ "Description" | trans}}",
+        rows: 5
+    },
+    {   type:"input",    
+        name: "HOST", 
+        label:"{{ "Host" | trans}}"
+    },
+    {   type: "newcolumn" },
+    {   type: "fieldset", 
+        name: "CONNECTION", 
+        width: 600,
+        label:"{{ "Connection" | trans}}",
+        list:[ 
+            {   type:"input",    
+                name: "INTERFACE", 
+                label:"{{ "Interface" | trans}}"
+            },
+            {   type:"input",    
+                name: "PROTOCOL", 
+                label:"{{ "Protocol" | trans}}"
+            },
+            {   type:"input",    
+                name: "PORT", 
+                label:"{{ "Port" | trans}}"
+            },
+            {   type:"input",    
+                name: "LOGIN", 
+                label:"{{ "Login" | trans}}"
+            },
+            {
+                type:"checkbox",
+                name: "AUTH_METHOD",
+                value: false,
+                label:"{{ "Authentication" | trans}}",
+                list:[ 
+                    {   type:"input",    
+                        name: "PKEY", 
+                        label:"{{ "Private key" | trans}}"
+                    },
+                    {   type:"password",    
+                        name: "PASSWORD", 
+                        label:"{{ "Password" | trans}}"
+                    }         
+                ]
+            }
+        ]
+    },
+    {type:"hidden",    name: "ID" }
+]

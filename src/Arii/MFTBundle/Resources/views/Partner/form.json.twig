@@ -1,0 +1,31 @@
+[
+    {   
+        type:"settings",
+        position:   "label-left", 
+        labelAlign: "right", 
+        labelWidth: 100,
+        inputWidth: 300,
+        offsetLeft: 10 
+    },
+    {   type:"input", 
+        name: "NAME", 
+        label:"{{ "name" | trans}}",
+        required: true
+    },
+    {  type: "select",
+       name: "CATEGORY_ID",
+       label: "{{ "Category"| trans }}",
+       connector: "{{ url('xml_Admin_categories_select') }}",
+        required: true
+    },
+    {   type:"input", 
+        name: "TITLE", 
+        label:"{{ "Title" | trans}}"
+    },
+    {   type:"input", 
+        name: "DESCRIPTION", 
+        label:"{{ "Description" | trans}}",
+        rows: 5
+    },
+    {type:"hidden",    name: "ID" }
+]

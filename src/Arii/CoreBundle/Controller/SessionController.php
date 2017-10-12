@@ -1,0 +1,104 @@
+<?php
+
+namespace Arii\CoreBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class SessionController extends Controller
+{
+
+    public function updateAction()
+    {
+        $request = Request::createFromGlobals();
+        $session = $this->container->get('arii_core.session');
+        $portal = $this->container->get('arii_core.portal');
+
+        if ($request->query->get( 'scheduler' ))
+            $portal->setJobScheduler($request->query->get( 'scheduler' ));
+
+        
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+
+        if ($request->query->get( 'action' )== 'init') {
+            $session->ForceInit();
+           return $this->render('AriiCoreBundle:Session:result.html.twig',array(), $response );
+        }
+        
+        # Date de reference
+        if ($request->query->get( 'ref_date' )) {
+            if ($request->query->get( 'ref_date' ) == 'now()') {
+                  $Time = localtime(time(),true);
+                  $session->setRefDate( sprintf("%04d-%02d-%02d %02d:%02d:%02d", $Time['tm_year']+1900, $Time['tm_mon']+1, $Time['tm_mday'], $Time['tm_hour'], $Time['tm_min'], $Time['tm_sec']) );       
+            }
+            else {
+                $session->setRefDate( $request->query->get( 'ref_date' ) );                
+            }
+        }
+        if ($request->query->get( 'ref_past' )) 
+            $session->setRefPast( $request->query->get( 'ref_past' ) );
+
+        if ($request->query->get( 'ref_future' )) 
+            $session->setRefFuture( $request->query->get( 'ref_future' ) );
+
+        if ($request->query->get( 'refresh' )) {
+            $portal->setRefresh( $request->query->get( 'refresh' ) );
+        }
+        
+        if ($request->query->get( 'env' )) 
+            $portal->setEnv( $request->query->get( 'env' ) );
+        
+        if ($request->query->get( 'app' )) 
+            $portal->setApp( $request->query->get( 'app' ) );
+        
+        if ($request->query->get( 'filter' )) {
+            $portal->setUserFilterById( $request->query->get( 'filter' ) );
+        }
+        
+        if ($request->query->get( 'database' )) {
+            $db = $request->query->get( 'database' )-1;
+            $Databases = $session->getDatabases();
+            if (isset($Databases[$db])) {
+                $session->setDatabase($Databases[$db]);
+                print $Databases[$db]['name'];
+                exit();
+            }
+            else {
+                print "<font color='red'>$db ?!</font>";
+                exit();
+            }
+        }
+        
+
+        if ($request->query->get( 'node' )) {
+            $node = $request->query->get( 'node' );
+            $portal->setNode($node);
+            print $node;
+            exit();
+        }
+        
+        if ($request->query->get( 'current_dir' )) {
+            $session->set('current_dir',$request->query->get( 'current_dir' ));
+        }
+
+        if ($request->query->get( 'state' )) {
+            list($page, $id, $state) = explode('::',$request->query->get( 'state' )); 
+            $State = $session->get( 'state' );
+            $State[$page][$id] = $state;
+            $session->set( 'state', $State );
+        }
+        exit();
+        return $this->render('AriiCoreBundle:Session:result.html.twig',array(), $response );
+    }
+    
+     public function viewAction()
+    {
+        $session = $this->container->get('arii_core.session');
+        //  print_r($session->get('database'));
+        return $this->render('AriiCoreBundle:Session:view.html.twig' );
+    }
+   
+}

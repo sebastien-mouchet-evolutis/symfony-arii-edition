@@ -1,0 +1,18 @@
+#--------------------------------------------------------------------
+# Login form
+#--------------------------------------------------------------------
+json_User_login_form:
+    path:  /login.json
+    defaults: { _controller: AriiUserBundle:Arii:login}
+
+xml_User_menu:
+    path:  /menu.xml
+    defaults: { _controller: AriiUserBundle:Arii:menu }
+
+xml_User_toolbar:
+    path:  /toolbar.xml
+    defaults: { _controller: AriiUserBundle:Arii:toolbar }
+
+json_User_ribbon:
+    path:  /login/ribbon.json
+    defaults: { _controller: AriiUserBundle:Arii:ribbon }

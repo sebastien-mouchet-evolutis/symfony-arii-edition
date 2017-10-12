@@ -1,0 +1,37 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+dhtmlxEvent(window,"load",function(){         
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setWidth(250);
+    globalLayout.cells("b").hideHeader();
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    myTree =globalLayout.cells("a").attachTree();
+    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.load("{{ url('xml_Report_edit_tree') }}");
+    myTree.attachEvent("onClick",Detail);
+
+    myTab = globalLayout.cells("b").attachTabbar();
+    myTab.addTab("sql","{{ "SQL" | trans }}","100px", null, true);    
+    myTab.cells("sql").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}');
+});
+
+function Detail(id) {
+    myTab.cells("sql").attachURL("{{ url('html_Report_edit_sql') }}?order="+id);
+}
+    
+function GlobalRefresh() {};
+</script>
+{% endblock %}

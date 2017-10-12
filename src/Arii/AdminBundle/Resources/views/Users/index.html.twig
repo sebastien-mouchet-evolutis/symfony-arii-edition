@@ -1,0 +1,189 @@
+{# src/Arii/AdminBundle/Resources/views/Users/index.html.twig #}
+{% extends "AriiAdminBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+dhtmlxEvent(window,"load",function(){  
+var size=300;
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"4L");
+    globalLayout.cells("a").setWidth(size); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").setText("{{ "Teams" | trans }}"); 
+    globalLayout.cells("b").setWidth(250); 
+    globalLayout.cells("c").hideHeader(); 
+    globalLayout.cells("d").hideHeader(); 
+    globalLayout.cells("d").setHeight(180); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );    
+
+    mySidebar = globalLayout.cells("a").attachSidebar({
+        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
+    });
+    mySidebar.attachEvent("onSelect", function(id, value){
+        document.location.href = "{{ url('arii_Admin_index') }}"+id;
+    });
+    globalLayout.cells("a").hideHeader();    
+
+    myTeam = globalLayout.cells("b").attachTree();
+    myTeam.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTeam.load( "{{ url('xml_Admin_teams_tree') }}" );
+        
+    myGrid = globalLayout.cells("c").attachGrid();
+    myGrid.setMultiRows = true;
+    myGrid.setImagePath("{{ asset('/bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Username" | trans }},{{ "Name" | trans }},{{ "Email" | trans }},{{ "Team" | trans }},{{ "Role"  | trans }},{{ "Login" | trans }},#cspan");
+    myGrid.attachHeader("#text_filter,#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#cspan");
+    myGrid.setInitWidths("200,*,150,150,150,140,50");
+    myGrid.setColAlign("left,left,left,left,left,left,left");
+    myGrid.setColTypes("ro,ro,ro,ro,ro,ro,ch");
+    myGrid.setColSorting("str,str,str,str,str,date,str");
+    myGrid.enableDragAndDrop(true);
+    myGrid.init();
+    myGrid.load("{{ url('xml_Admin_users_grid') }}");
+
+    myGrid.attachEvent("onDragIn",function(did,tid,sObj,tObj){
+        var did_type = myGrid.getUserData(did,"type");
+        var tid_type = myGrid.getUserData(tid,"type");
+        if(did_type === "user"){
+            if(tid_type === "team")
+            {
+                return true;
+            } 
+        }
+    });
+    myGrid.attachEvent("onDrag",function(sid,tid,sObj,tObj,sInd,tInd){
+        var team_id = tid.substr(2);
+        var user_id = sid.substr(2);
+        globalLayout.cells("a").progressOn();
+        dhtmlxAjax.get("{{ url('xml_Admin_user_drag') }}?team_id="+team_id+"&user_id="+user_id,function(loader){
+            myGrid.loadXML("{{ url('xml_Admin_users_grid') }}" );
+            globalLayout.cells("a").progressOff();
+        });
+    });
+
+    formData = [
+        { type: "settings", position: "label-left", labelWidth: 80, inputWidth: 250, noteWidth: 250},
+        { type: "input",
+          name: "username",
+          label: "{{ "Login" | trans }}",
+          required: true
+        },
+        {
+          type: "select",
+          name: "roles",
+          label: "{{ "Roles" | trans }}",
+          options: [
+             { text: "{{ "ROLE_USER" | trans }}", value: "ROLE_USER" },
+             { text: "{{ "ROLE_OPERATOR" | trans }}", value: "ROLE_OPERATOR" },
+             { text: "{{ "ROLE_DEVELOPER" | trans }}", value: "ROLE_DEVELOPER" },
+             { text: "{{ "ROLE_ADMIN" |trans }}", value: "ROLE_ADMIN" }
+          ],
+          required: true
+        },
+        { type: "select",
+          name: "team_id",
+          label: "{{ "Team"| trans }}",
+          connector: "{{ url('xml_Admin_teams_select') }}",
+          required: true
+        },
+        { type: 'newcolumn' },
+       { type: "input",
+         name: "first_name",
+         label: "{{ "First name"| trans }}"
+        },
+       { type: "input",
+         name: "last_name",
+         label: "{{ "Last name"| trans }}"
+        },
+       { type: "input",
+         name: "email",
+         label: "{{ "Email"| trans }}",
+         validate: "ValidEmail"
+        }
+    ];
+    
+    myFormToolbar = globalLayout.cells("d").attachToolbar();
+    myFormToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.loadStruct("{{ url('xml_Admin_user_toolbar') }}");
+    
+    myForm = globalLayout.cells("d").attachForm(formData);
+    myForm.enableLiveValidation(true);
+    var dp = new dataProcessor("{{ url('xml_Admin_user_save') }}");
+    dp.setUpdateMode("off");
+    dp.init(myForm);
+/*
+    myForm.attachEvent('onXLE', function (){
+        var opts = myForm.getOptions("role");
+        var role  =  myForm.getItemValue("roles");
+        if (role.indexOf("USER")>0) r=0
+        else if (role.indexOf("OPERATOR")>0) r=1
+        else if (role.indexOf("DEVELOPER")>0) r=2
+        else if (role.indexOf("ADMIN")>0) r=3
+        else r=0;
+        opts['selectedIndex'] = r;
+    });
+*/    
+    myGrid.attachEvent("onRowDblClicked",function(id,cind){
+        globalLayout.cells("d").progressOn();
+         myForm.load("{{ url('xml_Admin_user_form') }}?id="+id, function () {
+            globalLayout.cells("d").progressOff();
+        });
+    });
+    
+    myFormToolbar.attachEvent("onClick", function (id,value) {
+        switch (id) {
+            case "save_user":
+                if(myForm.validate()){
+                    globalLayout.cells("a").progressOn();
+                    myForm.send("{{ url('xml_Admin_user_save') }}","POST",function(loader,response){
+                    if(response === "success")
+                        {
+                            dhtmlx.message({
+                                title:"Save",
+                                type: "Notice",
+                                lifetime: "60000",
+                                text: "{{ "User saved" | trans }}"
+                            });
+                            myForm.clear();
+                            myForm.setItemFocus('username');
+                            myGrid.load("{{ url('xml_Admin_users_grid') }}");
+                            globalLayout.cells("a").progressOff();
+                        } else
+                        {
+                            globalLayout.cells("a").progressOff();
+                            alert(response);
+                        }
+                    });
+                }
+            break;
+            case "add_user":
+                myForm.clear();
+                myForm.setItemFocus('username');
+            break;
+            case "delete_user":
+            break;
+            default:
+                break;
+        }
+    });
+
+});    
+    
+function GridRefresh()
+{
+    myGrid.loadXML("{{ url('xml_Admin_users_grid') }}");
+}
+
+function GlobalRefresh() {
+    GridRefresh();
+};
+</script>
+{% endblock %}

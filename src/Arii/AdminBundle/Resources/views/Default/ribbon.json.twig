@@ -1,0 +1,68 @@
+{
+   "items":
+   [
+      {   "type":"block", 
+          text:"{{ "module.Admin" | trans }}", 
+          "text_pos": "top", 
+          "list":
+          [
+             {  type: "button", 
+                id: 'index',
+                 text:"", 
+                 "isbig": true, 
+                 "img": "48/admin.png"
+              },
+              {   type:   "buttonSelect", 
+                    text:   "{{ "Organisation" | trans }}", 
+                    img:    "bricks.png", 
+                    items:
+                        [ 
+                            { id:"categories", text: "{{ "Categories" | trans }}", img: "categories.png" },   
+                            { id:"sites", text: "{{ "Sites" | trans }}", img: "world.png" },
+                            { id:"applications", text: "{{ "Applications" | trans }}", img: "application.png" }
+                        ]
+              },              
+                {   type:   "buttonSelect", 
+                    text:   "{{ "Securité" | trans }}", 
+                    img:    "group.png", 
+                    items:
+                        [ 
+                            { id:"users", text: "{{ "Users" | trans }}", img: "user.png" },
+                            { id:"teams", text: "{{ "Teams" | trans }}", img: "group.png" },
+                            { id:"filters", text: "{{ "Filters" | trans }}", img: "filter.png" },
+                        ]
+              },
+/*                {   type:   "buttonSelect", 
+                    text:   "{{ "Config" | trans }}", 
+                    img:    "config.png", 
+                    items:
+                        [ 
+                         { id:"parameters", text: "{{ "Parameters" | trans }}", img: "params.png" },
+                         { id:"colors", text: "{{ "Colors" | trans }}", img: "color_wheel.png" }
+                        ]
+              },
+*/                {   type:   "buttonSelect", 
+                    text:   "{{ "Network" | trans }}", 
+                    img:    "drive_network.png", 
+                    items:
+                        [              
+                            { id:"connections", text: "{{ "Connections" | trans }}", img: "connect.png" },
+                            { id:"nodes", text: "{{ "Nodes" | trans }}", img: "agent.png" }
+                        ]
+              },                        
+
+/*                {   type:   "buttonSelect", 
+                    text:   "{{ "Components" | trans }}", 
+                    img:    "brick.png", 
+                    items:
+                        [              
+                            { id:"spoolers", text: "{{ "Spoolers" | trans }}", img: "spooler.png" },
+                            { id:"repositories", text: "{{ "Repositories" | trans }}", img: "database.png" }
+                        ]
+              },                        
+*/
+              { type: "button", id:"cron", text: "{{ "Cron" | trans }}", img: "schedule.png" }
+          ]
+      }
+   ]
+}

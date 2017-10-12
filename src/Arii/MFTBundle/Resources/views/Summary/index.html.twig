@@ -1,0 +1,185 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiMFTBundle::layout.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+var update = 60;
+var autorefresh;
+var transfer=-1;
+{% if id is defined %}
+var partner={{ id }};
+{% else %}
+var partner=-1;
+{% endif %}    
+
+dhtmlxEvent(window,"load",function(){
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+    globalLayout.cells("c").setText("{{ "Transfers" | trans }}"); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_MFT_ribbon_edit') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    
+    myPartners = globalLayout.cells("a").attachGrid();
+    myPartners.selMultiRows = true;
+    myPartners.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myPartners.setHeader("{{ "Category" | trans }},{{ "Partner" | trans }},{{ "Description" | trans }}");
+    myPartners.attachHeader("#select_filter,#text_filter,#text_filter");
+    myPartners.setInitWidths("0,*,0");
+    myPartners.setColAlign("left,left,left");
+    myPartners.setColTypes("ro,ro,ro");
+    myPartners.setColSorting("str,str,str");
+    myPartners.init();
+    myPartners.load("{{ url('xml_MFT_partners_grid') }}");
+
+    myFormToolbar = globalLayout.cells("c").attachToolbar();
+    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.loadStruct( "{{ url('xml_MFT_summary_toolbar') }}");
+
+    formData =
+    [
+        {   
+            type:"settings",
+            position:   "label-left", 
+            labelAlign: "right", 
+            labelWidth: 100,
+            inputWidth: 300,
+            offsetLeft: 10 
+        },
+        {   type:"input", 
+            name: "name", 
+            label:"{{ "name" | trans}}",
+            required: true
+        },
+        {  type: "select",
+           name: "category_id",
+           label: "{{ "Category"| trans }}",
+           connector: "{{ url('xml_Admin_categories_select') }}",
+            required: true
+        },
+        {   type:"input", 
+            name: "title", 
+            label:"{{ "Title" | trans}}"
+        },
+        {   type:"input", 
+            name: "description", 
+            label:"{{ "Description" | trans}}",
+            rows: 5
+        },
+        {type:"hidden",    name: "id" }
+    ];
+
+    myForm = globalLayout.cells("c").attachForm(formData);
+
+    myForm.attachEvent( "onChangeValue", function(id, value) {
+        myFormToolbar.enableItem('save');
+    });
+    myForm.attachEvent( "onEnter", function(id, value) {
+        myFormToolbar.enableItem('save');
+    });
+    myFormToolbar.attachEvent("onClick",function(itemid, state){
+        switch (itemid) {
+           case "delete":
+                dhtmlx.confirm({
+                title: "{{ "Delete" | trans }}",
+                type: "confirm-error",
+                text: "{{ "Are you sure ?" | trans }}",
+                callback: function(answer) { 
+                    if (answer) {      
+                        globalLayout.progressOn();
+                        dhx4.ajax.get("{{ url('html_MFT_summary_delete') }}?id="+myForm.getItemValue('ID'),function(loader){
+                            if(loader.xmlDoc.responseText==="success"){
+                                myForm.setItemValue('ID','');
+                            } 
+                            else {
+                                alert(loader.xmlDoc.responseText);
+                            }
+                            globalLayout.progressOff();
+                        });
+                    }
+                },
+                cancel: "{{ "No" | trans }}",
+                ok: "{{ "Yes" | trans }}" });
+            break;
+            case "save":
+                if(!myForm.validate())
+                {
+                    dhtmlx.message({
+                        title:"Error",
+                        type: "error",
+                        lifetime: "60000",
+                        text: "{{ "Please type in all the required fields!" | trans }}"
+                     });
+                    return;
+                }
+                globalLayout.cells("c").progressOn();
+                myForm.send("{{ url('html_MFT_summary_save') }}","POST",function(loader,response){
+                    globalLayout.cells("c").progressOff();
+                    if(response === "success")
+                    {
+                        dhtmlx.message({
+                           title:"Save",
+                           type: "Notice",
+                           lifetime: "60000",
+                           text: "{{ "Saved" | trans }}"
+                        });
+                        globalLayout.cells("b").progressOn();
+                        myPartners.load("{{ url('xml_MFT_partners_grid') }}", function(){
+                            globalLayout.cells("b").progressOff();
+                        });
+                   }
+                   else 
+                   {
+                       alert(response);
+                   }               
+                });
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+
+    myPartners.attachEvent("onRowDblClicked", function(id) {
+        PartnerDetail(id);
+    });
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.selMultiRows = true;
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Partner" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Description" | trans }},{{ "Change" | trans }},{{ "User" | trans }},{{ "Env" | trans }}");
+    myGrid.attachHeader("#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
+    myGrid.setInitWidths("0,200,*,200,140,140,100");
+    myGrid.setColAlign("left,left,left,left,left,left,right");
+    myGrid.setColTypes("ro,ro,ro,ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,str,str,str,date,str");
+//    myGrid.enableContextMenu(myGridMenu);
+    myGrid.init();
+    myGrid.attachEvent("onRowDblClicked", function(id) {
+        window.location = "{{ path('arii_MFT_transfer') }}?id="+id+"&partner_id="+partner;
+    });    
+    if (partner>=0)
+        PartnerDetail(partner);   
+});
+
+function PartnerDetail(id) {
+    partner=id;
+    globalLayout.cells("b").progressOn();
+    myForm.load("{{ url('xml_MFT_summary_form') }}?id="+id, function() {
+        globalLayout.cells("b").progressOff();            
+        globalLayout.cells("c").progressOn();
+        myGrid.clearAll();
+        myGrid.load("{{ url('xml_MFT_transfers_grid') }}?partner_id="+id, function () {
+            globalLayout.cells("c").progressOff();            
+        });    
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,847 @@
+arii_JOC_command:
+    path:  /XML/command
+    defaults: { _controller: AriiJOCBundle:SOS:XMLCommand }
+
+# Commandes dediees au JOC
+arii_JOC_sync:
+    path:  /spooler/sync
+    defaults: { _controller: AriiJOCBundle:SOS:Sync }
+
+arii_JOC_sync_all:
+    path:  /spooler/syncAll
+    defaults: { _controller: AriiJOCBundle:SOS:SyncAll }
+
+# --------------------------------------------------------------------------
+# PAGES PRINCIPALES
+# --------------------------------------------------------------------------
+arii_JOC_index:
+    path:  /
+    defaults: { _controller: AriiJOCBundle:Orders:index }
+
+arii_JOC_readme:
+    path:  /readme
+    defaults: { _controller: AriiJOCBundle:Default:readme }
+
+json_JOC_ribbon:
+    path:  /ribbon.json
+    defaults: { _controller: AriiJOCBundle:Default:ribbon }
+
+arii_JOC_jobs_dashboard:
+    path:  /jobs/dashboard
+    defaults: { _controller: AriiJOCBundle:Jobs:dashboard }
+
+xml_JOC_browser:
+    path:  /browser.xml
+    defaults: { _controller: AriiJOCBundle:Jobs:browser }
+
+arii_JOC_orders_gantt:
+    path:  /orders/gantt
+    defaults: { _controller: AriiJOCBundle:Gantt:index }
+
+xml_JOC_toolbar_gantt:
+    path:  /orders/gantt/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:Gantt:toolbar }
+
+arii_JOC_toolbar:
+    path:  /toolbar
+    defaults: { _controller: AriiJOCBundle:Toolbar:default }
+
+arii_JOC_toolbar_footer:
+    path:  /toolbar/footer
+    defaults: { _controller: AriiJOCBundle:Toolbar:footer }
+
+arii_JOC_toolbar_start_job:
+    path:  /toolbar/start_job
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_start_job }
+
+arii_JOC_toolbar_start_jobs:
+    path:  /toolbar/start_jobs
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_start_jobs }
+    
+arii_JOC_toolbar_stop_job:
+    path:  /toolbar/stop_job
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_stop_job }
+
+arii_JOC_toolbar_stop_jobs:
+    path:  /toolbar/stop_jobs
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_stop_jobs }
+
+arii_JOC_toolbar_unstop_job:
+    path:  /toolbar/unstop_job
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_unstop_job }
+
+arii_JOC_toolbar_unstop_jobs:
+    path:  /toolbar/unstop_jobs
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_unstop_jobs }
+
+arii_JOC_toolbar_add_order:
+    path:  /toolbar/add_order
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_add_order }
+
+xml_JOC_toolbar_global:
+    path:  /toolbar/global
+    defaults: { _controller: AriiJOCBundle:Toolbar:global }
+
+png_JOC_percent:
+    path:  /percent.png/{percent}/{color}
+    defaults: { _controller: AriiJOCBundle:Graph:percent }
+
+arii_JOC_todo:
+    path:  /todo
+    defaults: { _controller: AriiJOCBundle:Sidebar:todo }
+
+# --------------------------------------------------------------------------
+# Gantt
+# --------------------------------------------------------------------------
+arii_JOC_orders_gantt:
+    path:  /orders/gantt
+    defaults: { _controller: AriiJOCBundle:Gantt:index }
+
+xml_JOC_orders_gantt:
+    path:  /orders/gantt.xml
+    defaults: { _controller: AriiJOCBundle:Gantt:orders }
+
+# --------------------------------------------------------------------------
+# Locks
+# --------------------------------------------------------------------------
+arii_JOC_locks:
+    path:  /locks
+    defaults: { _controller: AriiJOCBundle:Locks:index }
+
+xml_JOC_locks:
+    path:  /locks/grid.xml
+    defaults: { _controller: AriiJOCBundle:Locks:grid}
+    
+xml_JOC_locks_toolbar:
+    path:  /locks/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:Locks:toolbar}
+
+xml_JOC_locks_jobs:
+    path:  /locks/jobs.xml
+    defaults: { _controller: AriiJOCBundle:Locks:jobs}
+    
+xml_JOC_locks_use:
+    path:  /locks/use.xml
+    defaults: { _controller: AriiJOCBundle:Locks:use}
+    
+xml_JOC_locks_pie:
+    path:  /locks/pie.xml
+    defaults: { _controller: AriiJOCBundle:Locks:pie}
+# --------------------------------------------------------------------------
+# Remote Schedulers
+# --------------------------------------------------------------------------
+
+arii_JOC_remote_schedulers:
+    path:  /remote_schedulers
+    defaults: { _controller: AriiJOCBundle:RemoteSchedulers:index}
+
+xml_JOC_remote_schedulers_grid:
+    path:  /remote_schedulers/grid.xml
+    defaults: { _controller: AriiJOCBundle:RemoteSchedulers:grid}
+
+xml_JOC_remote_schedulers_toolbar:
+    path:  /remote_schedulers/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:RemoteSchedulers:toolbar }
+
+xml_JOC_remote_schedulers_pie:
+    path:  /remote_schedulers/pie.xml
+    defaults: { _controller: AriiJOCBundle:RemoteSchedulers:pie }
+
+json_JOC_remote_schedulers_form:
+    path:  /remote_schedulers/form.json
+    defaults: { _controller: AriiJOCBundle:RemoteSchedulers:form }
+# --------------------------------------------------------------------------
+# Remote Schedulers
+# --------------------------------------------------------------------------
+xml_JOC_remote_scheduler_form:
+    path:  /remote_scheduler/form.xml
+    defaults: { _controller: AriiJOCBundle:RemoteScheduler:form }
+
+
+    
+# --------------------------------------------------------------------------
+# Connections
+# --------------------------------------------------------------------------
+
+arii_JOC_connections:
+    path:  /connections
+    defaults: { _controller: AriiJOCBundle:Connections:index}
+
+xml_JOC_connections:
+    path:  /connections/grid.xml
+    defaults: { _controller: AriiJOCBundle:Connections:grid}
+
+# --------------------------------------------------------------------------
+# Jobs
+# --------------------------------------------------------------------------
+arii_JOC_jobs:
+    path:  /jobs
+    defaults: { _controller: AriiJOCBundle:Jobs:index}
+
+json_JOC_jobs_form:
+    path:  /jobs/form.json
+    defaults: { _controller: AriiJOCBundle:Jobs:form}
+
+xml_JOC_jobs_form_toolbar:
+    path:  /jobs/form_toolbar.json
+    defaults: { _controller: AriiJOCBundle:Jobs:form_toolbar}
+
+xml_JOC_job_params_toolbar:
+    path:  /job/params_toolbar.json
+    defaults: { _controller: AriiJOCBundle:Job:params_toolbar}
+
+xml_JOC_jobs_grid:
+    path:  /jobs/grid.xml
+    defaults: { _controller: AriiJOCBundle:Jobs:grid }
+    
+xml_JOC_jobs_toolbar:
+    path:  /jobs/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:Jobs:toolbar}
+
+xml_JOC_jobs_menu:
+    path:  /jobs/menu.xml
+    defaults: { _controller: AriiJOCBundle:Jobs:menu}
+
+xml_JOC_start_job_parameters:
+    path:  /start_job/parameters
+    defaults: { _controller: AriiJOCBundle:Toolbar:start_job_parameters}
+
+xml_JOC_job_list:
+    path:  /job_list
+    defaults: { _controller: AriiJOCBundle:Toolbar:job_list}
+
+xml_JOC_jobs_pie:
+    path:  /jobs/pie.xml
+    defaults: { _controller: AriiJOCBundle:Jobs:pie, ordered: 0}
+
+xml_JOC_ordered_jobs_pie:
+    path:  /ordered_jobs/pie.xml
+    defaults: { _controller: AriiJOCBundle:Jobs:pie, ordered: 1 }
+
+json_JOC_jobs_execution_form:
+    path:  /jobs/execution.json
+    defaults: { _controller: AriiJOCBundle:Jobs:execution }
+
+json_JOC_jobs_spooler_form:
+    path:  /jobs/spooler.json
+    defaults: { _controller: AriiJOCBundle:Jobs:spooler }
+
+json_JOC_jobs_target_form:
+    path:  /jobs/target.json
+    defaults: { _controller: AriiJOCBundle:Jobs:target }
+
+# --------------------------------------------------------------------------
+# Job
+# --------------------------------------------------------------------------
+html_JOC_job_detail:
+    path:  /job/detail
+    defaults: { _controller: AriiJOCBundle:Job:detail}
+
+html_JOC_job_detail:
+    path:  /job/detail
+    defaults: { _controller: AriiJOCBundle:Job:detail}
+
+xml_JOC_job_form:
+    path:  /job/form.xml
+    defaults: { _controller: AriiJOCBundle:Job:form}
+
+xml_JOC_job_params:
+    path:  /job/params.xml
+    defaults: { _controller: AriiJOCBundle:Job:params }
+
+xml_JOC_job_execution_form:
+    path:  /job/execution.xml
+    defaults: { _controller: AriiJOCBundle:Job:execution }
+
+xml_JOC_job_spooler_form:
+    path:  /job/spooler.xml
+    defaults: { _controller: AriiJOCBundle:Job:spooler }
+
+xml_JOC_job_target_form:
+    path:  /job/target.xml
+    defaults: { _controller: AriiJOCBundle:Job:target }
+
+xml_JOC_job_log:
+    path:  /job/log
+    defaults: { _controller: AriiJOCBundle:Job:log}
+
+xml_JOC_job_tasks:
+    path:  /job/tasks.xml
+    defaults: { _controller: AriiJOCBundle:Job:tasks }
+
+# --------------------------------------------------------------------------
+# Job Chains
+# --------------------------------------------------------------------------
+
+arii_JOC_jobchains:
+    path:  /jobchains
+    defaults: { _controller: AriiJOCBundle:JobChains:list}
+
+xml_JOC_jobchains_list:
+    path:  /jobchains/list.xml
+    defaults: { _controller: AriiJOCBundle:JobChains:list_xml}
+
+# --------------------------------------------------------------------------
+# JOC Orders
+# --------------------------------------------------------------------------
+
+arii_JOC_orders:
+    path:  /orders
+    defaults: { _controller: AriiJOCBundle:Orders:index }
+
+xml_JOC_orders_grid:
+    path:  /orders/grid.xml
+    defaults: { _controller: AriiJOCBundle:Orders:grid}
+
+xml_JOC_orders_menu:
+    path:  /orders/menu.xml
+    defaults: { _controller: AriiJOCBundle:Orders:menu}
+
+xml_JOC_orders_toolbar:
+    path:  /orders/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:Orders:grid_toolbar}
+
+xml_JOC_orders_form_toolbar:
+    path:  /orders/form_toolbar.json
+    defaults: { _controller: AriiJOCBundle:Orders:form_toolbar}
+
+arii_JOC_orders_list:
+    path:  /orders
+    defaults: { _controller: AriiJOCBundle:Orders:list}
+    
+xml_JOC_orders_list:
+    path:  /orders/list.xml
+    defaults: { _controller: AriiJOCBundle:Orders:list_xml}
+
+arii_JOC_orders_charts:
+    path:  /orders/charts
+    defaults: { _controller: AriiJOCBundle:Orders:charts }
+    
+xml_JOC_orders_list:
+    path:  /orders/list.xml
+    defaults: { _controller: AriiJOCBundle:Orders:list_xml }
+
+xml_JOC_add_order_parameters:
+    path:  /add_order/parameters
+    defaults: { _controller: AriiJOCBundle:Toolbar:add_order_parameters}
+
+    
+arii_JOC_orders_timeline:
+    path:  /orders/timeline
+    defaults: { _controller: AriiJOCBundle:Orders:timeline }
+    
+xml_JOC_orders_pie:
+    path:  /orders/pie.xml
+    defaults: { _controller: AriiJOCBundle:Orders:pie }
+
+xml_JOC_orders_bar:
+    path:  /orders/bar.xml
+    defaults: { _controller: AriiJOCBundle:Orders:bar }
+
+xml_JOC_orders_timeline:
+    path:  /orders/timeline.xml
+    defaults: { _controller: AriiJOCBundle:Orders:timeline_xml }
+
+arii_JOC_order_log:
+    path:  /order/log
+    defaults: { _controller: AriiJOCBundle:Detail:order_log}
+
+# --------------------------------------------------------------------------
+# JOC Order
+# --------------------------------------------------------------------------
+arii_JOC_order:
+    path:  /order
+    defaults: { _controller: AriiJOCBundle:Order:index }
+
+arii_JOC_order_detail:
+    path:  /order/detail
+    defaults: { _controller: AriiJOCBundle:Order:detail }
+
+xml_JOC_order_params:
+    path:  /order/parameters.xml
+    defaults: { _controller: AriiJOCBundle:Order:params }
+
+json_JOC_orders_form:
+    path:  /orders/form.xml
+    defaults: { _controller: AriiJOCBundle:Orders:form }
+
+xml_JOC_order_form:
+    path:  /order/form.xml
+    defaults: { _controller: AriiJOCBundle:Order:form }
+
+svg_JOC_process_steps:
+    path:  /order/graph.svg
+    defaults: { _controller: AriiJOCBundle:Order:graphviz }    
+
+# --------------------------------------------------------------------------
+# JOC Chains
+# --------------------------------------------------------------------------
+arii_JOC_chains:
+    path:  /chains
+    defaults: { _controller: AriiJOCBundle:Chains:list}
+
+arii_JOC_chains_list:
+    path:  /chains
+    defaults: { _controller: AriiJOCBundle:Chains:list}
+    
+arii_JOC_chains_charts:
+    path:  /chains/charts
+    defaults: { _controller: AriiJOCBundle:Chains:charts }
+    
+xml_JOC_chains_list:
+    path:  /chains/list.xml
+    defaults: { _controller: AriiJOCBundle:Chains:list_xml }
+
+arii_JOC_chains_timeline:
+    path:  /chains/timeline
+    defaults: { _controller: AriiJOCBundle:Chains:timeline }
+    
+xml_JOC_chains_pie:
+    path:  /chains/pie.xml
+    defaults: { _controller: AriiJOCBundle:Chains:pie }
+
+xml_JOC_chains_bar:
+    path:  /chains/bar.xml
+    defaults: { _controller: AriiJOCBundle:Chains:bar }
+
+xml_JOC_chains_timeline:
+    path:  /chains/timeline.xml
+    defaults: { _controller: AriiJOCBundle:Chains:timeline_xml }
+
+xml_JOC_chains_menu:
+    path:  /chains/menu.xml
+    defaults: { _controller: AriiJOCBundle:Chains:menu }
+
+xml_JOC_chains_toolbar:
+    path:  /chains/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:Chains:toolbar }
+
+# --------------------------------------------------------------------------
+# JOC Nested
+# --------------------------------------------------------------------------
+arii_JOC_nested:
+    path:  /nested
+    defaults: { _controller: AriiJOCBundle:Nested:list}
+
+arii_JOC_nested_list:
+    path:  /nested
+    defaults: { _controller: AriiJOCBundle:Nested:list}
+    
+xml_JOC_nested_list:
+    path:  /nested/list.xml
+    defaults: { _controller: AriiJOCBundle:Nested:list_xml}
+
+arii_JOC_nested_charts:
+    path:  /chains/charts
+    defaults: { _controller: AriiJOCBundle:Nested:charts }
+    
+xml_JOC_nested_list:
+    path:  /nested/list.xml
+    defaults: { _controller: AriiJOCBundle:Nested:list_xml }
+
+arii_JOC_nested_timeline:
+    path:  /nested/timeline
+    defaults: { _controller: AriiJOCBundle:Nested:timeline }
+    
+xml_JOC_nested_pie:
+    path:  /nested/pie.xml
+    defaults: { _controller: AriiJOCBundle:Nested:pie }
+
+xml_JOC_nested_bar:
+    path:  /nested/bar.xml
+    defaults: { _controller: AriiJOCBundle:Nested:bar }
+
+xml_JOC_nested_timeline:
+    path:  /nested/timeline.xml
+    defaults: { _controller: AriiJOCBundle:Nested:timeline_xml }
+
+xml_JOC_nested_menu:
+    path:  /nested/menu.xml
+    defaults: { _controller: AriiJOCBundle:Nested:menu }
+
+xml_JOC_nested_toolbar:
+    path:  /nested/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:Nested:toolbar }
+
+# --------------------------------------------------------------------------
+# Spoolers
+# --------------------------------------------------------------------------
+arii_JOC_spoolers:
+    path:  /spoolers
+    defaults: { _controller: AriiJOCBundle:Spoolers:index }
+
+xml_JOC_spoolers_menu:
+    path:  /spoolers/menu.xml
+    defaults: { _controller: AriiJOCBundle:Spoolers:menu }
+
+arii_JOC_spoolers_list:
+    path:  /spoolers/list
+    defaults: { _controller: AriiJOCBundle:Spoolers:list }
+
+arii_JOC_spoolers_charts:
+    path:  /spoolers/charts
+    defaults: { _controller: AriiJOCBundle:Spoolers:charts }
+
+xml_JOC_spoolers_grid:
+    path:  /spoolers/grid.xml
+    defaults: { _controller: AriiJOCBundle:Spoolers:grid }
+
+xml_JOC_spoolers_toolbar:
+    path:  /spoolers/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:Spoolers:toolbar }
+
+xml_JOC_spoolers_pie:
+    path:  /spoolers/pie.xml
+    defaults: { _controller: AriiJOCBundle:Spoolers:pie }
+
+xml_JOC_spoolers_orders_bar:
+    path:  /spoolers/orders/bar.xml
+    defaults: { _controller: AriiJOCBundle:Spoolers:barOrders }
+
+xml_JOC_spoolers_jobs_bar:
+    path:  /spoolers/jobs/bar.xml
+    defaults: { _controller: AriiJOCBundle:Spoolers:barJobs }
+
+xml_JOC_spoolers_timeline:
+    path:  /spoolers/timeline.xml
+    defaults: { _controller: AriiJOCBundle:Spoolers:timeline_xml }
+
+xml_JOC_spooler_log:
+    path:  /spooler/log.xml
+    defaults: { _controller: AriiJOCBundle:Spooler:log }
+
+arii_JOC_spooler_status:
+    path:  /spooler/status
+    defaults: { _controller: AriiJOCBundle:Spooler:status }
+
+xml_JOC_spooler_delete:
+    path:  /spooler/delete
+    defaults: { _controller: AriiJOCBundle:Spooler:delete }
+
+json_JOC_spoolers_form:
+    path:  /spoolers/form.json
+    defaults: { _controller: AriiJOCBundle:Spoolers:form}
+
+
+xml_JOC_spooler_form:
+    path:  /spooler/form.xml
+    defaults: { _controller: AriiJOCBundle:Spooler:form}
+
+xml_JOC_spooler_toolbar:
+    path:  /spooler/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:Spooler:toolbar }
+    
+xml_JOC_subscribers:
+    path:  /spooler/subscribers.xml
+    defaults: { _controller: AriiJOCBundle:Spooler:subscribers }
+    
+# --------------------------------------------------------------------------
+# Process classes
+# --------------------------------------------------------------------------
+
+arii_JOC_process_classes:
+    path:  /process_classes
+    defaults: { _controller: AriiJOCBundle:ProcessClasses:index }
+
+xml_JOC_process_classes:
+    path:  /process_classes/grid.xml
+    defaults: { _controller: AriiJOCBundle:ProcessClasses:grid}
+
+
+# --------------------------------------------------------------------------
+# PAGES PRINCIPALES
+# --------------------------------------------------------------------------
+
+arii_JOC_detail_planned:
+    path:  /planned/detail
+    defaults: { _controller: AriiJOCBundle:Detail:planned}
+
+arii_JOC_planned_log:
+    path:  /planned/log
+    defaults: { _controller: AriiJOCBundle:Detail:planned_log}
+
+
+arii_JOC_detail_job:
+    path:  /job/detail
+    defaults: { _controller: AriiJOCBundle:Detail:job }
+    
+arii_JOC_job_log:
+    path:  /job/log
+    defaults: { _controller: AriiJOCBundle:Detail:job_log }
+
+arii_JOC_start_job:
+    path:  /job/start
+    defaults: { _controller: AriiJOCBundle:Cmd:startjob }
+
+# --------------------------------------------------------------------------
+# Internes
+# --------------------------------------------------------------------------
+
+arii_JOC_db_daysschedule:
+    path:  /db/daysschedule
+    defaults: { _controller: AriiJOCBundle:DB:days_schedule }
+
+arii_JOC_db_reorg:
+    path:  /db/reorg
+    defaults: { _controller: AriiJOCBundle:DB:reorg }
+
+# --------------------------------------------------------------------------
+# DHTMLX
+# --------------------------------------------------------------------------
+xml_JOC_toolbar_start_order:
+    path:  /toolbar/start_order.xml
+    defaults: { _controller: AriiJOCBundle:Toolbar:start_order }
+
+xml_JOC_toolbar_order_params:
+    path:  /toolbar/start_order_params.xml
+    defaults: { _controller: AriiJOCBundle:Toolbar:order_params }
+
+
+
+arii_JOC_form_start_job:
+    path:  /dhtmlx/start_job
+    defaults: { _controller: AriiJOCBundle:Form:start_job }
+
+arii_JOC_form_start_order:
+    path:  /dhtmlx/start_order
+    defaults: { _controller: AriiJOCBundle:Form:start_order }
+
+arii_JOC_form_add_order:
+    path:  /dhtmlx/add_order
+    defaults: { _controller: AriiJOCBundle:Form:add_order }
+
+arii_JOC_select_start_state:
+    path:  /dhtmlx/select_start_state
+    defaults: { _controller: AriiJOCBundle:Form:select_start_state }
+
+arii_JOC_select_end_state:
+    path:  /dhtmlx/select_end_state
+    defaults: { _controller: AriiJOCBundle:Form:select_end_state }
+
+
+arii_JOC_form_kill_job:
+    path:  /dhtmlx/kill_job
+    defaults: { _controller: AriiJOCBundle:Form:kill_job }
+
+arii_JOC_form_stop_job:
+    path:  /dhtmlx/stop_job
+    defaults: { _controller: AriiJOCBundle:Form:stop_job }
+
+arii_JOC_form_unstop_job:
+    path:  /dhtmlx/unstop_job
+    defaults: { _controller: AriiJOCBundle:Form:unstop_job }
+
+arii_JOC_grid_history_job:
+    path:  /dhtmlx/grid_history
+    defaults: { _controller: AriiJOCBundle:Detail:grid_history }
+
+arii_JOC_grid_history_order:
+    path:  /dhtmlx/grid_order_history
+    defaults: { _controller: AriiJOCBundle:Detail:grid_order_history }
+
+arii_JOC_chart_history_job:
+    path:  /dhtmlx/chart_history
+    defaults: { _controller: AriiJOCBundle:Detail:chart_history }
+
+arii_JOC_chart_history_order:
+    path:  /dhtmlx/chart_order_history
+    defaults: { _controller: AriiJOCBundle:Detail:chart_order_history }
+
+arii_JOC_timeline_history:
+    path:  /timeline/history
+    defaults: { _controller: AriiJOCBundle:DBGraph:timeline_history }
+
+arii_JOC_radar_history:
+    path:  /radar_chart/history
+    defaults: { _controller: AriiJOCBundle:DBGraph:radar_history }
+
+arii_JOC_bar3_history:
+    path:  /bar3_chart/history
+    defaults: { _controller: AriiJOCBundle:DBGraph:bar3_history }
+
+arii_JOC_last_history:
+    path:  /last_chart/history
+    defaults: { _controller: AriiJOCBundle:DBGraph:last_history }
+
+arii_JOC_bar_history:
+    path:  /bar_chart/history
+    defaults: { _controller: AriiJOCBundle:DBGraph:bar_history }
+
+arii_JOC_pie_orders:
+    path:  /pie_chart/orders
+    defaults: { _controller: AriiJOCBundle:DBGraph:pie_orders }
+
+arii_JOC_radar_orders:
+    path:  /radar_chart/orders
+    defaults: { _controller: AriiJOCBundle:DBGraph:radar_orders }
+
+arii_JOC_pie_orders:
+    path:  /pie_chart/orders
+    defaults: { _controller: AriiJOCBundle:DBGraph:pie_orders }
+
+arii_JOC_pie_planned:
+    path:  /pie_chart/planned
+    defaults: { _controller: AriiJOCBundle:DBGraph:pie_planned }
+
+arii_JOC_radar_planned:
+    path:  /radar_chart/planned
+    defaults: { _controller: AriiJOCBundle:DBGraph:radar_planned }
+
+arii_JOC_pie_messages:
+    path:  /pie_chart/messages
+    defaults: { _controller: AriiJOCBundle:DBGraph:pie_messages }
+
+arii_JOC_menu_history:
+    path:  /menu/history
+    defaults: { _controller: AriiJOCBundle:Menu:history }
+
+arii_JOC_menu_orders:
+    path:  /menu/orders
+    defaults: { _controller: AriiJOCBundle:Menu:orders }
+    
+arii_JOC_menu_planned:
+    path:  /menu/planned
+    defaults: { _controller: AriiJOCBundle:Menu:planned }
+    
+arii_JOC_menu_messages:
+    path:  /menu/orders
+    defaults: { _controller: AriiJOCBundle:Menu:messages }
+    
+arii_JOC_toolbar_job_list:
+    path:  /toolbar/job_list
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_job_list }
+
+arii_JOC_toolbar_refresh:
+    path:  /toolbar/refresh
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_refresh }
+    
+arii_JOC_toolbar_schedule_list:
+    path:  /toolbar/schedule_list
+    defaults: { _controller: AriiJOCBundle:Toolbar:toolbar_schedule_list }
+
+# --------------------------------------------------------------------------
+# SIMILE
+# --------------------------------------------------------------------------
+arii_JOC_simile_xml_all:
+    path:  /timeline/xml/all
+    defaults: { _controller: AriiJOCBundle:Simile:history_xml, part: '' }
+
+arii_JOC_simile_xml_history:
+    path:  /timeline/xml/history
+    defaults: { _controller: AriiJOCBundle:Simile:history_xml, part: history }
+
+arii_JOC_simile_xml_orders:
+    path:  /timeline/xml/orders
+    defaults: { _controller: AriiJOCBundle:Simile:history_xml, part: orders }
+
+arii_JOC_simile_xml_planned:
+    path:  /timeline/xml/planned
+    defaults: { _controller: AriiJOCBundle:Simile:history_xml, part: planned }
+
+arii_JOC_simile_xml_events:
+    path:  /timeline/xml/events
+    defaults: { _controller: AriiJOCBundle:Simile:history_xml, part: events }
+
+# --------------------------------------------------------------------------
+# REPORTS
+# --------------------------------------------------------------------------
+xml_JOC_reports_toolbar:
+    path:  /reports/toolbar.xml
+    defaults: { _controller: AriiJOCBundle:Reports:toolbar }
+    
+arii_JOC_report_jobs:
+    path:  /reports/jobs
+    defaults: { _controller: AriiJOCBundle:Reports:jobs}
+
+xml_JOC_report_jobs:
+    path:  /reports/jobs.xml
+    defaults: { _controller: AriiJOCBundle:Reports:report_jobs}
+    
+# ===============================================================================
+# Runtimes
+# -------------------------------------------------------------------------------
+arii_JOC_runtimes:
+    path:  /runtimes
+    defaults: { _controller: AriiJOCBundle:Runtimes:list }
+
+xml_JOC_runtimes_orders:
+    path:  /runtimes/orders.xml
+    defaults: { _controller: AriiJOCBundle:Runtimes:orders }
+
+xml_JOC_runtimes_steps:
+    path:  /runtimes/steps
+    defaults: { _controller: AriiJOCBundle:Runtimes:steps }
+
+xml_JOC_runtimes_jobs:
+    path:  /runtimes/jobs
+    defaults: { _controller: AriiJOCBundle:Runtimes:jobs }
+
+# ===============================================================================
+# Schedules
+# -------------------------------------------------------------------------------
+arii_JOC_schedules:
+    path:  /schedules
+    defaults: { _controller: AriiJOCBundle:Schedules:index }
+
+xml_JOC_schedules:
+    path:  /schedules/grid.xml
+    defaults: { _controller: AriiJOCBundle:Schedules:grid }
+
+# ===============================================================================
+# FOCUS
+# -------------------------------------------------------------------------------
+arii_Focus_get:
+    path:  /{spooler}/{port}/get
+    defaults: { _controller: AriiJOCBundle:Focus:get }
+
+arii_Focus_refresh:
+    path:  /refresh
+    defaults: { _controller: AriiJOCBundle:Focus:refresh }
+
+# ===============================================================================
+# FOCUS
+# -------------------------------------------------------------------------------
+arii_Focus_get:
+    path:  /{spooler}/{port}/get
+    defaults: { _controller: AriiJOCBundle:Focus:get }
+
+arii_Focus_refresh:
+    path:  /refresh
+    defaults: { _controller: AriiJOCBundle:Focus:refresh }
+
+# CACHE
+arii_Cache_post:
+    path:  /post
+    defaults: { _controller: AriiJOCBundle:Focus:post }
+
+arii_Cache_file:
+    path:  /file
+    defaults: { _controller: AriiJOCBundle:Focus:file }
+
+arii_Cache_get:
+    path:  /{spooler}/{port}/get
+    defaults: { _controller: AriiJOCBundle:Focus:get }
+
+arii_Cache_test:
+    path:  /{spooler}/{port}/test
+    defaults: { _controller: AriiJOCBundle:Focus:test }
+
+# --------------------------------------------------------------------------
+# REQUESTS
+# --------------------------------------------------------------------------
+arii_JOC_requests:
+    path:  /requests
+    defaults: { _controller: AriiJOCBundle:Requests:index }
+
+xml_JOC_requests_list:
+    path:  /requests/list.xml
+    defaults: { _controller: AriiJOCBundle:Requests:list }
+
+arii_JOC_requests_result:
+    path:  /requests/result.html
+    defaults: { _controller: AriiJOCBundle:Requests:result }
+
+arii_JOC_requests_summary:
+    path:  /requests/summary.html
+    defaults: { _controller: AriiJOCBundle:Requests:summary }
+

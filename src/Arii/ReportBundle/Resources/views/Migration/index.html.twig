@@ -1,0 +1,39 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+dhtmlxEvent(window,"load",function(){         
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
+    globalLayout.cells("a").setWidth(345);
+    globalLayout.cells("b").hideHeader();
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    mySidebar = globalLayout.cells("a").attachSidebar({
+        icons_path: "{{ asset('/bundles/ariicore/images/sidebar/') }}",
+        width: 410,
+        items: [
+            {id: 'job', text: "{{ "Jobs" | trans }}", icon: "job.png"},
+            {id: 'run', text: "{{ "Runs" | trans }}", icon: "run.png"}
+        ]
+    });
+    mySidebar.attachEvent("onSelect", function(id, value){
+        globalLayout.cells("b").attachURL('{{ url('html_Report_import') }}?get='+id);
+    });
+    
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("b").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}');
+
+});
+
+function GlobalRefresh() {};
+</script>
+{% endblock %}

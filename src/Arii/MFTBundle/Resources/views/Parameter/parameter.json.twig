@@ -1,0 +1,281 @@
+[
+    {   
+        type:"settings",
+        position:   "label-left", 
+        labelAlign: "right", 
+        labelWidth: 100,
+        inputWidth: 300,
+        offsetLeft: 10 
+    },
+    {    
+        type:  "fieldset",
+        name:  "operation",
+        label: "{{ "Operation"| trans}}",
+        width: 500,
+        list: [
+            {   type:"input",
+                name: "NAME", 
+                label: "{{ "Name" | trans}}",
+                required: true
+            },
+            {   type:"input",
+                name: "TITLE", 
+                label: "{{ "Title" | trans}}"
+            },
+            {   type:"input",
+                name: "DESCRIPTION", 
+                label: "{{ "Description" | trans}}",
+                rows: 4
+            }
+        ]
+    },
+    {    type:"fieldset",
+         name: "transfer",
+         label:"{{ "Transfer mode"| trans}}",
+         width: 500,
+         list: [
+                {   type:"checkbox", 
+                    name: "TRANSACTIONAL", 
+                    value: 1,
+                    label:"{{ "Transactional" | trans}}",
+                    note: { text: "Les fichiers sont envoyés par lot, en cas de problème de transfert tout le lot est annulé." },
+                    list:[ 
+                            {   type:"input",    
+                                name: "ATOMIC_PREFIX", 
+                                label:"{{ "Prefix" | trans}}"
+                            },
+                            {   type:"input",    
+                                name: "ATOMIC_SUFFIX", 
+                                label:"{{ "Suffix" | trans}}"
+                            }
+                        ]
+                },
+                {   type:"checkbox", 
+                    name: "CONCURRENT_TRANSFER", 
+                    value: false,
+                    label:"{{ "Concurrent transfer" | trans}}",
+                    note: { text: "Les fichiers sont envoyés en parallèle." },
+                    list:[ 
+                            {   type:"input",    
+                                name: "MAX_CONCURRENT_TRANSFERS", 
+                                label:"{{ "Max. transfers" | trans}}"
+                            }
+                        ]
+                },
+                {   
+                    type:"checkbox", 
+                    name: "PRE_COMMAND", 
+                    value: false,
+                    label:"{{ "Pre-command" | trans}}",
+                    note: { text: "Commande avant transfert." },
+                    list:[ 
+                        {   type:"input",    
+                            name: "PRE_COMMAND_STR", 
+                            label:"{{ "Command" | trans}}", 
+                            rows: 2
+                        }
+                    ]
+                },
+                {   
+                    type:"checkbox", 
+                    name: "POST_COMMAND", 
+                    value: false,
+                    label:"{{ "Post-command" | trans}}",
+                    note: { text: "Commande après transfert." },
+                    list:[ 
+                        {   type:"input",    
+                            name: "POST_COMMAND_STR", 
+                            label:"{{ "Command" | trans}}", 
+                            rows: 2
+                        }
+                    ]
+                }
+         ]
+    },
+    {type:"newcolumn"  },    
+    {    
+        type:  "fieldset",
+        name:  "source",
+        label: "{{ "Source"| trans}}",
+        width: 500,
+        list: [
+            {   
+                type:"checkbox", 
+                name: "POLLING", 
+                value: false,
+                label:"{{ "Polling" | trans}}",
+                note: { text: "Tentatives de récupération." },
+                list:[ 
+                    {   type:"input",    
+                        name: "POLL_INTERVAL", 
+                        label:"{{ "Interval" | trans}}"
+                    },
+                    {   type:"input",    
+                        name: "POLL_TIMEOUT", 
+                        label:"{{ "Timeout" | trans}}"
+                    }
+                ]
+            },
+            {   type:"checkbox",
+                name: "RECURSIVE", 
+                value: false,
+                label: "{{ "Recursive" | trans}}",
+                note: { text: "Prend en charge les fichiers de l'arborescence." }
+            },
+            {   type:"checkbox",
+                name: "ZERO_BYTE_TRANSFER", 
+                value: true,
+                label: "{{ "Empty files transfer" | trans}}",
+                note: { text: "Copie les fichiers même si ils sont vides." }
+            },
+            {   type:"checkbox",
+                name: "FORCE_FILES", 
+                value: true,
+                label: "{{ "Error if no file" | trans}}",
+                note: { text: "Renvoie une erreur si aucun fichier n'est présent à la source." }
+            },
+            {   type:"checkbox", 
+                name: "COMPRESS_FILES", 
+                value: false,
+                label: "{{ "Compress files" | trans}}",
+                note: { text: "Les fichiers sont compressés avant transfert." },
+                list: [ 
+                        {   type:"input",    
+                            name: "COMPRESSED_FILE_EXTENSION", 
+                            value: ".gz",
+                            label:"{{ "File extension" | trans}}"
+                        }
+                ]
+            },
+           {   
+                type:"checkbox", 
+                name: "SOURCE_REPLACE", 
+                value: false,
+                label:"{{ "Rename" | trans}}",
+                note: { text: "Renommage des fichiers source." },
+                list:[ 
+                    {   type:"input",    
+                        name: "SOURCE_REPLACING", 
+                        label:"{{ "Replacing" | trans}}"
+                    },
+                    {   type:"input",    
+                        name: "SOURCE_REPLACEMENT", 
+                        label:"{{ "Replacement" | trans}}"
+                    }
+                ]
+            },
+            {   type:"checkbox",
+                name: "REMOVE_FILES", 
+                value: false,
+                label: "{{ "Remove files" | trans}}",
+                note: { text: "Supprime les fichiers après le transfert." }
+            }
+        ]
+    },
+    {
+        type:"fieldset",
+        name: "target",
+        label:"{{ "Target"| trans}}",
+        width: 500,
+        list: [
+           {   
+                type:"checkbox", 
+                name: "TARGET_REPLACE", 
+                value: false,
+                label:"{{ "Rename" | trans}}",
+                note: { text: "Renommage des fichiers source." },
+                list:[ 
+                    {   type:"input",    
+                        name: "TARGET_REPLACING", 
+                        label:"{{ "Replacing" | trans}}"
+                    },
+                    {   type:"input",    
+                        name: "TARGET_REPLACEMENT", 
+                        label:"{{ "Replacement" | trans}}"
+                    }
+                ]
+            },
+            {
+                type:  "select",
+                name:  "FILE_EXIST",
+                label: "{{ "If files exist"| trans}}",
+                options: [
+                    {   text: "{{ "Do nothing" | trans }}", 
+                        name: "DO_NOTHING",
+                        value: "DO_NOTHING"
+                    },
+                    {   text: "{{ "Append files" | trans }}", 
+                        name: "APPEND_FILES",
+                        value: "APPEND_FILES"
+                    },
+                    {   text: "{{ "Overwrite files" | trans }}", 
+                        name: "OVERWRITE_FILES",
+                        value: "OVERWRITE_FILES"
+                    }
+                ]
+            },
+            {   
+                type:"checkbox", 
+                name: "MAIL_ON_SUCCESS", 
+                value: false,
+                label:"{{ "Mail on success" | trans}}",
+                list:[ 
+                    {   type:"input",    
+                        name: "MAIL_ON_SUCCESS_TO", 
+                        label:"{{ "Mail to" | trans}}"
+                    },
+                    {   type:"input",    
+                        name: "MAIL_ON_SUCCESS_SUBJECT", 
+                        label:"{{ "Mail subject" | trans}}"
+                    }
+                ]
+            },
+            {   
+                type:"checkbox", 
+                name: "MAIL_ON_ERROR", 
+                value: false,
+                label:"{{ "Mail on error" | trans}}",
+                list:[ 
+                    {   type:"input",    
+                        name: "MAIL_ON_ERROR_TO", 
+                        label:"{{ "Mail to" | trans}}"
+                    },
+                    {   type:"input",    
+                        name: "MAIL_ON_ERROR_SUBJECT", 
+                        label:"{{ "Mail subject" | trans}}"
+                    }
+                ]
+            }
+        ]
+    },
+/*
+    {
+        type:"fieldset",
+        name: "file_arrival",
+        label:"{{ "File arrival"| trans}}",
+        width: 500,
+        value: false,
+        list: [
+            {   type:"checkbox", 
+                name: "CHECK_STEADY_STATE", 
+                value: false,
+                label: "{{ "Check steady state" | trans}}",
+                note: { text: "Les fichiers sont compressés avant transfert." },
+                list: [        
+                    {   type:"input",    
+                        name: "CHECK_STEADY_STATE_INTERVAL",
+                        value: 1,
+                        label:"{{ "Interval" | trans}}"
+                    },
+                    {   type:"input",    
+                        name: "CHECK_STEADY_STATE_COUNT", 
+                        value: 30,
+                        label:"{{ "Count" | trans}}"
+                    }
+                ]
+            }
+        ]
+    },
+*/
+    {type:"hidden",    name: "ID" }
+]

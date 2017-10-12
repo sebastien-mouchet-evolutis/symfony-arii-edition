@@ -1,0 +1,100 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('bundles/ariiats/js/jquery.tablesorter.min.js') }}"></script>
+<script src="{{ asset('dhtmlx/codebase/dhtmlx.js') }}" type="text/javascript"></script>
+{% endblock %} 
+{% block body %}
+<body>
+<div class="container-fluid">
+<div class="jumbotron">
+<img style="float: right;" src="{{ asset('logo.png') }}"/>
+  <h1>{{ result.title | trans }}</h1>
+  <p>{{ result.description | trans }}</p>
+{% if infos.status == 1 %}   
+    <div class="alert alert-info" role="alert">
+        <p># {{ infos.results }}</p>
+        <p>{{ infos.runtime }}s</p>
+    </div>
+{% endif %}
+{% if infos.status == 2 %}   
+    <div class="alert alert-success" role="alert">
+        <p># {{ infos.results }}</p>
+        <p>{{ infos.runtime }}s</p>
+        {% if infos.min_warning != infos.max_warning %}
+        <p>{{ infos.min_warning }} &lt;= {{ infos.results }} &lt;= {{ infos.max_warning }}]</p>
+        {% endif %}
+    </div>
+{% endif %}
+{% if infos.status == 3 %}   
+    <div class="alert alert-warning" role="alert">
+        <p># {{ infos.results }}</p>
+        {% if infos.min_warning != infos.max_warning %}
+        <p>{{ infos.min_warning }} &lt; {{ infos.results }} &lt; {{ infos.max_warning }}]</p>
+        {% endif %}
+        <p>{{ infos.runtime }}s</p>
+    </div>
+{% endif %}
+{% if infos.status == 4 %}   
+    <div class="alert alert-danger" role="alert">
+        <p># {{ infos.results }}</p>
+        <p>
+        {% if infos.results < infos.min_success %}&lt; {{ infos.min_success }}{% endif %}
+        {% if infos.results > infos.max_success %}&gt; {{ infos.max_success }}{% endif %}
+        </p>
+        <p>{{ infos.runtime }}s</p>
+    </div>
+{% endif %}
+</div>
+<div class="table-responsive">
+{% if result.count > 0 %}
+  <table id="myTable" class="table tablesorter">
+      <thead>
+      <tr><td>#</td>
+    {% for cell in result.columns %}
+        <th>{{ cell | trans }}</th>
+    {% endfor %}
+    </tr>
+      </thead>
+      <tbody>
+    {% for id,line in result.lines %}
+        {% if line.status is defined %}
+        <tr class="{% if line.status == 'SUCCESS' %}success{% endif %}{% if line.status == 'RUNNING' %}warning{% endif %}{% if line.status == 'FAILURE' %}danger{% endif %}{% if line.status == 'ON_ICE' %}info{% endif %}{% if line.status == 'ON_HOLD' %}info{% endif %}">
+        {% else %}
+        <tr>
+        {% endif %}        
+        <th>{{ id }}</th>
+        {% for cell in line.cells %}  
+            <td>{{ cell | raw }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+      </tbody>
+  </table>
+{% else %}
+<div class="alert alert-success" role="alert">
+{{ "No result" | trans }}
+</div>
+{% endif %}
+{% if result.sql.oracle is defined %}
+    <h2>{{ "SQL request" | trans }}</h2>
+    <pre>{{ result.sql.oracle }} </pre>
+{% endif %}
+</div>
+<small><i>{{ infos.request }}</i></small>
+</div>
+<script>
+$(document).ready(function(){
+$(function(){
+$("#myTable").tablesorter();
+});
+});
+</script>
+</body>
+{% endblock %}

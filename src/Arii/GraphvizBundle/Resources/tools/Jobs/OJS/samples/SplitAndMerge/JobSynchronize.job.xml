@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<job order="yes"
+     stop_on_error="no">
+    <settings>
+        <log_level><![CDATA[debug9]]></log_level>
+    </settings>
+    <!--
+    <params>
+        <param name="ChainA_required_orders"
+               value="2"/>
+
+
+        <param name="ChainB_required_orders"
+               value="3"/>
+    </params>
+    -->
+    <script java_class="sos.scheduler.job.JobSchedulerSynchronizeJobChains"
+            language="java"/>
+    <delay_order_after_setback setback_count="1"
+                               is_maximum="no"
+                               delay="00:02"/>
+    <delay_order_after_setback setback_count="200"
+                               is_maximum="yes"
+                               delay="00:02"/>
+    <run_time/>
+</job>

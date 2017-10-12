@@ -1,0 +1,56 @@
+{% extends "AriiCoreBundle::vis.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+var nodes = null;
+var edges = null;
+var network = null;
+var dir = "{{ asset('/bundles/ariicore/images/wa/') }}";
+        
+function draw() {
+    // Create a data table with nodes.
+    nodes = [ {{ NODES | raw }} ];
+    // Create a data table with links.
+    edges = [ {{ EDGES | raw }} ];
+
+    // legend
+    var container = document.getElementById('mynetwork');
+    var data = {
+      nodes: nodes,
+      edges: edges
+    };
+    var options = {
+      nodes: {
+        scaling: {
+          min: 128,
+          max: 256
+        },
+        shape:'dot',
+        size: 16,
+        color: {
+          background: '#ff0000',
+          border: 'red',
+          highlight: {
+            background: '#07f968',
+            border: '#3c3c3c'
+          }
+        },
+        borderWidth: 2,
+        borderWidthSelected: 2      
+      },
+      edges: {
+        color: "#AAA",
+        smooth: false,
+        arrows: {to : true }
+      },
+      physics:{
+        barnesHut:{gravitationalConstant:-10000},
+        stabilization: {iterations:2500}
+      },
+    };
+    network = new vis.Network(container, data, options);
+  }
+</script>
+<body onload="draw()">    
+<div id="mynetwork"></div>
+</body>
+{% endblock body %}

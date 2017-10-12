@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<menu>
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('IS_AUTHENTICATED_FULLY') %}                
+	<item id="menu" img="house.png">
+            {% for menu in MENU %}
+                <item id="{{ menu.mod }}" text="{{ menu.title | trans }}" img="{{ menu.mod }}.png">
+                <href><![CDATA[{{ menu.url }}]]></href>
+                </item>
+            {% endfor %}
+	</item>
+{% else %}
+	<item id="login" img="lock.png"/>
+{% endif %}
+	<item id="help" img="help.png">
+            <item id="sos" img="sosp.gif" text="{{ "Contact" | trans }}">
+                <href><![CDATA[http://sos-paris.com]]></href>
+            </item>
+            <item id="wiki" img="world.png" text="{{ "Wiki" | trans }}">
+                <href><![CDATA[http://wiki.sos-paris.com/index.php/Accueil]]></href>
+            </item>
+            <item type="separator"/>        
+            <item id="bug" img="bug.png" text="{{ "Issue" | trans }}">
+                <href><![CDATA[https://github.com/AriiPortal/{{ BUNDLE.mod }}Bundle/issues]]></href>
+            </item>
+            <item id="github" img="github.png" text="{{ "Code" | trans }}">
+                <href><![CDATA[https://github.com/AriiPortal/{{ BUNDLE.mod }}Bundle]]></href>
+            </item>
+            <item id="readme" img="{{ BUNDLE.img }}.png" text="{{ "About..." | trans }}">
+                <href><![CDATA[{{ BUNDLE.url }}]]></href>
+            </item>
+        </item>        
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}                
+	<item type="separator"/>
+{% if is_granted('ROLE_USER') %}
+	<item id="topdis" text="{{ app.user.username }}" img="role_operator.png">
+{% endif %}
+        <item id="my_account" text="{{ "My account" | trans }}"  img="profile.png">
+        <href><![CDATA[{{ path('arii_my_account') }}]]></href>
+        </item>
+        <item id="filtre" text="{{ 'Filters'|trans }}"  img="zoom.png">
+        <href><![CDATA[{{ path('arii_filters') }}]]></href>
+        </item>
+        <item id="message" text="{{ 'Messages'|trans }}"  img="email.png">
+        <href><![CDATA[{{ path('arii_messages') }}]]></href>
+        </item>
+        <item id="logout" text="{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}"  img="logout.png">
+        <href><![CDATA[{{ path('fos_user_security_logout') }}]]></href>
+        </item>
+{% if is_granted('ROLE_USER') %}
+        </item>
+{% else %}
+	<item id="topdis" text="{{ app.user.username }}" img="role_operator.png"/>        
+{% endif %}
+	<item id="messages" text="0" img="email.png"/>        
+{% endif %}
+    <item type="separator"/>
+    <item id="lang" img="{{ app.request.locale }}.png">
+            {% for lang,info in LANG %}
+               <item id="{{ lang }}" text="{{ info.string }}" img="{{ lang }}.png">
+                <href>{{ info.url }}</href>
+               </item>    
+            {% endfor %}
+    </item>
+</menu>

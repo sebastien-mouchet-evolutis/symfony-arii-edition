@@ -1,0 +1,161 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    
+framework:
+    #esi:             ~
+    translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        # handler_id set to null will use default session handler from php.ini
+        handler_id:  ~
+        # Sauvegarde les sessions dans la DB
+        #handler_id: session.handler.pdo
+        
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+#    exception_controller:  CoreBundle:Exception:showException
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                driver:   "%database_driver%"
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database_name%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8
+            local:
+                driver:   pdo_mysql
+                host:     127.0.0.1
+                port:     3306
+                dbname:   arii
+                user:     root
+                password: null
+                charset:  UTF8
+            jobscheduler:
+                driver:   "%database2_driver%"
+                host:     "%database2_host%"
+                port:     "%database2_port%"
+                dbname:   "%database2_name%"
+                user:     "%database2_user%"
+                password: "%database2_password%"
+                charset:  UTF8
+            autosys:
+                driver:   "%database3_driver%"
+                host:     "%database3_host%"
+                port:     "%database3_port%"
+                dbname:   "%database3_name%"
+                user:     "%database3_user%"
+                password: "%database3_password%"
+                charset:  UTF8                
+                
+        # if using pdo_sqlite as your database driver, add the path in parameters.yml
+        # e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        # path:     "%database_path%"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                auto_mapping: true        
+                dql:
+                    datetime_functions:
+                        Hour:  Arii\CoreBundle\DQL\%database_driver%\Hour
+                        Date:  Arii\CoreBundle\DQL\%database_driver%\Date
+                        Trunc: Arii\CoreBundle\DQL\Trunc
+                        Month: Arii\CoreBundle\DQL\Month
+                        Year:  Arii\CoreBundle\DQL\Year
+                        Cast:  Arii\CoreBundle\DQL\Cast
+            jobscheduler:
+                connection: jobscheduler
+                dql:
+                    datetime_functions:
+                        Hour:  Arii\CoreBundle\DQL\%database2_driver%\Hour
+                        Date:  Arii\CoreBundle\DQL\%database2_driver%\Date
+                        Trunc: Arii\CoreBundle\DQL\Trunc
+                        Month: Arii\CoreBundle\DQL\Month
+                        Year:  Arii\CoreBundle\DQL\Year
+                        Cast:  Arii\CoreBundle\DQL\Cast
+            autosys:
+                connection: autosys
+                dql:
+                    datetime_functions:
+                        Hour:  Arii\CoreBundle\DQL\%database3_driver%\Hour
+                        Date:  Arii\CoreBundle\DQL\%database3_driver%\Date
+                        Trunc: Arii\CoreBundle\DQL\Trunc
+                        Month: Arii\CoreBundle\DQL\Month
+                        Year:  Arii\CoreBundle\DQL\Year
+                        Cast:  Arii\CoreBundle\DQL\Cast
+
+# Swiftmailer Configuration        auto_generate_proxy_classes: "%kernel.debug%"
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
+
+# Configuration FOSUserBundle
+fos_user:
+    db_driver:     orm                        # Le type de BDD à utiliser, nous utilisons l'ORM Doctrine depuis le début
+    firewall_name: main                       # Le nom du firewall duquel on utilisera ces utilisateurs
+    user_class:    Arii\UserBundle\Entity\User # La classe de l'entité User que nous venons de définir
+    group:
+        group_class: Arii\UserBundle\Entity\Group
+        
+parameters:
+    pdo.db_options:
+        db_table:    ARII_SESSION
+        db_id_col:   session_id
+        db_data_col: session_value
+        db_time_col: session_time
+
+services:
+    # Oracle
+#    oracle.listener:
+#        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
+#        tags:
+#            - { name: doctrine.event_listener, event: postConnect }
+    
+    pdo:
+        class: PDO
+        arguments:
+            - "mysql:host=%database_host%;port=%database_port%;dbname=%database_name%"
+            - '%database_user%'
+            - '%database_password%'
+            
+        calls:
+            - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION        
+
+    fos_user.doctrine_registry:
+        alias: doctrine
+
+# Session en base de donnees
+#    session.handler.pdo:
+#        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+#        arguments: [@pdo, %pdo.db_options%]

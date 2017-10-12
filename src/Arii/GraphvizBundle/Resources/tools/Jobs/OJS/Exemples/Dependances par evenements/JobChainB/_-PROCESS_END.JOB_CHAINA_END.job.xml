@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job  order="yes" stop_on_error="no" tasks="1">
+    <description >
+        <include  file="jobs/JobSchedulerEventJob.xml"/>
+    </description>
+
+    <params >
+        <param  name="action" value="remove"/>
+
+        <param  name="event_class" value="PROCESS_END"/>
+
+        <param  name="event_id" value="JOB_CHAINA_END"/>
+    </params>
+
+    <script  language="java" java_class="sos.scheduler.job.JobSchedulerEventJob"/>
+
+    <run_time />
+</job>

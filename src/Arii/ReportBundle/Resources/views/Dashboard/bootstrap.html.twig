@@ -1,0 +1,584 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ asset('dhtmlx/skins/terrace/dhtmlx.css') }}" />
+<script src="{{ asset('dhtmlx/codebase/dhtmlx.js') }}" type="text/javascript"></script>    
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+{% endblock %} 
+{% block body %}
+<style>
+body {
+  background: rgb(204,204,204); 
+}
+.scale {
+    font-size: 8px;
+}
+
+page {
+  background: white;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+}
+
+page[size="A4"] {  
+  width: 21cm;
+  height: 59.4cm; 
+}
+page[size="A4"][layout="portrait"] {
+  width: 29.7cm;
+  height: 42cm;  
+}
+page[size="A3"] {
+  width: 29.7cm;
+  height: 42cm;
+}
+page[size="A3"][layout="portrait"] {
+  width: 42cm;
+  height: 29.7cm;  
+}
+page[size="A5"] {
+  width: 14.8cm;
+  height: 21cm;
+}
+page[size="A5"][layout="portrait"] {
+  width: 21cm;
+  height: 14.8cm;  
+}
+@media print {
+  body, page {
+    margin: 0;
+    box-shadow: 0;
+  }
+}    
+.dashboard {
+    width: 20cm;
+}
+.title {
+    width: 15cm;
+}
+.summary {
+    width: 5cm;
+}
+.dhx_chart {
+    font-family: sans-serif;
+}
+</style>    
+<body>
+<page size="A4"> 
+<div class="container">
+<script language="javascript">
+dhtmlxEvent(window,"load",function(){   
+
+    jobAppsChart =  new dhtmlXChart( {
+        container:"jobAppsChart",
+        view:"barH",
+        padding: {
+            left: 200
+        },
+        value: "#jobs#",
+        label: '',
+        tooltip: "#application#: #jobs#",
+        gradient:true,
+        border:false,
+        shadow: 0,
+        xAxis:{
+            lines: false,
+            template: '',
+            color: 'transparent' 
+        },
+        yAxis:{
+            lines: false,
+            template: function (obj) { 
+                if (obj.application == '{{ application }}' )
+                    return '<b><font color="darkgreen">'+obj.application+'</font></b> ['+obj.jobs+']';
+                return obj.application+' ['+obj.jobs+']';
+            },
+            color: '#BBB'
+        }
+    });
+    
+    jobNbChart =   new dhtmlXChart({
+        container:"jobNbChart",
+        view: "bar",
+        value:"#jobs#",
+        color:"#00cccc",
+        label:"#jobs#",
+        seriesPadding: 0, 
+        seriesMargin: 0,
+        gradient:true,
+        border:false,  
+        width: 40,        
+        yAxis:{
+            lines: false,            
+            template: '',
+            color: '#BBB'
+        },
+        xAxis:{
+            lines: false,
+            template: function (obj) { return obj.mois.substr(0,3) },
+            title: "",
+                margin: { 
+                    left: -20
+                },
+            color: '#BBB'
+        },
+        legend:{
+                values:[{text:"{{ "Nombre de traitements statiques" | trans }}",color:"#00cccc"}],
+                valign:"top",
+                align:"left",
+                layout:"x"
+        }
+    });
+
+/*
+    jobADChart =   new dhtmlXChart({
+        container:"jobADChart",
+        view:  "line",
+        value: function (obj) { return obj.delta },
+        item: {
+            color:"darkgreen",
+            borderColor:"#ffffff",
+            width:5
+        },
+        line: {
+            color:"#00ff00",
+            width:3
+        },
+        label: function (obj) {
+            if (obj.delta==0) return;
+            
+            if (obj.delta>0) 
+                return ' <p style="color: darkgreen;">+'+obj.delta+'</p>';
+            else 
+                return '<p style="color: red;">'+obj.delta+'</p>';
+        },
+        color: "#ff0000",
+        alpha: 0.6,
+        yAxis:{
+            lines:false,
+            template: '',
+            color: '#BBB'                
+        },
+        xAxis:{
+            lines:false,
+            template: function (obj) { return obj.mois.substr(0,3) },
+            title:  "",
+            margin: { 
+                left: 200
+            },
+            color: '#BBB'                
+        },
+        legend:{
+                values:[{text:"{{ "Evolution du nombre de traitements" | trans }}",color:"#00FF00"}],
+                valign:"top",
+                align:"left",
+                width:100,
+                layout:"x"
+        }
+    });
+*/
+    runExecutionsChart =  new dhtmlXChart({
+        container: "runExecutionsChart",
+        view:"barH",
+        padding: {
+            left:200
+        },
+        value: "#executions#",
+        label: '',
+        tooltip: "#application#: #executions#",
+        gradient:true,
+        border: false,
+        xAxis:{
+            lines: false,
+            template: '',
+            color: '#BBB'                            
+        },
+        yAxis:{
+            lines: false,
+            template: function (obj) { 
+                if (obj.application == '{{ application }}' )
+                    return '<b><font color="darkgreen">'+obj.application+'</font></b> ['+obj.executions+']';
+                return obj.application+' ['+obj.executions+']';
+            },
+            width: 200,
+            color: '#BBB'                            
+        }
+    });
+
+    runAlarmsChart =  new dhtmlXChart({
+        container: "runAlarmsChart",
+        view:"barH",
+        padding: {
+            left:200
+        },
+        value: "#alarms#",
+        label: '',
+        tooltip: "#application#: #alarms#",
+        gradient:true,
+        border: false,
+        xAxis: {
+            lines: false,
+            template: '',
+            color: '#BBB'                            
+        },
+        yAxis: {
+            lines: false,
+            template: function (obj) { 
+                if (obj.application == '{{ application }}' )
+                    return '<b><font color="darkgreen">'+obj.application+'</font></b> ['+obj.alarms+']';
+                return obj.application+' ['+obj.alarms+']';
+            },
+            width: 200,
+            color: '#BBB'                            
+        }
+    });
+
+    runExecChart =  new dhtmlXChart({
+        container: "runExecChart",
+        view: "bar",
+        value:"#executions#",
+        color:"#00cccc",
+        label:"#executions#",
+        seriesPadding: 0, 
+        seriesMargin: 0,
+        gradient:true,
+        border:false,    
+        width: 40,
+        yAxis:{
+            lines: false,
+            color: '#BBB' ,
+            template: ''
+        },
+        xAxis:{
+            lines: false,
+            template: function (obj) { return obj.mois.substr(0,3) },
+            title: "",
+            margin: { 
+                left: 200
+            },
+            color: '#BBB'                                            
+        },
+        legend:{
+                values:[{text:"{{ "Nombre d'exécutions" | trans }}",color:"#00cccc"}],
+                valign:"top",
+                align:"left",
+                width:140,
+                layout:"x"
+        }
+    });    
+/*    
+    runDetailChart =  new dhtmlXChart({
+        container: "runDetailChart",
+        view:  "line",
+        value: function (obj) { 
+            return obj.alarms;
+        },
+        color: "#ff0000",
+        gradient: true,
+        item: {
+            color:"red",
+            borderColor:"red",
+            width:5
+        },
+        line: {
+            color: "red",
+            width:1  
+        },
+        label: function (obj) {
+            str='';
+            if (obj.alarms>0) {
+                str += '<font color="red"><b>'+obj.alarms+'</b></font>';
+                if (obj.acks>0)
+                    str += '<p style="background-color: darkgreen;color: #00FF00"><b>'+obj.acks+'</b></p>';
+            }
+            return str;
+        },
+        yAxis:{
+            lines: false,            
+            template: '',
+            color: '#BBB'                                                    
+        },
+        xAxis:{
+            lines: false,
+            template: function (obj) { return obj.mois.substr(0,3) },
+            title: "",
+            margin: { 
+                left: 200
+            },
+            color: '#BBB'                                                      
+        },
+        legend:{
+                values:[{text:"{{ "Nombre de traitements en erreur" | trans }}",color:"#FF0000"},{text:"{{ "Nombre de Jira automatiquement créés" | trans }}",color:"#00FF00"}],
+                valign:"top",
+                align:"left",
+                width:100,
+                layout:"x"
+        }
+    });
+    runDetailChart.addSeries({
+        view:  "area",
+        value: function (obj) { return obj.alarms },
+        color: "#FF0000",
+        alpha: 0.3
+    });
+    runDetailChart.addSeries({
+        view:  "line",
+        value: function (obj) { return obj.acks },
+        label: function (obj) {
+            str='';
+            if (obj.alarms>0) {
+                str += '<font color="red"><b>'+obj.alarms+'</b></font>';
+                if (obj.acks>0)
+                    str += '<p style="background-color: darkgreen;color: #00FF00"><b>'+obj.acks+'</b></p>';
+            }
+            return str;
+        },        
+        item: {
+            color: "#00FF00",
+            borderColor: "#00FF00",
+            width:5
+        },
+        line: {
+            color: "green",
+            width:3
+        },
+        label: '',
+        color: "#00FF00"
+    });
+*/
+    runDetailChart =  new dhtmlXChart({
+        container: "runDetailChart",
+        view:  "bar",
+        value: "#acks#",
+        label:"#acks#",
+        color:"#00cccc",        
+        seriesPadding: 0, 
+        seriesMargin: 0,
+        gradient:true,
+        border:false,  
+        width: 40,        
+        yAxis:{
+            lines: false,            
+            template: '',
+            color: '#BBB'                                                    
+        },
+        xAxis:{
+            lines: false,
+            template: function (obj) { return obj.mois.substr(0,3) },
+            title: "",
+            margin: { 
+                left: 200
+            },
+            color: '#BBB'                                                      
+        },
+        legend:{
+                values:[{text:"{{ "Nombre de Jira automatiquement créés" | trans }}",color:"#00cccc"}],
+                valign:"top",
+                align:"left",
+                width:140,
+                layout:"x"
+        }
+    });
+   
+    loaded = false;
+    jobAppsChart.load( '{{ url('xml_Report_jobs_applications_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {
+        jobNbChart.load( '{{ url('xml_Report_jobs_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {
+//            jobADChart.load( '{ { url('xml_Report_jobs_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {
+                runExecutionsChart.load( '{{ url('xml_Report_runs_executions_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {
+                    runExecChart.load( '{{ url('xml_Report_runs_status_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}' , function() {
+                        runAlarmsChart.load( '{{ url('xml_Report_runs_alarms_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {
+                            runDetailChart.load( '{{ url('xml_Report_runs_status_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}' , function() {
+                                loaded = true;
+                            });
+                        });
+                    });   
+                });
+//            });
+        });
+    });
+});
+</script>
+<table class="dashboard">
+    <tr align="center">
+        <td class="title" colspan="3" >
+            <h1><span class="label label-default">{{ "Workload Automation Dashboard" | trans }}</span></h1>
+        </td>
+        <td class="summary">
+            <div class="alert alert-warning" role="alert">
+                <b>{{ application }}</b><br/>       
+                <i>{{ environment }}</i><br/>
+                <b>{{ month_str }} {{ year }}</b>
+            </div>
+        </td>
+    </tr>
+  {% if header==1 %}
+    <tr align="center">
+    <td>
+        <button class="btn btn-primary" type="button">{{ "Jobs" | trans }} <span class="badge">{{ jobs }}</span></button>
+    </td>
+    <td>
+        <button class="btn btn-primary" type="button">{{ "Executions" | trans }} <span class="badge">{{ runs }}</span></button>
+    </td>
+    <td>
+        <button class="btn btn-primary" type="button">{{ "Jira" | trans }} <span class="badge">{{ acks }}</span></button>
+    </td>
+    <td rowspan="3" width="25%">
+        <div class="alert alert-success" role="alert">
+            <img src="{{ asset('logo.png') }}"/>
+            <br/><b><i>Batch & Processing</i></b>
+        </div>    
+    </td>
+    </tr>  
+    <tr align="center">
+        <td>{% if jobs_delta==0 %}<img src="{{ asset('/bundles/ariireport/images/dashboard/accept.png') }}"/>
+            {% elseif jobs_delta>0 %}<img src="{{ asset('/bundles/ariireport/images/dashboard/add.png') }}"/>
+            {% else %}<img src="{{ asset('/bundles/ariireport/images/dashboard/delete.png') }}"/>
+            {% endif %}
+        </td>
+        <td>{% if runs_delta==0 %}<img src="{{ asset('/bundles/ariireport/images/dashboard/accept.png') }}"/>
+            {% elseif runs_delta>0 %}<img src="{{ asset('/bundles/ariireport/images/dashboard/chart_up.png') }}"/>
+            {% else %}<img src="{{ asset('/bundles/ariireport/images/dashboard/chart_down.png') }}"/>
+            {% endif %}
+        </td>
+        <td><img src="{{ asset('/bundles/ariireport/images/dashboard') }}/{{ note }}.png"/></td>
+    </tr>
+    <tr align="center">
+        <td><h4>
+        {% if jobs_delta>0 %}<span class="label label-success">+{{ jobs_delta }}</span>
+        {% elseif jobs_delta<0 %}<span class="label label-warning">{{ jobs_delta }}</span>
+        {% endif %}
+        </h4>
+        </td>
+        <td><h4>
+        {% if runs_delta>0 %}<span class="label label-success">+{{ runs_delta }}</span>
+        {% elseif runs_delta<0 %}<span class="label label-warning">{{ runs_delta }}</span>
+        {% endif %}
+        </h4>
+        </td>
+        <td><h4>
+        {% if acks_delta>0 %}<span class="label label-danger">+{{ acks_delta }}</span>
+        {% elseif acks_delta==0 %}
+        {% else %}<span class="label label-success">{{ acks_delta }}</span>
+        {% endif %}
+        </h4>
+        </td>
+    </tr>
+<!-- Appel des graphiques -->
+{% endif %}
+    <tr><td colspan="4" valign="bottom" style="border-top: solid 1px #DDD;"><h3><span class="label label-default">{{ "Definitions" | trans }} (Top 10)</h3</span></td></tr>
+    <tr valign="top"><td>
+            <div id="jobAppsChart" style="width: 9cm;height: 6cm;"></div>
+        </td>
+        <td colspan="3">
+            <div id="jobNbChart" style="width: 11cm;height: 6cm;"></div>
+        </td>
+    </tr>
+<!--    
+{% if JobApps is not empty %}
+    <tr valign="top">
+        <td class="title" colspan="4" >
+            <div class="panel panel-default">
+              <table class="table">
+            {% for App in JobApps %}
+            {% if App.title != App.description %}
+                <tr><th>{{ App.title }}</th><td>{{ App.description }}</td></th>
+            {% endif %}
+            {% endfor %}  
+              </table>
+            </div>    
+        </td>    
+    </tr>
+{% endif %}
+-->
+    <tr>
+        <td valign="bottom" style="border-top: solid 1px #DDD;"><h3><span class="label label-default">{{ "Executions" | trans }} (Top 10)</h3></span>
+        <td colspan="3" valign="bottom" style="border-top: solid 1px #DDD;"></td>
+    </tr>
+    <tr valign="top"><td>
+            <div id="runExecutionsChart" style="width: 9cm;height: 6cm;"></div>
+        </td>
+        <td colspan="3">
+            <div id="runExecChart" style="width: 11cm;height: 6cm;"></div>
+        </td>
+    </tr> 
+<!--
+{% if RunApps is not empty %}    
+    <tr valign="top">
+        <td class="title" colspan="4" >
+            <div class="panel panel-default">
+              <table class="table">
+            {% for Run in RunApps %}
+            {% if Run.title != Run.description %}
+                <tr><th>{{ Run.title }}</th><td>{{ Run.description }}</td></th>
+            {% endif %}
+            {% endfor %}
+              </table>
+            </div>    
+        </td>    
+    </tr>
+{% endif %}    
+-->
+{% if AllApps is not empty %}    
+    <tr valign="top">
+        <td class="title" colspan="4" >
+            <div class="panel panel-default">
+              <table class="table">
+            {% for Job in AllApps %}
+            {% if Job.title != Job.description %}
+                <tr><th>{{ Job.title }}</th><td>{{ Job.description }}</td></th>
+            {% endif %}
+            {% endfor %}
+              </table>
+            </div>    
+        </td>    
+    </tr>
+{% endif %}    
+    <tr>
+        <td valign="bottom" style="border-top: solid 1px #DDD;"><h3><span class="label label-default">{{ "Alarms" | trans }} (Top 10)</h3></span>
+        <td colspan="3" valign="bottom" style="border-top: solid 1px #DDD;"></td>
+    </tr>
+    <tr valign="top"><td>
+            <div id="runAlarmsChart" style="width: 9cm;height: 6cm;"></div>
+        </td>
+        <td colspan="3" >
+            <div id="runDetailChart" style="width: 11cm;height: 6cm;"></div>
+        </td>
+    </tr> 
+{% if Events is not empty %}    
+    <tr valign="top">
+        <td class="title" colspan="4" >
+            <div class="panel panel-default">
+            <div class="panel-heading">Incidents générateurs d'erreurs multiples.</div>
+            <table class="table">
+                <tr>
+                    <th><span class="badge">{{ "Days" | trans }}</span> {{ "Events" | trans }}</th>
+                    <th>{{ "Impact" | trans }}</th>
+                </tr>
+{% for Event in Events %}
+                <tr>
+                    <td><span class="badge">{{ Event.start_time | date("d") }}</span> <b>{{ Event.title }}</b><br/>{{ Event.description | raw }}</td>
+                    <td><img style="float: right;" src="{{ asset('/bundles/ariireport/images/dashboard') }}/{{ Event.event_type }}.png"/> <b>{{ Event.impact }}</b><br/><i>{{ Event.name }}</i></td>
+                </tr>
+{% endfor %}
+              </table>
+              <div class="panel-body">
+                  <center>
+              <img src="{{ asset('/bundles/ariireport/images/dashboard') }}/hdw.png"/> {{ "event_type.hdw" | trans({},'internal') }}&nbsp;&nbsp;|&nbsp;&nbsp;
+              <img src="{{ asset('/bundles/ariireport/images/dashboard') }}/sys.png"/> {{ "event_type.sys" | trans({},'internal') }}&nbsp;&nbsp;|&nbsp;&nbsp;
+              <img src="{{ asset('/bundles/ariireport/images/dashboard') }}/net.png"/> {{ "event_type.net" | trans({},'internal') }}&nbsp;&nbsp;|&nbsp;&nbsp;
+              <img src="{{ asset('/bundles/ariireport/images/dashboard') }}/app.png"/> {{ "event_type.app" | trans({},'internal') }}&nbsp;&nbsp;|&nbsp;&nbsp;
+              <img src="{{ asset('/bundles/ariireport/images/dashboard') }}/usr.png"/> {{ "event_type.usr" | trans({},'internal') }}&nbsp;&nbsp;|&nbsp;&nbsp;
+              <img src="{{ asset('/bundles/ariireport/images/dashboard') }}/upd.png"/> {{ "event_type.upd" | trans({},'internal') }}&nbsp;&nbsp;|&nbsp;&nbsp;
+              <img src="{{ asset('/bundles/ariireport/images/dashboard') }}/tst.png"/> {{ "event_type.tst" | trans({},'internal') }}              
+                  </center>
+            </div>
+            </div>    
+        </td>    
+    </tr>
+{% endif %}    
+</table>
+</div>
+</page>
+</body>
+{% endblock %}

@@ -1,0 +1,37 @@
+{
+   "items":
+   [
+        {   
+            type:       "block", 
+            text:       "{{ "Home" | trans }}", 
+            text_pos:   "top", 
+            list:
+                [
+                   {   
+                        type:   "button", 
+                        id:     "home",
+                        text:   "", 
+                        isbig:  true, 
+                        img:    "48/arii.png"
+                    },
+                    {   
+                         type:   "buttonSelect", 
+                         id:     "lang",
+                         text:   "", 
+                         img:    "{{ app.request.locale }}.png",
+                         items: [
+{% set routeParams = app.request.get('_route_params') %}                         
+    {% for lang in ['fr','en'] %}
+        {% if app.request.locale != lang %}
+    {% if routeParams['_locale'] is defined %}
+    {%set routeParams = routeParams|merge({'_locale': lang}) %}
+    {% endif %}
+            { id: "{{ lang }}", text: "{{ ('lang.' ~ lang ) | trans }}", img: "{{ lang }}.png" },
+        {% endif %}
+    {% endfor %}
+                         ]
+                    }
+                ]
+        }
+   ]
+}

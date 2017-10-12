@@ -1,0 +1,217 @@
+{% extends "AriiSelfBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var update=10
+var last="{{ request }}";
+var mode="{{ mode }}";
+var last_row=0;
+
+dhtmlxEvent(window,"load",function(){
+var size=300;
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setWidth(size); 
+    globalLayout.cells("c").setText("{{ "Demandes en cours" | trans }}"); 
+    
+    globalLayout.cells("a").hideHeader(); 
+
+    myTree = globalLayout.cells("a").attachTree();
+    myTree.setImagePath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.load( '{{ url('xml_Self_tree') }}');
+
+    myGridToolbar = globalLayout.cells("b").attachToolbar();
+    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.loadStruct( "{{ url('xml_Self_toolbar') }}");
+
+    myGridMenu = new dhtmlXMenuObject(null);
+    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    myGridMenu.renderAsContextMenu();
+    myGridMenu.loadStruct("{{ url('xml_Self_grid_menu') }}");
+
+    myReq uests = globalLayout.cells("c").attachGrid();
+    myRequests.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRequests.setHeader("{{ "Requests" | trans }},{{ "Parameters" | trans }},{{ "Status" | trans }},{{ "Exit" | trans }},{{ "Created" | trans }},{{ "Started" | trans }},{{ "Processed" | trans }},{{ "User" | trans }}");
+    myRequests.attachHeader("#text_filter,#text_filter,#select_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#select_filter");
+    myRequests.setInitWidths("*,*,150,60,150,150,250,200");
+    myRequests.setColAlign("left,left,center,right,right,right,right,right");
+    myRequests.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");
+    myRequests.setColSorting("str,str,str,int,date,date,date,str");
+    myRequests.enableContextMenu(myGridMenu);
+    myRequests.init();
+    myRequests.load( "{{ url('xml_Self_requests_grid') }}?request="+last);
+    
+    myRequests.attachEvent("onRowSelect", function(id,ind){
+        myRequests.setRowTextNormal(last_row);
+        myRequests.setRowTextBold(id);
+        last_row=id;
+    });
+    
+    myTabbar = globalLayout.cells("b").attachTabbar();
+    myTabbar.addTab("edit","{{ "Edit" | trans }}","120px",null,true);
+    myTabbar.addTab("history","{{ "History" | trans }}","120px");
+
+    myHistory = myTabbar.cells("history").attachGrid();
+    myHistory.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myHistory.setHeader("{{ "Requests" | trans }},{{ "Parameters" | trans }},{{ "Status" | trans }},{{ "Exit" | trans }},{{ "Started" | trans }},{{ "Processed" | trans }},{{ "Client" | trans }}");
+    myHistory.attachHeader("#text_filter,#text_filter,#select_filter,#numeric_filter,#text_filter,#text_filter,#select_filter");
+    myHistory.setInitWidths("*,*,100,60,150,150,250");
+    myHistory.setColAlign("left,left,center,right,right,right,right");
+    myHistory.setColTypes("ro,ro,ro,ro,ro,ro,ro");
+    myHistory.setColSorting("str,str,str,int,date,date,str");
+    myHistory.init();
+    myHistory.load( "{{ url('xml_Self_history_grid') }}?request="+last);    
+    
+    {% if request is not empty %}
+    form("{{request}}");
+    {% else %}
+    globalLayout.cells("b").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}');     
+    {% endif %}      
+    myMenu.attachEvent("onRowDblClicked", function(id) {
+        form(id);
+        last=id;
+        globalLayout.cells("b").progressOn();
+        globalLayout.cells("c").progressOn();
+        GridRefresh();
+    });    
+
+    myHistory.attachEvent("onRowDblClicked", function(id) {
+        log(id);
+        globalLayout.cells("b").progressOn();
+        globalLayout.cells("c").progressOn();
+        GridRefresh();
+    });      
+    form(last);
+    
+    myRequests.attachEvent("onRowDblClicked", function(id) {
+        myTabbar.tabs("edit").setActive();
+        globalLayout.cells("b").progressOn();
+        myForm.load("{{ url('json_Self_load') }}?id="+id, function() {
+            globalLayout.cells("b").progressOff();
+        });
+    });
+    
+    myGridToolbar.attachEvent("onClick",function(itemid){
+         switch (itemid) {
+            case 'refresh':
+                globalLayout.cells("a").progressOn();
+                globalLayout.cells("b").progressOn();
+                globalLayout.cells("c").progressOn();
+                GridRefresh();
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });    
+
+    myGridMenu.attachEvent("onClick", function (menuitemId, type) {
+        var data = myRequests.contextID.split("_");
+        //rowInd_colInd;
+        var rId = data[0];
+        var cInd = data[1];
+        switch (menuitemId) {
+            case "edit":                
+                globalLayout.cells("b").progressOn();
+                myForm.load("{{ url('json_Self_load') }}?id="+rId, function() {
+                    globalLayout.cells("b").progressOff();
+                });
+                break;
+            case "log":
+                logRequest(rId);
+                break;
+            case "queue":
+                dhx4.ajax.get( "{{ url('html_Self_queuing') }}?id="+rId, function() {
+                    globalLayout.cells("c").progressOn();
+                    myRequests.load( "{{ url('xml_Self_requests_grid') }}?request="+last, function() {
+                        globalLayout.cells("c").progressOff();
+                    });            
+                });
+                break;
+            case "cancel":
+                dhx4.ajax.get( "{{ url('html_Self_canceling') }}?id="+rId, function() {
+                    globalLayout.cells("c").progressOn();
+                    myRequests.load( "{{ url('xml_Self_requests_grid') }}?request="+last, function() {
+                        globalLayout.cells("c").progressOff();
+                    });            
+                });  
+                break;
+        break;
+            default:
+                alert("inconnu ! "+menuitemId);    
+        }
+        return true;
+    });
+
+    autorefresh = setInterval( "GridRefresh()",update*1000);        
+});
+
+function form(id) {
+    globalLayout.cells("b").progressOn();
+    globalLayout.cells("c").progressOn();
+    var obj = globalLayout.cells("c").getAttachedObject();
+    if (typeof(window.dhtmlXFormObject) == "function" && obj instanceof dhtmlXFormObject)
+        myForm.clear();
+    myForm = myTabbar.cells("edit").attachForm();
+    myForm.loadStruct("{{ url('json_Self_form') }}?form="+id, function() {
+        globalLayout.cells("b").progressOff();
+        globalLayout.cells("c").progressOff();
+        GridRefresh();
+    });
+    myForm.attachEvent("onButtonClick", function(id){
+        if (id != 'SUBMIT') return true;
+        globalLayout.cells("c").progressOff();
+        myForm.send("{{ url('html_Self_save') }}","POST",function(loader,response){
+            // on recharge les demandes en cours
+            myRequests.load( "{{ url('xml_Self_requests_grid') }}?request="+last, function() {
+                globalLayout.cells("c").progressOff();
+            });
+        });        
+    });
+}
+
+function log(id) {
+    var dhxWins = new dhtmlXWindows();
+    var largeur = 940;
+    var myWin = dhxWins.createWindow( "note" ,  (document.body.offsetWidth-largeur)/2, 50, largeur, 700 );
+    myWin.setText("{{ "Log" | trans }} ");
+
+    myWin.attachEvent("onContentLoaded", function(){
+        myWin.progressOff();
+    });    
+    
+    myWin.attachURL("{{ url('html_Self_history_status') }}?id="+id);  
+}
+
+function logRequest(id) {
+    var dhxWins = new dhtmlXWindows();
+    var largeur = 940;
+    var myWin = dhxWins.createWindow( "note" ,  (document.body.offsetWidth-largeur)/2, 50, largeur, 700 );
+    myWin.setText("{{ "Log" | trans }} ");
+
+    myWin.attachEvent("onContentLoaded", function(){
+        myWin.progressOff();
+    });    
+    
+    myWin.attachURL("{{ url('html_Self_request_status') }}?id="+id);  
+}
+
+function GridRefresh() {    
+    myMenu.load( "{{ url('xml_Self_status') }}", function() {        
+        myMenu.refreshFilters();
+        myMenu.filterByAll();    
+        globalLayout.cells("a").progressOff();
+        myRequests.load( "{{ url('xml_Self_requests_grid') }}?request="+last, function() {
+            myRequests.refreshFilters();
+            myRequests.filterByAll();    
+            globalLayout.cells("c").progressOff();
+            myHistory.load( "{{ url('xml_Self_history_grid') }}?request="+last, function() {
+                myHistory.refreshFilters();
+                myHistory.filterByAll();    
+                globalLayout.cells("b").progressOff();
+            });    
+        });    
+    });    
+}
+</script>
+{% endblock %}

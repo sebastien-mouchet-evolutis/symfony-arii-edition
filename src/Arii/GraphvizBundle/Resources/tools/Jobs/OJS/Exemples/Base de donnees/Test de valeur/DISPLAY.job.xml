@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job  order="yes" stop_on_error="no" title="Affiche la valeur de l'ID mas et du nombre d'enregistrements">
+    <script  language="shell">
+        <![CDATA[
+@echo off
+echo # RECS: %SCHEDULER_PARAM_NB%
+echo MAX_ID: %SCHEDULER_PARAM_MAX_ID%
+        ]]>
+    </script>
+
+    <run_time />
+</job>

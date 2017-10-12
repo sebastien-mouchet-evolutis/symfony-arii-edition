@@ -1,0 +1,85 @@
+{# src/Arii/MFTBundle/Resources/views/Edit/edit.html.twig #}
+{% extends "AriiMFTBundle::layout.html.twig" %}
+{% block body %}
+<script>
+dhtmlxEvent(window,"load",function(){     
+    
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").setWidth(360); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+    globalLayout.cells("b").setHeight(800); 
+    globalLayout.cells("c").hideHeader(); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_MFT_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    window.dhx_globalImgPath = "{{ asset('bundles/ariicore/dhtmlx/dhtmlxCombo/codebase/imgs/') }}";
+
+    globalToolbar = globalLayout.cells("b").attachToolbar(); 
+    globalToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
+    globalToolbar.loadStruct("{{ url('xml_MFT_transfer_toolbar') }}");
+
+    myForm = globalLayout.cells("b").attachForm();
+    myForm.loadStruct( "{{ url('json_MFT_transfer_form') }}" );
+
+    dp = new dataProcessor( "{{ url('arii_MFT_transfer_form') }}" );
+    dp.setUpdateMode("off");
+    dp.init(myForm);
+
+    myForm.attachEvent( "onChangeValue", function(id, value) {
+        toolbar.enableItem('save');
+    });
+    myForm.attachEvent( "onEnter", function(id, value) {
+        toolbar.enableItem('save');
+    });
+    myForm.attachEvent("onButtonClick", function(name, command){
+    });
+    myForm.attachEvent("onValidateError", function (input, value, result){
+              dhtmlx.message({
+              title: "{{ "Validate error" | trans }}",
+              type: "confirm-error",
+              text: "{{ "You have to correct the following field" | trans }}"+input});
+    });
+
+    globalToolbar.attachEvent( "onClick", function(id, value) {
+        switch (id) {
+            case "save":
+                if(!myForm.validate())
+                {
+                    dhtmlx.message({
+                        title:"Error",
+                        type: "error",
+                        lifetime: "60000",
+                        text: "{{ "Please type in all the required fields!" | trans }}"
+                     });
+                    return;
+                }
+                dp.sendData();
+                this.setItemText('save', '{{ "Saved" | trans }}' );
+                this.disableItem('save');
+            break;
+            default:
+                alert(id);
+        }
+    });
+
+});
+    
+function outputResponse(loader) {
+    if (loader.xmlDoc.responseXML != null) {
+//        alert("We Got Response\n\n" + loader.doSerialization());
+    }
+    else {
+        alert("Response contains no XML");
+    }
+}
+</script>
+{% endblock %}

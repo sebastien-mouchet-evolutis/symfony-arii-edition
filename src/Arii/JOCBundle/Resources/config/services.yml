@@ -1,0 +1,28 @@
+parameters:
+#    arii_jid.example.class: Arii\JOCBundle\Example
+
+services:
+#    arii_jid.example:
+#        class: %arii_jid.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+services:
+    arii_joc.sos:
+        class: Arii\JOCBundle\Service\AriiSOS
+        arguments: ["@arii_core.db", "@arii_core.sql"]
+
+    arii_joc.treegrid:
+        class: Arii\JOCBundle\Service\AriiTreeGrid
+        arguments: []
+
+    arii_joc.state:
+        class: Arii\JOCBundle\Service\AriiState
+        arguments: ["@arii_core.db", "@arii_core.sql", "@arii_core.date"]
+
+    arii_joc.focus:
+        class: Arii\JOCBundle\Service\AriiFocus
+        arguments: [ "@arii_core.tools", "@arii_core.db" ]
+
+    arii_joc.focus2:
+        class: Arii\JOCBundle\Service\AriiFocus2
+        arguments: [ "@arii_core.tools", "@doctrine.orm.default_entity_manager" ]

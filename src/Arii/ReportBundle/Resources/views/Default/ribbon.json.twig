@@ -1,0 +1,60 @@
+{
+   "items":
+   [
+      {   "type":"block", 
+          text:"{{ "module.Report" | trans }}", 
+          "text_pos": "top",           
+          "list":
+          [
+             {  "id": "menu_index", 
+                "type": "button", 
+                 text:"",
+                 "isbig": true,
+                 "img": "48/report.png"
+             },
+             {   type:  "buttonSelect", 
+                 text:  "{{ "Dashboard" | trans }}", 
+                 img:   "dashboard.png", 
+                 items:
+                 [ 
+/*                    { id:"global", text: "{{ "Global" | trans }}", img: "report.png" },
+                    {id:"sep0", type: "separator"},
+*/                    { id:"jobs", text: "{{ "Jobs" | trans }}", img: "job.png" },
+                    { id:"runs", text: "{{ "Runs" | trans }}", img: "run.png" },
+                    { id:"calendars", text: "{{ "Calendars" | trans }}", img: "calendar.png" }
+                 ]
+              },
+             {   type:  "button", 
+                 text:  "{{ "Documents" | trans }}", 
+                 img:   "doc.png",
+                 id: "snapshots"
+              },
+             {   type:  "buttonSelect", 
+                 text:  "{{ "Requests" | trans }}", 
+                 img:   "table.png", 
+                 items:
+                 [ 
+{% for k,request in Requests %}
+                    { id:"request_{{ request.id }}", text: "{{ request.title }}", img: "{{ request.icon }}.png" },
+{% endfor %}                 
+                 ]
+              },
+             {   type:  "buttonSelect", 
+                 text:  "", 
+                 img:   "tools.png", 
+                 items:
+                 [ 
+                    {  id:   "import",
+                       text: "{{ "Import" | trans }}", 
+                       img:  "import.png"
+                    },
+                    {  id:   "database",
+                       text: "{{ "Database" | trans }}", 
+                       img:  "database.png"
+                    }                    
+                 ]
+              }              
+          ]
+      }
+   ]
+}

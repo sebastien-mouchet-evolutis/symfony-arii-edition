@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job_chain>                        
+   <job_chain_node state="check_day"   job="check_day" next_state="chain_b_job"    error_state="error"/>
+   <job_chain_node state="chain_b_job" job="readparam" next_state="end_of_chain_b" error_state="error"/>
+
+   <job_chain_node state="end_of_chain_b"/>
+   <job_chain_node state="error"/>
+</job_chain>

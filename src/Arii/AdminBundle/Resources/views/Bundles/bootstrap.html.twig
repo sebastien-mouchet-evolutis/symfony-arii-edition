@@ -1,0 +1,32 @@
+{# src/Arii/AdminBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<!-- <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script> -->
+{% endblock %}
+{% block body %}
+<body>
+<div class="container-fluid">
+<div class="jumbotron">
+<img style="float: right;" src="{{ asset('logo.png') }}"/>
+  <h1>{{ bundle }}</h1>
+  <p>{{ mode | trans }}<br/>
+  </p>
+</div>
+  <h1>Kernel</h1>
+  <h2>appKernel.php</h2>
+  <pre>{{ appkernel }}</pre>
+  
+  <h1>Routing</h1>
+  <h2>Route</h2>
+  <pre>{{ route }}</pre>
+  <h2>app/config/routing.yml</h2>
+  <pre>{{ routing }}</pre>
+
+</div>
+</body>
+{% endblock %}

@@ -1,0 +1,21 @@
+title:          Erreurs d'inventaire
+description:    Erreurs sur la récupération d'informations pour l'inventaire de la CMDB.
+header:         HOST,END(localtime),STATE,LOG(log)
+icon:           job
+sql:
+    oracle: |
+        SELECT  ORDER_ID as "HOST",
+                START_TIME,
+                END_TIME as END, 
+                STATE,
+                LOG
+        FROM SCHEDULER_ORDER_HISTORY
+        WHERE HISTORY_ID IN 
+        (
+            SELECT MAX(HISTORY_ID) 
+            FROM SCHEDULER_ORDER_HISTORY 
+            WHERE START_TIME >= SYSDATE - 1 AND JOB_CHAIN='Vaudoise/CMDB/Inventaire'
+            GROUP BY ORDER_ID
+        )
+        AND STATE!='SUCCESS'
+        ORDER BY ORDER_ID		

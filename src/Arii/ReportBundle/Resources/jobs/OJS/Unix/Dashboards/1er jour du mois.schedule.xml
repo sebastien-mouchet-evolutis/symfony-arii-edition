@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<schedule  title="Envoi des tableaux de bords">
+    <monthdays >
+        <day  day="1">
+            <period  single_start="08:00"/>
+        </day>
+    </monthdays>
+</schedule>

@@ -1,0 +1,157 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiMFTBundle::layout.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+var update = 60;
+var autorefresh;
+var partner=-1;
+var transfer=-1;
+
+dhtmlxEvent(window,"load",function(){
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_MFT_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    
+    myParameters = globalLayout.cells("a").attachGrid();
+    myParameters.selMultiRows = true;
+    myParameters.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myParameters.setHeader("{{ "Name" | trans }},{{ "Title" | trans }}");
+    myParameters.attachHeader("#text_filter,#text_filter");
+    myParameters.setInitWidths("150,*");
+    myParameters.setColAlign("left,left");
+    myParameters.setColTypes("ro,ro");
+    myParameters.setColSorting("str,str");
+    myParameters.init();
+    myParameters.load("{{ url('xml_MFT_parameters_grid') }}");
+
+    myFormToolbar = globalLayout.cells("b").attachToolbar();
+    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.loadStruct( "{{ url('xml_MFT_parameter_toolbar') }}");
+
+    myForm = globalLayout.cells("b").attachForm();
+    myForm.loadStruct("{{ url('json_MFT_parameter_form') }}");
+    
+    myForm.attachEvent( "onChangeValue", function(id, value) {
+        myFormToolbar.enableItem('save');
+    });
+    myForm.attachEvent( "onEnter", function(id, value) {
+        myFormToolbar.enableItem('save');
+    });    
+    myFormToolbar.attachEvent("onClick",function(itemid, state){
+         switch (itemid) {
+             case 'add':
+                myForm.clear();
+                break;
+            case "save":
+                if(!myForm.validate())
+                {
+                    dhtmlx.message({
+                        title:"Error",
+                        type: "error",
+                        lifetime: "60000",
+                        text: "{{ "Please type in all the required fields!" | trans }}"
+                     });
+                    return;
+                }
+                globalLayout.cells("b").progressOn();
+                myForm.send("{{ url('html_MFT_parameter_save') }}","POST",function(loader,response){
+                    globalLayout.cells("b").progressOff();
+                    if(response === "success")
+                    {
+                        dhtmlx.message({
+                           title:"Save",
+                           type: "Notice",
+                           lifetime: "60000",
+                           text: "{{ "Saved" | trans }}"
+                        });
+                        globalLayout.cells("a").progressOn();
+                        myParameters.load("{{ url('xml_MFT_parameters_grid') }}", function () {
+                            if (transfer>=0) {
+                                myTabbar.cells("config").attachURL("{{ url('ini_MFT_parameter_doc') }}?id="+transfer);
+                            }    
+                            globalLayout.cells("a").progressOff();
+                        });
+                   }
+                   else 
+                   {
+                       alert(response);
+                   }               
+                });
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+    
+    myParameters.attachEvent("onRowDblClicked", function(id) {
+        ParameterDetail(id);
+    });
+
+    myTabbar = globalLayout.cells("c").attachTabbar();
+    myTabbar.addTab("operations","{{ "Operations" | trans }}","150px", null, true);
+    myTabbar.addTab("config","{{ "Config" | trans }}","150px");
+
+    myOperations = myTabbar.cells("operations").attachGrid();
+    myOperations.selMultiRows = true;
+    myOperations.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myOperations.setHeader("{{ "Name" | trans }},{{ "Title" | trans }}");
+    myOperations.attachHeader("#text_filter,#text_filter");
+    myOperations.setInitWidths("150,*");
+    myOperations.setColAlign("left,left");
+    myOperations.setColTypes("ro,ro");
+    myOperations.setColSorting("str,str");
+    myOperations.init();
+
+    globalLayout.cells("c").collapse();
+    globalLayout.cells("c").setText("{{ "Operations" | trans }}"); 
+    globalLayout.cells("c").setHeight(200); 
+
+    autorefresh = setInterval( "GridRefresh()",update*1000);
+});
+
+function GlobalRefresh() {
+    clearInterval( autorefresh );
+    GridRefresh();
+    autorefresh = setInterval( "GridRefresh()", update*1000 );
+}
+
+function GridRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+        seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+}
+
+function ParameterDetail(id) {
+    transfer=id;
+    globalLayout.cells("b").progressOn();
+    globalLayout.cells("c").expand();
+    myForm.load("{{ url('xml_MFT_parameter_form') }}?id="+id, function() {
+        myOperations.clearAll();
+        myTabbar.cells("config").attachURL("{{ url('ini_MFT_parameter_doc') }}?id="+id);
+        myOperations.load("{{ url('xml_MFT_operations_grid') }}?transfer_id="+id, function () {
+        globalLayout.cells("b").progressOff();
+        });
+    });
+}
+</script>
+{% endblock %}

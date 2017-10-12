@@ -1,0 +1,23 @@
+{
+   "items":
+   [
+      {   "type":"block", 
+          text:"{{ "My account" | trans }}", 
+          "text_pos": "top", 
+          "list":
+          [
+             {   "type": "buttonSelect", 
+                 text:"", 
+                 "isbig": true, 
+                 "img": "48/user.png", 
+                 items:
+                 [ 
+                    { id:"about_me", text: "{{ "About me" | trans }}", img: "user.png" },
+                    { id:"messages", text: "{{ "Messages" | trans }}", img: "filters.png" }
+                    { id:"filters", text: "{{ "Filters" | trans }}", img: "email.png" }
+                ]
+              }
+          ]
+      }
+   ]
+}

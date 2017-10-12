@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job_chain  orders_recoverable="yes" visible="yes" title="DEBUT">
+    <job_chain_node  state="C_DEBUT" job="J_DEBUT" next_state="C_DEBUT_SUCCESS" error_state="C_DEBUT_ERROR"/>
+
+    <job_chain_node  state="C_DEBUT_SUCCESS"/>
+
+    <job_chain_node  state="C_DEBUT_ERROR"/>
+</job_chain>

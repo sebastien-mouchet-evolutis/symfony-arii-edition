@@ -1,0 +1,36 @@
+[
+    {type:"settings",
+        position: "label-left", 
+        labelAlign:"right", 
+        labelWidth:"80",
+        inputWidth:"200" },
+    {   type:"input",    
+            name: "NAME", 
+            label:"{{ "Spooler" | trans}}"
+    },
+    {   type:"input",    
+            name: "HOSTNAME", 
+            label:"{{ "Host" | trans}}"
+    },
+    {   type:"input",    
+            name: "IP", 
+            label:"{{ "IP" | trans}}"
+    },
+    {   type:"input",    
+            name: "PORT", 
+            label:"{{ "Port" | trans}}"
+    },
+    {   type:"input",    
+            name: "VERSION", 
+            label:"{{ "Version" | trans}}"
+    },
+    {type:"newcolumn"},  
+    {type:"input",    name: "ERROR", label:"{{ "Error" | trans}}", rows: 5,                 labelWidth:"100"},
+    {type:"input",    name: "ERROR_AT", label:"{{ "Error at" | trans}}",                    labelWidth:"100"},
+    {type:"newcolumn"},  
+    {type:"input",    name: "CONFIGURATION_CHANGED_AT", label:"{{ "Change" | trans}}",         labelWidth:"120"},
+    {type:"input",    name: "CONFIGURATION_TRANSFERED_AT", label:"{{ "Transfer" | trans}}",    labelWidth:"120"}, 
+    {type:"input",    name: "CONNECTED_AT", label:"{{ "Connection" | trans}}",                 labelWidth:"120"},
+    {type:"input",    name: "DISCONNECTED_AT", label:"{{ "Disconnection" | trans}}",           labelWidth:"120"},
+    {type:"hidden",    name: "ID" }
+]

@@ -1,0 +1,40 @@
+{
+   "items":
+   [
+      {   type: "block", 
+          text: "{{ "module.MFT" | trans }}", 
+          text_pos: "top", 
+          id: "block",
+          list:
+          [
+             {   id:    "menu_home",
+                 type:  "button", 
+                 text:  "", 
+                 isbig: true,                  
+                 img:   "48/mft.png"
+             },
+             {   id: "menu", 
+                  "type":"buttonSelect", 
+                  "img": "view.png",
+                  "items": 
+                  [ 
+                     { id: "menu_deliveries",      text: "{{ "Deliveries" | trans}}", img: "package.png"  },
+                     { id: "menu_transmissions",      text: "{{ "Transmissions" | trans}}", img: "transmit_blue.png"  },
+                  ]
+                  
+              },
+             {   id: "edit", 
+                  "type":"buttonSelect", 
+                  "img": "edit.png",
+                  "items": 
+                  [ 
+                     { id: "menu_partners", text: "{{ "Partners" | trans}}", img: "partners.png"  },
+                     { id: "menu_transfers", text: "{{ "Transfers" | trans}}", img: "lorry.png"  },
+                     { id: "menu_operations", text: "{{ "Operations" | trans}}", img: "operations.png"  },
+                     { id: "menu_parameters",      text: "{{ "Parameters" | trans}}", img: "config.png"  }
+                  ]
+              }
+          ]
+      }
+   ]
+}

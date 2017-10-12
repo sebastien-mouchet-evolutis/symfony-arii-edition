@@ -1,0 +1,13 @@
+module.Self: Self-service
+summary.Self: Demande d'actions
+text.Self: Interface de demande d'action devops
+Waiting requests: Demandes en attente
+Running requests: Suivi des demandes
+Processed requests: Demandes traitées
+Last requests: Dernières demandes
+Requests history: Historique des demandes
+Queueing: Remise en file d'attente
+Templates: Modèles
+Canceling: Abandon de la demande
+Log request: Journal d'exécution
+Edit request: Modifier la demande

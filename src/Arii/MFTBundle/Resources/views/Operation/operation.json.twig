@@ -1,0 +1,108 @@
+[
+    {   
+        type:"settings",
+        position:   "label-left", 
+        labelAlign: "right", 
+        labelWidth: 100,
+        inputWidth: 300,
+        offsetLeft: 10 
+    },
+    {   type:"hidden", 
+        name: "ID"
+    },
+    {
+        type: "fieldset",
+        name: "operation",
+        label: "{{ "Operation" | trans }}",
+        inputWidth: "auto",
+        list: [
+            {   type:"input", 
+                name: "NAME", 
+                label:"{{ "Name" | trans}}",
+                required: true
+            },
+            {   type:"input", 
+                name: "TITLE", 
+                label:"{{ "Title" | trans}}"
+            },
+            {   type:"input", 
+                name: "DESCRIPTION", 
+                label:"{{ "Description" | trans}}",
+                rows: 4
+            },
+            {  type: "select",
+               name: "TRANSFER_ID",
+               label: "{{ "Transfer"| trans }}",
+               connector: "{{ url('xml_MFT_transfers_select') }}"
+            },
+            {  type: "select",
+               name: "PARAMETERS_ID",
+               label: "{{ "Parameters"| trans }}",
+               connector: "{{ url('xml_MFT_parameters_select') }}"
+            },
+            {   type:"input", 
+                name: "CLIENT", 
+                label:"{{ "Client" | trans}}"
+            },
+            {   type:"input", 
+                name: "STEP", 
+                label:"{{ "Step" | trans}}"
+            },
+            {   type:"input", 
+                name: "ENV", 
+                label:"{{ "Environment" | trans}}"
+            }
+        ]
+    },
+    { type: "newcolumn" },
+    {
+        type: "fieldset",
+        name: "source",
+        label: "{{ "Source" | trans }}",
+        inputWidth: "auto",
+        list: [
+            {  type: "select",
+               name: "SOURCE_ID",
+               label: "{{ "Node"| trans }}",
+               connector: "{{ url('xml_MFT_connections_select') }}"
+            },
+            {   type:"input", 
+                name: "SOURCE_PATH", 
+                label:"{{ "Path" | trans}}"
+            },    
+            {   type:"input", 
+                name: "SOURCE_FILES", 
+                label:"{{ "Files" | trans}}"
+            },    
+            {   type:"input", 
+                name: "EXPECTED_FILES", 
+                label:"{{ "Expected files" | trans}}"
+            },
+            {   type:"checkbox", 
+                name: "EXIT_IF_NOTHING", 
+                label:"{{ "Exit if nothing" | trans}}"
+            }
+        ]
+    },
+    {
+        type: "fieldset",
+        name: "target",
+        label: "{{ "Target" | trans }}",
+        inputWidth: "auto",
+        list: [
+            {  type: "select",
+               name: "TARGET_ID",
+               label: "{{ "Node"| trans }}",
+               connector: "{{ url('xml_MFT_connections_select') }}"
+            },
+            {   type:"input", 
+                name: "TARGET_PATH", 
+                label:"{{ "Path" | trans}}"
+            },
+            {   type:"input", 
+                name: "TARGET_FILES", 
+                label:"{{ "Files" | trans}}"
+            }
+        ]
+    }
+]

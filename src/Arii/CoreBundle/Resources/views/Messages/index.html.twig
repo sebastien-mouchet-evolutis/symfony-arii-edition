@@ -1,0 +1,155 @@
+{% extends "AriiCoreBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var autorefresh; 
+var update=30;
+
+dhtmlxEvent(window,"load",function(){
+var size=300;
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"4L");  
+    globalLayout.cells("a").setWidth(size); 
+    globalLayout.cells("b").setWidth(600);     
+    globalLayout.cells("d").setHeight(400); 
+
+    {% include "AriiCoreBundle:Default:menu.html.twig" %} 
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Home_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    myTabbar = globalLayout.cells("b").attachTabbar();
+    myTabbar.addTab("inbox","{{ "Inbox" | trans }}","100px", null, true);
+    myTabbar.addTab("outbox","{{ "Outbox" | trans }}","100px");
+
+    myInbox = myTabbar.cells("inbox").attachGrid();
+    myInbox.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myInbox.setHeader("{{ "Title" | trans }},#cspan,{{ "Date" | trans }},{{ "From" | trans }},{{ "To" | trans }}");
+    myInbox.attachHeader("#text_filter,#cspan,#text_filter,#select_filter,#select_filter");
+    myInbox.setInitWidths("*,35,150,150,0");
+    myInbox.setColAlign("left,left,left,left,left");
+    myInbox.setColTypes("ro,img,ro,ro,ro");
+    myInbox.setColSorting("str,str,date,str,str");
+    myInbox.enableAlterCss("even_row","odd_row");     
+    myInbox.init();
+    myInbox.load( "{{ url('xml_messages_inbox') }}" );
+    myInbox.attachEvent("onRowDblClicked", function (rid) {
+        globalLayout.cells("c").attachURL("{{ url('html_message_display') }}?id="+rid);
+        GlobalRefresh();
+    });
+
+    myOutbox = myTabbar.cells("outbox").attachGrid();
+    myOutbox.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myOutbox.setHeader("{{ "Title" | trans }},#cspan,{{ "Date" | trans }},{{ "From" | trans }},{{ "To" | trans }}");
+    myOutbox.attachHeader("#text_filter,#cspan,#text_filter,#select_filter,#select_filter");
+    myOutbox.setInitWidths("*,35,150,0,150");
+    myOutbox.setColAlign("left,left,left,left,left");
+    myOutbox.setColTypes("ro,img,ro,ro,ro");
+    myOutbox.setColSorting("str,str,date,str,str");
+    myOutbox.enableAlterCss("even_row","odd_row");    
+    myOutbox.init();
+    myOutbox.load( "{{ url('xml_messages_outbox') }}" );
+    myOutbox.attachEvent("onRowDblClicked", function (rid) {
+        globalLayout.cells("c").attachURL("{{ url('html_message_display') }}?id="+rid);
+        GlobalRefresh();
+    });
+
+    {% include "AriiCoreBundle:Default:menu.js.twig" %}        
+    formData = [
+        { type: "settings", position: "label-left", labelWidth: 70, inputWidth: 600,labelAlign: "right" },
+        { type: "hidden",
+          name: "id"
+        },         
+        {  type: "input",
+            name: "title",
+            label: "{{ "Title" | trans }}",
+            required: true
+        },
+        { type: "select", name: 'msg_type', label:'{{ 'Type' | trans }}', 
+            options: [ 
+                {text: "Information", value: "I", selected: true}, 
+                {text: "Warning",   value: "W"}, 
+                {text: "Alert",    value: "A"}
+            ] 
+        },
+        {  type: "select",
+            name: "user_id",
+            label: "{{ "To"| trans }}",
+            connector: "{{ url('xml_messages_users') }}"
+        },
+        {  type: "input",
+            name: "msg_text",
+            label: "{{ "Message"| trans }}",
+            rows: 15
+        }
+    ];
+    myForm = globalLayout.cells("d").attachForm(formData);
+    myForm.enableLiveValidation(true);
+
+    myToolbar = globalLayout.cells("d").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.loadStruct("{{ url('xml_message_toolbar') }}", function () {
+        myToolbar.hideItem("delete_category");
+    });
+
+    myToolbar.attachEvent("onClick", function (id){
+        switch (id){
+            case "add":
+                myForm.clear();
+                break;
+            case "save":
+                if(!myForm.validate())
+                {
+                    dhtmlx.message({
+                        title:"Error",
+                        type: "error",
+                        lifetime: "60000",
+                        text: "{{ "Please type in all the required fields!" | trans }}"
+                     });
+                    return;
+                }
+                globalLayout.cells("b").progressOn();
+                myForm.send("{{ url('xml_message_save') }}","POST",function(loader,response){
+                    globalLayout.cells("c").progressOff();
+                    if(response === "success")
+                   {
+                     dhtmlx.message({
+                        title:"Save",
+                        type: "Notice",
+                        lifetime: "60000",
+                        text: "{{ "Saved" | trans }}"
+                     });
+                     GlobalRefresh();
+                   }
+                   else 
+                   {
+                       alert(response);
+                   }
+                });
+            break;
+            default:
+                alert(id);
+                break;
+        }
+    });
+    
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+    globalLayout.cells("c").hideHeader(); 
+    globalLayout.cells("d").hideHeader(); 
+    // Premier chargement avant le smart rendering
+    autorefresh = setInterval( "GlobalRefresh()",update*1000);
+});
+
+function GlobalRefresh() {
+    myOutbox.load( "{{ url('xml_messages_outbox') }}", function() {
+        myInbox.load( "{{ url('xml_messages_inbox') }}", function() { 
+            globalLayout.cells("b").progressOff();
+        })
+    });
+}
+
+</script>
+{% endblock %}

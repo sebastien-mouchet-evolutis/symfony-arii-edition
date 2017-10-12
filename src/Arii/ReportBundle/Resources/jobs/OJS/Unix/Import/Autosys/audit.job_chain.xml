@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job_chain  orders_recoverable="yes" visible="yes" title="Intégration des audit" max_orders="1">
+
+    <job_chain_node  state="AUTOTRACK" job="autotrack" next_state="AUDIT" error_state="!AUTOTRACK" on_error="suspend"/>
+
+    <job_chain_node  state="AUDIT" job="audit" next_state="SEND" error_state="!AUDIT" on_error="suspend"/>
+
+    <job_chain_node  state="SEND" job="send_audit" next_state="SUCCESS" error_state="!SEND" on_error="suspend"/>
+
+    <job_chain_node  state="!AUTOTRACK"/>
+
+    <job_chain_node  state="!AUDIT"/>
+	
+    <job_chain_node  state="!SEND"/>
+
+    <job_chain_node  state="SUCCESS"/>
+</job_chain>

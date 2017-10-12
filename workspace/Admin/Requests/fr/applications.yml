@@ -1,0 +1,15 @@
+title:          Applications actives
+description:    Liste des applications en activité.
+header:         CODE,TITLE,DESCRIPTION,CONTACT
+icon:           info
+sql: 
+    oci8: |
+        select NAME as CODE,TITLE,DESCRIPTION,CONTACT
+        from ARII_APPLICATION
+        where active=1
+        order by NAME
+    mysql: |
+        select NAME,TITLE,CONTACT
+        from ARII_APPLICATION
+        where active=1
+        order by NAME

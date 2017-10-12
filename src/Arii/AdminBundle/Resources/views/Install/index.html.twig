@@ -1,0 +1,49 @@
+{% extends "AriiAdminBundle::layout.html.twig" %}
+{% block body %}
+<script>
+dhtmlxEvent(window,"load",function(){ 
+var size=300;
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setWidth(size);
+    globalLayout.cells("b").hideHeader();
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myToolbar = globalLayout.cells("b").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
+    myToolbar.loadStruct("{{ url('xml_Admin_notes_toolbar') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    mySidebar = globalLayout.cells("a").attachSidebar({
+        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
+    });
+    mySidebar.attachEvent("onBubbleClick", function(id, value){
+        // bubble clicked, your code here
+        // 'return true' means item allowed to be selected
+        // false - otherwise
+        return true;
+    });
+    mySidebar.attachEvent("onSelect", function(id, value){
+        switch(id) {
+            default:
+                document.location.href = "{{ url('arii_Admin_index') }}"+id;
+        }
+        return true;
+    });
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("b").attachURL('{{ url('html_Admin_install') }}');   
+});
+
+function GlobalRefresh() {
+}
+</script>
+{% endblock %}

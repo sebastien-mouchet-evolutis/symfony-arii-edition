@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job_chain  orders_recoverable="yes" visible="yes" title="Aiguillage en fonction de la valeur d'un champ de la base de données">
+    <job_chain_node  state="SQL" job="SQL" next_state="DB OK!" error_state="WARNING"/>
+
+    <job_chain_node  state="WARNING" job="DISPLAY" next_state="PURGE" error_state="!ERROR"/>
+
+    <job_chain_node  state="DB OK!"/>
+
+    <job_chain_node  state="PURGE"/>
+
+    <job_chain_node  state="!ERROR"/>
+</job_chain>

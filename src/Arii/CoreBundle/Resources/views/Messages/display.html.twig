@@ -1,0 +1,49 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiCoreBundle::doc.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<!-- <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script> -->
+{% endblock %} 
+{% block body %}
+<body>
+<br/>
+<div class="container-fluid">
+{% if type == 'A' %} 
+<div class="alert alert-danger">
+  <strong>{{ "Alert!" | trans }}</strong> {{ title }}
+</div>
+{% elseif type == 'W' %} 
+<div class="alert alert-warning">
+  <strong>{{ "Warning!" | trans }}</strong> {{ title }}
+</div>
+{% elseif type == 'I' %} 
+<div class="alert alert-info">
+  <strong>{{ "Info!" | trans }}</strong> {{ title }}
+</div>
+{% else %} 
+<div class="alert alert-warning">
+  <strong>{{ type }}?</strong> {{ title }}
+</div>
+{% endif %}
+<pre>
+{{ text }}
+</pre>
+<table class="table table-striped table-bordered table-condensed">
+    <tr>
+        <td><img src="{{ asset('/bundles/ariicore/images/wa/date.png') }}"/> {{ sent }}</td>
+        {% if read is not empty %}
+        <td><img src="{{ asset('/bundles/ariicore/images/wa/read.png') }}"/> {{ read }}</td>
+        {% endif %}
+        {% if ack is not empty %}
+        <td><img src="{{ asset('/bundles/ariicore/images/wa/ack.png') }}"/> {{ ack }}</td>
+        {% endif %}
+
+    </tr>
+</table>
+</div>    
+</body>
+{% endblock %}

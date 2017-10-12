@@ -1,0 +1,124 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiMFTBundle::layout.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+var only_warning = 0;
+var update = 60;
+var autorefresh;
+var transfer=-1;
+dhtmlxEvent(window,"load",function(){
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
+    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_MFT_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    myTransfers = globalLayout.cells("a").attachGrid();
+    myTransfers.selMultiRows = true;
+    myTransfers.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myTransfers.setHeader("{{ "Partner" | trans }},{{ "Transfer" | trans }},{{ "Description" | trans }}");
+    myTransfers.attachHeader("#select_filter,#text_filter,#text_filter");
+    myTransfers.setInitWidths("150,*,0");
+    myTransfers.setColAlign("left,left,left");
+    myTransfers.setColTypes("ro,ro,ro");
+    myTransfers.setColSorting("str,str,str");
+    myTransfers.init();
+    myTransfers.load("{{ url('xml_MFT_transfers_grid') }}");
+
+    myTabbar = globalLayout.cells("b").attachTabbar();
+    myTabbar.addTab( "files", "{{ "Files" | trans }}", "150px", null, true);
+    myTabbar.addTab( "size", "{{ "Volume" | trans }}", "150px");
+    myTabbar.addTab( "detail", "{{ "Detail" | trans }}", "150px");
+
+    myGrid = myTabbar.cells("detail").attachGrid();
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Operation" | trans }},{{ "Source file" | trans }},{{ "Start" | trans }},{{ "End" | trans }},{{ "Status" | trans }},{{ "Size" | trans }},{{ "MD5" | trans }},Files");
+    myGrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#select_filter,#numeric_filter,#text_filter");
+    myGrid.setInitWidths("200,*,150,150,100,80,250,0");
+    myGrid.setColAlign("left,left,right,left,left,right,left,left");
+    myGrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,date,date,str,int,str,int");
+    myGrid.init();
+
+    myBarChart = myTabbar.cells("files").attachChart( {
+        view:"line",
+        color:"#66ccff",
+        container:"chart_container",
+        value:"#data7#",
+        label:"#data2#",
+        radius:3,
+        tooltip:{
+                template:"#data7#"
+        },
+        width:50,
+        origin:0,
+        yAxis:{
+            title: "{{ "Hours" | trans }}"            
+        },
+        group:{
+                by:"#data2#",
+                map:{
+                        data7:["#data7#","sum"]
+                }
+        },
+        xAxis:{  
+            template:""
+        },
+        border:false
+    });
+
+    myBarChart2 = myTabbar.cells("size").attachChart( {
+        view:"line",
+        color:"#66ccff",
+        container:"chart_container",
+        value:"#data5#",
+        label:"#data2#",
+        radius:3,
+        tooltip:{
+                template:"#data5#"
+        },
+        width:50,
+        origin:0,
+        yAxis:{
+            title: "{{ "Hours" | trans }}"            
+        },
+        group:{
+                by:"#data2#",
+                map:{
+                        data5: ["#data5#","sum"]
+                }
+        },
+        xAxis:{
+            template:""
+        },
+        border:false
+    });
+    
+    GlobalRefresh();
+});
+
+function GlobalRefresh() {
+    globalLayout.cells("b").progressOn();
+    myGrid.load( "{{ url('xml_MFT_transmissions_grid') }}?only_warning="+only_warning+"&transfer="+transfer,function() {
+        myBarChart.parse(myGrid,"dhtmlxgrid");
+        myBarChart2.parse(myGrid,"dhtmlxgrid");
+        globalLayout.cells("b").progressOff();
+        myGrid.refreshFilters();
+        myGrid.filterByAll();
+    });
+}
+
+function onShowMenu(rowId, celInd, grid) {
+return true;
+}
+</script>
+{% endblock %}

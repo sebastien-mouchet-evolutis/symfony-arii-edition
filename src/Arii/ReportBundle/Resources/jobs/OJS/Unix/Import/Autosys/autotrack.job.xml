@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job  order="yes" title="Transforme le journal en tableau" stop_on_error="no">
+    <params>
+        <include live_file="../../../arii.params.xml"/>
+    </params>
+
+    <script  language="shell">
+        <![CDATA[
+autotrack -v > ${SCHEDULER_PARAM_ARII_TMP}/audit.txt
+        ]]>
+    </script>
+
+    <run_time />
+</job>

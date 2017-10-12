@@ -1,0 +1,73 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<!-- <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script> -->
+{% endblock %} 
+{% block body %}
+<body>
+<div class="container-fluid">
+<div class="jumbotron">
+  <h1>{{ "Imports" | trans }}</h1>
+</div>
+<h2>Jobs & Runs</h2>
+<table class="table">
+<tr>
+    <th>{{ "Table" | trans }}</th>
+    <th>{{ "Count" | trans }}</th>
+    <th>{{ "Last" | trans }}</th>
+    <th>{{ "Days" | trans }}</th>
+</tr>
+{% for name,check in Check %}
+{% if check.count>=0 %}
+    {% if check.days<8 %}
+    <tr class="success">
+    {% else %}
+    <tr class="warning">
+    {% endif %}
+    <th>{{ name }}</th>
+    <td>{{ check.count }}</td>
+    <td>{{ check.last }}</td>
+    <td>{{ check.days }}</td
+{% else %}
+<tr class="danger">
+    <th>{{ name }}</th>
+{% endif %}
+</tr>
+{% endfor %}
+</table>
+
+<h2>Backups</h2>
+<table class="table">
+<tr>
+    <th>{{ "Table" | trans }}</th>
+    <th>{{ "Count" | trans }}</th>
+    <th>{{ "Last" | trans }}</th>
+    <th>{{ "Days" | trans }}</th>
+</tr>
+{% for name,check in Backup %}
+{% if check.count>=0 %}
+    {% if check.days<8 %}
+    <tr class="success">
+    {% else %}
+    <tr class="warning">
+    {% endif %}
+    <th>{{ name }}</th>
+    <td>{{ check.count }}</td>
+    <td>{{ check.last }}</td>
+    <td>{{ check.days }}</td
+{% else %}
+<tr class="danger">
+    <th>{{ name }}</th>
+{% endif %}
+</tr>
+{% endfor %}
+</table>
+
+</div>    
+</div>
+</body>
+{% endblock %}

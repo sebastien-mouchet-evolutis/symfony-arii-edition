@@ -1,0 +1,29 @@
+After transfer: Après le transfert
+Before transfer: Avant le transfert
+Changes: Changements
+Definitions: Définitions
+Deliveries: Livraisons
+Delivery: Livraison
+Diagram: Diagramme
+Exit if nothing: Sortie en absence
+Expected files: Fichiers attendus
+No schedule: Aucune planification
+Operation: Opération
+Operations: Opérations
+Partner: Partenaire
+Partners: Partenaires
+Scheduled: Planifié
+Start step: Départ
+End step: Arrivée
+Transfer:  Transfer
+Transfers: Transferts
+polling: Tentatives multiples
+polling_interval: Intervalle entre les tentatives (secondes)
+polling_timeout: Temps maximum (minutes)
+remove_files: Suppression des fichiers à la source
+transactional: Mode transactionnel
+pre_command: Commande avant transfert
+post_command: Commande après transfert
+mail_on_error: Envoi de mail sur erreur
+mail_on_success: Envoi de mail en cas de succès
+Transfer report: Rapport de transfert

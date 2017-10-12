@@ -1,0 +1,33 @@
+{
+    "items":
+    [
+        {   "type":"block", 
+            text:"{{ "module.Self" | trans }}", 
+            "text_pos": "top", 
+            "list":
+            [
+               {   type: "button", 
+                   id: 'index',
+                   text:"", 
+                   "isbig": true, 
+                   "img": "48/self.png"
+                },
+                {  type: "button", 
+                   id: 'request',
+                   text:"{{ "New request" | trans }}", 
+                   "img": "edit.png"
+                },
+                {  type: "button", 
+                   id: 'requests',
+                   text:"{{ "Running requests" | trans }}", 
+                   "img": "cog.png"
+                },
+                {  type: "button", 
+                   id: 'history',
+                   text:"{{ "Requests history" | trans }}", 
+                   "img": "table.png"
+                }                
+            ]
+        }
+    ]
+}

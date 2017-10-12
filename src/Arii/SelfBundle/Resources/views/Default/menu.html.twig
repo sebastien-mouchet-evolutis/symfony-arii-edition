@@ -1,0 +1,18 @@
+    myTab = globalLayout.cells("a").attachTabbar();
+    myTab.addTab("queue","{{ "Templates" | trans }}","120px",null,true);
+    myTab.addTab("status","{{ "Status" | trans }}","120px");
+
+    myTree = myTab.cells("queue").attachTree();
+    myTree.setImagePath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.load( '{{ url('xml_Self_requests_tree') }}');
+
+    myMenu = myTab.cells("status").attachGrid();
+    myMenu.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myMenu.setHeader("#text_filter,#numeric_filter");
+    myMenu.setInitWidths("*,60");
+    myMenu.setColAlign("left,right");
+    myMenu.setColTypes("ro,ro");
+    myMenu.setColSorting("str,int");
+    myMenu.init();
+    myMenu.load( "{{ url('xml_Self_status') }}");
+

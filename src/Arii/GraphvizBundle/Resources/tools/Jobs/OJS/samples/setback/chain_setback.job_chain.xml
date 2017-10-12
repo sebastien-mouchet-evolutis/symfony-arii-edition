@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job_chain orders_recoverable="yes" visible="yes">
+
+  <job_chain_node state="start" job="setback" next_state="next" error_state="error"/>            
+  <job_chain_node state="next" job="after_setback" next_state="success" error_state="error"/>  
+  <job_chain_node state="success"/>  
+  <job_chain_node state="error"/>
+  
+</job_chain>

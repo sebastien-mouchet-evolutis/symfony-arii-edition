@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job_chain>                        
+  <job_chain_node state="start" job="readparam" next_state="success" error_state="error"/>
+
+  <job_chain_node state="success"/>
+  <job_chain_node state="error"/>
+</job_chain>

@@ -1,0 +1,75 @@
+[
+    {   
+        type:"settings",
+        position:   "label-left", 
+        labelAlign: "right", 
+        labelWidth: 100,
+        inputWidth: 300,
+        offsetLeft: 10 
+    },
+    {   type:"hidden", 
+        name: "ID"
+    },
+    {   type:"hidden", 
+        name: "ID_PARTNER"
+    },
+    {   type:"input", 
+        name: "NAME", 
+        label:"{{ "Name" | trans}}",
+        required: true
+    },
+    {   type:"input", 
+        name: "TITLE", 
+        label:"{{ "Title" | trans}}"
+    },
+    {  type: "select",
+       name: "PARTNER_ID",
+       label: "{{ "Partner"| trans }}",
+       connector: "{{ url('xml_MFT_partners_select') }}"
+    },
+    {   type:"input", 
+        name: "DESCRIPTION", 
+        label:"{{ "Description" | trans}}",
+        rows: 4
+    },
+    { type: "newcolumn" },
+    {   type:"input",
+        name: "ENV", 
+        label:"{{ "Env." | trans}}"
+    },
+    {   type:"input", 
+        name: "STEP_START", 
+        label:"{{ "Start step" | trans}}"
+    },
+    {   type:"input", 
+        name: "STEP_END", 
+        label:"{{ "End step" | trans}}"
+    },
+    {   type:"hidden", 
+        name: "CHANGE_TIME", 
+        label:"{{ "Change" | trans}}",
+        readonly: true
+    },
+    {   type:"hidden", 
+        name: "CHANGE_USER", 
+        label:"{{ "User" | trans}}",
+        readonly: true
+    },
+    {   type:"input", 
+        name: "STEPS", 
+        label:"{{ "Steps" | trans}}",
+        readonly: true
+    },
+    {   type:"checkbox", 
+        name: "TIME",
+        label:"{{ "Scheduled" | trans}}",
+        list: [
+            {   type:"select", 
+                name: "SCHEDULE_ID",
+                label:"{{ "Schedule" | trans}}",
+                connector: "{{ url('xml_MFT_schedules_select') }}"
+            }
+        ]
+    },
+    {type:"hidden",    name: "ID" }
+]

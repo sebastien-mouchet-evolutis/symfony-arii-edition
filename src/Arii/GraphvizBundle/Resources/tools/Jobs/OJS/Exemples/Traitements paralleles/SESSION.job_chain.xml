@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job_chain  orders_recoverable="yes" visible="yes">
+    <job_chain_node  state="ENTETE" job="JobChainSplitter" next_state="FIN" error_state="FAILURE"/>
+
+    <job_chain_node  state="ENTETE:UPROC1" job="UPROC1" next_state="FIN" error_state="FAILURE"/>
+
+    <job_chain_node  state="ENTETE:UPROC2" job="UPROC2" next_state="FIN" error_state="FAILURE"/>
+
+    <job_chain_node  state="ENTETE:UPROC3" job="UPROC3" next_state="FIN" error_state="FAILURE"/>
+
+    <job_chain_node  state="FIN" job="JobChainSync" next_state="SUCCESS" error_state="FAILURE"/>
+
+    <job_chain_node  state="SUCCESS"/>
+
+    <job_chain_node  state="FAILURE"/>
+</job_chain>

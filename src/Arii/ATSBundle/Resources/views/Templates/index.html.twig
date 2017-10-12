@@ -1,0 +1,84 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiATSBundle::layout.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+dhtmlxEvent(window,"load",function(){ 
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setWidth(410);
+    globalLayout.cells("b").hideHeader();
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    var myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/') }}");
+    myGrid.setHeader("{{ "Folder" | trans }},{{ "File" | trans }},{{ "Date" | trans }},{{ "Size" | trans }}");
+    myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#numeric_filter");
+    myGrid.setColAlign("left,left,right,right");
+    myGrid.setInitWidths("*,*,140,100");
+    myGrid.setColTypes("ro,ro,ro,ro");
+    myGrid.init();
+    myGrid.load("{{ url('xml_ATS_templates_files') }}");
+    
+    var myTab = globalLayout.cells("c").attachTabbar();
+    myTab.addTab("jil","JIL","100px", null, true);
+    myTab.addTab("diff","{{ "Check" | trans }}","100px");
+
+    myTree = globalLayout.cells("a").attachTree();
+    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.load( "{{ url('xml_ATS_templates_tree') }}" );
+
+    myTree.attachEvent("onClick",function(id){
+        globalLayout.cells("b").progressOn();   
+        dhx4.ajax.get("{{ url('html_ATS_template_recalc') }}?config="+encodeURIComponent(id),function(loader,response){
+            dhtmlx.message({
+            type: "Notice",
+            expire: 10000,
+            width: "500px",
+            text: loader.xmlDoc.responseText });
+            myGrid.load("{{ url('xml_ATS_templates_files') }}", function() {
+                globalLayout.cells("b").progressOff();
+            });
+        });
+    })    
+    
+    myTab.attachEvent("onContentLoaded", function(id){
+        globalLayout.cells("c").progressOff();
+    });
+    
+    myGrid.attachEvent("onRowSelect",function(id){    
+        globalLayout.cells("c").progressOn();
+        myTab.cells("jil").attachURL("{{ url('arii_ATS_template_read') }}?file="+encodeURIComponent(id));
+        myTab.cells("diff").attachURL("{{ url('arii_ATS_template_diff') }}?file="+encodeURIComponent(id));
+    });
+
+    myMEPToolbar = myTab.cells("diff").attachToolbar();
+    myMEPToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myMEPToolbar.loadStruct( "{{ url('xml_ATS_templates_mep_toolbar') }}");
+    myMEPToolbar.attachEvent("onClick",function(itemid){
+         switch (itemid) {
+            case 'go':
+                myTab.cells("diff").attachURL("{{ url('arii_ATS_template_mep') }}?file="+encodeURIComponent(id));
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+
+    globalLayout.cells("a").hideHeader();
+    myTab.cells("jil").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}'); 
+});
+
+</script>
+{% endblock %}

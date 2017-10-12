@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<job title="Creates order for another job chain"
+     order="yes"
+     stop_on_error="no">
+    <description>
+        <include file="${SCHEDULER_RPTR_PATH}\RaptorProd2.txt"/>
+    </description>
+    <script language="javascript">
+        <![CDATA[
+function spooler_process(){
+      var thisOrder = spooler_task.order;
+      var order = spooler.create_order();
+      var exe_jobchain = thisOrder.params.value("exe_jobchain");
+      order.id         = thisOrder.id + "_" + thisOrder.state;
+      spooler_log.info ("Order added:" + order.id);
+      order.params.merge(thisOrder.params);
+      spooler.job_chain( exe_jobchain ).add_order( order );
+
+      return true;
+}
+        ]]>
+    </script>
+    <monitor name="configuration_monitor"
+             ordering="0">
+        <script java_class="sos.scheduler.managed.configuration.ConfigurationOrderMonitor"
+                language="java"/>
+    </monitor>
+    <run_time/>
+</job>

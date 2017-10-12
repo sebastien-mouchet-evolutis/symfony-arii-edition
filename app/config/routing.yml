@@ -1,0 +1,204 @@
+arii_homepage:
+    path:  /
+    defaults: {_controller: AriiCoreBundle:Default:default }
+
+arii_home:
+    path:  /home/{_locale}
+    defaults: { _controller: AriiCoreBundle:Default:index }
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp
+
+# ========================================
+# Core Bundle
+# ----------------------------------------
+arii_core:
+    resource: "@AriiCoreBundle/Resources/config/routing.yml"
+    prefix:   /home/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp
+                
+# ========================================
+# Admin 
+# ----------------------------------------
+arii_Admin:
+    resource: "@AriiAdminBundle/Resources/config/routing.yml"
+    prefix:   /admin/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# Self
+# ----------------------------------------
+arii_Self:
+    resource: "@AriiSelfBundle/Resources/config/routing.yml"
+    prefix:   /self/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# Stat
+# ----------------------------------------
+arii_Stat:
+    resource: "@StatBundle/Resources/config/routing.yml"
+    prefix:   /stat/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# Plumb
+# ----------------------------------------
+arii_Plumb:
+    resource: "@AriiPlumbBundle/Resources/config/routing.yml"
+    prefix:   /plumb/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# JID 
+# ----------------------------------------
+arii_jid:
+    resource: "@AriiJIDBundle/Resources/config/routing.yml"
+    prefix:   /jid/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# DS 
+# ----------------------------------------
+arii_ds:
+    resource: "@AriiDSBundle/Resources/config/routing.yml"
+    prefix:   /ds/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# MFT 
+# ----------------------------------------
+arii_mft:
+    resource: "@AriiMFTBundle/Resources/config/routing.yml"
+    prefix:   /mft/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# Graphviz
+# ----------------------------------------
+arii_GVZ:
+    resource: "@AriiGraphvizBundle/Resources/config/routing.yml"
+    prefix:   /gvz/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# JOC
+# ----------------------------------------
+arii_JOC:
+    resource: "@AriiJOCBundle/Resources/config/routing.yml"
+    prefix:   /joc/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# Report
+# ----------------------------------------
+arii_Report:
+    resource: "@AriiReportBundle/Resources/config/routing.yml"
+    prefix:   /report/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# Autosys
+# ----------------------------------------
+arii_ATS:
+    resource: "@AriiATSBundle/Resources/config/routing.yml"
+    prefix:   /ats/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+
+# ----------------------------------------
+# Housekeeping
+# ----------------------------------------
+arii_JID_purge:
+    path:  /housekeeping/purge
+    defaults: { _controller: AriiJIDBundle:DB:purge }
+
+arii_JID_purge_history:
+    path:  /housekeeping/purge_history
+    defaults: { _controller: AriiJIDBundle:DB:purge_history }
+
+arii_JID_purge_order_history:
+    path:  /housekeeping/purge_order
+    defaults: { _controller: AriiJIDBundle:DB:purge_order }
+
+arii_JID_purge_history_out:
+    path:  /housekeeping/purge/history/{DB}
+    defaults: { _controller: AriiJIDBundle:DB:purgeHistory }
+
+arii_JID_purge_orders_history_out:
+    path:  /housekeeping/purge/orders/{DB}
+    defaults: { _controller: AriiJIDBundle:DB:purgeOrdersHistory }
+    
+arii_JID_status_history:
+    path:  /housekeeping/status
+    defaults: { _controller: AriiJIDBundle:DB:status }
+
+# ========================================
+arii_JID_purge_history_public:
+    path:  /public/purge/history
+    defaults: { _controller: AriiJIDBundle:DB:purge_history }
+
+arii_JID_purge_order_public:
+    path:  /public/purge/orders
+    defaults: { _controller: AriiJIDBundle:DB:purge_order }
+
+arii_JID_purge_order_step_public:
+    path:  /public/purge/steps
+    defaults: { _controller: AriiJIDBundle:DB:purge_order_steps }
+
+# ========================================
+# User Bundle
+# ----------------------------------------
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /profile
+
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /change-password
+
+arii_user:
+    resource: "@AriiUserBundle/Resources/config/routing.yml"
+    prefix:   /user/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp
+
+# ========================================
+# I5
+# ----------------------------------------
+arii_I5:
+    resource: "@AriiI5Bundle/Resources/config/routing.yml"
+    prefix:   /i5/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# Time
+# ----------------------------------------
+arii_Time:
+    resource: "@AriiTimeBundle/Resources/config/routing.yml"
+    prefix:   /time/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 

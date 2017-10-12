@@ -1,0 +1,113 @@
+{% extends "AriiAdminBundle::layout.html.twig" %}
+{% block dhtmlx_plus %}
+<link rel="stylesheet" type="text/css" href="{{ asset('dhtmlx_vault/codebase/dhtmlxvault.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ asset('dhtmlx_vault/skins/terrace/dhtmlxvault.css') }}" />
+<script src="{{ asset('dhtmlx_vault/codebase/dhtmlxvault.js') }}" type="text/javascript"></script>
+<script src="{{ asset('dhtmlx_vault/codebase/swfobject.js') }}"></script>
+{% endblock dhtmlx_plus %}
+{% block body %}
+<script>
+dhtmlxEvent(window,"load",function(){ 
+var size=300;
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"3W");
+    globalLayout.cells("a").setWidth(size);
+    globalLayout.cells("c").hideHeader();
+    globalLayout.cells("c").setHeight(220); 
+    globalLayout.cells("b").setWidth(size); 
+    globalLayout.cells("b").setText("{{ "Workspace" | trans }}");
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    mySidebar = globalLayout.cells("a").attachSidebar({
+        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
+    });
+    mySidebar.attachEvent("onBubbleClick", function(id, value){
+        // bubble clicked, your code here
+        // 'return true' means item allowed to be selected
+        // false - otherwise
+        return true;
+    });
+    mySidebar.attachEvent("onSelect", function(id, value){
+        document.location.href = "{{ url('arii_Admin_index') }}"+id;
+        return true;
+    });
+    
+    globalLayout.cells("b").setText("{{ "Workspace" | trans }}");
+    myTree = globalLayout.cells("b").attachTree();
+    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    globalLayout.cells("b").progressOn();
+    myTree.load( "{{ url('xml_Admin_vault_tree') }}", function (id) {
+        globalLayout.cells("b").progressOff();
+    });        
+
+    myLayout = globalLayout.cells("c").attachLayout("2E");
+    myLayout.cells("a").setText("{{ "Files" | trans }}");
+    
+    myGrid = myLayout.cells("a").attachGrid();
+    myGrid.setHeader("{{ "File" | trans }},{{ "Type" | trans }},{{ "Date" | trans }},{{ "Size" | trans }}");
+    myGrid.attachHeader("#text_filter,#select_filter,#text_filter,#numeric_filter");
+    myGrid.setInitWidths("*,180,180,200");
+    myGrid.setColAlign("left,left,left,left");
+    myGrid.setColTypes("ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,str,str");
+    myGrid.enableAlterCss("","");
+    myGrid.init();
+    myGrid.load("{{ url('xml_Admin_vault_grid') }}");
+ 
+    myTab = myLayout.cells("b").attachTabbar();
+    myTab.addTab("upload","{{ "Send" | trans }}","100px", null, true);
+    myTab.addTab("view","{{ "View" | trans }}","100px");
+    
+    myVault = myTab.cells("upload").attachVault({
+        "autoStart": true,
+        "buttonUpload": true,        
+        "uploadUrl": "{{ url('json_Admin_vault_upload') }}",
+        "swfUrl":    "{{ url('json_Admin_vault_upload') }}",
+        "slUrl":     "{{ url('json_Admin_vault_upload') }}",
+        "swfPath":   "{{ asset('dhtmlx_vault/codebase/dhxvault.swf') }}",
+        "slXap":     "{{ asset('dhtmlx_vault/codebase/dhxvault.xap') }}",
+        "maxFileSize": 2097152
+    });    
+
+    myVault.setStrings({
+        done:           "{{ "Done" | trans }}",
+        error:          "{{ "Error" | trans }}",
+        size_exceeded:  "{{ "Size execeeded"  | trans }} (&gt; #size#)",
+        btnAdd:         "{{ "Add"  | trans }}",
+        btnUpload:      "{{ "Upload"  | trans }}",
+        btnClean:       "{{ "Clean"  | trans }}",
+        btnCancel:      "{{ "Cancel"  | trans }}",
+        dnd:            "{{ "Drop files here" | trans }}"
+    });
+    
+    // Clic sur l'arbre => Liste les fichiers    
+    myTree.attachEvent("onClick",function(id){
+        globalLayout.cells("c").progressOn();
+        myGrid.load("{{ url('xml_Admin_vault_grid') }}?path="+id, function() {
+            myTab.cells("view").attachHTMLString('');
+            globalLayout.cells("c").progressOff();            
+        });
+    })    
+    
+    // Clic sur le fichier => Vue
+    myGrid.attachEvent("onRowDblClicked", function(id) {
+        myTab.cells("view").attachURL("{{ url('html_Admin_vault_view') }}?file="+encodeURIComponent(id),false)
+        myTab.tabs("view").setActive();
+    });
+
+    globalLayout.cells("a").hideHeader();
+});
+
+function GlobalRefresh() {
+}
+</script>
+{% endblock %}

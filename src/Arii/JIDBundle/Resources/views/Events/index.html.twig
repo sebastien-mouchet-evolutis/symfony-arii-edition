@@ -1,0 +1,61 @@
+{% extends "AriiJIDBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+dhtmlxEvent(window,"load",function(){
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");
+    globalLayout.cells("a").setWidth(350); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+    globalLayout.cells("c").setHeight(260); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_JID_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    
+    myGrid = globalLayout.cells("c").attachGrid();
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader( "{{ "Spooler" | trans }},{{ "Event" | trans }},{{ "Job" | trans }},{{ "Chain" | trans }},{{ "Order" | trans }},{{ "Exit" | trans }},{{ "Creation" | trans }}" );
+    myGrid.attachHeader("#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#text_filter,#text_filter");
+    myGrid.setInitWidths( "100,200,*,*,*,50,130" );
+    myGrid.setColTypes(   "ro,ro,ro,ro,ro,ro,ro" );
+    myGrid.setColAlign(   "left,left,left,left,left,right,right" );
+    myGrid.setColSorting( "str,str,str,str,str,int,date" );
+    myGrid.init();
+    myGrid.load( "{{ url('xml_JID_events_last') }}" );
+    myGrid.enableLightMouseNavigation( true );
+
+    globalLayout.cells("b").hideHeader();
+    myGrid.attachEvent("onRowDblClicked",function(id, value){
+        globalLayout.cells("b").attachURL("{{ url('html_JID_event_detail') }}?id="+id,true);
+    });
+});
+
+function GlobalRefresh() {
+    clearInterval( autorefresh );
+    GridRefresh();
+    autorefresh = setInterval( "GridRefresh()", update*1000 );
+}
+
+function GridRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    myGrid.load("{{ url('xml_JID_events_last') }}", function(){    
+    });    
+}
+</script>
+{% endblock %}

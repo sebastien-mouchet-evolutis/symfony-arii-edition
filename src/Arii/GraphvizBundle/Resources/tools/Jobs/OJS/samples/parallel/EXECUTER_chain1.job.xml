@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<job order="yes"
+     stop_on_error="no"
+     tasks="10">
+    <script language="shell">
+        <![CDATA[
+%scheduler_param_sync_command%
+        ]]>
+    </script>
+    <run_time/>
+</job>

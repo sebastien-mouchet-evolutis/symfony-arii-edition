@@ -1,0 +1,28 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+{% endblock %} 
+{% block body %}
+<body>
+<div class="container-fluid">
+<div class="jumbotron">
+<img style="float: right;" src="{{ asset('arii.png') }}"/>
+  <h1>{{ "Installation" | trans }}</h1>
+  <p>{{ "Database update" | trans }}</p>
+</div>
+<div class="table-responsive">
+{% for name,values in Change %}
+<div class="panel panel-info"> 
+ <div class="panel-heading"> {{ name }}</div>   
+  <div class="panel-body">
+    {{ values }}
+  </div>
+</div>         
+{% endfor %}
+</div>
+</div>
+</body>
+{% endblock %}

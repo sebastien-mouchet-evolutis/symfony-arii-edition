@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job order="yes" tasks="1">
+  <script language="java:javascript"><![CDATA[
+                    
+      function spooler_process(){
+        var orderparams = spooler_task.order.params;
+        var count = orderparams.value("count");
+        spooler_log.info("job chain: "+spooler_task.order.job_chain.name);
+        
+        // simulate an error unless this job is started three times
+        if (count!=3) {
+          count++;
+          orderparams.set_var("count",count);
+          spooler_log.info("setting back order");
+          spooler_task.order.setback();
+          return false;
+        } else{
+          spooler_log.info("count==3");
+        }
+        
+        return true;
+      }
+                          
+  ]]></script>
+
+  <!-- after the first setback, try again every 20 seconds -->
+  <delay_order_after_setback setback_count="1" delay="20"/>
+  <!-- after the 100th setback, try again every 60 seconds -->
+  <delay_order_after_setback setback_count="100" delay="60"/>
+  <!-- after the 1000th setback, give up -->
+  <delay_order_after_setback setback_count="1000" is_maximum="yes"/>
+</job>

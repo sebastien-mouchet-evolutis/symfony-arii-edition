@@ -1,0 +1,4 @@
+services:
+    arii_self.self:
+        class: Arii\SelfBundle\Service\AriiSelf
+        arguments: [ "@arii_core.portal", "@doctrine.orm.default_entity_manager" ]

@@ -1,0 +1,63 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var app="{{ appl }}",
+    env="{{ env }}",
+    month={{ month }},
+    year={{ year }},
+    day_past={{ day_past }};
+
+dhtmlxEvent(window,"load",function(){     
+    globalLayout = new dhtmlXLayoutObject(document.body,"1C");
+    globalLayout.cells("a").hideHeader();
+
+    myToolbar = globalLayout.cells("a").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.loadStruct("{{ url('xml_Report_toolbar') }}?app="+app+"&env="+env+"&month="+month, function() {
+        this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
+        this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
+        this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
+        this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
+    });
+    myToolbar.attachEvent( "onClick", function(id, value) {
+        var parent=this.getParentId(id);
+        switch (parent) {
+            case "APP":
+                this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
+                app = id;
+                GlobalRefresh();
+                break;
+            case "ENV":
+                this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
+                env = id;
+                GlobalRefresh();
+                break;
+            case "MONTH":
+                this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
+                month = id;
+                GlobalRefresh();
+                break;
+            case "DAY_PAST":
+                this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
+                day_past = id;
+                GlobalRefresh();
+                break;
+            case "YEAR":
+                this.setItemText("YEAR",this.getListOptionText("YEAR",this.getListOptionSelected("YEAR")));
+                year = id;
+                GlobalRefresh();
+                break;
+            default:
+//                alert(id);
+                GlobalRefresh();
+        }
+    });
+    GlobalRefresh();
+});
+
+function GlobalRefresh() {
+    globalLayout.cells("a").attachURL( "{{url('html_Report_dashboard') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past );                      
+};
+</script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiUserBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block body %}
+<script type="text/javascript">
+dhtmlxEvent(window,"load",function(){ 
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
+    globalLayout.cells("a").hideHeader();
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");    
+
+    globalLayout.cells("a").setWidth(360);
+    globalLayout.cells("b").hideHeader();
+
+    myDocs = globalLayout.cells("a").attachAccordion();
+    myDocs.addItem( "Home", "{{ "Ari'i" }}", true);
+
+    globalLayout.cells("b").attachURL("{{ url('html_Core_readme') }}");
+
+    myTree = myDocs.cells("Home").attachTree();
+    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.load("{{ url('xml_docs_tree') }}?route=arii_Core_index");
+    myTree.attachEvent("onClick",function(id){
+        globalLayout.cells("b").attachURL("{{ url('html_doc_view') }}?doc="+id);
+    })    
+    
+});
+</script>
+</body>
+{% endblock %}

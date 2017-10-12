@@ -1,0 +1,60 @@
+component:
+    webserver:    Serveur web
+    jobscheduler: Ordonnanceur
+    database:     Base de données
+    mailserver:   Messagerie
+    agent:        Agent
+    client:       Client
+    os:           OS
+domain:
+    web:          Web
+    jobscheduler: Ordonnanceur
+    database:     Base de données
+    mail:         Messagerie
+jobscheduler:
+    ojs:          OS Jobscheduler
+    ats:          Autosys
+    ctm:          Control-M
+    uni:          $Universe
+    run:          Rundeck
+webserver:
+    apache:       Apache
+    iis:          IIS
+os:
+    windows:      Windows
+    unix:         Unix
+    raspberry:    Raspberry
+    symfony2:     Symfony2
+    iseries:      ISeries
+agent:
+    iseries:      iSeries
+database:    
+    mysql:        MariaDB
+    oracle:       Oracle
+    postgres:     PostGreSQL
+    sqlserver:    SQLServer
+env:
+    T:            Test
+    D:            Développement
+    U:            Validation
+    I:            Intégration
+    P:            Production
+    R:            Recette 
+role:
+    primary:      Primaire
+    backup:       Secours
+    agent:        Agent
+    client:       Client
+    supervisor:   Superviseur
+    tiebreaker:   Arbitre
+    eventmanager: Gest. évènements
+    launcher:     Lanceur
+event_type:
+    app:          Application
+    usr:          Utilisateur
+    sys:          Système
+    sec:          Sécurité
+    hdw:          Matériel
+    upd:          Mise à jour
+    tst:          Test
+    net:          Réseau

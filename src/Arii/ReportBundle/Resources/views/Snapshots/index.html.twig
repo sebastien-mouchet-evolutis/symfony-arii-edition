@@ -1,0 +1,67 @@
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block dhtmlx_plus %}
+<link rel="stylesheet" type="text/css" href="{{ asset('dhtmlx_vault/codebase/dhtmlxvault.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ asset('dhtmlx_vault/skins/terrace/dhtmlxvault.css') }}" />
+<script src="{{ asset('dhtmlx_vault/codebase/dhtmlxvault.js') }}" type="text/javascript"></script>
+<script src="{{ asset('dhtmlx_vault/codebase/swfobject.js') }}"></script>
+{% endblock dhtmlx_plus %}
+{% block body %}
+<script>
+dhtmlxEvent(window,"load",function(){ 
+var size=345;
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"3W");
+    globalLayout.cells("a").setWidth(size);
+    globalLayout.cells("c").hideHeader();
+    globalLayout.cells("b").setWidth(600); 
+    globalLayout.cells("b").setText("{{ "Workspace" | trans }}");
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+ 
+    myTree = globalLayout.cells("a").attachTree();
+    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    globalLayout.cells("b").progressOn();
+    myTree.load( "{{ url('xml_Report_snapshots_tree') }}", function (id) {
+        globalLayout.cells("b").progressOff();
+    });        
+
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.setHeader("{{ "File" | trans }},{{ "Type" | trans }},{{ "Date" | trans }},{{ "Size" | trans }}");
+    myGrid.attachHeader("#text_filter,#select_filter,#text_filter,#numeric_filter");
+    myGrid.setInitWidths("*,0,180,100");
+    myGrid.setColAlign("left,right,right,right");
+    myGrid.setColTypes("ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,str,str");
+    myGrid.enableAlterCss("","");
+    myGrid.init();
+    myGrid.load("{{ url('xml_Report_snapshots_grid') }}");
+ 
+    // Clic sur l'arbre => Liste les fichiers    
+    myTree.attachEvent("onClick",function(id){
+        globalLayout.cells("b").progressOn();
+        myGrid.load("{{ url('xml_Report_snapshots_grid') }}?path="+id, function() {
+            globalLayout.cells("c").attachHTMLString('');
+            globalLayout.cells("b").progressOff();            
+        });
+    })    
+    
+    // Clic sur le fichier => Vue
+    myGrid.attachEvent("onRowDblClicked", function(id) {
+        globalLayout.cells("c").attachURL("{{ url('html_Report_snapshots_view') }}?file="+encodeURIComponent(id),false)
+    });
+
+    globalLayout.cells("a").hideHeader();
+});
+
+function GlobalRefresh() {
+}
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job_chain  visible="yes" orders_recoverable="yes" title="JobChainB">
+    <job_chain_node  state="Start" job="/sos/jitl/JobChainStart" next_state="CheckEvent" error_state="Error"/>
+
+    <job_chain_node  state="CheckEvent" job="__PROCESS_END.JOB_CHAINA_END" next_state="TaskB1" error_state="Error" on_error="setback"/>
+
+    <job_chain_node  state="TaskB1" job="TaskB1" next_state="TaskB2" error_state="Error"/>
+
+    <job_chain_node  state="TaskB2" job="TaskB2" next_state="TaskB3" error_state="Error"/>
+
+    <job_chain_node  state="TaskB3" job="TaskB3" next_state="RemoveEvent" error_state="Error"/>
+
+    <job_chain_node  state="RemoveEvent" job="_-PROCESS_END.JOB_CHAINA_END" next_state="End" error_state="Error"/>
+
+    <job_chain_node  state="End" job="/sos/jitl/JobChainEnd" next_state="Success" error_state="Error"/>
+
+    <job_chain_node  state="Success"/>
+
+    <job_chain_node  state="Error"/>
+</job_chain>

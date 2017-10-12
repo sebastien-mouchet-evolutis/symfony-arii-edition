@@ -1,0 +1,29 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+{% endblock %} 
+{% block body %}
+<body>
+<div class="container-fluid">
+<div class="jumbotron">
+<img style="float: right;" src="{{ asset('logo.png') }}"/>
+  <h1>Demandes manuelles</h1>
+  <p>Une demande manuelle permet d'intégrer de nouvelles données dans les processus automatisés.</p>
+</div>
+  <h1>Comment ça marche ?</h1>
+  <ul>
+      <li>Choississez un modèle dans le menu de gauche</li>
+      <li>Double-cliquez sur le modèle choisi</li>
+      <li>Complétez le formulaire avec les paramètres</li>
+      <li>Cliquez sur Go!</li>
+  <ul>
+</script>
+</body>
+{% endblock %}
+{% block cron %}{% endblock %}

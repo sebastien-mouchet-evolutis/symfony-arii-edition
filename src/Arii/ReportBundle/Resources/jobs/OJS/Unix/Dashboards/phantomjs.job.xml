@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job  title="Création d'un rapport" order="yes" stop_on_error="no">
+    <params>
+	<include live_file="/Arii/arii.params.xml"/>
+	</params>
+	
+    <script  language="shell">
+        <![CDATA[
+echo === %SCHEDULER_ORDER_ID% =================================================================		
+%SCHEDULER_HOME%\addons\phantomjs\bin\phantomjs %SCHEDULER_JOB_CONFIGURATION_DIRECTORY%\dashboard.js xxadarlon %SCHEDULER_ORDER_ID% now -180 %SCHEDULER_PARAM_WORKSPACE%\Report\Dashboards
+]]>	
+	</script>
+
+    <run_time />
+</job>

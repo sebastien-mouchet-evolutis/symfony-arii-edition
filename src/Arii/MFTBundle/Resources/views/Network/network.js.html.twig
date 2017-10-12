@@ -1,0 +1,60 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiMFTBundle::layout.html.twig" %}
+{% block body %}
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script src="{{ asset('network/network.js') }}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var nodesTable = null;
+var linksTable = null;
+var network = null;
+
+var DIR = '{{ asset('arii/images/wa/') }}';
+
+google.load('visualization', '1');
+
+// Set callback to run when API is loaded
+google.setOnLoadCallback(drawVisualization); 
+
+// Called when the Visualization API is loaded.
+function drawVisualization() {
+  // Create a data table with nodes.
+  nodesTable = new google.visualization.DataTable();
+  nodesTable.addColumn('string', 'id');
+  nodesTable.addColumn('string', 'text');   // optional
+  nodesTable.addColumn('string', 'image');  // optional
+  nodesTable.addColumn('string', 'style');   // optional
+
+
+  // Create a data table with links.
+  linksTable = new google.visualization.DataTable();
+  linksTable.addColumn('string', 'from');
+  linksTable.addColumn('string', 'to');
+  linksTable.addColumn('string', 'color');
+  linksTable.addColumn('string', 'style');
+  linksTable.addColumn('number', 'length'); // optional
+  linksTable.addColumn('number', 'width');
+
+  {% for k  in Nodes %}
+    nodesTable.addRow([ '{{ k.id }}', '{{ k.name}}', DIR + '{{ k.image }}.png', 'image' ]);
+  {% endfor %}
+  {% for k  in Links %}
+    linksTable.addRow([ '{{ k.from }}', '{{ k.to}}', '{{ k.color }}', '{{ k.style }}', {{ k.length }}, {{ k.width }} ]);
+  {% endfor %}
+  
+  // specify options
+  var options = {
+    'width': '100%', 
+    'height': '500px',
+    'stabilize': false   // stabilize positions before displaying
+  };
+
+  // Instantiate our graph object.
+  network = new links.Network(document.getElementById('mynetwork'));
+
+  // Draw our graph with the created data and options 
+  network.draw(nodesTable, linksTable, options);
+}
+
+function GlobalRefresh() {}
+</script>
+{% endblock %}

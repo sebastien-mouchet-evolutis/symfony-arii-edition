@@ -1,0 +1,470 @@
+arii_report_bkp_ref:
+    resource: "@AriiReportBundle/Resources/config/routing/bkp_ref.yml"
+    prefix:   /bkp_ref
+
+arii_Report_bkp_ref_update:
+    path:  /bkp_ref/update
+    defaults: { _controller: AriiReportBundle:BKP_REF2:update }
+    
+arii_Report_index:
+    path:  /
+    defaults: { _controller: AriiReportBundle:Default:index }
+
+arii_Report_index_public:
+    path:  /public
+    defaults: { _controller: AriiReportBundle:Default:public }
+
+html_Report_summary:
+    path:  /summary
+    defaults: { _controller: AriiReportBundle:Default:summary }
+    
+arii_Report_readme:
+    path:  /readme
+    defaults: { _controller: AriiReportBundle:Default:readme }
+
+xml_Report_tree:
+    path:  /tree.xml
+    defaults: { _controller: AriiReportBundle:Default:tree }
+
+xml_Report_form:
+    path:  /form.xml
+    defaults: { _controller: AriiReportBundle:Default:info }
+
+xml_Report_view:
+    path:  /view.xml
+    defaults: { _controller: AriiReportBundle:Default:doc }
+    
+json_Report_ribbon:
+    path:  /ribbon.json
+    defaults: { _controller: AriiReportBundle:Default:ribbon }
+
+arii_Report_documents:
+    path:  /documents
+    defaults: { _controller: AriiReportBundle:Documents:index }
+
+xml_Report_documents_toolbar:
+    path:  /documents/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Documents:toolbar }
+
+arii_Report_document:
+    path:  /document
+    defaults: { _controller: AriiReportBundle:Document:doc }
+
+arii_Report_document_get:
+    path:  /document/get
+    defaults: { _controller: AriiReportBundle:Document:get }
+
+arii_Report_document_pdf:
+    path:  /public/document/pdf
+    defaults: { _controller: AriiReportBundle:Document:pdf }
+
+xml_Report_document_toolbar:
+    path:  /document/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Document:toolbar }
+
+arii_Report_status:
+    path:  /status
+    defaults: { _controller: AriiReportBundle:Default:status }
+    
+arii_Report_history:
+    path:  /history
+    defaults: { _controller: AriiReportBundle:Default:history }
+
+xml_Report_docs:
+    path:  /documents/grid.xml
+    defaults: { _controller: AriiReportBundle:Documents:grid }
+
+xml_Report_toolbar:
+    path:  /dashboard/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Default:toolbar }
+    
+# ==========================================================================
+# DASHBOARD
+# ==========================================================================
+html_Report_dashboard:
+    path:  /dashboard
+    defaults: { _controller: AriiReportBundle:Dashboard\Dashboard:index }
+
+html_Report_dashboard_public:
+    path:  /public/dashboard
+    defaults: { _controller: AriiReportBundle:Dashboard\Dashboard:index }
+
+json_Report_ribbon_dashboard:
+    path:  /dashboard/ribbon.json
+    defaults: { _controller: AriiReportBundle:Dashboard\Default:ribbon }
+
+xml_Report_dashboard_toolbar:
+    path:  /dashboard/toolbar2.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Dashboard:toolbar }
+    
+# --------------------------------------------------------------------------
+# RUNS
+# --------------------------------------------------------------------------
+arii_Report_runs:
+    path:  /runs
+    defaults: { _controller: AriiReportBundle:Dashboard\Runs:index }
+
+# RUNS/Month
+xml_Report_runs_grid:
+    path:  /runs/month/grid.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Runs:grid }
+
+xml_Report_runs_executions_chart:
+    path:  /public/runs/month/executions/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Runs:executionsChart }
+
+xml_Report_runs_alarms_chart:
+    path:  /public/runs/month/alarms/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Runs:alarmsChart }
+
+xml_Report_runs_applications_chart:
+    path:  /public/runs/month/applications/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Runs:applicationsChart }
+
+xml_Report_runs_status_chart:
+    path:  /public/runs/month/status/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Runs:statusChart }
+
+xml_Report_runs_status_hour_chart:
+    path:  /public/runs/status/hour/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Runs:StatusPerHourChart }
+
+xml_Report_runs_jobs:
+    path:  /runs/month/jobs/grid.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Runs:jobs }
+
+# --------------------------------------------------------------------------
+# JOBS
+# --------------------------------------------------------------------------
+arii_Report_jobs:
+    path:  /jobs
+    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:index }
+    
+xml_Report_jobs_grid:
+    path:  /jobs/grid.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:grid }
+
+xml_Report_jobs_export:
+    path:  /jobs/export.csv
+    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:export }
+
+xml_Report_jobs_applications_chart:
+    path:  /public/jobs/applications/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:applications }
+
+xml_Report_jobs_applications_month_chart:
+    path:  /public/jobs/applications/month/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:applications_month }
+
+xml_Report_jobs_chart:
+    path:  /jobs/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:chart }
+
+xml_Report_jobs_chart_days:
+    path:  /jobs/days/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:chart_days }
+
+xml_Report_jobs_scatter:
+    path:  /jobs/scatter.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:scatter }
+
+xml_Report_jobs_creation_chart:
+    path:  /public/jobs/creation/chart.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:creationChart }
+
+# --------------------------------------------------------------------------
+# APPS
+# --------------------------------------------------------------------------
+arii_Report_apps:
+    path:  /apps
+    defaults: { _controller: AriiReportBundle:Dashboard\Apps:index }
+    
+# --------------------------------------------------------------------------
+# CALENDARS
+# --------------------------------------------------------------------------
+arii_Report_calendars:
+    path:  /calendars
+    defaults: { _controller: AriiReportBundle:Dashboard\Calendars:index }
+
+xml_Report_calendars_grid:
+    path:  /calendars/grid.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Calendars:grid }
+
+xml_Report_calendars_days:
+    path:  /calendars/days.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Calendars:days }    
+
+xml_Report_calendars_toolbar:
+    path:  /calendars/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Calendars:toolbar }    
+
+# --------------------------------------------------------------------------
+# APPS
+# --------------------------------------------------------------------------
+arii_Report_apps:
+    path:  /apps
+    defaults: { _controller: AriiReportBundle:Dashboard\Apps:index }
+
+xml_Report_apps_grid:
+    path:  /apps/grid.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Apps:grid }
+
+# --------------------------------------------------------------------------
+# SNAPSHOTS
+# --------------------------------------------------------------------------
+arii_Report_snapshots:
+    path:  /snapshots
+    defaults: { _controller: AriiReportBundle:Snapshots:index }
+
+xml_Report_snapshots_tree:
+    path:  /snapshots/tree.xml
+    defaults: { _controller: AriiReportBundle:Snapshots:tree }
+
+xml_Report_snapshots_grid:
+    path:  /snapshots/grid.xml
+    defaults: { _controller: AriiReportBundle:Snapshots:grid }
+    
+html_Report_snapshots_view:
+    path:  /snapshots/view
+    defaults: { _controller: AriiReportBundle:Snapshots:view }
+
+# --------------------------------------------------------------------------
+# REQUESTS
+# --------------------------------------------------------------------------
+arii_Report_requests:
+    path:  /requests
+    defaults: { _controller: AriiReportBundle:Requests\Requests:index }
+
+xml_Report_requests_list:
+    path:  /requests/list.xml
+    defaults: { _controller: AriiReportBundle:Requests\Requests:list }
+
+xml_Report_requests_toolbar:
+    path:  /requests/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Requests\Requests:toolbar }
+    
+arii_Report_requests_result:
+    path:  /requests/result.html
+    defaults: { _controller: AriiReportBundle:Requests\Requests:result }
+
+arii_Report_requests_summary:
+    path:  /requests/summary.html
+    defaults: { _controller: AriiReportBundle:Requests\Requests:summary }
+
+# --------------------------------------------------------------------------
+# DATABASE
+# --------------------------------------------------------------------------
+arii_Report_database:
+    path:  /database
+    defaults: { _controller: AriiReportBundle:Database:index }
+
+html_Report_database:
+    path:  /database/check
+    defaults: { _controller: AriiReportBundle:Database:check }
+
+#================================================================
+# IMPORT
+#================================================================
+arii_Report_import:
+    path:  /import
+    defaults: { _controller: AriiReportBundle:Import:index }
+
+html_Report_import:
+    path:  /cron/import.html
+    defaults: { _controller: AriiReportBundle:Import:get }
+
+# Plus clair
+html_Report_import_url:
+    path:  /cron/import/{get}.html
+    defaults: { _controller: AriiReportBundle:Import:get }
+
+json_Report_ribbon_import:
+    path:  /import/ribbon.json
+    defaults: { _controller: AriiReportBundle:Import\Default:ribbon }
+
+# --------------------------------------------------------------------------
+# Autosys
+# --------------------------------------------------------------------------
+post_Report_run_ats:
+    path:  /post/ats/event_demon
+    defaults: { _controller: AriiReportBundle:Import\ATS:event_demon }
+
+post_Report_job_ats:
+    path:  /post/ats/jobs
+    defaults: { _controller: AriiReportBundle:Import\ATS:jobs }
+
+post_Report_job_ats_audit:
+    path:  /post/ats/audit
+    defaults: { _controller: AriiReportBundle:Import\ATS:audit }
+
+post_Report_job_calendars:
+    path:  /post/ats/calendars
+    defaults: { _controller: AriiReportBundle:Import\ATS:calendars }
+
+# --------------------------------------------------------------------------
+# JobScheduler
+# --------------------------------------------------------------------------
+# import des executions OJS
+post_Report_run_ojs:
+    path:  /post/ojs/scheduler.log
+    defaults: { _controller: AriiReportBundle:Import\RUN:OJS }
+
+# --------------------------------------------------------------------------
+# Search
+# --------------------------------------------------------------------------
+arii_Report_search:
+    path:  /search
+    defaults: { _controller: AriiReportBundle:Search:index }
+
+xml_Report_search_grid:
+    path:  /search/grid.xml
+    defaults: { _controller: AriiReportBundle:Search:grid }
+
+xml_Report_search_toolbar:
+    path:  /search/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Search:toolbar }
+
+xml_Report_search_history:
+    path:  /search/history.xml
+    defaults: { _controller: AriiReportBundle:Search:history }
+
+xml_Report_search_chart:
+    path:  /search/chart.xml
+    defaults: { _controller: AriiReportBundle:Search:chart }
+
+# --------------------------------------------------------------------------
+# MISES A JOUR
+# --------------------------------------------------------------------------
+# mise a jour des applications et des environnements (application de règles)
+html_Report_runs2rules:
+    path:  /cron/run2rules.html
+    defaults: { _controller: AriiReportBundle:Import\RUN:Rules }
+
+# mise a jour des apps avec les informations d'executions
+html_Report_runs2apps:
+    path:  /cron/run2apps.html
+    defaults: { _controller: AriiReportBundle:Import\RUN:APP }
+    
+# mise a jour des jobs avec les informations d'executions
+html_Report_runs2jobs:
+    path:  /cron/run2jobs.html
+    defaults: { _controller: AriiReportBundle:Import\RUN:JOB }
+
+# Aggregation des executions
+html_Report_runs2runhours:
+    path:  /cron/run2runhours.html
+    defaults: { _controller: AriiReportBundle:Import\RUN:RunHour }
+    
+html_Report_runs2rundays:
+    path:  /cron/run2rundays.html
+    defaults: { _controller: AriiReportBundle:Import\RUN:RunDay }
+
+# mise a jour des applications et des environnements (application de règles)
+html_Report_jobs2rules:
+    path:  /cron/job2rules.html
+    defaults: { _controller: AriiReportBundle:Import\JOB:Rules }
+
+# Aggregation des jobs
+html_Report_jobs2jobdays:
+    path:  /cron/job2jobdays.html
+    defaults: { _controller: AriiReportBundle:Import\JOB:JOBDay }
+
+# Aggregation des jobs
+html_Report_jobs2jobmonths:
+    path:  /cron/jobs2jobmonths.html
+    defaults: { _controller: AriiReportBundle:Import\JOB:JOBMonth }
+
+# Aggregation des runs
+html_Report_runs2runmonths:
+    path:  /cron/runs2runmonths.html
+    defaults: { _controller: AriiReportBundle:Import\RUN:RUNMonth }
+
+#================================================================
+# MIGRATION
+# Deplacement de données
+#================================================================
+arii_Report_migration:
+    path:  /migration
+    defaults: { _controller: AriiReportBundle:Migration:index }
+
+html_Report_migration_job:
+    path:  /migration/job.html
+    defaults: { _controller: AriiReportBundle:Migration:Job }
+
+html_Report_migration_run:
+    path:  /migration/run.html
+    defaults: { _controller: AriiReportBundle:Migration:Run }
+
+
+html_Report_migration_job:
+    path:  /migration/job.html
+    defaults: { _controller: AriiReportBundle:Migration:Job }
+
+#================================================================
+# MIGRATION MySQL -> NOuveau
+# Dev -> Prod
+#================================================================
+txt_Report_migration_mysql_job:
+    path:  /migration/job.txt
+    defaults: { _controller: AriiReportBundle:Import\MIG:JOB }
+
+txt_Report_migration_mysql_run:
+    path:  /migration/run.txt
+    defaults: { _controller: AriiReportBundle:Import\MIG:RUN }
+    
+# --------------------------------------------------------------------------
+# Autosys
+# --------------------------------------------------------------------------
+post_Report_run_ats:
+    path:  /post/ats/event_demon
+    defaults: { _controller: AriiReportBundle:Import\ATS:event_demon }
+
+#================================================================
+# JASPER
+#================================================================
+arii_Report_jasper:
+    path:  /jasper
+    defaults: { _controller: AriiReportBundle:Documents:index }
+
+#----------------------------------------------------------------
+# EDIT
+#----------------------------------------------------------------
+arii_Report_edit:
+    path:  /edit
+    defaults: { _controller: AriiReportBundle:Edit:index }
+
+xml_Report_edit_tree:
+    path:  /edit/tree.xml
+    defaults: { _controller: AriiReportBundle:Edit:tree }
+
+html_Report_edit_sql:
+    path:  /edit/sql.html
+    defaults: { _controller: AriiReportBundle:Edit:sql }
+
+#----------------------------------------------------------------
+# IPAM
+#----------------------------------------------------------------
+arii_Report_ipam:
+    path:  /ipam
+    defaults: { _controller: AriiReportBundle:IPAM:index }
+
+xml_Report_ipam_grid:
+    path:  /ipam/grid.xml
+    defaults: { _controller: AriiReportBundle:IPAM:grid }
+
+html_Report_ipam_pop:
+    path:  /ipam/pop.html
+    defaults: { _controller: AriiReportBundle:IPAM:pop }
+
+#----------------------------------------------------------------
+# REST
+#----------------------------------------------------------------
+rest_Report_import:
+    path:  /public/rest/import/{get}.txt
+    defaults: { _controller: AriiReportBundle:Import:get }
+    
+arii_Report_public:
+    path:  /public/external/{req}.{output}
+    defaults: { _controller: AriiReportBundle:Requests\Requests:result }
+    
+   

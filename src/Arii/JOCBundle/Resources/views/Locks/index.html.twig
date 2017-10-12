@@ -1,0 +1,143 @@
+{# src/Arii/JOCBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiJOCBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+update = 30;
+dhtmlxEvent(window,"load",function(){ 
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
+    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("b").hideHeader(); 
+//    globalLayout.cells("c").hideHeader(); 
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_JOC_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    myGridToolbar = globalLayout.cells("b").attachToolbar();
+    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.loadStruct("{{ url('xml_JOC_locks_toolbar') }}");
+    myGridToolbar.attachEvent( "onClick", function(id, value) {
+        switch (id) {
+            case "refresh":
+                GridRefresh();
+            break;
+            default:
+                alert(id);
+        }
+    });
+    
+    globalLayout.cells("a").hideHeader();
+
+    myDonut =  globalLayout.cells("a").attachChart({
+            view:"donut",
+            container:"pie_chart_container",
+            value:"#JOBS#",
+            label:"",
+            tooltip: "#STATUS#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "#JOBS#",
+            shadow: 0,
+            legend:{
+                  width: 0,
+                  template: "#STATUS#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+    myDonut.load( "{{ url('xml_JOC_locks_pie') }}" );
+
+    myTabbar = globalLayout.cells("b").attachTabbar();
+    myTabbar.addTab("use","{{ "Locks use" | trans }}","100px", null, true);
+    myTabbar.addTab("locks","{{ "Locks" | trans }}","100px");
+    
+    myGrid = myTabbar.cells("use").attachGrid();
+    myGrid.selMultiRows = true;
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Spooler" | trans }},{{ "Folder" | trans }},{{ "Name" | trans }},{{ "Status" | trans }},{{ "Jobs" | trans }},{{ "Used" | trans }}");
+    myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#numeric_filter,#numeric_filter");
+    myGrid.setInitWidths("200,*,200,120,100,100");
+    myGrid.setColAlign("left,left,left,left,right,right");
+    myGrid.setColTypes("ro,ro,ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,str,str,numeric,numeric");
+    myGrid.enableAlterCss("","");
+    myGrid.loadXML( "{{ url('xml_JOC_locks_use') }}" );
+    myGrid.enableLightMouseNavigation( true );
+    myGrid.init();
+
+    myLock = myTabbar.cells("locks").attachGrid();
+    myLock.selMultiRows = true;
+    myLock.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myLock.setHeader("{{ "Spooler" | trans }},{{ "Folder" | trans }},{{ "Name" | trans }},{{ "Status" | trans }},{{ "Max" | trans }}");
+    myLock.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#numeric_filter");
+    myLock.setInitWidths("200,*,200,120,100");
+    myLock.setColAlign("left,left,left,right,right");
+    myLock.setColTypes("ro,ro,ro,ro,ro");
+    myLock.setColSorting("str,str,str,str,numeric");
+    myLock.enableAlterCss("","");
+    myLock.loadXML( "{{ url('xml_JOC_locks') }}" );
+    myLock.enableLightMouseNavigation( true );
+    myLock.init();
+/*
+    myUse = globalLayout.cells("c").attachGrid();
+    myUse.selMultiRows = true;
+    myUse.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myUse.setHeader("{{ "Job" | trans }},{{ "Status" | trans }}");
+    myUse.attachHeader("#text_filter,#select_filter");
+    myUse.setInitWidths("*,200");
+    myUse.setColAlign("left,left");
+    myUse.setColTypes("ro,ro");
+    myUse.setColSorting("str,str");
+    myUse.enableAlterCss("","");
+    myUse.enableLightMouseNavigation( true );
+    myUse.init();
+    myGrid.attachEvent("onRowDblClicked", function(id) {
+        globalLayout.cells("c").progressOn();
+        alert("{{ url('xml_JOC_locks_jobs') }}?path="+id);
+        myUse.loadXML( "{{ url('xml_JOC_locks_jobs') }}?path="+id, function() {
+            globalLayout.cells("c").progressOff();            
+        } ); 
+    });    
+    myLock.attachEvent("onRowDblClicked", function(id) {
+        globalLayout.cells("c").progressOn();
+        alert("{{ url('xml_JOC_locks_jobs') }}?id="+id);
+        myUse.loadXML( "{{ url('xml_JOC_locks_jobs') }}?id="+id, function() {
+            globalLayout.cells("c").progressOff();            
+        } ); 
+    });    
+*/
+   autorefresh = setInterval( "GlobalRefresh()", update*1000 );
+});
+
+function GridRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    myGrid.load("{{ url('xml_JOC_locks_use') }}", function (id) {
+        myLock.loadXML( "{{ url('xml_JOC_locks') }}", function (id) {
+            myDonut.load( "{{ url('xml_JOC_locks_pie') }}" );
+        });
+    });
+}
+
+function GlobalRefresh() {
+    GridRefresh();
+}
+</script>
+
+{% endblock %}

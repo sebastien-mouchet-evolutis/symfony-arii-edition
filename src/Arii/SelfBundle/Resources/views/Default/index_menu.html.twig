@@ -1,0 +1,51 @@
+{% extends "AriiSelfBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var update=30
+
+dhtmlxEvent(window,"load",function(){
+var size=300;
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setWidth(size); 
+    globalLayout.cells("b").hideHeader(); 
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Self_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    globalLayout.cells("b").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}');     
+
+    mySidebar = globalLayout.cells("a").attachSidebar({
+        icons_path: "{{ asset('/bundles/ariicore/images/sidebar/') }}",
+        template: "tiles",
+        width: size,
+        items: [
+            { id: "new",  text: "{{ "New request" | trans }}", icon: "big/edit_page.png" },
+            { id: "sep1", type: "separator" },
+            { id: "list", text: "{{ "Last requests" | trans }}", icon: "big/page_process.png" },
+            { id: "history", text: "{{ "History" | trans }}", icon: "big/accept_page.png" }
+        ]
+    });
+    
+    // mySidebar.cells("new").setBubble(6);
+    mySidebar.attachEvent("onSelect", function(id, value){
+        window.location = "{{ url('arii_Self_index') }}"+id;
+        return true;
+    });
+    
+    globalLayout.cells("a").hideHeader(); 
+        
+});
+
+function GlobalRefresh() {
+}
+</script>
+{% endblock %}

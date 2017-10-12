@@ -1,0 +1,109 @@
+{% extends "AriiAdminBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var update=30
+
+dhtmlxEvent(window,"load",function(){
+var size=300;
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"3W");  
+    globalLayout.cells("a").setWidth(size); 
+    globalLayout.cells("b").setWidth(size);
+    globalLayout.cells("b").hideHeader(); 
+    globalLayout.cells("c").hideHeader(); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    mySidebar = globalLayout.cells("a").attachSidebar({
+        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
+    });
+    mySidebar.attachEvent("onSelect", function(id, value){
+        document.location.href = "{{ url('arii_Admin_index') }}"+id;
+    });
+    globalLayout.cells("a").hideHeader();    
+
+    myGridMenu = new dhtmlXMenuObject(null);
+    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/toolbar/') }}" );
+    myGridMenu.renderAsContextMenu();
+    myGridMenu.loadStruct("{{ url('xml_Admin_bundles_toolbar') }}");
+          
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader( "{{ "Module" | trans }},{{ "Activated" | trans }}" );
+    myGrid.attachHeader("#text_filter,#select_filter");
+    myGrid.setInitWidths( "*,100" );
+    myGrid.setColTypes(   "ro,ch" );
+    myGrid.setColAlign(   "left,center" );
+    myGrid.setColSorting( "str,int" );
+    myGrid.enableAlterCss("","");
+//    myGrid.enableContextMenu(myGridMenu);
+    myGrid.init();
+    myGrid.load( "{{ url('xml_Admin_bundles_grid') }}" );
+//    myGrid.enableLightMouseNavigation( true );
+    myGrid.attachEvent("onXLE",function(){
+        myGrid.refreshFilters();
+        myGrid.filterByAll();
+    });
+    
+    globalLayout.attachEvent("onContentLoaded", function(id){
+        switch (id) {
+            case 'b':
+                globalLayout.cells("a").progressOn();
+                myGrid.load( "{{ url('xml_Admin_bundles_grid') }}", function() {
+                    globalLayout.cells("a").progressOff();
+                    globalLayout.cells("c").progressOff();
+                } );
+                break;
+            default:
+        }
+    });
+    
+    myGrid.attachEvent("onRowDblClicked", function(id) { 
+        var bundle = myGrid.cells(id,0).getValue();
+        var activate = myGrid.cells(id,1).getValue();
+        globalLayout.cells("c").progressOn();
+        globalLayout.cells("c").attachURL("{{ url('xml_Admin_bundle_activation') }}?bundle="+bundle+"&activate="+activate);
+    });
+
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("c").attachURL("{{ asset('arii.jpg') }}");
+            
+    // V3 ?
+    myGridMenu.attachEvent("onClick", function (menuitemId, type) {
+        alert(menuitemId);
+        var data = myGrid.contextID.split("_");
+        var rId = data[0];
+        var cInd = data[1];
+        active = myGrid.cells(rId,1).getValue();
+        return true;
+    });
+    
+});
+
+function GlobalRefresh() {
+    GridRefresh();
+}
+
+function GridRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );        
+}
+</script>
+{% endblock %}

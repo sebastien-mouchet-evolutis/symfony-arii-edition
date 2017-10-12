@@ -1,0 +1,186 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiUserBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block style_plus %}
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.min.css">
+{% endblock style_plus %}
+{% block body %}
+<style>
+div#objToAttach {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+.dhx_dataview {
+	overflow-y: auto !important;
+}
+.dhx_dataview_default_item,
+.dhx_dataview_default_item_selected {
+	position: relative;
+	border-width: 0px !important;
+	background: none !important;
+	cursor: default;
+}
+.dhx_dataview div.dhxdataview_placeholder:first-child {
+	margin-top: 2px;
+}
+.menu_item {
+	position: relative;
+	height: 60px;
+	background-color: #f5f5f5;
+	margin: 3px 2px 0px 5px;
+	border-bottom: 1px dotted #ccc;
+	background-repeat: no-repeat;
+	background-position: 18px 4px;
+	color: #333333;  
+        width: 100%
+}
+.menu_item:hover {
+	background-color: #f0f0f0;
+	border-color: #bbb;
+}
+.dhx_dataview_default_item_selected .menu_item {
+	background-color: #B6BADF;
+	border-color: #aaa;
+	color: #2e2e2e;
+}
+.menu_item.inbox {
+	background-image: url(../icons/folder-downloads.png);
+}
+.menu_item.fav {
+	background-image: url(../icons/folder-favorites.png);
+}
+.menu_item.drafts {
+	background-image: url(../icons/folder-txt.png);
+}
+.menu_item.outbox {
+	background-image: url(../icons/folder-activities.png);
+}
+.menu_item.sent {
+	background-image: url(../icons/mail-folder-sent.png);
+}
+.menu_item.trash {
+	background-image: url(../icons/user-trash.png);
+}
+.menu_item.contacts {
+	background-image: url(../icons/folder-image-people.png);
+}
+.menu_item_text {
+	position: relative;
+	margin-left: 12px;
+	height: 60px;
+	line-height: 56px;
+	font-family: "Open Sans", sans-serif, Arial;
+	font-weight: 400;
+	font-size: 16px;
+	color: inherit;
+}
+label { display: block; width: 200px; }
+.dhxtree_dhx_terrace .standartTreeRow {
+      font-size: 14px !important;
+      }
+.dhxtree_dhx_terrace .standartTreeRow_lor {
+      font-size: 14px !important;
+      }
+</style>
+<script type="text/javascript">  
+dhtmlxEvent(window,"load",function(){ 
+    globalLayout = new dhtmlXLayoutObject(document.body,"3J");  
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setWidth(360);
+    globalLayout.cells("b").hideHeader();
+    globalLayout.cells("c").setText("{{ "Login" | trans }}");
+{%if error %}
+    globalLayout.cells("c").setHeight(350);    
+{% else %}
+    globalLayout.cells("c").setHeight(265);    
+{% endif %}
+/*    
+    globalToolbar = globalLayout.cells("a").attachToolbar();
+    globalToolbar.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalToolbar.loadStruct("{{ url('xml_User_toolbar') }}?route={{ app.request.attributes.get('_route') }}");
+*/
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_User_ribbon') }}");
+
+    myDocs = globalLayout.cells("a").attachAccordion();
+    myDocs.addItem( "Home", "{{ "Ari'i" }}", true);
+
+    globalLayout.cells("b").attachURL("{{ url('html_Core_readme') }}");
+
+    myTree = myDocs.cells("Home").attachTree();
+    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.load("{{ url('xml_docs_tree') }}?route=arii_Core_index");
+    myTree.setItemStyle(0,"font-size: 16px !important")
+    myTree.attachEvent("onClick",function(id){
+        globalLayout.cells("b").attachURL("{{ url('html_doc_view') }}?doc="+id);
+    })
+
+//    globalLayout.cells("b").attachObject("objToAttach");  
+    
+//    myPop = new dhtmlXPopup();
+//    myForm = myPop.attachObject(formToAttach);
+
+    globalLayout.cells("c").attachObject(formToAttach);
+
+    myRibbon.attachEvent("onClick", function(id) {
+        switch(id) {
+            case 'fr':
+                {% set routeParams = app.request.get('_route_params') %}
+                {% if routeParams['_locale'] is defined %}
+                {%set routeParams = routeParams|merge({'_locale': 'fr'}) %}
+                {% endif %}                
+                window.location = "{{ path(app.request.get('_route'), routeParams) }}";            
+                break;
+            case 'en':
+                {% set routeParams = app.request.get('_route_params') %}
+                {% if routeParams['_locale'] is defined %}
+                {%set routeParams = routeParams|merge({'_locale': 'en'}) %}
+                {% endif %}                
+                window.location = "{{ path(app.request.get('_route'), routeParams) }}";            
+                break;
+            default:
+                alert(id);
+        }
+    });
+});
+
+</script>
+<div id="formToAttach" style="margin: 10px;"/>
+{%if error %}
+<div id="ObjError" class="container-fluid">
+<div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+{{ error.message | trans }}
+</div>
+</div>
+{% endif %}
+<form action="{{ url("fos_user_security_check") }}" method="post">
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+  <div class="form-group">
+    <label for="username">{{ 'security.login.username'|trans }}</label>
+    <input type="text" class="form-control"  id="username" name="_username" value="{{ last_username }}" placeholder=""/>
+  </div>
+  <div class="form-group">
+    <label for="password">{{ 'security.login.password'|trans }}</label>
+    <input type="password" class="form-control" id="password" name="_password"/>
+  </div>
+  <div class="checkbox">
+    <label for="remember_me">
+    <input type="checkbox" id="remember_me" name="_remember_me" checked/>
+    {{ 'security.login.remember_me'|trans }}</label>
+    </label>
+  </div>
+  <button type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" class="btn btn-default">{{ 'security.login.submit'|trans }}</button>
+</form>
+</div>
+<div id="objToAttach" style="align:center; vertical-align: center; font-family: Tahoma; font-size: 10px; height: 100%; overflow: auto; display: none;">
+    <center>
+            <img src="{{ asset('/bundles/ariicore/images/arii.jpg') }}"/>
+    </center>
+</div>
+{% endblock %}

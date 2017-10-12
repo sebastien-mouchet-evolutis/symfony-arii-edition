@@ -1,0 +1,47 @@
+module.ATS: Autosys
+summary.ATS: Module de suivi des traitements Autosys.
+text.ATS: Interface pour l'ordonnanceur "Workload Automation Autosys Edition" de CA.
+Summary: Sommaire
+List of requests: Liste des requêtes
+SQL request: Requête SQL
+No result: Aucun résultat
+JOB_NAME: Nom du traitement
+SUCCESS_CODES: Codes 'SUCCESS'
+DESCRIPTION: Description
+SUCCESSOR: Successeur
+PREDECESSOR: Prédécesseur
+COMMAND: Commande
+Title: Titre
+LAST_START: Départ
+NEXT_START: Prochain
+PLANNED_END: Fin planifiée
+LAST_END: Fin
+DURATION: Durée
+EXIT_CODE: Exit
+INSTANCE: Instance
+STATUS: Statut
+HOST: Hôte
+DELAY: Retard
+STANDBY: Standby
+Request: Demande
+Trigger: Déclencheur
+Constraints: Contraintes
+Start times: Heure de départ
+Days: Jours
+Everyday: Tous les jours
+Days of Week: Jours de la semaine
+Date/Time: Date/Heure
+File watcher: Attente de fichier
+Dependencies: Dépendances
+Resource: Ressource
+Database update: Mise à jour DB
+Post processing: Post traitement
+Success codes: Exit en Succès
+Successors: Successeurs
+File name: Nom de fichier
+Job note: Note sur le traitement
+New note: Nouvelle note
+Use template: Utiliser un modèle
+Is a template: Est un modèle
+No doc found: Aucune documentation trouvée
+No suggestion: Aucune suggestion

@@ -1,0 +1,30 @@
+{% extends "AriiReportBundle::bootstrap.html.twig" %}
+{% block body %}
+<div class="container-fluid">
+<div class="jumbotron">
+    <div style='float: right'><img src="{{ asset('/bundles/ariicore/images/cover/') }}/{{ module.img }}"/></div>
+  <h1>{{ module.name }}</h1>
+  <p>{{ module.desc }}</p>
+</div>
+
+<form  class="form" action="{{ url('arii_Report_index') }}" target="_top">
+<fieldset class="form-group">
+    <legend>{{ "Application" | trans }}</legend>    
+<select class="form-control" name="app">
+{% for app,application in Applications %}
+    <option value="{{ app }}">{{ application }}</option>
+{% endfor %}       
+</select>
+  <br/>
+<legend>{{ "Environment" | trans }}</legend>    
+<select class="form-control" name="env">
+{% for id,environment in Env %}
+    <option value="{{ id }}">{{ environment }}</option>
+{% endfor %}       
+</select>
+  <br/>
+<button type="submit" class="btn btn-primary">{{ "Dashboard" | trans }}</button>
+</fieldset>
+</form>    
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "AriiSelfBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var update=30
+
+dhtmlxEvent(window,"load",function(){
+var size=300;
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setWidth(size); 
+    globalLayout.cells("b").hideHeader(); 
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Self_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    globalLayout.cells("b").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}');     
+    globalLayout.cells("a").hideHeader(); 
+
+    {% include "AriiSelfBundle:Default:menu.html.twig" %}   
+
+    myGridMenu = new dhtmlXMenuObject(null);
+    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    myGridMenu.renderAsContextMenu();
+    myGridMenu.loadStruct("{{ url('xml_Self_requests_grid_menu') }}");
+
+    myRequests = globalLayout.cells("b").attachGrid();
+    myRequests.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRequests.setHeader("{{ "Requests" | trans }},{{ "Reference" | trans }},{{ "Parameters" | trans }},{{ "Status" | trans }},{{ "Created" | trans }},{{ "Planned" | trans }},{{ "Processed" | trans }},{{ "User" | trans }}");
+    myRequests.attachHeader("#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#select_filter");
+    myRequests.setInitWidths("*,200,0,120,150,150,150,200");
+    myRequests.setColAlign("left,left,left,center,right,right,right,right");
+    myRequests.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");
+    myRequests.setColSorting("str,str,str,str,date,date,date,str");
+    myRequests.enableContextMenu(myGridMenu);
+    myRequests.init();
+    myRequests.load( "{{ url('xml_Self_requests_grid') }}");    
+    
+    myRequests.attachEvent("onRowDblClicked", function(id) {
+        logRequest(id);
+    });
+    
+    myTree.attachEvent("onClick", function(id) {
+        // alert(id);
+    });
+
+    myGridMenu.attachEvent("onClick", function (menuitemId, type) {
+        var data = myRequests.contextID.split("_");
+        //rowInd_colInd;
+        var rId = data[0];
+        var cInd = data[1];
+        switch (menuitemId) {
+            case "log":
+                logRequest(rId);
+                break;
+            case "queue":
+                dhx4.ajax.get( "{{ url('html_Self_queuing') }}?id="+rId, function() {
+                    globalLayout.cells("b").progressOn();
+                    myRequests.load( "{{ url('xml_Self_requests_grid') }}", function() {
+                        globalLayout.cells("b").progressOff();
+                    });
+                });
+                break;
+            case "cancel":
+                dhx4.ajax.get( "{{ url('html_Self_canceling') }}?id="+rId, function() {
+                    globalLayout.cells("b").progressOn();
+                    myRequests.load( "{{ url('xml_Self_requests_grid') }}", function() {
+                        globalLayout.cells("b").progressOff();
+                    });            
+                });  
+                break;
+        break;
+            default:
+                alert("inconnu ! "+menuitemId);    
+        }
+        return true;
+    });
+
+    autorefresh = setInterval( "GridRefresh()",update*1000);
+});
+
+function logRequest(id) {
+    var dhxWins = new dhtmlXWindows();
+    var largeur = 940;
+    var myWin = dhxWins.createWindow( "note" ,  (document.body.offsetWidth-largeur)/2, 50, largeur, 700 );
+    myWin.setText("{{ "Log" | trans }} ");
+
+    myWin.attachEvent("onContentLoaded", function(){
+        myWin.progressOff();
+    });    
+    
+    myWin.attachURL("{{ url('html_Self_history_status') }}?id="+id);  
+}
+
+function GridRefresh() {
+    myMenu.load( "{{ url('xml_Self_status') }}");
+    myRequests.load( "{{ url('xml_Self_requests_grid') }}");    
+}
+</script>
+{% endblock %}

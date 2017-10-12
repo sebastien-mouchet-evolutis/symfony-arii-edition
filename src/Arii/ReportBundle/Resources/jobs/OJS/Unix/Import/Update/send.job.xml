@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job  order="yes" title="Envoi du fichier sur le serveur de rapports" stop_on_error="no">
+    <params />
+
+    <script  language="shell">
+        <![CDATA[
+\\sgcifsc1\autosys\transfers\tools\curl\curl.exe --fail -Flog=@c:\temp\event_demon.csv http://localhost/app_dev.php/report/fr/post/ats/event_demon
+        ]]>
+    </script>
+
+    <run_time />
+</job>

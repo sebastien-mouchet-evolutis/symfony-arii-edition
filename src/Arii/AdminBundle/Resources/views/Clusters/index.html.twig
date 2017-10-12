@@ -1,0 +1,295 @@
+{% extends "AriiAdminBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+dhtmlxEvent(window,"load",function(){
+    
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+    globalLayout.cells("c").hideHeader(); 
+    globalLayout.cells("c").setHeight(400); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    myTree = globalLayout.cells("a").attachTree();
+    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.load( "{{ url('xml_Admin_categories_tree') }}" );
+    myTree.enableDragAndDrop(true, false);
+    myTree.attachEvent("onClick",function(id){
+        globalLayout.cells("b").progressOn();
+        myGrid.clearAll();
+        myGrid.load("{{ url('xml_Admin_connections_grid') }}?id="+id, function() {
+            globalLayout.cells("b").progressOff();
+        });
+    })
+
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.selMultiRows = true;
+    myGrid.setImagePath("{{ asset('arii/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Instance"| trans }},{{ "Name" | trans }},{{ "Description"| trans }}");
+    myGrid.setInitWidths("200,100,*");
+    myGrid.setColAlign("left,left,left");
+    myGrid.setColTypes("ro,ro,ro");
+//    myGrid.enableLightMouseNavigation( true );
+    myGrid.load("{{ url('xml_Admin_spoolers_grid') }}");
+    myGrid.init();
+    myGrid.attachEvent("onRowDblClicked", function (id) {
+        EditSpooler(id);
+    });
+
+    formData = [
+        { type: "settings", position: "label-left", labelWidth: 150, inputWidth: 200,labelAlign: "right" },
+        {type: "hidden",name: "ID"},
+        { type: "input",
+          name: "INSTANCE",
+          label: "{{ "Instance"| trans }}",
+          required: true
+        },         
+        { type: "input",
+          name: "NAME",
+          label: "{{ "Name"| trans }}"
+        },
+        { type: "input",
+          name: "DESCRIPTION",
+          label: "{{ "Description" | trans }}",
+          rows: 3
+        },        
+        {
+          type: "select",
+          name: "ROLE",
+          label: "{{ "Role" | trans}}",
+          options:[
+                {text: "{{ "Primary" | trans }}", value: "primary"},
+                {text: "{{ "Backup" | trans }}", value: "backup"},
+                {text: "{{ "Third" | trans }}", value: "third"}
+            ]
+        },
+        {
+          type: "select",
+          name: "CATEGORY_ID",
+          label: "{{ "Category" | trans}}",
+          connector: "{{ url('xml_Admin_categories_select') }}"
+        },        
+        {
+          type: "select",
+          name: "SITE_ID",
+          label: "{{ "Site" | trans}}",
+          connector: "{{ url('xml_Admin_spooler_sites_select') }}"
+        },   
+        { type: "newcolumn" },
+        {
+          type: "select",
+          name: "CONNECTION_ID",
+          label: "{{ "Connection" | trans}}",
+          connector: "{{ url('xml_Admin_connections_spoolers_select') }}"
+        },        
+        {
+          type: "select",
+          name: "MASTER_ID",
+          label: "{{ "Master" | trans}}",
+          connector: "{{ url('xml_Admin_connections_spoolers_select') }}"
+        },        
+        {
+          type: "select",
+          name: "REPOSITORY_ID",
+          label: "{{ "Repository" | trans}}",
+          connector: "{{ url('xml_Admin_connections_databases_select') }}"
+        },         
+        {
+          type: "select",
+          name: "SMTP_ID",
+          label: "{{ "Mail" | trans}}",
+          connector: "{{ url('xml_Admin_connections_mail_select') }}"
+        },         
+        {
+          type: "select",
+          name: "WEBACCESS_ID",
+          label: "{{ "Web access" | trans}}",
+          connector: "{{ url('xml_Admin_connections_webaccess_select') }}"
+        },         
+        {
+          type: "select",
+          name: "REMOTE_ID",
+          label: "{{ "Remote access" | trans}}",
+          connector: "{{ url('xml_Admin_connections_remotes_select') }}"
+        },   
+        {
+          type: "select",
+          name: "TRANSFER_ID",
+          label: "{{ "Transfer" | trans}}",
+          connector: "{{ url('xml_Admin_connections_transfer_select') }}"
+        },   
+        { type: "input",
+          name: "INSTALL_PATH",
+          label: "{{ "Install path"| trans }}"
+        },
+        { type: "input",
+          name: "USER_PATH",
+          label: "{{ "User path"| trans }}"
+        },
+        { type: "input",
+          name: "LICENCE",
+          label: "{{ "Licence"| trans }}"
+        }
+    ];
+
+    myFormToolbar = globalLayout.cells("c").attachToolbar();
+    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.loadStruct("{{ url('xml_Admin_spooler_toolbar') }}", function () {
+    });
+    myFormToolbar.attachEvent("onClick",onClick);
+    
+    myForm = globalLayout.cells("c").attachForm(formData);
+});
+
+
+function onClick(id){
+    switch (id){
+        case "add_spooler":
+            NewSpooler();
+            break;
+        case "delete_spooler":
+            id = myForm.getItemValue("id");
+            DeleteSpooler(id);
+            break;
+        case "save_spooler":
+            if(!myForm.validate())
+            {
+                dhtmlx.message({
+                    title:"Error",
+                    type: "error",
+                    lifetime: "60000",
+                    text: "{{ "Please type in all the required fields!" | trans }}"
+                 });
+                return;
+            }
+            globalLayout.cells("b").progressOn();
+            myForm.send("{{ url('xml_Admin_spooler_save') }}","POST",function(loader,response){
+                if(response === "success")
+                {
+                 dhtmlx.message({
+                    title:"Save",
+                    type: "Notice",
+                    lifetime: "60000",
+                    text: "{{ "Spooler Saved" | trans }}"
+                 });
+                 GridRefresh();
+                 globalLayout.cells("b").progressOff();
+               }
+               else 
+               {
+                   alert(response);
+                   globalLayout.cells("b").progressOff();
+               }
+            });
+            break;
+        default:
+            break;
+    }
+}
+
+function onMenuClick(menuitemId, type)
+{
+    var rid = myGrid.contextID.split("_")[0];
+    switch(menuitemId){
+        case "add_spooler":
+            NewSpooler();
+            break;
+        case "edit_spooler":
+            EditSpooler(rid);
+            break;
+        case "delete_spooler":
+            DeleteSpooler(rid);
+            break;
+        case "edit_site":
+            alert(rid);
+            document.location.href = "{{ url('arii_Admin_sites') }}?id="+rid;
+            break;
+        case "add_site":
+            document.location.href = "{{ url('arii_Admin_sites') }}";
+            break;
+        case "edit_repository":
+            alert(rid);
+            document.location.href = "{{ url('arii_Admin_repositories') }}?id="+rid;
+            break;
+        case "add_repository":
+            document.location.href = "{{ url('arii_Admin_repositories') }}";
+            break;
+        default:
+            alert(menuitemId);
+    }
+    return true;
+}
+
+function GridRefresh()
+{
+    myGrid.load("{{ url('xml_Admin_spoolers_grid') }}");
+}
+
+function NewSpooler() {
+    myForm.clear();
+    myForm.setItemFocus("scheduler");
+    myForm.setItemLabel("fieldset","{{ "New spooler" | trans }}");
+}
+
+function EditSpooler(id) {
+    globalLayout.cells("c").progressOn();
+    myForm.clear();
+    myForm.load("{{ url('xml_Admin_spooler_form') }}?id="+id, function () {
+        globalLayout.cells("c").progressOff();
+    });
+return true;
+}
+
+function DeleteSpooler(id) {
+        dhtmlx.confirm({
+        title: "{{ "Delete spooler" | trans }}",
+        type: "confirm-error",
+        text: "{{ "spooler.message.delete" | trans }}",
+        callback: function(answer) { if (answer) {
+                globalLayout.cells("a").progressOn();
+                dhtmlxAjax.get("{{ url('xml_Admin_spooler_delete') }}?id="+id,function(loader){
+                    if(loader.xmlDoc.responseText === 'success')
+                    {
+                        dhtmlx.message({
+                            title:"Save",
+                            type: "Notice",
+                            lifetime: "60000",
+                            text: "{{ "Spooler Deleted" | trans }}"
+                         });
+                        GridRefresh();
+                        if(myForm.getItemValue("id")===id) // when we are editting the spooler, and we delete the spooler in the grid, we need to clear the form also.
+                        {
+                            myForm.clear();
+                        }
+                        globalLayout.cells("a").progressOff(); 
+                    } else
+                    {
+                        dhtmlx.message({
+                            title:"Error",
+                            type: "error",
+                            lifetime: "60000",
+                            text: loader.xmlDoc.responseText
+                         });
+                        globalLayout.cells("a").progressOff(); 
+                    }
+                });
+            }
+        },
+        cancel: "{{ "No" | trans }}",
+        ok: "{{ "Yes" | trans }}" });
+}
+
+function GlobalRefresh() {
+}
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job_chain  orders_recoverable="yes" visible="yes">
+    <job_chain_node.job_chain  state="DEBUT" job_chain="C_DEBUT" next_state="GAUCHE" error_state="GAUCHE"/>
+
+    <job_chain_node.job_chain  state="GAUCHE" job_chain="C_GAUCHE" next_state="FIN" error_state="FIN"/>
+
+    <job_chain_node.job_chain  state="FIN" job_chain="C_FIN" next_state="CHAINE_SUCCESS" error_state="CHAINE_FIN"/>
+
+    <job_chain_node.end  state="CHAINE_SUCCESS"/>
+
+    <job_chain_node.end  state="CHAINE_FIN"/>
+</job_chain>

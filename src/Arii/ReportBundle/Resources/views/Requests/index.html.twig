@@ -1,0 +1,94 @@
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+last='';
+dhtmlxEvent(window,"load",function(){     
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
+    globalLayout.cells("a").setWidth(355); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+    {% if  app.request.query.get('request') is defined %}
+    last = "{{ app.request.query.get('request') }}";
+    {% else %}
+    last = "";
+    {% endif %}
+        
+    if (last == '') {
+        globalLayout.cells("b").attachURL("{{ url('arii_Report_requests_summary') }}");
+    }
+    else
+        globalLayout.cells("b").attachURL("{{ url('arii_Report_requests_result') }}?request="+last );
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    myGrid = globalLayout.cells("a").attachGrid();
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("#text_filter,#numeric_filter");
+    myGrid.setColAlign("left,right");    
+    myGrid.setInitWidths("*,70");
+    myGrid.setColSorting("str,int");
+    myGrid.init();
+    myGrid.load( "{{ url('xml_Report_requests_list') }}");
+
+    myGrid.attachEvent("onRowDblClicked", function (id) {
+        last = id;
+        globalLayout.cells("b").attachURL("{{ url('arii_Report_requests_result') }}?request="+id);
+    });
+    globalLayout.attachEvent("onContentLoaded", function(){
+        globalLayout.cells("b").progressOff();
+        myGrid.load( "{{ url('xml_Report_requests_list') }}", function() {
+            globalLayout.cells("a").progressOff();        
+        });
+    });
+    
+    myGridToolbar = globalLayout.cells("b").attachToolbar();
+    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.loadStruct( "{{ url('xml_Report_requests_toolbar') }}");
+    myGridToolbar.attachEvent("onClick",function(itemid){
+         switch (itemid) {
+            case 'csv': 
+            case 'pdf': 
+            case 'excel': 
+                globalLayout.cells("b").attachURL("{{ url('arii_Report_requests_result') }}?output="+itemid+"&request="+last);
+                break;
+            case 'refresh':
+                globalLayout.cells("b").progressOn();
+                GlobalRefresh();
+                break;
+            case "print":
+                myGrid.printView();
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+});
+
+function GlobalRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    globalLayout.cells("b").attachURL("{{ url('arii_Report_requests_result') }}?request="+last);
+    globalLayout.cells("a").progressOff();
+    globalLayout.cells("b").progressOff();
+    globalLayout.progressOff();
+}
+</script>
+{% endblock %}

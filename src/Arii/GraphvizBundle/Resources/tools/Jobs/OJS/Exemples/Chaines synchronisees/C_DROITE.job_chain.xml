@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job_chain  orders_recoverable="yes" visible="yes" title="DROITE">
+    <job_chain_node  state="DROITE" job="J_DROITE" next_state="SYNCHRO" error_state="SYNCHRO"/>
+
+    <job_chain_node  state="SYNCHRO" job="J_SYNCHRO" next_state="C_DROITE_SUCCESS" error_state="C_DROITE_ERROR"/>
+
+    <job_chain_node  state="C_DROITE_SUCCESS"/>
+
+    <job_chain_node  state="C_DROITE_ERROR"/>
+</job_chain>

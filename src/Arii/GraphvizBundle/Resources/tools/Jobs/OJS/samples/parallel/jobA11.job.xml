@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<job order="yes">
+    <lock.use lock="test1"
+              exclusive="no"/>
+    <script language="shell">
+        <![CDATA[
+echo job jobA11 is running
+        ]]>
+    </script>
+    <monitor name="configuration_monitor"
+             ordering="0">
+        <script java_class="sos.scheduler.managed.configuration.ConfigurationOrderMonitor"
+                language="java"/>
+    </monitor>
+    <run_time/>
+</job>

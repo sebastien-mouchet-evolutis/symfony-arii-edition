@@ -1,0 +1,42 @@
+[
+    {type:"settings",
+        position: "label-left", 
+        labelAlign:"right", 
+        labelWidth:"80",
+        inputWidth:"200" },
+    {   type:"input",    
+            name: "JOB_NAME", 
+            label:"{{ "Job" | trans}}"
+    },
+    {   type:"input",    
+            name: "DESCRIPTION", 
+            label:"{{ "Description" | trans}}", 
+            rows: 3
+    },
+    {   type:"input",    
+            name: "OWNER", 
+            label:"{{ "Owner" | trans}}"
+    },
+    {   type:"input",    
+            name: "MACH_NAME", 
+            label:"{{ "Machine" | trans}}"
+    },
+    {type:"newcolumn"},
+    {   type:"input",    
+            name: "AS_APPLIC", 
+            label:"{{ "Application" | trans}}"
+    },
+    {   type:"input",    
+            name: "AS_GROUP", 
+            label:"{{ "Group" | trans}}"
+    },
+    {   type:"input",    
+            name: "PROFILE", 
+            label:"{{ "Profile" | trans}}"
+    },
+    {   type:"input",    
+            name: "PERMISSION", 
+            label:"{{ "Permission" | trans}}"
+    },
+    {type:"hidden",    name: "ID" }
+]

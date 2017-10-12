@@ -1,0 +1,368 @@
+{# src/Arii/JOCBundle/Resources/views/Spoolers/index.html.twig #}
+{% extends "AriiJOCBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var max_history = 0; // pas d'historique
+var chained = 0; // que des standalone
+var only_warning = 1; // que les problemes
+var update=30;
+var autorefresh;
+
+dhtmlxEvent(window,"load",function(){ 
+    menu = new dhtmlXMenuObject(null);
+    menu.setIconsPath( "{{ asset('bundles/ariicore/images/menu/') }}" );
+    menu.renderAsContextMenu();
+    menu.attachEvent("onClick", onButtonClick);
+    menu.loadStruct("{{ url('xml_JOC_spoolers_menu') }}");
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");
+    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("c").setHeight(180); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_JOC_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setHeight(300);
+
+    myTabbar = globalLayout.cells("a").attachTabbar();
+    myTabbar.addTab("orders","{{ "Orders" | trans }}","100px", null, true);
+    myTabbar.addTab("jobs","{{ "Jobs" | trans }}","100px" );
+    myTabbar.addTab("status","{{ "Status" | trans }}","100px");
+    
+    bar_orders =  myTabbar.cells("orders").attachChart ({
+            view:"stackedBarH",
+            container:"bar_container",
+            value:"#pending#",
+            label:"#pending#",
+            tooltip: "PENDING: #pending#",
+            fill:true,
+            gradient:false,
+            color:"#ccebc5",
+            padding:{
+                left: 100
+            },
+            yAxis:{
+                    title:"{{ "Spoolers" | trans }}",
+                    lines: true,
+                    template: "#SPOOLER#"
+            },
+            xAxis:{
+    /* 
+                    title:"{{ "Hour" | trans }}",
+                    template:"#SPOOLER#",
+                    lines: false                
+    */
+            }
+    //        disableItems:true
+    });
+    bar_orders.addSeries({
+                    value:"#running#",
+                    label:"<span style='background-color: orange;color: black;'>#running#</span>",
+                    tooltip: "RUNNING: #running#",
+                    gradient:false,
+                    color:"black",
+                    line:{
+                        color:"#ffffcc",
+                        width:1
+                    }
+    });
+    bar_orders.addSeries({
+                    value:"#suspended#",
+                    label:"<span style='background-color: red;color: yellow;'>#suspended#</span>",
+                    tooltip: "SUSPENDED: #suspended#",
+                    gradient:false,
+                    color:"red",
+                    line:{
+                        color:"red",
+                        width:1
+                    }
+    });
+    bar_orders.load( "{{ url('xml_JOC_spoolers_orders_bar') }}" );
+
+    bar_jobs =  myTabbar.cells("jobs").attachChart ({
+            view:"stackedBarH",
+            container:"bar_container",
+            value:"#pending#",
+            label:"#pending#",
+            tooltip: "#pending#",
+            fill:true,
+            gradient:false,
+            color:"#ccebc5",
+            padding:{
+                left: 100
+            },
+            yAxis:{
+                    title:"{{ "Spoolers" | trans }}",
+                    lines: true,
+                    template: "#SPOOLER#"
+            },
+            xAxis:{
+    /* 
+                    title:"{{ "Hour" | trans }}",
+                    template:"#SPOOLER#",
+                    lines: false                
+    */
+            }
+    //        disableItems:true
+    });
+    bar_jobs.addSeries({
+                    value:"#running#",
+                    label:"<span style='background-color: orange;color: black;'>#running#</span>",
+                    tooltip: "#running#",
+                    gradient:false,
+                    color:"black",
+                    line:{
+                        color:"#ffffcc",
+                        width:1
+                    }
+    });
+    bar_jobs.addSeries({
+                    value:"#stopped#",
+                    label:"<span style='background-color: red;color: yellow;'>#stopped#</span>",
+                    tooltip: "#stopped#",
+                    gradient:false,
+                    color:"red",
+                    line:{
+                        color:"red",
+                        width:1
+                    }
+    });
+    bar_jobs.load( "{{ url('xml_JOC_spoolers_jobs_bar') }}" );
+
+    myDonut =  myTabbar.cells("status").attachChart({
+            view:"donut",
+            container:"pie_chart_container",
+            value:"#JOBS#",
+            label:"",
+            tooltip: "#STATUS#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "#JOBS#",
+            shadow: 0,
+            legend:{
+                  width: 0,
+                  template: "#STATUS#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+    myDonut.load( "{{ url('xml_JOC_spoolers_pie') }}" );
+
+{% if is_granted('ROLE_OPERATOR') %}
+    myGridToolbar = globalLayout.cells("b").attachToolbar();
+    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.loadStruct("{{ url('xml_JOC_spoolers_toolbar') }}");
+    myGridToolbar.attachEvent( "onClick", function(id, value) {
+        switch (id) {
+            case "refresh":
+                globalLayout.cells("b").progressOn();
+                GridRefresh();
+                break;
+            case "add":
+                globalLayout.cells("b").progressOn();
+                // alert("{{ url('arii_JOC_sync') }}?host="+this.getValue('host')+"&port="+this.getValue('port'));
+                dhx4.ajax.post("{{ url('arii_JOC_sync') }}","host="+this.getValue('host')+"&port="+this.getValue('port'),function(loader,response){
+                    dhtmlx.message({
+                    type: "Notice",
+                    expire: 10000,
+                    width: "500px",
+                    text: loader.xmlDoc.responseText });                  
+                        globalLayout.progressOff();
+                        GlobalRefresh();
+                });
+                break;
+            default:
+                alert(id);
+        }
+    });
+    myGridToolbar.attachEvent("onStateChange",function(id,state){
+        switch (id) {
+            case 'show_spooler':
+                myGrid.setColumnHidden(0,!state);  
+                break;
+            case 'comment':
+                myGrid.setColumnHidden(4,!state);  
+                break;
+            case 'show_info':
+                myGrid.setColumnHidden(7,!state);  
+                break;
+            default:
+                alert(id);
+        }
+    });
+{% endif %}    
+    myGrid = globalLayout.cells("b").hideHeader();
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.selMultiRows = true;
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader( "{{ "Spooler" | trans }},{{ "Status" | trans }},{{ "Version" | trans }},{{ "Host" | trans }},{{ "Ip Adress" | trans }},{{ "Port" | trans }},{{ "Time" | trans }},{{ "Heartbeat" | trans }},{{ "Updated" | trans }}" );
+    myGrid.attachHeader("#text_filter,#select_filter,#select_filter,#select_filter,#select_filter,#select_filter,#text_filter,#numeric_filter,#text_filter");
+    myGrid.setInitWidths( "200,120,100,*,140,80,160,120,140" );
+    myGrid.setColTypes(   "ro,ro,ro,ro,ro,ro,ro,ro,ro" );
+    myGrid.setColAlign(   "left,center,right,left,right,right,right,right,right" );
+    myGrid.setColSorting( "str,str,str,str,str,str,date,int,str" );
+    myGrid.enableContextMenu(menu);
+    myGrid.enableAlterCss("","");
+    myGrid.init();
+    myGrid.load( "{{ url('xml_JOC_spoolers_grid') }}" );
+    myGrid.enableLightMouseNavigation( true );
+    myGrid.attachEvent("onXLE",function(){
+        myGrid.refreshFilters();
+        myGrid.filterByAll();
+    });
+
+    globalLayout.cells("c").hideHeader();
+    
+    myForm = globalLayout.cells("c").attachForm();
+    myForm.loadStruct("{{ url('json_JOC_spoolers_form') }}");
+{% if is_granted('ROLE_OPERATOR') %}
+    myDetailToolbar = globalLayout.cells("c").attachToolbar();
+    myDetailToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myDetailToolbar.loadStruct( "{{ url('xml_JOC_spooler_toolbar') }}" , function(){
+    });
+    myDetailToolbar.attachEvent("onClick",function(itemid){
+        switch(itemid) {
+            case "delete":
+                url = "{{ url('xml_JOC_spooler_delete') }}?spooler_id="+myForm.getItemValue('ID');
+                globalLayout.progressOn();
+                dhx4.ajax.get( url, function(loader,response){
+                        dhtmlx.message({
+                        type: "Notice",
+                        expire: 5000,
+                        width: "500px",
+                        text: loader.xmlDoc.responseText });
+                        globalLayout.progressOff();
+                        GlobalRefresh();
+                });
+            break;
+            case "update":
+                dhx4.ajax.post("{{ url('arii_JOC_sync') }}","id="+myForm.getItemValue('NAME'),function(loader,response){
+                    dhtmlx.message({
+                    type: "Notice",
+                    expire: 10000,
+                    width: "500px",
+                    text: loader.xmlDoc.responseText });                  
+                        globalLayout.progressOff();
+                        GlobalRefresh();
+                });
+                break;
+            default:
+                alert(itemid);
+        }
+    });
+{% endif %}    
+    myGrid.attachEvent("onRowDblClicked", function(id){        
+        myForm.load("{{ url('xml_JOC_spooler_form') }}?id="+id);
+    } );
+    myGrid.attachEvent("onBeforeContextMenu", function (id) {
+        status = myGrid.cells(id,1).getValue();
+        if (status=='RUNNING') {
+            menu.showItem('pause_spooler');
+            menu.hideItem('continue_spooler');
+        }
+        else if (status=='PAUSED') {
+            menu.showItem('continue_spooler');
+            menu.hideItem('pause_spooler');
+        }
+        else {
+            menu.hideItem('continue_spooler');
+            menu.hideItem('pause_spooler');
+        }
+        return true;
+    });
+
+    autorefresh = setInterval( "GlobalRefresh()", update*1000 );
+});
+
+// Autorefresh
+function GlobalRefresh() {
+    GridRefresh();
+}
+
+function GridRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    myGrid.loadXML( "{{ url('xml_JOC_spoolers_grid') }}", function () {
+        globalLayout.cells("b").progressOff();
+        bar_orders.load( "{{ url('xml_JOC_spoolers_orders_bar') }}", function() {
+            bar_orders.refresh();
+            bar_jobs.load( "{{ url('xml_JOC_spoolers_jobs_bar') }}", function() {
+                bar_jobs.refresh();
+                myDonut.load( "{{ url('xml_JOC_spoolers_pie') }}", function () {
+                    myDonut.refresh();
+                    globalLayout.progressOff();
+                });
+            });        
+        });
+    });
+}
+
+function onButtonClick(menuitemId) {
+    var data = myGrid.contextID.split("_");
+    //rowInd_colInd;
+    var id = data[0];
+    var cInd = data[1];
+    // alert("rId "+rId+" cInd "+cInd);
+    switch (menuitemId) {
+        case "get_info":
+            globalLayout.progressOn();      
+            dhx4.ajax.post("{{ url('arii_JOC_sync') }}","id="+myGrid.cells(id,0).getValue(),function(loader,response){
+                dhtmlx.message({
+                type: "Notice",
+                expire: 10000,
+                width: "500px",
+                text: loader.xmlDoc.responseText });                  
+                    globalLayout.progressOff();
+                    GlobalRefresh();
+            });
+         break;
+            case "continue_spooler":
+            case "pause_spooler":
+                dhx4.ajax.post("{{ url('arii_JOC_command') }}","command="+menuitemId+"&id="+myGrid.cells(id,0).getValue(),function(loader,response){
+                    dhtmlx.message({
+                    type: "Notice",
+                    expire: 10000,
+                    width: "500px",
+                    text: loader.xmlDoc.responseText });
+                    globalLayout.cells("b").progressOff();        
+                    globalLayout.cells("a").progressOn();        
+                    // internal refresh
+                    // alert("{{ url('arii_JOC_sync') }}?id="+spooler_id);
+                    dhx4.ajax.post("{{ url('arii_JOC_sync') }}","id="+myGrid.cells(id,0).getValue(),function(loader,response){
+                        dhtmlx.message({
+                        type: "Notice",
+                        expire: 10000,
+                        width: "500px",
+                        text: loader.xmlDoc.responseText });                  
+                        GlobalRefresh();
+                    });
+                    globalLayout.cells("a").progressOff();        
+                });
+                break;
+        case "show_info":
+            SpoolerDetail(id);
+        break;
+       default:
+            alert(menuitemId);    
+    }
+    return true;
+}
+</script>
+{% endblock %}

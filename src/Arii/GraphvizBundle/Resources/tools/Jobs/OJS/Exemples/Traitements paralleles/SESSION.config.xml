@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<?xml-stylesheet type="text/xsl" href="scheduler_configuration_documentation.xsl"?> 
+<settings>
+    <job_chain name="SESSION">
+        <note language="de"/>
+
+        <note language="en"/>
+
+        <order>
+            <params/>
+
+            <process state="ENTETE">
+                <note language="de"/>
+
+                <note language="en"/>
+
+                <params file="jobs/JobSchedulerJobChainSplitter.xml">
+                    <param name="state_names"
+                           value="ENTETE:UPROC1,ENTETE:UPROC2,ENTETE:UPROC3"/>
+
+                    <note language="de">
+                        <div xmlns="http://www.w3.org/1999/xhtml"/>
+                    </note>
+
+                    <note language="en"/>
+                </params>
+            </process>
+
+            <process state="ENTETE:UPROC1">
+                <note language="de"/>
+
+                <note language="en"/>
+
+                <params/>
+            </process>
+
+            <process state="ENTETE:UPROC2">
+                <note language="de"/>
+
+                <note language="en"/>
+
+                <params/>
+            </process>
+
+            <process state="ENTETE:UPROC3">
+                <note language="de"/>
+
+                <note language="en"/>
+
+                <params/>
+            </process>
+        </order>
+    </job_chain>
+</settings>

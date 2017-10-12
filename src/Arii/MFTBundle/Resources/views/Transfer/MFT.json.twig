@@ -1,0 +1,242 @@
+[
+    {   
+        type:"settings",
+        position:   "label-left", 
+        labelAlign: "right", 
+        labelWidth: 100,
+        inputWidth: 300,
+        offsetLeft: 10 
+    },
+    {    type:  "fieldset",
+         name:  "source",
+         label: "{{ "Source files"| trans}}",
+         width: 600,
+         list: [
+            {  type: "combo",
+               label: "{{ "Connection" | trans }}",
+               name: "source_connection",
+               value: "/",
+                   connector: "{{ url('xml_MFT_transfer_connections') }}",
+                   filtering: true,
+                   required: true
+               },
+            {   type:"input",    
+                name: "source_dir", 
+                label:"{{ "Path" | trans}}"
+            },
+            {    type:  "select",
+                 label: "{{ "Select mode"| trans}}",
+                 options: [
+                    {   text: "{{ "Shell mode" | trans }}", 
+                        value: "file_path", 
+                        list:[ 
+                                    {   type:"input",    
+                                        name: "file_path", 
+                                        label:"{{ "Path and File" | trans}}",
+                                        note: { text: "Le joker * peut être utilisé. Si plusieurs fichiers sont indiqués, il peuvent être séparés par un point virgule." }
+                                    }
+                            ]
+                    },
+                    {   text: "{{ "Regular expression" | trans }}", 
+                        value: "file_spec", 
+                        list:[ 
+                            {   type:"input",    
+                                name: "file_spec", 
+                                label:"{{ "File" | trans}}",
+                                value: ".*",
+                                note: { text: "Les expressions régulières peuvent êtres utilisées." }
+                            }
+                        ]
+                    },
+                    {   text: "{{ "File list" | trans }}", 
+                        value: "file_list_name", 
+                        list:[ 
+                            {   type:"input",    
+                                name: "file_list_name", 
+                                label:"{{ "File list" | trans}}"
+                            }
+                        ]
+                    }
+                 ]
+            },
+            {   type:"checkbox", 
+                name: "REPLACE", 
+                value: false,
+                label:"{{ "Rename" | trans}}",
+                note: { text: "Renommage des fichiers source." },
+                list:[ 
+                        {   type:"input",    
+                            name: "source_replacing", 
+                            label:"{{ "Replacing" | trans}}"
+                        },
+                        {   type:"input",    
+                            name: "source_replacement", 
+                            label:"{{ "Replacement" | trans}}"
+                        }
+                    ]
+            }
+         ]
+    },
+    {    
+        type:  "fieldset",
+        name:  "source_options",
+        label: "{{ "Source options"| trans}}",
+        width: 600,
+        list: [
+            {   type:"checkbox",
+                name: "RECURSIVE", 
+                value: false,
+                label: "{{ "Recursive" | trans}}",
+                note: { text: "Prend en charge les fichiers de l'arborescence." }
+            },
+            {   type:"checkbox",
+                name: "ZERO_BYTE_TRANSFER", 
+                value: true,
+                label: "{{ "Empty files transfer" | trans}}",
+                note: { text: "Copie les fichiers même si ils sont vides." }
+            },
+            {   type:"checkbox",
+                name: "FORCE_FILES", 
+                value: true,
+                label: "{{ "Error if no file" | trans}}",
+                note: { text: "Renvoie une erreur si aucun fichier n'est présent à la source." }
+            },
+            {   type:"checkbox",
+                name: "REMOVE_FILES", 
+                value: false,
+                label: "{{ "Remove files" | trans}}",
+                note: { text: "Supprime les fichiers après le transfert." }
+            }
+        ]
+    },
+    {    type:"fieldset",
+         name: "transfer",
+         label:"{{ "Transfer mode"| trans}}",
+         width: 600,
+         list: [
+                {   type:"checkbox", 
+                    name: "TRANSACTIONAL", 
+                    value: false,
+                    label:"{{ "Transactional" | trans}}",
+                    note: { text: "Les fichiers sont envoyés par lot, en cas de problème de transfert tout le lot est annulé." }
+                },
+                {   type:"checkbox", 
+                    name: "ATOMIC_TRANSFER", 
+                    value: false,
+                    label:"{{ "Atomic transfer" | trans}}",
+                    note: { text: "Les fichiers sont envoyés par lot, en cas de problème de transfert tout le lot est annulé." },
+                    list:[ 
+                            {   type:"input",    
+                                name: "ATOMIC_PREFIX", 
+                                label:"{{ "Prefix" | trans}}"
+                            },
+                            {   type:"input",    
+                                name: "ATOMIC_SUFFIX", 
+                                label:"{{ "Suffix" | trans}}"
+                            }
+                        ]
+                },
+                {   type:"checkbox", 
+                    name: "CONCURRENT_TRANSFER", 
+                    value: false,
+                    label:"{{ "Concurrent transfer" | trans}}",
+                    note: { text: "Les fichiers sont envoyés en parallèle." },
+                    list:[ 
+                            {   type:"input",    
+                                name: "MAX_CONCURRENT_TRANSFERS", 
+                                label:"{{ "Max. transfers" | trans}}"
+                            }
+                        ]
+                },
+                {   type:"checkbox", 
+                    name: "COMPRESS_FILES", 
+                    value: false,
+                    label: "{{ "Compress files" | trans}}",
+                    note: { text: "Les fichiers sont compressés avant transfert." },
+                    list: [ 
+                            {   type:"input",    
+                                name: "COMPRESSED_FILE_EXTENSION", 
+                                value: ".gz",
+                                label:"{{ "File extension" | trans}}"
+                            }
+                    ]
+                }
+         ]
+    },
+    {type:"newcolumn"  },
+    {
+        type:"fieldset",
+        name: "target",
+        label:"{{ "Target files"| trans}}",
+        width: 600,
+        list: [
+            {  type: "combo",
+               label: "{{ "Connection" | trans }}",
+               name: "target_connection",
+               value: "/",
+                   connector: "{{ url('xml_MFT_transfer_connections') }}",
+                   filtering: true
+               },
+            {   type:"input",    
+                   name: "REMOTE_DIR", 
+                   label:"{{ "Directory" | trans}}"
+            },
+            {   type:"input",    
+                   name: "ALTERNATIVE_REMOTE_DIR", 
+                   label:"{{ "Alternative" | trans}}"
+            }
+            
+         ]
+    },
+    {    
+        type:  "fieldset",
+        name:  "target_options",
+        label: "{{ "Target options"| trans}}",
+        width: 600,
+        list: [
+            {
+                type:  "select",
+                label: "{{ "If files exist"| trans}}",
+                options: [
+                    {   text: "{{ "Do nothing" | trans }}", 
+                        name: "DO_NOTHING"
+                    },
+                    {   text: "{{ "Append files" | trans }}", 
+                        name: "APPEND_FILES"
+                    },
+                    {   text: "{{ "Append files" | trans }}", 
+                        name: "OVERWRITE_FILES"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        type:"fieldset",
+        name: "file_arrival",
+        label:"{{ "File arrival"| trans}}",
+        width: 600,
+        value: false,
+        list: [
+            {   type:"checkbox", 
+                name: "CHECK_STEADY_STATE", 
+                value: false,
+                label: "{{ "Check steady state" | trans}}",
+                note: { text: "Les fichiers sont compressés avant transfert." },
+                list: [        
+                    {   type:"input",    
+                        name: "CHECK_STEADY_STATE_INTERVAL",
+                        value: 1,
+                        label:"{{ "Interval" | trans}}"
+                    },
+                    {   type:"input",    
+                        name: "CHECK_STEADY_STATE_COUNT", 
+                        value: 30,
+                        label:"{{ "Count" | trans}}"
+                    }
+                ]
+            }
+        ]
+    },
+    {type:"hidden",    name: "ID" }
+]

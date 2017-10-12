@@ -1,0 +1,76 @@
+{% extends "AriiAdminBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var update=30
+
+dhtmlxEvent(window,"load",function(){
+var size=300;
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
+    globalLayout.cells("a").setWidth(size); 
+    globalLayout.cells("b").hideHeader(); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    mySidebar = globalLayout.cells("a").attachSidebar({
+        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
+    });
+    mySidebar.attachEvent("onBubbleClick", function(id, value){
+        // bubble clicked, your code here
+        // 'return true' means item allowed to be selected
+        // false - otherwise
+        return true;
+    });
+    mySidebar.attachEvent("onSelect", function(id, value){
+        document.location.href = "{{ url('arii_Admin_index') }}"+id;
+        return true;
+    });
+
+    
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader( "{{ "Log" | trans }},{{ "Module" | trans }},{{ "User" | trans }},{{ "Action" | trans }},{{ "Status" | trans }},{{ "Message" | trans }},{{ "IP" | trans }}" );
+    myGrid.attachHeader("#text_filter,#select_filter,#select_filter,#text_filter,#select_filter,#text_filter,#select_filter");
+    myGrid.setInitWidths( "120,100,150,*,120,*,100" );
+    myGrid.setColTypes(   "ro,ro,ro,ro,ro,ro,ro" );
+    myGrid.setColAlign(   "left,center,left,left,center,left,right" );
+    myGrid.setColSorting( "str,str,str,str,str,str,str" );
+    myGrid.enableAlterCss("","");
+    myGrid.init();
+    myGrid.load( "{{ url('xml_Admin_audit_grid') }}" );
+//    myGrid.attachEvent("onRowDblClicked",AuditDetail );
+    myGrid.attachEvent("onXLE",function(){
+        myGrid.refreshFilters();
+        myGrid.filterByAll();
+    });
+
+    globalLayout.cells("a").hideHeader();
+    autorefresh = setInterval( "GridRefresh()",update*1000);
+});
+
+function GlobalRefresh() {
+    GridRefresh();
+}
+
+function GridRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );        
+}
+</script>
+{% endblock %}

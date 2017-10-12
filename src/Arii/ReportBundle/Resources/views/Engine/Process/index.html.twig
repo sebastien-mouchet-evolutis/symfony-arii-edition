@@ -1,0 +1,62 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+dhtmlxEvent(window,"load",function(){         
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setWidth(250);
+    globalLayout.cells("b").hideHeader();
+    globalLayout.cells("c").setText("{{ "Log" | trans }}");
+    globalLayout.cells("c").collapse();
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    myTree =globalLayout.cells("a").attachTree();
+    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.load("{{ url('xml_Report_process_tree') }}");
+    
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Order" | trans }},{{ "Chain" | trans }},{{ "Title" | trans }},{{ "State" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }}");
+    myGrid.attachHeader("#select_filter,#select_filter,#text_filter,#select_filter,#text_filter,#text_filter");
+    myGrid.setInitWidths("200,*,*,100,140,140");
+    myGrid.setColAlign("left,left,left,left,left,left");
+    myGrid.setColTypes("ro,ro,ro,ro,ro,ro");
+    myGrid.init();
+    myGrid.loadXML( "{{ url('xml_Report_process_orders') }}" );
+    myGrid.attachEvent("onRowDblClicked", Detail );
+    myGrid.enableAlterCss("even_row","odd_row");
+
+    myLog = globalLayout.cells("c").attachGrid();
+    myLog.setHeader("{{ "Date" | trans }},{{ "Type" | trans }},{{ "Message" | trans }},{{ "Code" | trans }}");
+    myLog.attachHeader("#text_filter,#select_filter,#text_filter,#select_filter");
+    myLog.setInitWidths("160,200,*,60");
+    myLog.setColAlign("right,left,left,right");
+    myLog.setColTypes("ro,ro,ro,ro");
+    myLog.setColSorting("date,str,str,int");
+    myLog.init();
+    myLog.enableSmartRendering(true,50);
+    myLog.enableAlterCss("even_row","odd_row");
+
+});
+
+function Detail(id) {
+    globalLayout.cells("c").progressOn();
+    globalLayout.cells("c").expand();
+    myLog.clearAndLoad("{{ url('xml_JID_order_log') }}?id="+id, function () {
+        globalLayout.cells("c").progressOff(); 
+    });                                   
+}
+    
+function GlobalRefresh() {};
+</script>
+{% endblock %}

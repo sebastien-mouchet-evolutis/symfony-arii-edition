@@ -1,0 +1,195 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiMFTBundle::layout.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+var update = 60;
+var autorefresh;
+{% if id is defined %}
+var transfer={{ id }};
+{% else %}
+var transfer=-1;
+{% endif %}    
+partner=-1;
+
+dhtmlxEvent(window,"load",function(){
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_MFT_ribbon_edit') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    
+    myTabbar = globalLayout.cells("b").attachTabbar();
+    myTabbar.addTab("transfer","{{ "Transfer" | trans }}","150px", null, true);
+    myTabbar.addTab("doc","{{ "Doc" | trans }}","150px");
+    myTabbar.addTab("schema","{{ "Schema" | trans }}","150px");
+
+    myGrid = globalLayout.cells("a").attachGrid();
+    myGrid.selMultiRows = true;
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Partner" | trans }},{{ "Name" | trans }},{{ "Title" | trans }}");
+    myGrid.attachHeader("#select_filter,#select_filter,#text_filter,#text_filter");
+    myGrid.setInitWidths("0,0,*,0");
+    myGrid.setColAlign("left,left,left,left");
+    myGrid.setColTypes("ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,str,str");
+    myGrid.init();
+    myGrid.attachEvent("onRowDblClicked", TransferDetail );  
+
+    myFormToolbar = myTabbar.cells("transfer").attachToolbar();
+    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.loadStruct( "{{ url('xml_MFT_transfer_toolbar') }}");
+
+    myForm = myTabbar.cells("transfer").attachForm();
+    myForm.loadStruct("{{ url('json_MFT_transfer_form') }}");
+    
+    myForm.attachEvent( "onChangeValue", function(id, value) {
+        myFormToolbar.enableItem('save');
+    });
+    myForm.attachEvent( "onEnter", function(id, value) {
+        myFormToolbar.enableItem('save');
+    });    
+    myFormToolbar.attachEvent("onClick",function(itemid, state){
+         switch (itemid) {
+            case "save":
+                if(!myForm.validate())
+                {
+                    dhtmlx.message({
+                        title:"Error",
+                        type: "error",
+                        lifetime: "60000",
+                        text: "{{ "Please type in all the required fields!" | trans }}"
+                     });
+                    return;
+                }
+                globalLayout.cells("c").progressOn();
+                myForm.send("{{ url('html_MFT_transfer_save') }}","POST",function(loader,response){
+                    globalLayout.cells("c").progressOff();
+                    if(response === "success")
+                    {
+                        dhtmlx.message({
+                           title:"Save",
+                           type: "Notice",
+                           lifetime: "60000",
+                           text: "{{ "Saved" | trans }}"
+                        });
+                        globalLayout.cells("b").progressOn();
+                        myGrid.load("{{ url('xml_MFT_transfers_grid') }}?partner_id="+partner, function(){
+                            globalLayout.cells("b").progressOff();
+                        });
+                   }
+                   else 
+                   {
+                       alert(response);
+                   }               
+                });
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+
+    myLayout = globalLayout.cells("c").attachLayout("2U");
+    myLayout.cells("a").hideHeader();
+ 
+    myOperations = myLayout.cells("a").attachGrid();
+    myOperations.selMultiRows = true;
+    myOperations.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myOperations.setHeader("{{ "Transfer" | trans }},{{ "Step" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Description" | trans }},{{ "Source" | trans }},{{ "Target" | trans }},{{ "Env" | trans }}");
+    myOperations.attachHeader("#select_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#select_filter,#select_filter,#select_filter");
+    myOperations.setInitWidths("0,50,200,*,0,150,150,0");
+    myOperations.setColAlign("left,right,left,left,left,left,left,left");
+    myOperations.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");
+    myOperations.setColSorting("str,int,str,str,str,str,str,str");
+    myOperations.init();
+
+    myLayout.cells("b").hideHeader();
+    myLayout.cells("b").setWidth(450);
+
+    myOpForm = myLayout.cells("b").attachForm();
+    myOpForm.loadStruct("{{ url('json_MFT_operation_form') }}");
+
+    myOpFormToolbar = myLayout.cells("b").attachToolbar();
+    myOpFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myOpFormToolbar.loadStruct( "{{ url('xml_MFT_operation_toolbar') }}");
+
+    myOperations.attachEvent("onRowDblClicked", function(id) {
+        myLayout.cells("b").progressOn();
+        myOpForm.load("{{ url('xml_MFT_operation_form') }}?id="+id, function () {
+            myLayout.cells("b").progressOff();
+        });
+    });
+    
+    myOpFormToolbar.attachEvent("onClick",function(itemid, state){
+         switch (itemid) {
+            case "save":
+                if(!myForm.validate())
+                {
+                    dhtmlx.message({
+                        title:"Error",
+                        type: "error",
+                        lifetime: "60000",
+                        text: "{{ "Please type in all the required fields!" | trans }}"
+                     });
+                    return;
+                }
+                myLayout.cells("b").progressOn();
+                myOpForm.send("{{ url('html_MFT_operation_save') }}","POST",function(loader,response){
+                    myLayout.cells("b").progressOff();
+                    if(response === "success")
+                    {
+                        dhtmlx.message({
+                           title:"Save",
+                           type: "Notice",
+                           lifetime: "60000",
+                           text: "{{ "Saved" | trans }}"
+                        });
+                        TransferDetail(transfer);
+                   }
+                   else 
+                   {
+                       alert(response);
+                   }               
+                });
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+
+    if (transfer>=0) 
+        TransferDetail(transfer);
+});
+
+function TransferDetail(id) {
+    transfer=id;
+    globalLayout.cells("b").progressOn();
+    myForm.load("{{ url('xml_MFT_transfer_form') }}?id="+id, function() {
+        globalLayout.cells("b").progressOff();
+        partner= myForm.getItemValue('ID_PARTNER'); // bug avec la selection
+        globalLayout.cells("c").progressOn();        
+        myOperations.clearAll();
+        myOperations.load("{{ url('xml_MFT_operations_grid') }}?transfer_id="+id, function () {
+            globalLayout.cells("c").progressOff();
+            globalLayout.cells("a").progressOn();
+            myGrid.clearAll();
+            myGrid.load("{{ url('xml_MFT_transfers_grid') }}?partner_id="+partner, function () {
+                globalLayout.cells("a").progressOff();
+                myTabbar.cells("doc").attachURL("{{ url('html_MFT_transfer_doc') }}?id="+id);
+                myTabbar.cells("schema").attachURL("{{ url('svg_MFT_transfer_uml') }}?id="+id);
+            });
+        });
+    });
+}
+</script>
+{% endblock %}

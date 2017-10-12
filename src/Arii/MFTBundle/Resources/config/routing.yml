@@ -1,0 +1,579 @@
+# src/Arii/MFTBundle/Resources/config/routing.yml
+arii_MFT_index:
+    path:  /
+    defaults: { _controller: AriiMFTBundle:Default:index }
+
+arii_MFT_readme:
+    path:  /readme
+    defaults: { _controller: AriiMFTBundle:Default:readme }
+
+json_MFT_ribbon:
+    path:  /ribbon.json
+    defaults: { _controller: AriiMFTBundle:Default:ribbon }
+
+json_MFT_ribbon_edit:
+    path:  /ribbon_edit.json
+    defaults: { _controller: AriiMFTBundle:Default:ribbon_edit }
+
+xml_MFT_toolbar:
+    path:  /toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Default:toolbar }
+
+xml_MFT_status_grid:
+    path:  /status/grid.xml
+    defaults: { _controller: AriiMFTBundle:Default:grid }
+
+xml_MFT_status_pie:
+    path:  /status/pie.xml
+    defaults: { _controller: AriiMFTBundle:Default:pie }
+
+xml_MFT_status_grid_menu:
+    path:  /status/grid_menu.xml
+    defaults: { _controller: AriiMFTBundle:Default:contextmenu }
+
+svg_MFT_history_uml:
+    path:  /history/uml.svg
+ #   defaults: { _controller: AriiMFTBundle:Graphviz:history }
+    defaults: { _controller: AriiMFTBundle:History:graph }
+
+svg_MFT_history_gantt:
+    path:  /history/gantt.svg
+ #   defaults: { _controller: AriiMFTBundle:Graphviz:history }
+    defaults: { _controller: AriiMFTBundle:History:gantt }
+
+json_MFT_status_form:
+    path:  /status/form.json
+    defaults: { _controller: AriiMFTBundle:Status:struct }
+
+xml_MFT_status_form:
+    path:  /status/form.xml
+    defaults: { _controller: AriiMFTBundle:Status:form }
+
+html_MFT_status_save:
+    path:  /status/save.html
+    defaults: { _controller: AriiMFTBundle:Status:save }
+
+html_MFT_status_change:
+    path:  /status/change.html
+    defaults: { _controller: AriiMFTBundle:Status:change_status }
+
+#==================================================
+# History
+#==================================================
+xml_MFT_history:
+    path:  /history
+    defaults: { _controller: AriiMFTBundle:History:index }
+
+xml_MFT_history_grid:
+    path:  /history/grid.xml
+    defaults: { _controller: AriiMFTBundle:History:grid }
+    
+xml_MFT_history_chart:
+    path:  /history/chart.xml
+    defaults: { _controller: AriiMFTBundle:History:chart }
+
+html_MFT_delivery_doc:
+    path:  /history/delivery.html
+    defaults: { _controller: AriiMFTBundle:History:doc }
+
+#==================================================
+# Schedules
+#==================================================
+arii_MFT_schedules:
+    path:  /schedules
+    defaults: { _controller: AriiMFTBundle:Schedules:index }
+
+xml_MFT_schedules_toolbar:
+    path:  /schedules/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Schedules:toolbar }
+    
+xml_MFT_schedules_form:
+    path:  /schedules/form.xml
+    defaults: { _controller: AriiMFTBundle:Schedules:form }
+
+xml_MFT_schedules_select:
+    path:  /schedules/select.xml
+    defaults: { _controller: AriiMFTBundle:Schedules:select }
+    
+xml_MFT_schedules_grid:
+    path:  /schedules/grid.xml
+    defaults: { _controller: AriiMFTBundle:Schedules:grid }
+
+xml_MFT_schedules_list:
+    path:  /schedules/list.xml
+    defaults: { _controller: AriiMFTBundle:Schedules:list }
+    
+xml_MFT_schedules_save:
+    path:  /schedules/save.xml
+    defaults: { _controller: AriiMFTBundle:Schedules:save }   
+
+xml_MFT_schedules_delete:
+    path:  /schedules/delete.xml
+    defaults: { _controller: AriiMFTBundle:Schedules:delete }   
+
+xml_MFT_schedules_transfers:
+    path:  /schedules/transfers.xml
+    defaults: { _controller: AriiMFTBundle:Schedules:transfers } 
+    
+#==================================================
+# Transmissions 
+#==================================================
+arii_MFT_transmissions:
+    path:  /transmissions
+    defaults: { _controller: AriiMFTBundle:Transmissions:index }
+
+xml_MFT_transmissions_grid:
+    path:  /transmissions/grid.xml
+    defaults: { _controller: AriiMFTBundle:Transmissions:grid }
+
+#==================================================
+# Transmission
+#==================================================
+xml_MFT_transmission_history:
+    path:  /transmission/grid.xml
+    defaults: { _controller: AriiMFTBundle:Transmission:grid }
+
+#==================================================
+# Deliveries 
+#==================================================
+arii_MFT_deliveries:
+    path:  /deliveries
+    defaults: { _controller: AriiMFTBundle:Deliveries:index }
+
+xml_MFT_deliveries_grid:
+    path:  /deliveries/grid.xml
+    defaults: { _controller: AriiMFTBundle:Deliveries:grid }
+
+xml_MFT_deliveries_chart:
+    path:  /deliveries/chart.xml
+    defaults: { _controller: AriiMFTBundle:Deliveries:chart }
+
+xml_MFT_deliveries_toolbar:
+    path:  /deliveries/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Deliveries:toolbar }
+
+xml_MFT_deliveries_pie:
+    path:  /deliveries/pie.xml
+    defaults: { _controller: AriiMFTBundle:Deliveries:pie }
+
+xml_MFT_deliveries_stackedbars:
+    path:  /deliveries/stackedbars.xml
+    defaults: { _controller: AriiMFTBundle:Deliveries:stackedbars }
+
+#==================================================
+# Delivery
+#==================================================
+json_MFT_delivery_form:
+    path:  /delivery/form.json
+    defaults: { _controller: AriiMFTBundle:Delivery:form_struct }
+
+xml_MFT_delivery_form:
+    path:  /delivery/form.xml
+    defaults: { _controller: AriiMFTBundle:Delivery:form }
+
+html_MFT_delivery_log:
+    path:  /delivery/log.html
+    defaults: { _controller: AriiMFTBundle:Delivery:log }
+
+html_MFT_delivery_delete:
+    path:  /delivery/delete.html
+    defaults: { _controller: AriiMFTBundle:Delivery:delete }
+
+#==================================================
+# Summary 
+#==================================================
+arii_MFT_summary:
+    path:  /summary
+    defaults: { _controller: AriiMFTBundle:Summary:index }
+
+xml_MFT_summary_grid:
+    path:  /summary/grid.xml
+    defaults: { _controller: AriiMFTBundle:Summary:grid }
+
+json_MFT_summary_form:
+    path:  /summary/form.json
+    defaults: { _controller: AriiMFTBundle:Summary:form }
+
+xml_MFT_summary_form:
+    path:  /summary/form.xml
+    defaults: { _controller: AriiMFTBundle:Summary:form }
+    
+xml_MFT_summary_toolbar:
+    path:  /summary/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Summary:toolbar }
+
+html_MFT_summary_delete:
+    path:  /summary/delete.html
+    defaults: { _controller: AriiMFTBundle:Summary:delete }
+
+html_MFT_summary_save:
+    path:  /summary/save.html
+    defaults: { _controller: AriiMFTBundle:Summary:save }
+    
+#==================================================
+# Network
+#==================================================
+arii_MFT_network:
+    path:  /network
+    defaults: { _controller: AriiMFTBundle:Network:index }
+    
+#==================================================
+# Operations 
+#==================================================
+arii_MFT_operations:
+    path:  /operations
+    defaults: { _controller: AriiMFTBundle:Operations:index }
+
+xml_MFT_operations_grid:
+    path:  /operations/grid.xml
+    defaults: { _controller: AriiMFTBundle:Operations:grid }
+
+xml_MFT_form:
+    path:  /operations/form.xml
+    defaults: { _controller: AriiMFTBundle:Operations:form }
+
+xml_MFT_form_options:
+    path:  /operations/form/options.xml
+    defaults: { _controller: AriiMFTBundle:Operations:form_options }
+
+xml_MFT_form_source:
+    path:  /operations/form/source.xml
+    defaults: { _controller: AriiMFTBundle:Operations:form_source }
+
+xml_MFT_form_target:
+    path:  /operations/form/target.xml
+    defaults: { _controller: AriiMFTBundle:Operations:form_target }
+
+#==================================================
+# Operation
+#==================================================
+json_MFT_operation_form:
+    path:  /operation/form.json
+    defaults: { _controller: AriiMFTBundle:Operation:struct }
+
+xml_MFT_operation_form:
+    path:  /operation/form.xml
+    defaults: { _controller: AriiMFTBundle:Operation:form }
+
+json_MFT_operation_options:
+    path:  /operation/form/options.json
+    defaults: { _controller: AriiMFTBundle:Operation:struct_options }
+
+xml_MFT_operation_options:
+    path:  /operation/form/options.xml
+    defaults: { _controller: AriiMFTBundle:Operation:options }
+
+json_MFT_operation_connection:
+    path:  /operation/connection.json
+    defaults: { _controller: AriiMFTBundle:Operation:struct_connection }
+
+xml_MFT_operation_connection:
+    path:  /operation/connection.xml
+    defaults: { _controller: AriiMFTBundle:Operation:connection }
+
+xml_MFT_connections_select:
+    path:  /operation/connection/select.xml
+    defaults: { _controller: AriiMFTBundle:Operation:connectionsSelect }
+
+xml_MFT_parameters_select:
+    path:  /operation/connection/parameters/select.xml
+    defaults: { _controller: AriiMFTBundle:Operation:parametersSelect }
+
+xml_MFT_operation_toolbar:
+    path:  /operation/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Operation:toolbar }
+
+xml_MFT_operation_history:
+    path:  /operation/history.xml
+    defaults: { _controller: AriiMFTBundle:Operation:history }
+
+html_MFT_operation_save:
+    path:  /operation/save.html
+    defaults: { _controller: AriiMFTBundle:Operation:save }
+
+html_MFT_operation_delete:
+    path:  /operation/delete.html
+    defaults: { _controller: AriiMFTBundle:Operation:delete }
+
+#==================================================
+# Partners
+#==================================================
+arii_MFT_partners:
+    path:  /partners
+    defaults: { _controller: AriiMFTBundle:Partners:index }
+
+xml_MFT_partners_grid:
+    path:  /partners/grid.xml
+    defaults: { _controller: AriiMFTBundle:Partners:grid }
+
+xml_MFT_partners_list:
+    path:  /partners/list.xml
+    defaults: { _controller: AriiMFTBundle:Partners:list }
+
+xml_MFT_partners_toolbar:
+    path:  /partners/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Partners:toolbar }
+
+xml_MFT_partners_select:
+    path:  /partners/select.xml
+    defaults: { _controller: AriiMFTBundle:Partners:select }
+
+xml_MFT_partners_grid_menu:
+    path:  /partners/grid_menu.xml
+    defaults: { _controller: AriiMFTBundle:Partners:contextmenu }
+
+xml_MFT_partners_tree:
+    path:  /partners/tree.xml
+    defaults: { _controller: AriiMFTBundle:Partners:tree }
+
+#--------------------------------------------------
+# Partner
+#--------------------------------------------------
+arii_MFT_partner:
+    path:  /partner
+    defaults: { _controller: AriiMFTBundle:Partner:index }
+
+xml_MFT_partner_toolbar:
+    path:  /partner/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Partner:toolbar }
+
+json_MFT_partner_form:
+    path:  /partner/form.json
+    defaults: { _controller: AriiMFTBundle:Partner:struct }
+
+xml_MFT_partner_form:
+    path:  /partner/form.xml
+    defaults: { _controller: AriiMFTBundle:Partner:form }
+    
+txt_MFT_partner_config:
+    path:  /partner/config.txt
+    defaults: { _controller: AriiMFTBundle:Partner:config }
+
+html_MFT_partner_delete:
+    path:  /partner/delete.html
+    defaults: { _controller: AriiMFTBundle:Partner:delete }
+
+html_MFT_partner_save:
+    path:  /partner/save.html
+    defaults: { _controller: AriiMFTBundle:Partner:save }
+
+#==================================================
+# Transfers 
+#==================================================
+arii_MFT_transfers:
+    path:  /transfers
+    defaults: { _controller: AriiMFTBundle:Transfers:index }
+
+xml_MFT_transfers_grid:
+    path:  /transfers/grid.xml
+    defaults: { _controller: AriiMFTBundle:Transfers:grid }
+
+xml_MFT_transfers_form:
+    path:  /transfers/form.xml
+    defaults: { _controller: AriiMFTBundle:Transfers:form }
+
+xml_MFT_transfers_toolbar:
+    path:  /transfers/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Transfers:toolbar }
+
+xml_MFT_transfers_grid_menu:
+    path:  /transfers/grid_menu.xml
+    defaults: { _controller: AriiMFTBundle:Transfers:contextmenu }
+
+xml_MFT_transfers_list:
+    path:  /transfers/list.xml
+    defaults: { _controller: AriiMFTBundle:Transfers:list }
+
+xml_MFT_transfers_select:
+    path:  /transfers/select.xml
+    defaults: { _controller: AriiMFTBundle:Transfers:select }
+
+html_MFT_transfers_schema:
+    path:  /transfers/schema.html
+    defaults: { _controller: AriiMFTBundle:Graph:schema }
+
+#--------------------------------------------------
+# Transfer
+#--------------------------------------------------
+arii_MFT_transfer:
+    path:  /transfer
+    defaults: { _controller: AriiMFTBundle:Transfer:index }
+
+svg_MFT_transfer_graph:
+    path:  /transfer/graph.svg
+    defaults: { _controller: AriiMFTBundle:Graphviz:transfer }
+
+svg_MFT_transfer_uml:
+    path:  /transfer/uml.svg
+    defaults: { _controller: AriiMFTBundle:Graph:exchange }
+
+html_MFT_transfer_doc:
+    path:  /transfer/doc.html
+    defaults: { _controller: AriiMFTBundle:Transfer:doc }
+
+xml_MFT_transfer_toolbar:
+    path:  /transfer/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Transfer:toolbar }
+    
+json_MFT_transfer_form:
+    path:  /transfer/form.json
+    defaults: { _controller: AriiMFTBundle:Transfer:struct }
+
+xml_MFT_transfer_form:
+    path:  /transfer/form.xml
+    defaults: { _controller: AriiMFTBundle:Transfer:form }
+
+html_MFT_transfer_delete:
+    path:  /transfer/delete.html
+    defaults: { _controller: AriiMFTBundle:Transfer:delete }
+
+html_MFT_transfer_save:
+    path:  /transfer/save.html
+    defaults: { _controller: AriiMFTBundle:Transfer:save }
+    
+#==================================================
+html_MFT_transfer2operation:
+    path:  /transfer/transfer2operation.html
+    defaults: { _controller: AriiMFTBundle:Transfer:transfer2operation }
+    
+#==================================================
+# Parameters
+#==================================================
+arii_MFT_parameters:
+    path:  /parameters
+    defaults: { _controller: AriiMFTBundle:Parameters:index }
+
+xml_MFT_parameters_grid:
+    path:  /parameters/grid.xml
+    defaults: { _controller: AriiMFTBundle:Parameters:grid }
+
+xml_MFT_parameters_toolbar:
+    path:  /parameters/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Parameters:toolbar }
+
+xml_MFT_parameters_select:
+    path:  /parameters/select.xml
+    defaults: { _controller: AriiMFTBundle:Parameters:select }
+
+xml_MFT_parameters_grid_menu:
+    path:  /parameters/grid_menu.xml
+    defaults: { _controller: AriiMFTBundle:Parameters:contextmenu }
+
+#--------------------------------------------------
+# Parameter
+#--------------------------------------------------
+xml_MFT_parameter_toolbar:
+    path:  /parameter/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Parameter:toolbar }
+
+json_MFT_parameter_form:
+    path:  /parameter/form.json
+    defaults: { _controller: AriiMFTBundle:Parameter:struct }
+
+xml_MFT_parameter_form:
+    path:  /parameter/form.xml
+    defaults: { _controller: AriiMFTBundle:Parameter:options }
+
+html_MFT_parameter_save:
+    path:  /parameter/save.html
+    defaults: { _controller: AriiMFTBundle:Parameter:save }
+
+html_MFT_parameter_delete:
+    path:  /parameter/delete.html
+    defaults: { _controller: AriiMFTBundle:Parameter:delete }
+
+ini_MFT_parameter_doc:
+    path:  /parameter/config.ini
+    defaults: { _controller: AriiMFTBundle:Parameter:doc }
+    
+#==================================================
+# Receiver
+#==================================================
+
+arii_MFT_receiver_yade:
+    path:  /receiver/yade
+    defaults: { _controller: AriiMFTBundle:Jade:history }
+
+xml_MFT_pie:
+    path:  /operations/pie.xml
+    defaults: { _controller: AriiMFTBundle:Operations:pie }
+
+xml_MFT_grid_toolbar:
+    path:  /operations/toolbar.xml
+    defaults: { _controller: AriiMFTBundle:Operations:toolbar }
+
+arii_MFT_history:
+    path:  /history
+    defaults: { _controller: AriiMFTBundle:Operations:index }
+
+arii_MFT_activities:
+    path:  /activities
+    defaults: { _controller: AriiMFTBundle:Operations:activities }
+
+arii_MFT_detail:
+    path:  /detail
+    defaults: { _controller: AriiMFTBundle:DB:detail }
+
+xml_MFT_history:
+    path:  /history.xml
+    defaults: { _controller: AriiMFTBundle:DB:history }
+
+xml_MFT_activities:
+    path:  /activities.xml
+    defaults: { _controller: AriiMFTBundle:DB:activities }
+    
+db_sosftp_history:
+    path:  /operations/db/sosftp_history
+    defaults: { _controller: AriiMFTBundle:DB:sosftp_history }
+
+db_graph_pie_send:
+    path:  /operations/db/graph_pie_send
+    defaults: { _controller: AriiMFTBundle:DBGraph:pie_send }
+    
+arii_MFT_db:
+    path:  /db
+    defaults: { _controller: AriiMFTBundle:Edit:index }
+
+arii_MFT_edit:
+    path:  /edit
+    defaults: { _controller: AriiMFTBundle:Edit:edit }
+
+#==================================================
+# Api
+#==================================================
+api_MFT_partners_get:
+    path:  /api/v1/partners
+    defaults: { _controller: AriiMFTBundle:Rest:getPartners }
+
+api_MFT_status_get:
+    path:  /api/v1/status
+    defaults: { _controller: AriiMFTBundle:Rest:getStatus }
+
+api_MFT_transfers_get:
+    path:  /api/v1/partners/{partner_id}/transfers
+    defaults: { _controller: AriiMFTBundle:Rest:getTransfers }
+    requirements:
+        partner_id: '\d+'
+
+api_MFT_operations_get:
+    path:  /api/v1/transfers/{transfer_id}/operations
+    defaults: { _controller: AriiMFTBundle:Rest:getOperations }
+    requirements:
+        transfer_id: '\d+'
+
+api_MFT_history_put:
+    path:  /api/v1/transfers/{transfer_id}/history
+    defaults: { _controller: AriiMFTBundle:Rest:putHistory }
+    requirements:
+        transfer_id: '\d+'
+        
+api_MFT_transmissions_get:
+    path:  /api/v1/transfers/{transfer_id}/transmissions
+    defaults: { _controller: AriiMFTBundle:Rest:getTransmissions }
+    requirements:
+        transfer_id: '\d+'
+
+api_MFT_transmissions_post:
+    path:  /api/v1/transmission/{transmission}
+    defaults: { _controller: AriiMFTBundle:Rest:postTransmission }
+

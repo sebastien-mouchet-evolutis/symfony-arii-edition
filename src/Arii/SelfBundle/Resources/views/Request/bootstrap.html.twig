@@ -1,0 +1,28 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+<!-- Latest compiled and minified JavaScript -->
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+{% endblock %} 
+{% block body %}
+<body>
+<div class="container-fluid">
+<div class="jumbotron">
+<img style="float: right;" src="{{ asset('logo.png') }}"/>
+  <h1>{{ name }}</h1>
+  <p>{{ title }}</p>
+</div>
+<h1>{{ "Code" | trans }}</h1>
+<code><pre>{{ code }}</pre></code>
+
+<h1>{{ "Log" | trans }}</h1>
+<p>{{ processed }}</p>
+<code><pre>{{ log }}</pre></code>
+</script>
+</body>
+{% endblock %}
+{% block cron %}{% endblock %}

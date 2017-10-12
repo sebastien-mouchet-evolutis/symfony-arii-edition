@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta charset="UTF-8" />
+        <title>{% block title %}Ari'i{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        {% block style_plus %}{% endblock %}
+        {% block dhtmlx %}{% endblock %}
+        {% block dhtmlx_plus %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <style>
+            html, body {
+                width: 100%;      /*provides the correct work of a full-screen layout*/ 
+                height: 100%;     /*provides the correct work of a full-screen layout*/
+//                overflow: hidden; /*hides the default body's space*/
+                margin: 0px;      /*hides the body's scrolls*/
+            }
+        </style>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block script %}{% endblock %}
+{% block cron %}   
+<script language="javascript">       
+dhtmlxEvent(window,"load",function(){    
+/*    setInterval( function() {
+        dhx4.ajax.get( "{{ url('arii_cron_exec') }}", function(loader,response) {
+            if ((loader.xmlDoc.responseText!='SUCCESS') & (loader.xmlDoc.responseText!='')) {
+                dhtmlx.message({
+                    type: "Notice",
+                    text: "{{ "Cron error ! " | trans }}<br/>{{ url('arii_cron_exec') }}",
+                    width: "800"
+                });
+           }
+        } );
+    },30000);
+*/});
+window.dhx4.attachEvent("onLoadXMLError", function(request,obj){
+    dhtmlx.message({
+       title: request,
+       type: "alert-error",
+       lifetime: "60000",
+       width: "800px",
+       text: obj.response
+    });
+});
+window.dhx4.attachEvent("onAjaxError", function(request){
+    if (request.xmlDoc.status == 200) return true;
+    if (request.xmlDoc.status == 0) return true;
+    
+     dhtmlx.message({
+       title: request.xmlDoc.status+': '+request.xmlDoc.statusText,
+       type: "alert-error",
+       lifetime: "60000",
+       width: "800px",
+       text: request.xmlDoc.response+'<br/><a href="'+request.xmlDoc.responseURL+'">'+request.xmlDoc.responseURL+'</a></i>'
+    });
+    return false;
+});
+
+function mydump(arr,level) {
+    var dumped_text = "";
+    if(!level) level = 0;
+
+    var level_padding = "";
+    for(var j=0;j<level+1;j++) level_padding += "    ";
+
+    if(typeof(arr) == 'object') {  
+        for(var item in arr) {
+            var value = arr[item];
+
+            if(typeof(value) == 'object') { 
+                dumped_text += level_padding + "'" + item + "' ...\n";
+                dumped_text += mydump(value,level+1);
+            } else {
+                dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+            }
+        }
+    } else { 
+        dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+    }
+    return dumped_text;
+}
+</script>
+{% endblock cron %}
+<style>
+.dhtmlx-A{
+    font-weight:bold !important;
+    color: black !important;
+    background-color: #fbb4ae !important;
+}
+.dhtmlx-W{
+    font-weight:bold !important;
+    color: black !important;
+    background-color: #ffffcc !important;
+}
+.dhtmlx-I{
+    font-weight:bold !important;
+    color: black !important;
+    background-color: #d9edf7 !important;
+}
+</style>    
+<script language="javascript">   
+function GetMessages(first) {
+    dhx4.ajax.get("{{ url('int_messages_get') }}",function(loader){
+        messages = loader.xmlDoc.responseText;
+        if (messages>0) {
+            globalMenu.setItemText("messages",messages);
+            globalMenu.showItem("messages");
+            // on affiche les messages
+            dhx4.ajax.get("{{ url('json_messages_get') }}?first="+first,function(response){
+                var Messages = dhx4.s2j(response.xmlDoc.responseText); // convert response to json object
+                Messages.forEach(function(msg){
+/*                    if (msg.type == 'A') {
+                        dhtmlx.alert({
+                            title: msg.title,
+                            type:  "alert-error",
+                            text:  '<pre>'+msg.text+'</pre>',
+                            callback: function(result) {
+                                if (result) {
+                                    dhx4.ajax.get("{{ url('arii_message_ack') }}?id="+msg.id);
+                                }
+                            }                                
+                        });
+                    }
+                    else {
+*/                        dhtmlx.message({
+                            type:  msg.type,
+                            text:  '<h1>'+msg.title+'</h1><pre>'+msg.text+'</pre><i>'+msg.date+'</i>',
+                            expire: -1
+                        });
+//                    }
+                });
+            });
+        }
+        else {
+            globalMenu.hideItem("messages");
+        }
+    });
+}
+</script>
+</body>
+</html>

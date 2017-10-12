@@ -1,0 +1,30 @@
+bkp_ref:
+    path:     /
+    defaults: { _controller: "AriiReportBundle:BKP_REF:index" }
+
+bkp_ref_show:
+    path:     /{id}/show
+    defaults: { _controller: "AriiReportBundle:BKP_REF:show" }
+
+bkp_ref_new:
+    path:     /new
+    defaults: { _controller: "AriiReportBundle:BKP_REF:new" }
+
+bkp_ref_create:
+    path:     /create
+    defaults: { _controller: "AriiReportBundle:BKP_REF:create" }
+    methods:  POST
+
+bkp_ref_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AriiReportBundle:BKP_REF:edit" }
+
+bkp_ref_update:
+    path:     /{id}/update
+    defaults: { _controller: "AriiReportBundle:BKP_REF:update" }
+    methods:  [POST, PUT]
+
+bkp_ref_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AriiReportBundle:BKP_REF:delete" }
+    methods:  [POST, DELETE]

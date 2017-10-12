@@ -1,0 +1,4 @@
+services:
+    arii_time.timecode:
+        class: Arii\TimeBundle\Service\AriiTimecode
+        arguments: [ "@arii_core.date" ]

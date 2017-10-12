@@ -1,0 +1,254 @@
+arii_Core_index:
+    path:  /
+    defaults: { _controller: AriiCoreBundle:Default:index }
+    
+arii_Home_index:
+    path:  /
+    defaults: { _controller: AriiCoreBundle:Default:index }
+   
+arii_Home_readme:
+    path:  /public/readme
+    defaults: { _controller: AriiCoreBundle:Default:readme }
+
+arii_Home_docs:
+    path:  /public/docs
+    defaults: { _controller: AriiCoreBundle:Docs:index }
+
+arii_Core_readme:
+    path:  /public/readme
+    defaults: { _controller: AriiCoreBundle:Default:readme }
+    
+html_Core_readme:
+    path:  /public/readme.html
+    defaults: { _controller: AriiCoreBundle:Default:readme_html }
+
+html_Home_readme:
+    path:  /public/readme.html
+    defaults: { _controller: AriiCoreBundle:Default:readme_html }
+    
+json_Home_ribbon:
+    path:  /ribbon.json
+    defaults: { _controller: AriiCoreBundle:Default:ribbon }
+
+#--------------------------------------------------------------------
+# Cron
+#--------------------------------------------------------------------
+arii_cron_exec:
+    path:  /cron/exec
+    defaults: { _controller: AriiCoreBundle:Cron:exec }
+    
+#--------------------------------------------------------------------
+# Docs
+#--------------------------------------------------------------------
+xml_docs_tree:
+    path:  /public/docs/tree.xml
+    defaults: { _controller: AriiCoreBundle:Docs:tree }
+
+json_Home_docs_ribbon:
+    path:  /public/docs/ribbon.json
+    defaults: { _controller: AriiCoreBundle:Docs:ribbon }
+
+xml_doc_view:
+    path:  /public/doc
+    defaults: { _controller: AriiCoreBundle:Default:doc }
+
+html_doc_view:
+    path:  /public/docs/view
+    defaults: { _controller: AriiCoreBundle:Docs:view }
+
+#--------------------------------------------------------------------
+# DHTMLX
+#--------------------------------------------------------------------
+xml_menu:
+    path:  /menu.xml
+    defaults: { _controller: AriiCoreBundle:Default:menu }
+
+xml_toolbar:
+    path:  /toolbar.xml
+    defaults: { _controller: AriiCoreBundle:Default:toolbar }
+
+arii_About:
+    path:  /about
+    defaults: { _controller: AriiCoreBundle:Default:about }
+
+xml_modules:
+    path:  /modules.xml
+    defaults: { _controller: AriiCoreBundle:Default:modules }
+
+#--------------------------------------------------------------------
+# Session 
+#--------------------------------------------------------------------
+arii_session_update:
+    path:  /session/update
+    defaults: { _controller: AriiCoreBundle:Session:update }
+
+arii_session_view:
+    path:  /session/view
+    defaults: { _controller: AriiCoreBundle:Session:view }
+
+#--------------------------------------------------------------------
+# Favoris 
+#--------------------------------------------------------------------
+xml_favorites:
+    path:  /favorites.xml
+    defaults: { _controller: AriiCoreBundle:Default:favorites }
+
+xml_favoritesPP:
+    path:  /favoritesPP.xml
+    defaults: { _controller: AriiCoreBundle:Default:favoritesPP }
+
+#--------------------------------------------------------------------
+# Gestion des filtres
+#--------------------------------------------------------------------
+arii_filters:
+    path:  /filters
+    defaults: { _controller: AriiCoreBundle:Filter:index }
+
+json_filters_ribbon:
+    path:  /ribbon.json
+    defaults: { _controller: AriiCoreBundle:Filter:ribbon }
+
+arii_filters_list:
+    path:  /filters/list
+    defaults: { _controller: AriiCoreBundle:Filter:list }
+
+xml_filters_grid:
+    path:  /filters/grid.xml
+    defaults: { _controller: AriiCoreBundle:Filter:grid }
+
+xml_filter_delete:
+    path:  /filters/delete.xml
+    defaults: { _controller: AriiCoreBundle:Filter:delete }
+
+xml_filter_menu:
+    path:  /filters/menu.xml
+    defaults: { _controller: AriiCoreBundle:Filter:menu }
+    
+xml_filter_toolbar:
+    path:  /filters/toolbar.xml
+    defaults: { _controller: AriiCoreBundle:Filter:toolbar }
+    
+xml_filter_form:
+    path:  /filters/form.xml
+    defaults: { _controller: AriiCoreBundle:Filter:form }
+
+xml_filter_save:
+    path:  /filter/save.xml
+    defaults: { _controller: AriiCoreBundle:Filter:save }
+
+#--------------------------------------------------------------------
+# GLOBAL
+#--------------------------------------------------------------------
+arii_settings:
+    path:  /settings
+    defaults: { _controller: AriiCoreBundle:Default:settings }
+    requirements:
+        _locale: en|fr
+        
+lang:
+    path:  /lang/{lang}
+    defaults: { _controller: AriiCoreBundle:Default:lang }
+
+xml_User_filter_save:
+    path:  /filter/save
+    defaults: { _controller: AriiCoreBundle:Filter:save }
+
+xml_User_filter_delete:
+    path:  /filter/delete
+    defaults: { _controller: AriiCoreBundle:Filter:delete }
+
+#--------------------------------------------------------------------
+# User settings
+#--------------------------------------------------------------------
+arii_my_account:
+    path:  /user/me
+    defaults: { _controller: AriiCoreBundle:User:index }
+
+json_my_account_ribbon:
+    path:  /user/ribbon.json
+    defaults: { _controller: AriiCoreBundle:User:ribbon }
+
+arii_my_account_save:
+    path:  /user/me/save
+    defaults: { _controller: AriiCoreBundle:User:save }
+
+arii_my_account_notifications:
+    path:  /user/me/notifications
+    defaults: { _controller: AriiCoreBundle:User:notifications }
+
+arii_my_account_password:
+    path:  /user/me/password
+    defaults: { _controller: AriiCoreBundle:User:password }
+
+arii_my_filters:
+    path:  /user/filters
+    defaults: { _controller: AriiCoreBundle:User:session }
+
+arii_my_session:
+    path:  /user/session
+    defaults: { _controller: AriiCoreBundle:User:session }
+
+xml_my_session:
+    path:  /user/session.xml
+    defaults: { _controller: AriiCoreBundle:User:session_xml }
+    
+xml_user_toolbar:
+    path:  /user/toolbar.xml
+    defaults: { _controller: AriiCoreBundle:User:toolbar }
+ 
+#--------------------------------------------------------------------
+# Messages
+#--------------------------------------------------------------------
+arii_messages:
+    path:  /messages
+    defaults: { _controller: AriiCoreBundle:Messages:index }
+
+xml_messages_inbox:
+    path:  /messages/inbox.xml
+    defaults: { _controller: AriiCoreBundle:Messages:inbox }
+
+int_messages_get:
+    path:  /messages/get
+    defaults: { _controller: AriiCoreBundle:Messages:get }
+
+json_messages_get:
+    path:  /messages/get.json
+    defaults: { _controller: AriiCoreBundle:Messages:msgbox }
+
+arii_message_ack:
+    path:  /message/ack
+    defaults: { _controller: AriiCoreBundle:Messages:ack }
+    
+xml_messages_history:
+    path:  /messages/history.xml
+    defaults: { _controller: AriiCoreBundle:Messages:history }
+
+xml_messages_outbox:
+    path:  /messages/outbox.xml
+    defaults: { _controller: AriiCoreBundle:Messages:outbox }
+
+xml_messages_users:
+    path:  /messages/users.xml
+    defaults: { _controller: AriiCoreBundle:Messages:users }
+
+xml_message_toolbar:
+    path:  /message/toolbar.xml
+    defaults: { _controller: AriiCoreBundle:Messages:toolbar }
+
+xml_message_save:
+    path:  /message/save
+    defaults: { _controller: AriiCoreBundle:Messages:save }    
+    
+html_message_display:
+    path:  /message/display.html
+    defaults: { _controller: AriiCoreBundle:Messages:display }   
+#--------------------------------------------------------------------
+# PushBullet
+#--------------------------------------------------------------------
+arii_pushbullet:
+    path:  /pushbullet
+    defaults: { _controller: AriiCoreBundle:Pushbullet:index }
+
+html_pushbullet_me:
+    path:  /pushbullet/me
+    defaults: { _controller: AriiCoreBundle:Pushbullet:me }

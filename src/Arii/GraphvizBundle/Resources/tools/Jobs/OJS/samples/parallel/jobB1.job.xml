@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<job order="yes">
+    <lock.use lock="test1"
+              exclusive="no"/>
+    <params>
+        <!-- comma-separated list of the jobs which need to be synchronized -->
+        <param name="job_names"
+               value="samples/parallel/testjob1,samples/parallel/testjob2"/>
+    </params>
+    <script language="shell">
+        <![CDATA[
+echo job jobB1 is running
+        ]]>
+    </script>
+    <monitor name="configuration_monitor"
+             ordering="0">
+        <script java_class="sos.scheduler.managed.configuration.ConfigurationOrderMonitor"
+                language="java"/>
+    </monitor>
+    <run_time/>
+</job>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+<job  order="yes" title="desarchive le log" stop_on_error="no">
+    <params>
+        <include live_file="../../../arii.params.xml"/>
+    </params>
+
+    <script  language="shell">
+        <![CDATA[ 
+gunzip $SCHEDULER_TASK_TRIGGER_FILES --stdout > ${SCHEDULER_PARAM_ARII_TMP}/event_demon.log
+        ]]>
+    </script>
+
+    <run_time />
+</job>

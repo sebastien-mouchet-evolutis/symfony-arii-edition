@@ -1,0 +1,19 @@
+parameters:
+#    arii_mft.example.class: Arii\MFTBundle\Example
+
+services:
+#    arii_mft.example:
+#        class: %arii_mft.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+    arii_mft.mft:
+        class: Arii\MFTBundle\Service\AriiMFT
+        arguments: ["@arii_core.portal", "@arii_core.db", "@arii_core.sql", "@arii_core.date", %database_driver% ]
+        
+    arii_mft.history:
+        class: Arii\MFTBundle\Service\AriiHistory
+        arguments: ["@arii_core.dhtmlx", "@arii_core.sql", "@arii_core.date", "@arii_core.tools"]
+
+    arii_mft.yade:
+        class: Arii\MFTBundle\Service\AriiYade
+        arguments: ["@arii_core.dhtmlx", "@arii_core.sql", "@arii_core.date", "@arii_core.tools"]

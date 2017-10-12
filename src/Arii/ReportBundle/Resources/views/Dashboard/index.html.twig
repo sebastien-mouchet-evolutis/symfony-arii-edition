@@ -1,0 +1,109 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var app="{{ appl }}",
+    env="{{ env }}",
+    month={{ month }},
+    year={{ year }},
+    day_past={{ day_past }};
+    header = {{ header }};
+    footer = {{ footer }};
+    
+dhtmlxEvent(window,"load",function(){    
+size=345
+
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
+    globalLayout.cells("a").setWidth(size);
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    
+    {% include "AriiReportBundle:Default:sidebar.html.twig" %}    
+    
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("b").hideHeader();
+
+    myTabbar = globalLayout.cells("b").attachTabbar();
+//    myTabbar.addTab("charts","{{ "Charts" | trans }}","120px", null, true);
+    myTabbar.addTab("dashboard","{{ "Dashboard" | trans }}","200px", null, true);
+    myTabbar.attachEvent("onContentLoaded", function(id){
+        this.cells("dashboard").progressOff();
+    });    
+    myToolbarDashboard = myTabbar.cells("dashboard").attachToolbar();
+    myToolbarDashboard.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbarDashboard.loadStruct("{{ url('xml_Report_dashboard_toolbar') }}?app="+app+"&env="+env);
+    myToolbarDashboard.attachEvent("onStateChange", function(id, state) {        
+        switch(id) {
+            case 'header':
+                if (state) 
+                    header = 1;
+                else
+                    header = 0;
+                GlobalRefresh();
+                break;
+            default:
+                alert(id);
+                break;
+        }    
+    });
+    
+    myToolbar = globalLayout.cells("b").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.loadStruct("{{ url('xml_Report_toolbar') }}?app="+app+"&env="+env, function() {
+        this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
+        this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
+        this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
+        this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
+    });
+    myToolbar.attachEvent( "onClick", function(id, value) {
+        var parent=this.getParentId(id);
+        switch (parent) {
+            case "APP":
+                this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
+                if (id=='_ALL_')
+                    app = '*';
+                else
+                    app = id;
+                GlobalRefresh();
+                break;
+            case "ENV":
+                this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
+                env = id;
+                GlobalRefresh();
+                break;
+            case "MONTH":
+                this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
+                month = id;
+                GlobalRefresh();
+                break;
+            case "DAY_PAST":
+                this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
+                day_past = id;
+                GlobalRefresh();
+                break;
+            case "YEAR":
+                this.setItemText("YEAR",this.getListOptionText("YEAR",this.getListOptionSelected("YEAR")));
+                year = id;
+                GlobalRefresh();
+                break;
+            default:
+//                alert(id);
+                GlobalRefresh();
+        }
+    });
+    GlobalRefresh();
+});
+
+function GlobalRefresh() {
+    myTabbar.cells("dashboard").attachURL( "{{url('html_Report_dashboard') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past+"&header="+header+"&footer="+footer );                      
+};
+</script>
+{% endblock %}

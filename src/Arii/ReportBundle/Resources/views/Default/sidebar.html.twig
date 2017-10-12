@@ -1,0 +1,20 @@
+    mySidebar = globalLayout.cells("a").attachSidebar({
+        icons_path: "{{ asset('/bundles/ariicore/images/ribbon/') }}",
+        width: 410,
+        items: [
+//            { "id" : "spoolers", text: "{{ "Spoolers" | trans }}", icon: "spooler.png"},
+//            { "id" : "applications", text: "{{ "Applications" | trans }}", icon: "application.png"},
+            { "id" : "jobs", text: "{{ "Jobs" | trans }}", icon: "job.png"},
+            { "id" : "runs", text: "{{ "Runs" | trans }}", icon: "cog.png"},
+            { "id" : "calendars", text: "{{ "Calendars" | trans }}", icon: "calendar.png"},
+            { "type": "separator"},
+            { "id" : "search", text: "{{ "Search" | trans }}", icon: "zoom.png"},
+            { "id" : "snapshots", text: "{{ "Documents" | trans }}", icon: "doc.png"},
+//            { "id" : "search", text: "{{ "Search" | trans }}", icon: "filter.png"},                        
+            { "id" : "import", text: "{{ "Import" | trans }}", icon: "import.png"},                        
+        ]
+    });
+    mySidebar.attachEvent("onSelect", function(itemid){
+        window.location = "{{ url('arii_Report_index') }}"+itemid;
+        return true;
+    });    

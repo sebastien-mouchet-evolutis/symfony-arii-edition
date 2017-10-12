@@ -1,0 +1,144 @@
+arii_Self_index:
+    path:  /
+    defaults: { _controller: AriiSelfBundle:Default:index }
+
+arii_Self_index2:
+    path:  /index
+    defaults: { _controller: AriiSelfBundle:Default:index }
+    
+arii_Self_readme:
+    path:  /readme
+    defaults: { _controller: AriiSelfBundle:Default:readme }
+
+json_Self_ribbon:
+    path:  /ribbon.json
+    defaults: { _controller: AriiSelfBundle:Default:ribbon }
+
+xml_Self_status:
+    path:  /status.xml
+    defaults: { _controller: AriiSelfBundle:Default:list }
+
+html_Self_help:
+    path:  /help.html
+    defaults: { _controller: AriiSelfBundle:Default:help }
+    
+xml_Self_toolbar:
+    path:  /toolbar.xml
+    defaults: { _controller: AriiSelfBundle:Default:toolbar }
+
+
+xml_Self_tree:
+    path:  /tree.xml
+    defaults: { _controller: AriiSelfBundle:Default:tree }
+    
+# Appels directs
+# Pour l'utilisateur
+arii_Self_request_edit:
+    path:  /edit/{req}
+    defaults: { _controller: AriiSelfBundle:Request:edit }
+    requirements:
+        req: \w*
+        
+#=====================
+# Request
+#---------------------
+arii_Self_request:
+    path:  /request
+    defaults: { _controller: AriiSelfBundle:Request:index }
+
+xml_Self_list:
+    path:  /request/list.xml
+    defaults: { _controller: AriiSelfBundle:Request:list }
+
+xml_Self_grid_menu:
+    path:  /request/menu.xml
+    defaults: { _controller: AriiSelfBundle:Request:menu }
+
+json_Self_form:
+    path:  /request/form.json
+    defaults: { _controller: AriiSelfBundle:Request:form }
+
+html_Self_save:
+    path:  /request/save.html
+    defaults: { _controller: AriiSelfBundle:Request:save }
+
+json_Self_load:
+    path:  /request/load.json
+    defaults: { _controller: AriiSelfBundle:Request:load }
+
+html_Self_queuing:
+    path:  /request/queuing.xml
+    defaults: { _controller: AriiSelfBundle:Request:queueing }
+
+html_Self_canceling:
+    path:  /request/canceling.xml
+    defaults: { _controller: AriiSelfBundle:Request:canceling }
+    
+#=====================
+# Requests
+#---------------------
+arii_Self_requests:
+    path:  /requests
+    defaults: { _controller: AriiSelfBundle:Requests:index }
+
+xml_Self_requests_grid:
+    path:  /requests/grid.xml
+    defaults: { _controller: AriiSelfBundle:Requests:grid }
+
+xml_Self_requests_tree:
+    path:  /requests/tree.xml
+    defaults: { _controller: AriiSelfBundle:Requests:tree }
+
+xml_Self_requests_grid_menu:
+    path:  /requests/menu.xml
+    defaults: { _controller: AriiSelfBundle:Requests:menu }
+    
+#=====================
+# Request
+#---------------------
+xml_Self_request_parameters:
+    path:  /request/parameters.xml
+    defaults: { _controller: AriiSelfBundle:Request:parameters }
+
+xml_Self_request_history:
+    path:  /request/history.xml
+    defaults: { _controller: AriiSelfBundle:Request:history }
+    
+#=====================
+# History
+#---------------------
+arii_Self_history:
+    path:  /history
+    defaults: { _controller: AriiSelfBundle:History:index }
+
+xml_Self_history_grid:
+    path:  /history/grid.xml
+    defaults: { _controller: AriiSelfBundle:History:grid }
+
+html_Self_history_status:
+    path:  /history/status.xml
+    defaults: { _controller: AriiSelfBundle:History:status }
+
+xml_Self_history_grid_menu:
+    path:  /history/menu.xml
+    defaults: { _controller: AriiSelfBundle:History:menu }
+
+#=====================
+# Exchange
+# Communication pafr agent
+#---------------------
+arii_Self_todo:
+    path:  /todo/{model}
+    defaults: { _controller: AriiSelfBundle:Exchange:todo }
+
+arii_Self_sh:
+    path:  /sh/{model}
+    defaults: { _controller: AriiSelfBundle:Exchange:sh }
+
+arii_Self_cmd:
+    path:  /cmd/{model}
+    defaults: { _controller: AriiSelfBundle:Exchange:cmd }
+
+arii_Self_return:
+    path:  /return/{model}
+    defaults: { _controller: AriiSelfBundle:Exchange:return }

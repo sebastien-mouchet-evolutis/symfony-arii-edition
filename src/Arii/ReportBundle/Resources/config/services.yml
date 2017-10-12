@@ -1,0 +1,35 @@
+parameters:
+#    arii_report.example.class: Arii\ReportBundle\Example
+
+services:
+#    arii_report.example:
+#        class: %arii_report.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    report_import.ezv:
+        class: Arii\ReportBundle\Service\ImportEZV
+        arguments: [  @doctrine.orm.entity_manager ]
+
+    report_import.ipam:
+        class: Arii\ReportBundle\Service\ImportIPAM
+        arguments: [  @doctrine.orm.entity_manager, @arii_core.portal ]
+
+    report_import.bkp:
+        class: Arii\ReportBundle\Service\ImportBKP
+        arguments: [  @doctrine.orm.entity_manager, @arii_core.portal ]
+        
+    report_import.ip:
+        class: Arii\ReportBundle\Service\ImportIP
+        arguments: [  @doctrine.orm.entity_manager ]
+
+    report_import.mac:
+        class: Arii\ReportBundle\Service\ImportMAC
+        arguments: [  @doctrine.orm.entity_manager ]
+
+    report.my_functions:
+        class: Arii\ReportBundle\Service\MyFunctions
+        arguments: [ ]
+
+    report.filter:
+        class: Arii\ReportBundle\Service\ReportFilter
+        arguments: [  "@arii_core.portal" ]
+  

@@ -1,0 +1,143 @@
+{% extends "AriiTimeBundle::layout.html.twig" %}
+{% block body %}
+<script charset="utf-8">
+
+dhtmlxEvent(window,"load",function(){
+        
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").setWidth(350); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Time_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );    
+    
+    dhxTree = globalLayout.cells("a").attachTree();
+    dhxTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    dhxTree.load( "{{ url('xml_Time_zones_tree') }}" );
+
+    dhxGrid = globalLayout.cells("b").attachGrid();
+    dhxGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    dhxGrid.setHeader("{{ "Code" | trans }},{{ "Name" | trans }},{{ "Description" | trans }},{{ "Latitude" | trans }},{{ "Longitude" | trans }}");
+    dhxGrid.attachHeader("#text_filter,#text_filter,#text_filter,#numeric_filter,#numeric_filter");
+    dhxGrid.setInitWidths("80,250,*,100,100");
+    dhxGrid.setColAlign("left,left,left,right,right");
+    dhxGrid.setColTypes("ro,ro,ro,ro,ro");
+    dhxGrid.setColSorting("str,str,str,int,int");
+    dhxGrid.init();
+    dhxGrid.load("{{ url('xml_Time_zones') }}");
+
+    myTab = globalLayout.cells("c").attachLayout("2U");
+    myTab.cells("a").hideHeader();
+    myTab.cells("a").setWidth(450); 
+    myTab.cells("b").hideHeader(); 
+    
+    formData = [
+        { type: "settings", position: "label-left", labelWidth: 110, inputWidth: 200,labelAlign: "left",noteWidth: 200 },
+        {type: "hidden",name: "id"},         
+        { type: "input",
+          name: "name",
+          label: "{{ "Name"| trans }}",
+          required: true
+        },
+        { type: "input",
+          name: "title",
+          label: "{{ "Title"| trans }}",
+          required: true
+        },
+        {type: 'select', 
+            name: 'country_id', 
+            label:'{{ 'Country' | trans }}',
+            connector: "{{ url('xml_Time_countries_select') }}",
+            required: true
+        },
+        { type: "input",
+          rows: 3,
+          name: "description",
+          label: "{{ "Description"| trans }}"
+        },
+        { type: "input",
+          name: "latitude",
+          label: "{{ "Latitude"| trans }}"
+        },
+        { type: "input",
+          name: "longitude",
+          label: "{{ "Longitude"| trans }}"
+        }
+    ];
+    
+    
+    myToolbar = myTab.cells("a").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.loadStruct( "{{ url('xml_Time_zones_toolbar') }}");
+
+    myForm = myTab.cells("a").attachForm(formData);
+    myMap = myTab.cells("b").attachMap();
+
+    dhxGrid.attachEvent("onRowDblClicked", function (rid) {
+        Detail(rid);
+   });
+
+    dhxTree.attachEvent("onClick",function(id){
+        dhxGrid.load("{{ url('xml_Time_zones') }}?id="+id);
+    })    
+
+    myToolbar.attachEvent("onClick",function(itemid){
+         switch (itemid) {
+            case 'add':
+            case 'new':
+                myForm.clear();
+                break;
+            case 'copy':
+                myForm.setItemValue("id","");
+                dhtmlx.message({
+                    type: "Notice",
+                    expire: 10000,
+                    width: "500px",
+                    text: "{{ "Copy" | trans }}" });
+                break;
+            case 'save':
+                globalLayout.cells("b").progressOn();
+                myForm.send("{{ url('xml_Time_zone_save') }}","POST",function(loader,response){
+                    dhtmlx.message({
+                    type: "Notice",
+                    expire: 10000,
+                    width: "500px",
+                    text: loader.xmlDoc.responseText });
+                    dhxGrid.load("{{ url('xml_Time_zones') }}", function() {
+                        globalLayout.cells("b").progressOff();
+                    });
+                });
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+});
+
+function Detail(id) {
+    globalLayout.cells("c").progressOn();
+    myForm.clear();
+    myForm.load("{{ url('xml_Time_zones_form') }}?id="+id, function () {
+        globalLayout.cells("c").progressOff();
+        var latLng = new google.maps.LatLng(  myForm.getItemValue("latitude"), myForm.getItemValue("longitude") ); 
+        var marker = new google.maps.Marker({
+         position : latLng,
+         map      : myMap,
+         title    : "test"
+         //icon     : "marker_lille.gif" // Chemin de l'image du marqueur pour surcharger celui par défaut
+       });
+
+       myMap.panTo(latLng);   
+   });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,129 @@
+parameters:
+#    arii_core.example.class: Arii\CoreBundle\Example
+      
+services: 
+    core.twig.core_extension:
+        class: Arii\CoreBundle\Twig\CoreExtension
+        arguments: ["%locale%"]
+        tags:
+            - { name: twig.extension }
+
+    arii.repository.connection:
+        class: Arii\CoreBundle\Entity\Connection
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments: [ 'AriiCoreBundle:Connection' ]
+
+    arii_core.session:
+        class: Arii\CoreBundle\Service\AriiSession
+        arguments: ["@session", "@doctrine.orm.default_entity_manager", "@service_container" ]
+
+    arii_core.portal:
+        class: Arii\CoreBundle\Service\AriiPortal
+        arguments: [ "@arii_core.session", "@fos_user.user_manager", "@doctrine.orm.default_entity_manager", @translator, @router, @kernel ]
+
+    arii_core.sql:
+        class: Arii\CoreBundle\Service\AriiSQL
+        arguments: [ "@arii_core.portal" ]
+
+    arii_core.date:
+        class: Arii\CoreBundle\Service\AriiDate
+        arguments: [ "@arii_core.portal", @translator ]
+
+    arii_core.dhtmlx:
+        class: Arii\CoreBundle\Service\AriiDHTMLX
+        arguments: [ "@arii_core.portal" ]
+
+    arii_core.render:
+        class: Arii\CoreBundle\Service\AriiRender
+        arguments: [ "@arii_core.portal" ]
+
+    arii_core.sos:
+        class: Arii\CoreBundle\Service\AriiSOS
+        arguments: [ "@arii_core.portal" ]
+
+    arii_core.curl:
+        class: Arii\CoreBundle\Service\AriiCurl
+        arguments: [ "@arii_core.portal" ]
+
+    arii_core.message:
+        class: Arii\CoreBundle\Service\AriiMessage
+        arguments: [ "@doctrine.orm.default_entity_manager" ]
+
+    arii_core.notifier:
+        class: Arii\CoreBundle\Service\AriiNotifier
+        arguments: [ "@arii_core.portal" ]
+
+    arii_core.tools:
+        class: Arii\CoreBundle\Service\AriiTools
+        arguments: [ "@arii_core.portal" ]
+        
+    arii_core.files:
+        class: Arii\CoreBundle\Service\AriiFiles
+        arguments: [ "@arii_core.session" ]
+
+    arii_core.folder:
+        class: Arii\CoreBundle\Service\AriiFolder
+        arguments: [ "@arii_core.session" ]
+
+    arii_core.cron:
+        class: Arii\CoreBundle\Service\AriiCron
+        arguments: [ "@arii_core.session" ]
+
+    arii_core.doc:
+        class: Arii\CoreBundle\Service\AriiDoc
+        arguments: [ "@arii_core.portal", "@request_stack" ]
+
+    arii_core.exec:
+        class: Arii\CoreBundle\Service\AriiExec
+        arguments: [ "@arii_core.portal" ]
+
+    arii_core.mermaid:
+        class: Arii\CoreBundle\Service\AriiMermaid
+        arguments: [ "@service_container", "@arii_core.portal" ]
+
+    arii_core.graphviz:
+        class: Arii\CoreBundle\Service\AriiGraphviz
+        arguments: [ "@service_container", "@arii_core.portal" ]
+
+# Deprecated
+    arii_core.plantuml:
+        class: Arii\CoreBundle\Service\AriiPlantuml
+        arguments: [ "@service_container", "@arii_core.portal" ]
+
+    arii_core.db:
+        class: Arii\CoreBundle\Service\AriiDB
+        arguments: [ "@doctrine.orm.default_entity_manager" ]
+
+# LISTENERS
+    arii_locale.locale_listener:
+        class: Arii\CoreBundle\EventListener\LocaleListener
+        arguments: ["%kernel.default_locale%"]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    arii_exception.exception_listener:
+        class: Arii\CoreBundle\EventListener\AriiException
+        arguments: [ "@arii_core.portal" ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+#    arii_notify.notification.listener:
+#        class: Arii\CoreBundle\EventListener\Notifier
+#        arguments: [ "@arii_core.notifier"]
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.response, method: Notification }
+
+    arii_message.message_listener:
+        class: Arii\CoreBundle\EventListener\MessageListener
+        arguments: [ "@arii_core.portal", "@arii_core.curl"]
+        tags:
+            - { name: kernel.event_subscriber, event: acme_message.after_message_sent, method: Notify  }
+            
+#    arii_db.switcher:
+#        class: Arii\CoreBundle\EventListener\DBSwitcher
+#        arguments:  [@request, @doctrine.dbal.default_connection, @logger]
+#        scope:      request
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            

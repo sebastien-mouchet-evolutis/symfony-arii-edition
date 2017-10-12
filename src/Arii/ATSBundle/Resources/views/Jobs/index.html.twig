@@ -1,0 +1,576 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiATSBundle::layout.html.twig" %}
+{% block body %}
+<script type="text/javascript">
+var max_history = 0; // pas d'historique
+var box = 0; // pas de boite en plus 
+var only_warning = 1; // que les problemes
+var update=30;
+var autorefresh;
+var jobtype = "CMD"; // Type de job en cours
+var status;
+
+dhtmlxEvent(window,"load",function(){     
+    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
+    globalLayout.cells("a").setWidth(400); 
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+    globalLayout.cells("c").setText("{{ "Detail" | trans }}"); 
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    myTab = globalLayout.cells("a").attachTabbar();
+    myTab.addTab("status","{{ "Status" | trans }}","100px", null, true);
+    myTab.addTab("alarms","{{ "Alarms" | trans }}","100px");
+
+    myDonut =  myTab.cells("status").attachChart({
+            view:"donut",
+            container:"pie_chart_container",
+            value:"#JOBS#",
+            label:"",
+            tooltip: "#STATUS#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "#JOBS#",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#STATUS#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+    myTab.cells("status").progressOn();
+    myDonut.load(  "{{ url('xml_ATS_jobs_pie') }}?box_more="+box+"&only_warning="+only_warning, function () {
+        myTab.cells("status").progressOff();
+    } );
+
+    myAlarms = myTab.cells("alarms").attachGrid();
+    myAlarms.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myAlarms.setHeader("{{ "Time" | trans }},{{ "Type" | trans }},{{ "Status" | trans }},{{ "Job" | trans }}");
+    myAlarms.attachHeader("#text_filter,#select_filter,#text_filter,#text_filter");
+    myAlarms.setInitWidths("140,0,0,*");
+    myAlarms.setColAlign("right,center,left,left");
+    myAlarms.setColTypes("ro,ro,ro,ro");
+    myAlarms.setColSorting("str,str,str,str");
+    myAlarms.enableAlterCss("","");
+    myAlarms.init();
+    myTab.cells("alarms").progressOn();
+    myAlarms.load( "{{ url('xml_ATS_alarms_grid') }}?only_open=1", function () {
+        myTab.cells("alarms").progressOff();
+    });
+    
+/*
+    myTree = myTab.cells("b2").attachTree();
+    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+*/    
+    myGridMenu = new dhtmlXMenuObject(null);
+    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.renderAsContextMenu();
+    myGridMenu.loadStruct("{{ url('xml_ATS_jobs_grid_menu') }}");
+          
+    globalLayout.cells("b").hideHeader();
+    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid.selMultiRows = true;
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Job" | trans }},{{ "Folder" | trans }},{{ "Description" | trans }},{{ "Status" | trans }},{{ "Type" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Duration" | trans }},{{ "Exit" | trans }}");
+    myGrid.attachHeader("#text_filter,#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter,#numeric_filter");
+    myGrid.setInitWidths("*,*,*,120,90,160,160,140,80");
+    myGrid.setColAlign("left,left,left,center,center,right,right,right,right");
+    myGrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,str,str,str,date,date,str,int");
+    myGrid.enableAlterCss("","");
+    myGrid.enableContextMenu(myGridMenu);
+    myGrid.attachEvent("onBeforeContextMenu", onShowMenu );
+    myGrid.init();
+    globalLayout.cells("b").progressOn();
+    myGrid.load( "{{ url('xml_ATS_jobs_grid') }}?history="+max_history+"&box_more="+box+"&only_warning="+only_warning, function() {
+        globalLayout.cells("b").progressOff();
+    });
+    myGrid.attachEvent("onRowDblClicked",JobDetail );
+    myGrid.setColumnHidden(1,true);
+    myGrid.setColumnHidden(2,true);
+
+    myDonut.attachEvent("onItemClick",function(id, value){
+        status = id;
+        myGrid.filterBy(2, status);  
+        myGrid.getFilterElement(2).value = status;
+    });
+
+    myGridToolbar = globalLayout.cells("b").attachToolbar();
+    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.loadStruct( "{{ url('xml_ATS_jobs_grid_toolbar') }}");
+    myGridToolbar.attachEvent("onClick",function(itemid){
+         switch (itemid) {
+            case 'refresh':
+                globalLayout.cells("b").progressOn();
+                GlobalRefresh();
+                break;
+            case "print":
+                myGrid.printView();
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+    myGridToolbar.attachEvent("onStateChange",function(itemid, state){
+         switch (itemid) {
+            case 'boxes':
+                myGrid.setColumnHidden(1,!state);  
+                break;
+            case "desc":
+                myGrid.setColumnHidden(2,!state);  
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+
+    globalLayout.cells("c").setHeight(300); 
+    myTabbar = globalLayout.cells("c").attachTabbar();
+    myTabbar.addTab("job","{{ "Job" | trans }}","100px", null, true);
+    myTabbar.addTab("output","{{ "Output" | trans }}","100px");
+    myTabbar.addTab("output_I5","{{ "Output" | trans }}","100px");
+    myTabbar.addTab("history","{{ "History" | trans }}","100px");
+    myTabbar.addTab("schema","{{ "Schema" | trans }}","100px");
+    myTabbar.addTab("jil","{{ "JIL" | trans }}","100px");
+    myTabbar.addTab("events","{{ "Events" | trans }}","100px");
+    myTabbar.addTab("agent","{{ "Agent" | trans }}","100px");
+    myTabbar.addTab("note","{{ "Note" | trans }}","100px");
+    
+    myTabbar.tabs("output_I5").hide();
+    
+    myTabbar.attachEvent("onContentLoaded", function(id){
+        myTabbar.cells(id).progressOff();
+    });
+
+    myDetailLayout = myTabbar.cells("job").attachLayout("2U");
+    myDetailLayout.cells("a").hideHeader(); 
+    myDetailLayout.cells("b").hideHeader(); 
+    myDetailLayout.cells("a").setWidth(640); 
+    
+    myForm = myDetailLayout.cells("a").attachForm();
+    myForm.loadStruct("{{ url('json_ATS_job_form') }}?type=JOB");
+
+    myForm2 = myDetailLayout.cells("b").attachForm();
+    myForm2.loadStruct("{{ url('json_ATS_job_form') }}?type="+jobtype);
+
+    myDetailToolbar = myTabbar.cells("job").attachToolbar();
+    myDetailToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myDetailToolbar.loadStruct( "{{ url('xml_ATS_sendevent_toolbar') }}" , function() {
+    });
+
+    myDetailToolbar.attachEvent("onClick",function(itemid){
+        switch(itemid) {
+            case 'KILLJOB':
+            case 'SUCCESS':
+            case 'FAILURE':
+            case 'INACTIVE':
+            case 'JOB_ON_ICE':
+            case 'JOB_OFF_ICE':
+            case 'JOB_ON_HOLD':
+            case 'JOB_OFF_HOLD':
+            case 'JOB_ON_NOEXEC':
+            case 'JOB_OFF_NOEXEC':
+            case 'STARTJOB':
+            case 'WAIT_REPLY':
+                Sendevent(myForm.getItemValue('JOB_NAME'),itemid);
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+        return true;
+    });
+    
+    myHistory = myTabbar.cells("history").attachGrid();
+    myHistory.selMultiRows = true;
+    myHistory.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myHistory.setHeader("{{ "Run" | trans }},#cspan,{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Duration" | trans }},{{ "Status" | trans }},{{ "Exit" | trans }},{{ "Machine" | trans }},REPLY_MESSAGE,REPLY_RESPONSE,STD_OUT_FILE,STD_ERR_FILE,EVT_NUM,{{ "Ver." | trans }},OVER_RUN,HAS_EXTENDED_INFO");
+    myHistory.attachHeader("#numeric_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
+    myHistory.setInitWidths("90,50,140,140,100,80,80,120,*,*,*,*,100,80,40,30");
+    myHistory.setColAlign("right,right,right,right,right,right,right,left,right,right,right,right,right,right,right,center");
+    myHistory.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro");
+    myHistory.setColSorting("str,str,str,str,str,str,str,str,str,str,str,str,str,str,str,ch");
+    myHistory.enableAlterCss("","");
+    myHistory.init();
+
+    myOut = myTabbar.cells("output").attachLayout("2E");
+    myOut.cells("a").setText("{{ "Standard output" | trans }}");
+    myOut.cells("b").setText("{{ "Error output" | trans }}");
+
+    myOutI5 = myTabbar.cells("output_I5").attachLayout("2U");
+    myOutI5.cells("a").setText("{{ "Files" | trans }}");
+    myOutI5.cells("a").setWidth(640);
+    myOutI5.cells("b").setText("{{ "Content" | trans }}");
+    
+    myGridOut = myOutI5.cells("a").attachGrid();
+    myGridOut.selMultiRows = true;
+    myGridOut.setHeader("{{ "File" | trans }},{{ "Num" | trans }},{{ "Status" | trans }},{{ "Size" | trans }},{{ "Date" | trans }},{{ "Time" | trans }},{{ "User data" | trans }},{{ "Queue name" | trans }}");
+    myGridOut.attachHeader("#text_filter,#numeric_filter,#select_filter,#numeric_filter,#numeric_filter,#numeric_filter,#text_filter,#text_filter");
+    myGridOut.setInitWidths("140,60,120,120,90,90,140,140");
+    myGridOut.setColAlign("left,right,left,right,right,right,left,left");
+    myGridOut.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");
+    myGridOut.setColSorting("str,int,str,int,int,int,str,str");
+    myGridOut.enableAlterCss("","");
+    myGridOut.init();
+    myGridOut.attachEvent("onRowDblClicked",LogDetail );
+    
+    myAgent = myTabbar.cells("agent").attachLayout("2E");
+    myAgent.cells("a").hideHeader();
+    myAgent.cells("b").setText("{{ "Spool" | trans }}");
+    
+    myTabbar.attachEvent("onContentLoaded", function(id){
+        myTabbar.cells(id).progressOff();
+    });
+    myOut.attachEvent("onContentLoaded", function(id){
+        myOut.cells(id).progressOff();
+    });
+    myOutI5.attachEvent("onContentLoaded", function(id){
+        myOutI5.cells(id).progressOff();
+    });
+    myAgent.attachEvent("onContentLoaded", function(id){
+        myAgent.cells(id).progressOff();
+    });
+    
+    // Premier chargement avant le smart rendering
+//    myTree.load( "{{ url('xml_ATS_jobs_tree') }}?only_warning="+only_warning );
+
+    function onShowMenu(rowId, celInd, grid) {
+        var job = grid.cells(rowId, 0 ).getValue();
+     return true;
+    }
+
+    myGridMenu.attachEvent("onClick", function (menuitemId, type) {
+        var data = myGrid.contextID.split("_");
+        var rId = data[0];
+        var cInd = data[1];
+        job = myGrid.cells(rId,0).getValue();
+        switch (menuitemId) {
+           case "job_history":
+                document.location.href = "{{ url('arii_ATS_job_history') }}?joid="+rId;
+            break;
+           case "job_note":
+               EditNote(job,myGrid.cells(rId,2).getValue());
+            break;
+             default:
+                alert("inconnu ! "+menuitemId);    
+        }
+        return true;
+    });
+
+    globalLayout.cells("c").collapse();
+    autorefresh = setInterval( "GridRefresh()",update*1000);
+    
+
+});
+
+function GlobalRefresh() {
+    clearInterval( autorefresh );
+    GridRefresh();
+    autorefresh = setInterval( "GridRefresh()", update*1000 );
+}
+
+function GridRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    myGrid.load("{{ url('xml_ATS_jobs_grid') }}?time="+seconds+"&history="+max_history+"&box_more="+box+"&only_warning="+only_warning, function(){    
+        globalLayout.cells("b").progressOff();
+        myGrid.refreshFilters();
+        myGrid.filterByAll();
+        myDonut.load( "{{ url('xml_ATS_jobs_pie') }}?box_more="+box+"&only_warning="+only_warning, function () {
+          myDonut.refresh();                
+            globalLayout.progressOff();
+            globalLayout.cells("a").progressOff();
+//            myTree.smartRefreshBranch(0,"{{ url('xml_ATS_jobs_tree') }}?only_warning="+only_warning);                    
+            myAlarms.load( "{{ url('xml_ATS_alarms_grid') }}?only_open=1" , function () {
+                // on compte les alarmes
+                var count=myAlarms.getRowsNum();
+                if (count>0) {                    
+                    myTab.cells('alarms').setText("{{ "Alarms" | trans }} [<font color='red'>"+count+"</font>]");
+                }
+                else {
+                    myTab.cells('alarms').setText("{{ "Alarms" | trans }}");
+                }
+            });
+        });
+    });    
+}
+
+function JobDetail(id) {
+    globalLayout.cells("c").expand();
+    
+    job = myGrid.cells(id, 0 ).getValue(); 
+    status = myGrid.cells(id, 2 ).getValue(); 
+    type = myGrid.cells(id, 3 ).getValue(); 
+    
+    myDetailToolbar.showItem("STARTJOB");    
+    myDetailToolbar.hideItem("KILLJOB");
+
+    myDetailToolbar.showItem("EXEC");    
+    myDetailToolbar.showListOption("EXEC","JOB_ON_ICE");    
+    myDetailToolbar.hideListOption("EXEC","JOB_OFF_ICE");    
+    myDetailToolbar.showListOption("EXEC","JOB_ON_HOLD");    
+    myDetailToolbar.hideListOption("EXEC","JOB_OFF_HOLD");
+    myDetailToolbar.showListOption("EXEC","JOB_ON_NOEXEC");    
+    myDetailToolbar.hideListOption("EXEC","JOB_OFF_NOEXEC");
+    
+    myDetailToolbar.showItem("STATUS");    
+    myDetailToolbar.showListOption("STATUS","SUCCESS");    
+    myDetailToolbar.showListOption("STATUS","FAILURE");    
+    myDetailToolbar.showListOption("STATUS","INACTIVE");
+    myDetailToolbar.showListOption("STATUS","TERMINATED"); 
+    
+    myDetailToolbar.hideItem("WAIT_REPLY");
+    // Toolbar
+    switch (status) {
+        case 'RUNNING':
+            myDetailToolbar.hideItem("STARTJOB");
+            myDetailToolbar.showItem("KILLJOB");
+            break;
+        case 'WAIT_REPLY':
+            myDetailToolbar.showItem("WAIT_REPLY");
+            myDetailToolbar.showItem("KILLJOB");
+            
+            myDetailToolbar.hideItem("STARTJOB");
+            myDetailToolbar.hideItem("BLOCK");
+            myDetailToolbar.hideItem("STATUS");
+            break;
+        case 'ON_ICE':
+            myDetailToolbar.hideListOption("EXEC","JOB_ON_ICE");    
+            myDetailToolbar.showListOption("EXEC","JOB_OFF_ICE"); 
+            break;
+        case 'ON_HOLD':
+            myDetailToolbar.hideListOption("EXEC","JOB_ON_HOLD");    
+            myDetailToolbar.showListOption("EXEC","JOB_OFF_HOLD"); 
+            break;
+        case 'NO_EXEC':
+            myDetailToolbar.hideListOption("EXEC","JOB_ON_NOEXEC");    
+            myDetailToolbar.showListOption("EXEC","JOB_OFF_NOEXEC"); 
+            break;
+        case 'SUCCESS':
+        case 'FAILURE':
+        case 'INACTIVE':
+        case 'TERMINATED':
+            myDetailToolbar.hideListOption("STATUS",status);
+            break;
+        default:
+            // alert(status);
+            break;
+    }
+   
+    // Infos
+    myTabbar.cells("job").progressOn();
+    myTabbar.tabs("agent").hide();               
+    myTabbar.tabs("output").hide();
+    myTabbar.tabs("output_I5").hide();
+    if (type == 'I5') {
+        myTabbar.tabs("output_I5").show();
+        myTabbar.tabs("output_I5").progressOn();
+    }
+    else if (type == 'BOX'){
+        // rien
+    }
+    else {
+        myTabbar.tabs("output").show();
+        myOut.cells("a").progressOn();
+        myOut.cells("b").progressOn();
+        if (status != 'SUCCESS') {
+            myTabbar.tabs("agent").show();
+            myAgent.cells("a").progressOn();
+            myAgent.cells("b").progressOn();
+        }
+    }
+    
+    myTabbar.cells("schema").progressOn();
+    myTabbar.cells("jil").progressOn();
+    myTabbar.cells("events").progressOn(); 
+        
+    if (type != jobtype) {
+        myForm2.unload();
+        myForm2 = myDetailLayout.cells("b").attachForm();
+        myForm2.loadStruct("{{ url('json_ATS_job_form') }}?type="+type);
+        jobtype = type;
+    }
+    
+    myForm.load("{{ url('xml_ATS_job_form') }}?id="+id);
+    myForm2.load("{{ url('xml_ATS_job_form') }}?id="+id+"&type="+type, function() {
+        myTabbar.cells("job").progressOff();
+        globalLayout.cells("c").progressOff();
+        myHistory.clearAndLoad( "{{ url('xml_ATS_job_history') }}?id="+id, function () {            
+            myTabbar.cells("history").progressOff();
+            if (type == 'I5') {
+                myGridOut.load("{{ url('xml_ATS_autosyslog') }}?options=-z&job="+job, function() {
+                    myTabbar.tabs("output_I5").progressOff();
+                });
+            }
+            else if (type == 'BOX'){
+                // rien
+            }
+            else {
+                myOut.cells("a").attachURL("{{ url('arii_ATS_autosyslog') }}?options=-tO&job="+job);            
+                myOut.cells("b").attachURL("{{ url('arii_ATS_autosyslog') }}?options=-tE&job="+job);
+                
+                if (status != 'SUCCESS') {
+                    myAgent.cells("a").attachURL("{{ url('arii_ATS_autosyslog') }}?options=-tA&job="+job);                            
+                    myAgent.cells("b").attachURL("{{ url('arii_ATS_autosyslog') }}?options=-tS&job="+job);                            
+                }            
+            }
+            myTabbar.cells("jil").attachURL("{{ url('arii_ATS_autorep') }}?options=-q -l0&job="+job);
+            myTabbar.cells("events").attachURL("{{ url('arii_ATS_autorep') }}?options=-d -l0&job="+job);            
+            var url = "{{ url('arii_ATS_generate') }}";
+            url += "?id="+id;
+            myTabbar.cells("schema").attachURL(url);
+            myTabbar.cells("note").attachURL("{{ url('arii_ATS_note') }}?job="+job);
+            globalLayout.cells("c").progressOff();
+        });
+    });
+}
+
+function LogDetail(id) {
+    file = this.cells(id, 0 ).getValue(); 
+    num = this.cells(id, 1 ).getValue(); 
+    status = this.cells(id, 2 ).getValue(); 
+    myOutI5.cells("b").progressOn();
+    myOutI5.cells("b").attachURL("{{ url('arii_ATS_autosyslog') }}?options=-d "+file+":"+num+"&job="+job);
+}
+
+function EditNote(jobname,description) {
+    var dhxWins = new dhtmlXWindows();
+    var largeur = 940;
+    var myWin = dhxWins.createWindow( "note" ,  (document.body.offsetWidth-largeur)/2, 50, largeur, 700 );
+    myWin.setText("{{ "Note" | trans }} "+jobname);
+   
+    var formData = [
+        {   type: 'settings', 
+            labelWidth: 80, 
+            inputWidth: largeur - 150, 
+            labelAlign: "right", 
+            position: "label-left" },
+        { type: "hidden", name: "ID"},
+        { type: "input",
+          name: "JOB_NAME",
+          label: "{{ "Name"| trans }}",
+          value: jobname,
+          required: true
+        },
+        { type: "input",
+          name: "JOB_DESC",
+          label: "{{ "Description"| trans }}",
+          value: description,
+          required: true
+        },
+        { type: "hidden",
+          name: "JOB_TYPE",
+          value: 'JOB'
+        },
+        {   type: 'editor', 
+            toolbar: true,
+            iconsPath: "{{ asset('dhtmlx/skins/terrace/imgs/') }}",
+            name: 'JOB_NOTE',
+            label: "{{ "Note"| trans }}", 
+            inputHeight:400
+        }
+/*
+        {
+          type: "select",
+          name: "NOTE_TYPE",
+          label: "{{ "Note type" | trans}}",
+          options:[
+                {
+                    text: "{{ "New note" | trans }}", 
+                    value: "note",
+                    list: [ 
+                        {   type: 'checkbox', 
+                            name: 'IS_TEMPLATE',
+                            label: "{{ "Is a template"| trans }}", 
+                            position: "label-left",
+                            labelAlign: "right"
+                        },
+                        {   type: 'editor', 
+                            toolbar: true,
+                            iconsPath: "{{ asset('dhtmlx/skins/terrace/imgs/') }}",
+                            name: 'JOB_NOTE',
+                            label: "{{ "Note"| trans }}", 
+                            inputHeight:400
+                        }
+                    ]
+                },
+                {   
+                    text: "{{ "Use template" | trans }}", 
+                    value: "template",
+                    list: [ 
+                        {   type: 'select', 
+                            name: 'TEMPLATE_ID',
+                            label: "{{ "Template"| trans }}",
+                            connector: "{ { url('xml_ATS_note_templates') }}?job="+job
+                        }                
+                    ]                        
+                }
+            ]
+        }
+*/
+    ];
+
+    myFormToolbar = myWin.attachToolbar();
+    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.loadStruct("{{ url('xml_ATS_note_toolbar') }}", function () {
+    });
+    
+    myFormWin = myWin.attachForm(formData);
+    myFormWin.load("{{ url('xml_ATS_note_form') }}?job="+jobname);
+    myFormToolbar.attachEvent("onClick",function (itemid) {
+         switch (itemid) {
+            case 'save':
+                myWin.progressOn();
+                myFormWin.send("{{ url('xml_ATS_note_save') }}","POST",function(loader,response){
+                    if(response === 'success')
+                    {
+                        myWin.close();
+                    }
+                    else {
+                        myWin.attachHTMLString( loader.xmlDoc.responseText );
+                    }
+                });
+                break;
+            case 'clear':
+                dhtmlx.confirm({
+                title: "{{ "Delete" | trans }}",
+                type: "confirm-error",
+                text: "{{ "Are you sure ?" | trans }}",
+                callback: function(answer) { 
+                    if (answer) {  
+                        workspace.clear();
+                    }
+                },
+                cancel: "{{ "No" | trans }}",
+                ok: "{{ "Yes" | trans }}" });
+                break;
+            default:
+                alert(itemid);
+                break;
+        }
+    });
+    
+}
+</script>
+{% endblock %}

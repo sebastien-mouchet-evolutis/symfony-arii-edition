@@ -1,0 +1,21 @@
+module.Report: Rapports
+module.Report: Rapports
+summary.Report: Publication des données sous forme de rapport
+Ack: Jira
+Executions: Exécutions
+Jobs by month: Traitements par mois
+First execution: Première exécution
+Last execution: Dernière exécution
+Last change: Dernier changement
+Updated: Mise à jour
+env.ALL: Tout
+env.P: Production
+env.R: Recette
+env.I: Intégration
+env.T: Test
+All environments: Tout environnement
+All applications: Toute application
+Workload Automation Dashboard: Tableau de bord Ordonnancement
+A month: Par mois
+A day: Par jour
+Search: Recherche

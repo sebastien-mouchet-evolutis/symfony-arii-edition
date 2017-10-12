@@ -1,0 +1,67 @@
+[
+    {   
+        type:"settings",
+        position:   "label-left", 
+        labelAlign: "right", 
+        labelWidth: 100,
+        inputWidth: 300,
+        offsetLeft: 10 
+    },
+    {   type:"hidden", 
+        name: "ID"
+    },
+    {   type:"input", 
+        name: "TITLE", 
+        label:"{{ "Title" | trans}}",
+        required: true
+    },
+    {   type:"input", 
+        name: "NAME", 
+        label:"{{ "Name" | trans}}",
+        required: true
+    },
+    {  type: "select",
+       name: "PARTNER_ID",
+       label: "{{ "Partner"| trans }}",
+       connector: "{{ url('xml_MFT_partners_select') }}"
+    },
+    {   type:"input", 
+        name: "DESCRIPTION", 
+        label:"{{ "Description" | trans}}",
+        rows: 4
+    },
+    {   type:"input", 
+        name: "CLIENT", 
+        label:"{{ "Client" | trans}}"
+    },
+    {   type:"input", 
+        name: "ENV", 
+        label:"{{ "Env." | trans}}"
+    },
+    { type: "newcolumn" },
+    {   type:"input", 
+        name: "RUN", 
+        label:"{{ "Run" | trans}}"
+    },
+    {   type:"input", 
+        name: "STEP", 
+        label:"{{ "Step" | trans}}"
+    },
+    {   type:"input", 
+        name: "STEP_START", 
+        label:"{{ "Start step" | trans}}"
+    },
+    {   type:"input", 
+        name: "STEP_END", 
+        label:"{{ "End step" | trans}}"
+    },
+    {   type:"input", 
+        name: "START_TIME", 
+        label:"{{ "Start time" | trans}}"
+    },
+    {   type:"input", 
+        name: "END_TIME", 
+        label:"{{ "End time" | trans}}"
+    },
+    {type:"hidden",    name: "ID" }
+]
