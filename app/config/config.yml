@@ -47,31 +47,7 @@ doctrine:
                 user:     "%database_user%"
                 password: "%database_password%"
                 charset:  UTF8
-            local:
-                driver:   pdo_mysql
-                host:     127.0.0.1
-                port:     3306
-                dbname:   arii
-                user:     root
-                password: null
-                charset:  UTF8
-            jobscheduler:
-                driver:   "%database2_driver%"
-                host:     "%database2_host%"
-                port:     "%database2_port%"
-                dbname:   "%database2_name%"
-                user:     "%database2_user%"
-                password: "%database2_password%"
-                charset:  UTF8
-            autosys:
-                driver:   "%database3_driver%"
-                host:     "%database3_host%"
-                port:     "%database3_port%"
-                dbname:   "%database3_name%"
-                user:     "%database3_user%"
-                password: "%database3_password%"
-                charset:  UTF8                
-                
+               
         # if using pdo_sqlite as your database driver, add the path in parameters.yml
         # e.g. database_path: "%kernel.root_dir%/data/data.db3"
         # path:     "%database_path%"
@@ -91,26 +67,6 @@ doctrine:
                         Month: Arii\CoreBundle\DQL\Month
                         Year:  Arii\CoreBundle\DQL\Year
                         Cast:  Arii\CoreBundle\DQL\Cast
-            jobscheduler:
-                connection: jobscheduler
-                dql:
-                    datetime_functions:
-                        Hour:  Arii\CoreBundle\DQL\%database2_driver%\Hour
-                        Date:  Arii\CoreBundle\DQL\%database2_driver%\Date
-                        Trunc: Arii\CoreBundle\DQL\Trunc
-                        Month: Arii\CoreBundle\DQL\Month
-                        Year:  Arii\CoreBundle\DQL\Year
-                        Cast:  Arii\CoreBundle\DQL\Cast
-            autosys:
-                connection: autosys
-                dql:
-                    datetime_functions:
-                        Hour:  Arii\CoreBundle\DQL\%database3_driver%\Hour
-                        Date:  Arii\CoreBundle\DQL\%database3_driver%\Date
-                        Trunc: Arii\CoreBundle\DQL\Trunc
-                        Month: Arii\CoreBundle\DQL\Month
-                        Year:  Arii\CoreBundle\DQL\Year
-                        Cast:  Arii\CoreBundle\DQL\Cast
 
 # Swiftmailer Configuration        auto_generate_proxy_classes: "%kernel.debug%"
 swiftmailer:
@@ -125,6 +81,9 @@ fos_user:
     db_driver:     orm                        # Le type de BDD à utiliser, nous utilisons l'ORM Doctrine depuis le début
     firewall_name: main                       # Le nom du firewall duquel on utilisera ces utilisateurs
     user_class:    Arii\UserBundle\Entity\User # La classe de l'entité User que nous venons de définir
+    from_email:
+        address:        noreply@arii.org
+        sender_name:    Arii
     group:
         group_class: Arii\UserBundle\Entity\Group
         

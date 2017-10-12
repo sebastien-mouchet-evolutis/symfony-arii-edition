@@ -36,24 +36,6 @@ arii_Self:
         _locale: en|fr|es|de|cn|ar|ru|jp 
 
 # ========================================
-# Stat
-# ----------------------------------------
-arii_Stat:
-    resource: "@StatBundle/Resources/config/routing.yml"
-    prefix:   /stat/{_locale}
-    requirements:
-        _locale: en|fr|es|de|cn|ar|ru|jp 
-
-# ========================================
-# Plumb
-# ----------------------------------------
-arii_Plumb:
-    resource: "@AriiPlumbBundle/Resources/config/routing.yml"
-    prefix:   /plumb/{_locale}
-    requirements:
-        _locale: en|fr|es|de|cn|ar|ru|jp 
-
-# ========================================
 # JID 
 # ----------------------------------------
 arii_jid:
@@ -184,15 +166,6 @@ arii_user:
     prefix:   /user/{_locale}
     requirements:
         _locale: en|fr|es|de|cn|ar|ru|jp
-
-# ========================================
-# I5
-# ----------------------------------------
-arii_I5:
-    resource: "@AriiI5Bundle/Resources/config/routing.yml"
-    prefix:   /i5/{_locale}
-    requirements:
-        _locale: en|fr|es|de|cn|ar|ru|jp 
 
 # ========================================
 # Time
