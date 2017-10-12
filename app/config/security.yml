@@ -22,17 +22,10 @@ security:
         in_memory:
             memory:
                 users:
-                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+                    admin: { password:  adminpass, roles: [ 'ROLE_ADMIN' ] }
                     client: { password: macpass, roles: [ 'ROLE_EXEC' ] }
                 
     firewalls:
-        ldap:
-            provider:  app_users
-            stateless: true
-            pattern:   /joc/
-            http_basic_ldap:
-                service: app.ldap
-                dn_string: "{username}@vaudoise.ch"
 
 #        wsse_secured:
 #            pattern:   /api/.*
