@@ -26,7 +26,6 @@
         "bfolliot/date": "~1.1.0",
         "ramsey/uuid": "^3.1",
         "ramsey/uuid-doctrine": "^1.1",
-        "symfony/event-dispatcher": "^2.7",
         "symfony/config" : "^2.7",
         "symfony/filesystem" : "^2.7",
         "bfolliot/filesystem" : "^1.0",
