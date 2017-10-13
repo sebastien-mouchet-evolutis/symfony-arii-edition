@@ -34,7 +34,7 @@
 		"gbprod/uuid-normalizer": "^1.0",				
         "mtdowling/cron-expression" : "^1.1",
         "mikehaertl/phpwkhtmltopdf" : "^2.1.1",
-		"dhtmlx/connector-php" : "^3.0.4"         
+		"dhtmlx/connector-php": "~2.0@dev",        
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
