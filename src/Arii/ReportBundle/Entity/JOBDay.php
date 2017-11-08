@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Autosys
  *
- * @ORM\Table(name="REPORT_JOB_DAY",indexes={@ORM\Index(name="search_idx", columns={"application", "env", "job_date"})})
+ * @ORM\Table(name="REPORT_JOB_DAY")
  * @ORM\Entity(repositoryClass="Arii\ReportBundle\Entity\JOBDayRepository")
  */
 class JOBDay
@@ -24,9 +24,9 @@ class JOBDay
     /**
      * @var string
      *
-     * @ORM\Column(name="application", type="string", length=64, nullable=true)
+     * @ORM\Column(name="app", type="string", length=64, nullable=true)
      */
-    private $application;
+    private $app;
     
     /**
      * @var string
@@ -35,6 +35,13 @@ class JOBDay
      */
     private $env;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="job_class", type="string", length=12, nullable=true)
+     */
+    private $job_class;
+    
     /**
      * @var datetime
      *
@@ -48,14 +55,6 @@ class JOBDay
      * @ORM\Column(name="spooler_name", type="string", length=32, nullable=true)
      */
     private $spooler_name;
-    
-    // Instance ou Id du spooler
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="spooler_type", type="string", length=12, nullable=true)
-     */
-    private $spooler_type;
     
     /**
      * @var string
@@ -89,26 +88,26 @@ class JOBDay
     }
 
     /**
-     * Set application
+     * Set app
      *
-     * @param string $application
+     * @param string $app
      * @return JOBDay
      */
-    public function setApplication($application)
+    public function setApp($app)
     {
-        $this->application = $application;
+        $this->app = $app;
 
         return $this;
     }
 
     /**
-     * Get application
+     * Get app
      *
      * @return string 
      */
-    public function getApplication()
+    public function getApp()
     {
-        return $this->application;
+        return $this->app;
     }
 
     /**
@@ -181,29 +180,6 @@ class JOBDay
     }
 
     /**
-     * Set spooler_type
-     *
-     * @param string $spoolerType
-     * @return JOBDay
-     */
-    public function setSpoolerType($spoolerType)
-    {
-        $this->spooler_type = $spoolerType;
-
-        return $this;
-    }
-
-    /**
-     * Get spooler_type
-     *
-     * @return string 
-     */
-    public function getSpoolerType()
-    {
-        return $this->spooler_type;
-    }
-
-    /**
      * Set jobs
      *
      * @param string $jobs
@@ -270,5 +246,29 @@ class JOBDay
     public function getDeleted()
     {
         return $this->deleted;
+    }
+   
+
+    /**
+     * Set job_class
+     *
+     * @param string $jobClass
+     * @return JOBDay
+     */
+    public function setJobClass($jobClass)
+    {
+        $this->job_class = $jobClass;
+
+        return $this;
+    }
+
+    /**
+     * Get job_class
+     *
+     * @return string 
+     */
+    public function getJobClass()
+    {
+        return $this->job_class;
     }
 }

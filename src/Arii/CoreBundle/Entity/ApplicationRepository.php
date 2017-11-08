@@ -15,7 +15,7 @@ class ApplicationRepository extends EntityRepository
    public function findApplications()
    {
         return $this->createQueryBuilder('app')
-            ->Select('app.name,app.title')
+            ->Select('app.name,app.title,app.active')
             ->orderBy('app.title,app.name')
             ->getQuery()
             ->getResult();

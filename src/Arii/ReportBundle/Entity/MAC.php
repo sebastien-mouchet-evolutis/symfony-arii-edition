@@ -5,7 +5,7 @@ namespace Arii\ReportBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Audit
+ * Mac
  *
  * @ORM\Table(name="IMPORT_MAC")
  * @ORM\Entity(repositoryClass="Arii\ReportBundle\Entity\MACRepository")

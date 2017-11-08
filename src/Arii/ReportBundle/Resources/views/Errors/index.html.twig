@@ -1,0 +1,92 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var app="{{ appl }}",
+    env="{{ env }}",
+    month={{ 
+month }},
+    year={{ year }},
+    day={{ day }},
+    day_past={{ day_past }};
+
+dhtmlxEvent(window,"load",function(){     
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
+    globalLayout.cells("a").setWidth(345);
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("b").hideHeader();
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+
+    {% include "AriiReportBundle:Default:tree.js.twig" %}    
+    {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
+
+    myTabbar = globalLayout.cells("b").attachTabbar();
+    myTabbar.addTab("jobs","{{ "Jobs" | trans }}","120px",null,true);
+    myTabbar.addTab("runs","{{ "Runs" | trans }}","120px");
+
+    jobToolbar = myTabbar.cells("jobs").attachToolbar();
+    jobToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    jobToolbar.loadStruct("{{ url('xml_Report_errors_jobs_toolbar') }}");
+
+    myJobs = myTabbar.cells("jobs").attachGrid();
+    myJobs.setImagePath("{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myJobs.setHeader("{{ "Job"| trans }},{{ "App"| trans }},{{ "Env"| trans }},{{ "Class"| trans }}");
+    myJobs.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter");
+    myJobs.setColAlign("left,left,left,left");
+    myJobs.setInitWidths( "*,*,*,*" );    
+    myJobs.setColTypes("ro,ro,ro,ro");
+    myJobs.setColSorting("str,str,str,str");
+    myStatus = myTabbar.cells("jobs").attachStatusBar();
+    myJobs.init();
+
+    myRuns = myTabbar.cells("runs").attachGrid();
+    myRuns.setImagePath("{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRuns.setHeader("{{ "Job"| trans }},{{ "App"| trans }},{{ "Env"| trans }},{{ "Class"| trans }}");
+    myRuns.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter");
+    myRuns.setColAlign("left,left,left,left");
+    myRuns.setInitWidths( "*,*,*,*" );    
+    myRuns.setColTypes("ro,ro,ro,ro");
+    myRuns.setColSorting("str,str,str,str");
+    myStatus2 = myTabbar.cells("runs").attachStatusBar();    
+    myRuns.init();
+
+    jobToolbar.attachEvent( "onClick", function(id, value) {
+        switch (id) {
+            case "apply_rules":
+                myTabbar.cells("jobs").progressOn();
+                dhx4.ajax.get( "{{ url('html_Report_jobs2rules') }}", function(loader,response){
+                    dhtmlx.message({
+                        title:"Done",
+                        type: "Notice",
+                        lifetime: "60000",
+                        text: loader.xmlDoc.responseText
+                    });
+                    myJobs.load("{{ url('xml_Report_errors_jobs') }}", function () {
+                        myStatus.setText("{{ "Jobs" | trans }}"+": "+myJobs.getRowsNum());
+                        myTabbar.cells("jobs").progressOff();
+                    });
+                });
+                break;
+            default:
+                alert(id);
+        }
+    });
+
+    GlobalRefresh();
+});
+
+function GlobalRefresh() {
+    myJobs.load("{{ url('xml_Report_errors_jobs') }}", function () {
+        myStatus.setText("{{ "Jobs" | trans }}"+": "+myJobs.getRowsNum());
+        myRuns.load("{{ url('xml_Report_errors_runs') }}", function () {
+            myStatus2.setText("{{ "Runs" | trans }}"+": "+myRuns.getRowsNum());
+        });
+    });    
+};
+</script>
+{% endblock %}

@@ -26,6 +26,10 @@ xml_Report_tree:
     path:  /tree.xml
     defaults: { _controller: AriiReportBundle:Default:tree }
 
+xml_Report_tree_menu:
+    path:  /tree_menu.xml
+    defaults: { _controller: AriiReportBundle:Default:treeMenu }
+    
 xml_Report_form:
     path:  /form.xml
     defaults: { _controller: AriiReportBundle:Default:info }
@@ -96,7 +100,74 @@ json_Report_ribbon_dashboard:
 xml_Report_dashboard_toolbar:
     path:  /dashboard/toolbar2.xml
     defaults: { _controller: AriiReportBundle:Dashboard\Dashboard:toolbar }
+
+# --------------------------------------------------------------------------
+# APPS
+# --------------------------------------------------------------------------
+arii_Report_apps:
+    path:  /apps
+    defaults: { _controller: AriiReportBundle:Dashboard\Apps:index }
+
+# Nombre de jobs par applications
+xml_Report_apps_jobs:
+    path:  /apps/jobs.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Apps:jobs }
+
+# Nombre d'exécutions par applications
+xml_Report_apps_runs:
+    path:  /apps/runs.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Apps:runs }
+
+# Nombre d'exécutions par applications
+xml_Report_apps_alerts:
+    path:  /apps/alerts.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Apps:alerts }
+
+# Jobs par applications
+arii_Report_jobs_app:
+    path:  /jobs/app
+    defaults: { _controller: AriiReportBundle:Dashboard\JobsApp:index }
     
+xml_Report_jobs_app_grid:
+    path:  /jobs/app/grid.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\JobsApp:grid }
+
+
+# --------------------------------------------------------------------------
+# ERREURS DE DONNEES
+# --------------------------------------------------------------------------
+
+arii_Report_errors:
+    path:  /errors
+    defaults: { _controller: AriiReportBundle:Errors:index }
+
+xml_Report_errors_jobs:
+    path:  /errors/jobs.xml
+    defaults: { _controller: AriiReportBundle:Errors:jobs }        
+    
+xml_Report_errors_runs:
+    path:  /errors/runs.xml
+    defaults: { _controller: AriiReportBundle:Errors:runs }        
+
+xml_Report_errors_jobs_toolbar:
+    path:  /errors/jobs/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Errors:jobsToolbar }        
+
+xml_Report_errors_runs_toolbar:
+    path:  /errors/runs/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Errors:runsToolbar }  
+
+
+# --------------------------------------------------------------------------
+# ALERTS
+# --------------------------------------------------------------------------
+arii_Report_alerts:
+    path:  /alerts
+    defaults: { _controller: AriiReportBundle:Dashboard\Alerts:index }
+
+xml_Report_alerts_hour_grid:
+    path:  /alerts/hour/grid.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\Alerts:grid }  
 # --------------------------------------------------------------------------
 # RUNS
 # --------------------------------------------------------------------------
@@ -105,6 +176,47 @@ arii_Report_runs:
     defaults: { _controller: AriiReportBundle:Dashboard\Runs:index }
 
 # RUNS/Month
+arii_Report_runs_month:
+    path:  /runs/month
+    defaults: { _controller: AriiReportBundle:Dashboard\RunsMonth:index }
+
+# RUNS/Week
+arii_Report_runs_week:
+    path:  /runs/week
+    defaults: { _controller: AriiReportBundle:Dashboard\RunsWeek:index }
+
+# RUNS/Day
+arii_Report_runs_day:
+    path:  /runs/day
+    defaults: { _controller: AriiReportBundle:Dashboard\RunsDay:index }
+
+xml_Report_runs_day_jobs:
+    path:  /runs/day/jobs.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\RunsDay:jobs }
+    
+# RUNS/Hour
+arii_Report_runs_hour:
+    path:  /runs/hour
+    defaults: { _controller: AriiReportBundle:Dashboard\RunsHour:index }
+
+xml_Report_runs_hour_jobs:
+    path:  /runs/hour/jobs.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\RunsHour:jobs }
+
+xml_Report_runs_hour_status:
+    path:  /runs/hour/status.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\RunsHour:status }    
+    
+# Statuts par applications
+xml_Report_runs_app_status:
+    path:  /runs/day/app_status.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\RunsDay:app_status }    
+
+xml_Report_runs_days_status:
+    path:  /runs/day/status.xml
+    defaults: { _controller: AriiReportBundle:Dashboard\RunsDay:grid }    
+
+
 xml_Report_runs_grid:
     path:  /runs/month/grid.xml
     defaults: { _controller: AriiReportBundle:Dashboard\Runs:grid }
@@ -116,10 +228,6 @@ xml_Report_runs_executions_chart:
 xml_Report_runs_alarms_chart:
     path:  /public/runs/month/alarms/chart.xml
     defaults: { _controller: AriiReportBundle:Dashboard\Runs:alarmsChart }
-
-xml_Report_runs_applications_chart:
-    path:  /public/runs/month/applications/chart.xml
-    defaults: { _controller: AriiReportBundle:Dashboard\Runs:applicationsChart }
 
 xml_Report_runs_status_chart:
     path:  /public/runs/month/status/chart.xml
@@ -148,10 +256,6 @@ xml_Report_jobs_export:
     path:  /jobs/export.csv
     defaults: { _controller: AriiReportBundle:Dashboard\Jobs:export }
 
-xml_Report_jobs_applications_chart:
-    path:  /public/jobs/applications/chart.xml
-    defaults: { _controller: AriiReportBundle:Dashboard\Jobs:applications }
-
 xml_Report_jobs_applications_month_chart:
     path:  /public/jobs/applications/month/chart.xml
     defaults: { _controller: AriiReportBundle:Dashboard\Jobs:applications_month }
@@ -173,12 +277,12 @@ xml_Report_jobs_creation_chart:
     defaults: { _controller: AriiReportBundle:Dashboard\Jobs:creationChart }
 
 # --------------------------------------------------------------------------
-# APPS
+# APPLICATION
 # --------------------------------------------------------------------------
-arii_Report_apps:
-    path:  /apps
-    defaults: { _controller: AriiReportBundle:Dashboard\Apps:index }
-    
+arii_Report_application:
+    path:  /application
+    defaults: { _controller: AriiReportBundle:Dashboard\Application:index }
+
 # --------------------------------------------------------------------------
 # CALENDARS
 # --------------------------------------------------------------------------
@@ -282,6 +386,10 @@ json_Report_ribbon_import:
     path:  /import/ribbon.json
     defaults: { _controller: AriiReportBundle:Import\Default:ribbon }
 
+xml_Report_toolbar_update:
+    path:  /import/toolbar_update.xml
+    defaults: { _controller: AriiReportBundle:Import\Default:toolbar_update }
+
 # --------------------------------------------------------------------------
 # Autosys
 # --------------------------------------------------------------------------
@@ -333,6 +441,53 @@ xml_Report_search_chart:
     defaults: { _controller: AriiReportBundle:Search:chart }
 
 # --------------------------------------------------------------------------
+# Regles
+# --------------------------------------------------------------------------
+arii_Report_rules:
+    path:  /rules
+    defaults: { _controller: AriiReportBundle:Rules:index }
+
+xml_Report_rules_grid:
+    path:  /rules/grid.xml
+    defaults: { _controller: AriiReportBundle:Rules:grid }
+
+xml_Report_rules_toolbar:
+    path:  /rules/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Rules:toolbar }
+
+xml_Report_rule_save:
+    path:  /rules/save.xml
+    defaults: { _controller: AriiReportBundle:Rules:save }    
+
+xml_Report_rule_delete:
+    path:  /rules/delete.xml
+    defaults: { _controller: AriiReportBundle:Rules:delete } 
+    
+xml_Report_rule_form:
+    path:  /rules/form.xml
+    defaults: { _controller: AriiReportBundle:Rules:form } 
+
+#================================================================
+# MIGRATION
+# Deplacement de données
+#================================================================
+arii_Report_aggregation:
+    path:  /aggregation
+    defaults: { _controller: AriiReportBundle:Import\Default:index }
+
+xml_Report_aggregation_toolbar:
+    path:  /aggregation/toolbar.xml
+    defaults: { _controller: AriiReportBundle:Import\Default:toolbar }
+
+#================================================================
+# CHECK
+# Verification avant mises a jour
+#================================================================
+xml_Report_runs2runhours_check:
+    path:  /check/run2runhours.xml
+    defaults: { _controller: AriiReportBundle:Import\Check:RunHour }
+    
+# --------------------------------------------------------------------------
 # MISES A JOUR
 # --------------------------------------------------------------------------
 # mise a jour des applications et des environnements (application de règles)
@@ -359,10 +514,23 @@ html_Report_runs2rundays:
     path:  /cron/run2rundays.html
     defaults: { _controller: AriiReportBundle:Import\RUN:RunDay }
 
+html_Report_runs2runweeks:
+    path:  /cron/run2runweeks.html
+    defaults: { _controller: AriiReportBundle:Import\RUN:RunWeek }
+
+html_Report_runs2runyears:
+    path:  /cron/run2runyears.html
+    defaults: { _controller: AriiReportBundle:Import\RUN:RunYear }
+    
 # mise a jour des applications et des environnements (application de règles)
 html_Report_jobs2rules:
     path:  /cron/job2rules.html
     defaults: { _controller: AriiReportBundle:Import\JOB:Rules }
+
+# Nettoyages de jobs
+html_Report_jobs4clean:
+    path:  /cron/job4clean.html
+    defaults: { _controller: AriiReportBundle:Import\JOB:clean }
 
 # Aggregation des jobs
 html_Report_jobs2jobdays:
@@ -394,7 +562,6 @@ html_Report_migration_job:
 html_Report_migration_run:
     path:  /migration/run.html
     defaults: { _controller: AriiReportBundle:Migration:Run }
-
 
 html_Report_migration_job:
     path:  /migration/job.html

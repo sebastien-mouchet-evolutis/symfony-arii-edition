@@ -2,8 +2,17 @@
 {% extends "AriiReportBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
+var app="{{ appl }}",
+    env="{{ env }}",
+    tag="{{ tag }}",
+    month={{ month }},
+    year={{ year }},
+    day={{ day }},
+    day_past={{ day_past }},
+    limit=99;
+
 dhtmlxEvent(window,"load",function(){     
-    globalLayout = new dhtmlXLayoutObject(document.body,"3L");
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
     globalLayout.cells("a").setWidth(345);
 
     globalMenu = globalLayout.cells("a").attachMenu();
@@ -19,36 +28,120 @@ dhtmlxEvent(window,"load",function(){
     myRibbon.attachEvent("onClick", ClickRibbon );
     
     globalLayout.cells("a").hideHeader();
+    globalLayout.cells("b").hideHeader();
     
-    myApps = globalLayout.cells("a").attachGrid();
-    myApps.selMultiRows = true;
-    myApps.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
-    myApps.setHeader("{{ "Application" | trans }}");
-    myApps.attachHeader("#text_filter");
-    myApps.setColAlign("left");
-    myApps.setColTypes("ro");
-    myApps.setColSorting("str");
-    myApps.init();
+    {% include "AriiReportBundle:Default:tree.js.twig" %}    
+    {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
 
-    myGrid = globalLayout.cells("b").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
-    myGrid.setHeader("{{ "Name" | trans }},{{ "Title" | trans }}");
-    myGrid.attachHeader("#text_filter,#text_filter");
-    myGrid.setColAlign("left,left");
-    myGrid.setInitWidths("100,*");
-    myGrid.setColTypes("ro,ro");
-    myGrid.setColSorting("str,str");
-    myGrid.init();
+    // Graphique
+    myLayout = globalLayout.cells("b").attachLayout("3W");
+    myLayout.cells("a").setText("{{ "Jobs" | trans }}");
+    myLayout.cells("b").setText("{{ "Runs" | trans }}");
+    myLayout.cells("c").setText("{{ "Alerts" | trans }}");
     
+    jobsChart =  myLayout.cells("a").attachChart({
+        view:"barH",
+        padding: {
+            left:150
+        },
+        value: "#jobs#",
+        label: "#jobs#",
+        tooltip: "#application#: #jobs#",
+        gradient:true,
+        border:false,
+        xAxis:{
+            title:"{{ "" | trans }}",
+            margin: { 
+                left: 200
+            }       
+        },
+        yAxis:{
+            lines:true,
+            template: "#application#",
+            width: 150
+        }
+    });
+    
+    runsChart = myLayout.cells("b").attachChart({
+        view:"barH",
+        padding: {
+            left:150
+        },
+        value: "#runs#",
+        label: "#runs#",
+        tooltip: "#application#: #runs#",
+        gradient:true,
+        border:false,
+        xAxis:{
+            title:"{{ "" | trans }}",
+            margin: { 
+                left: 200
+            }            
+        },
+        yAxis:{
+            lines:true,
+            template: "#application#",
+            width: 150
+        }
+    });
+    
+    alertsChart = myLayout.cells("c").attachChart({
+        view:"barH",
+        padding: {
+            left: 150
+        },
+        value: "#alarms#",
+        label: function (obj) {
+            if (obj.alarms>0)
+                return obj.alarms;
+        },
+        tooltip: "#application#: #alarms#",
+        gradient:true,
+        border:false,
+        xAxis:{
+            title:"{{ "" | trans }}",
+            margin: {
+                left: 200
+            }
+        },
+        yAxis:{
+            lines:true,
+            template: "#application#",
+            width: 150
+        }
+    });
+    
+    jobsChart.attachEvent("onItemClick",function(id){ 
+        app = id;
+        window.location = "{{ url('arii_Report_index') }}application?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past;
+    });
+    runsChart.attachEvent("onItemClick",function(id){ 
+        app = id;
+        window.location = "{{ url('arii_Report_index') }}application?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past;
+    });
+    alertsChart.attachEvent("onItemClick",function(id){ 
+        app = id;
+        window.location = "{{ url('arii_Report_index') }}application?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past;
+    });    
     GlobalRefresh();
 });
 
 function GlobalRefresh() {
-    myApps.load( "{{ url('xml_Report_apps_grid') }}", function() {
-        myGrid.load( "{{ url('xml_Report_apps_grid') }}", function() {
-        });         
-    });    
+    myLayout.cells("a").progressOn();
+    jobsChart.clearAll();
+    jobsChart.load( "{{ url('xml_Report_apps_jobs') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past+"&limit="+limit+"&tag="+tag, function() {
+        myLayout.cells("a").progressOff();
+        myLayout.cells("b").progressOn();
+        runsChart.clearAll();
+        runsChart.load( "{{ url('xml_Report_apps_runs') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past+"&limit="+limit+"&tag="+tag, function() {   
+            myLayout.cells("b").progressOff();
+            myLayout.cells("c").progressOn();
+            alertsChart.clearAll();
+            alertsChart.load( "{{ url('xml_Report_apps_alerts') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past+"&limit="+limit+"&tag="+tag, function() {   
+                myLayout.cells("c").progressOff();
+            });
+        });
+    });
 };
-
 </script>
 {% endblock %}

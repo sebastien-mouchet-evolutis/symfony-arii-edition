@@ -58,9 +58,11 @@
     <site id="{{ v.id }}">{{ v.name }}</site>
 {% endfor %}
 </sites>
+<!--
 {% set site = app.session.get('site') %}     
-<site>{{ site.name }}</site>
-<timezone>{{ site.timezone }}</timezone>
+<site>{ { site.name }}</site>
+<timezone>{ { site.timezone }}</timezone>
+-->
 {% set header = app.session.get('layout_header') %}     
 {% set sidebar = app.session.get('layout_sidebar') %}     
 <layout>

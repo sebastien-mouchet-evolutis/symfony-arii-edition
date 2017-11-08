@@ -28,6 +28,7 @@ class AriiPortal
         $this->userManager = $userManager;
         $this->translator = $translator;
         $this->router = $router;
+        
         $this->em = $em;
         $this->parameters = $kernel->getContainer()->getParameterBag()->all();
     }
@@ -151,6 +152,14 @@ class AriiPortal
         $errorlog->setTrace($Trace);
         $errorlog->setIp($_SERVER['REMOTE_ADDR']);
         
+        // reouverture si l'em est ferme
+        if (!$this->em->isOpen()) {
+            $this->em = $this->em->create(
+                $this->em->getConnection(),
+                $this->em->getConfiguration()
+            );
+        }
+
         $this->em->persist($errorlog);
         $this->em->flush();
         
@@ -2176,8 +2185,10 @@ class AriiPortal
 
     public function getUserId()
     {
-        $Infos = $this->getUserInfo();        
-        return $Infos['id'];
+        $Infos = $this->getUserInfo();   
+        if (isset($Infos['id']))
+            return $Infos['id'];
+        return;
     }
 
     /**************************************
@@ -2361,6 +2372,10 @@ class AriiPortal
         // Date de reference 
         $ref_date = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $Time['tm_year']+1900, $Time['tm_mon']+1, $Time['tm_mday'], $Time['tm_hour'], $Time['tm_min'], $Time['tm_sec']);
 
+        $User['day'] = $Time['tm_mday'];
+        $User['month'] = $Time['tm_mon']+1;
+        $User['year'] = $Time['tm_year']+1900;
+                
         $User['date'] = new \DateTime($ref_date);        
         $User['timestamp'] = time();
         
@@ -2382,7 +2397,8 @@ class AriiPortal
         
         $User['env'] = 'P';
         $User['app'] = '*';
-
+        $User['class'] = '*';
+        
         // Compatibilité ascendante
         $User['ref_date'] = clone $User['date'];
         $User['ref_timestamp'] = $User['timestamp'];
@@ -2404,7 +2420,7 @@ class AriiPortal
         $User = $this->getUserInterface();
         $User['ref_past'] = $hours;
         $User['past'] = $this->CalcDate( $User['ref_date'], $hours );
-        return $User;
+        return $this->session->set('UserInterface',$User);
     }
 
     public function setRefFuture($hours)
@@ -2412,28 +2428,56 @@ class AriiPortal
         $User = $this->getUserInterface();
         $User['ref_future'] = $hours;
         $User['future'] = $this->CalcDate( $User['ref_future'], $hours );
-        return $User;
+        return $this->session->set('UserInterface',$User);
     }
 
     public function setRefresh($seconds)
     {
         $User = $this->getUserInterface();        
         $User['refresh'] = $seconds;                
-        return $User;
+        return $this->session->set('UserInterface',$User);
     }
 
     public function setApp($app)
     {
         $User = $this->getUserInterface();        
         $User['app'] = $app;                
-        return $User;
+        return $this->session->set('UserInterface',$User);
     }
 
     public function setEnv($env)
     {
         $User = $this->getUserInterface();        
         $User['env'] = $env;                
-        return $User;
+        return $this->session->set('UserInterface',$User);
+    }
+
+    public function setTag($tag)
+    {
+        $User = $this->getUserInterface();        
+        $User['tag'] = $tag;                
+        return $this->session->set('UserInterface',$User);
+    }
+    
+    public function setDay($day)
+    {
+        $User = $this->getUserInterface();        
+        $User['day'] = $day;                
+        return $this->session->set('UserInterface',$User);
+    }
+
+    public function setMonth($month)
+    {
+        $User = $this->getUserInterface();        
+        $User['month'] = $month;      
+        return $this->session->set('UserInterface',$User);
+    }
+    
+    public function setYear($year)
+    {
+        $User = $this->getUserInterface();        
+        $User['year'] = $year;                
+        return $this->session->set('UserInterface',$User);
     }
     
     /**************************************

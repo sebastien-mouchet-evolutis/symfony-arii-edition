@@ -13,32 +13,36 @@ use Doctrine\ORM\Query\ResultSetMapping;
  */
 class RUNDayRepository extends EntityRepository
 {
-   public function findRunsMonth()
+   public function findRunsByMonth(\DateTime $from, \DateTime $to)
    {
         $driver = $this->_em->getConnection()->getDriver()->getName();
         switch ($driver) {
             case 'oci8':
-                $sql = "SELECT EXTRACT(YEAR FROM run.run_date) as run_year,EXTRACT(MONTH FROM run.run_date) as run_month,run.application,run.env,run.spooler_type,run.spooler_name,sum(run.executions) as runs,sum(run.alarms) as alarms,sum(run.acks) as acks
+                $sql = "SELECT EXTRACT(YEAR FROM run.run_date) as run_year,EXTRACT(MONTH FROM run.run_date) as run_month,run.app,run.env,run.spooler_name,run.job_class,sum(run.executions) as runs,sum(run.warnings) as warnings,sum(run.alarms) as alarms,sum(run.acks) as acks
                         FROM REPORT_RUN_DAY run
-                        GROUP BY EXTRACT(YEAR FROM run.run_date),EXTRACT(MONTH FROM run.run_date),run.application,run.env,run.spooler_type,run.spooler_name";
+                        WHERE run.run_date >= :from
+                        AND run.run_date <= :to
+                        GROUP BY EXTRACT(YEAR FROM run.run_date),EXTRACT(MONTH FROM run.run_date),run.app,run.env,run.spooler_name,run.job_class";
 
                 $rsm = new ResultSetMapping();
                 $rsm->addScalarResult('RUN_YEAR', 'run_year');
                 $rsm->addScalarResult('RUN_MONTH', 'run_month');                
-                $rsm->addScalarResult('APPLICATION', 'application');
+                $rsm->addScalarResult('APPLICATION', 'app');
                 $rsm->addScalarResult('ENV', 'env');
-                $rsm->addScalarResult('SPOOLER_TYPE', 'spooler_type');
                 $rsm->addScalarResult('SPOOLER_NAME', 'spooler_name');
                 $rsm->addScalarResult('RUNS', 'runs');
+                $rsm->addScalarResult('WARNINGS', 'warnings');                
                 $rsm->addScalarResult('ALARMS', 'alarms');
                 $rsm->addScalarResult('ACKS', 'acks');
-                $query = $this->_em->createNativeQuery($sql, $rsm);
+                $query = $this->_em->createNativeQuery($sql, $rsm)
+                        ->setParameter('from', $from )
+                        ->setParameter('to', $to );                
                 return $query->getResult();         
                 break;
             default:
                 return $this->createQueryBuilder('run')
-                      ->Select('Year(run.date) as run_year,Month(run.date) as run_month,run.application,run.env,run.spooler_type,run.spooler_name,sum(run.executions) as runs,sum(run.alarms) as alarms,sum(run.acks) as acks')
-                      ->groupBy('run_year,run_month,run.application,run.env,run.spooler_type,run.spooler_name')
+                      ->Select('Year(run.date) as run_year,Month(run.date) as run_month,run.app,run.env,run.spooler_name,sum(run.executions) as runs,sum(run.alarms) as alarms,sum(run.acks) as acks')
+                      ->groupBy('run_year,run_month,run.app,run.env,run.spooler_name')
                       ->getQuery()
                       ->getResult();
                 break;
@@ -48,10 +52,10 @@ class RUNDayRepository extends EntityRepository
    public function findRunsDay($start,$end,$env='*') {
        if (($env=='*') or ($env=='')) {
             return $this->createQueryBuilder('run')
-                ->Select('run.date,run.application,run.env,run.spooler_type,run.spooler_name,sum(run.executions) as executions,sum(run.alarms) as alarms,sum(run.acks) as acks')
+                ->Select('run.date,run.app,run.env,run.spooler_name,sum(run.executions) as executions,sum(run.alarms) as alarms,sum(run.acks) as acks')
                 ->where('run.date >= :start')
                 ->andWhere('run.date <= :end')
-                ->groupBy('run.date,run.env,run.spooler_type,run.spooler_name')
+                ->groupBy('run.date,run.env,run.spooler_name')
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
                 ->getQuery()
@@ -59,7 +63,7 @@ class RUNDayRepository extends EntityRepository
        }
        else {
             return $this->createQueryBuilder('run')
-                ->Select('run.date,run.application,run.env,run.spooler_type,run.spooler_name,run.executions,run.alarms,run.acks')
+                ->Select('run.date,run.app,run.env,run.spooler_name,run.executions,run.alarms,run.acks')
                 ->where('run.date >= :start')
                 ->andWhere('run.date <= :end')
                 ->andWhere('run.env = :env')
@@ -74,22 +78,22 @@ class RUNDayRepository extends EntityRepository
    public function findByDay()
    {
         return $this->createQueryBuilder('run')
-              ->Select('run.date,run.env,run.spooler_type,run.spooler_name,sum(run.alarms) as runs')
-              ->groupBy('run.date,run.env,run.spooler_type,run.spooler_name')
+              ->Select('run.date,run.env,run.spooler_name,sum(run.alarms) as runs')
+              ->groupBy('run.date,run.env,run.spooler_name')
               ->getQuery()
               ->getResult();
    }
 
-   /* liste d'applications concernée par les excutions */
-   public function findApplications($start,$end,$env='*')
+   /* liste d'apps concernée par les excutions */
+   public function findApps($start,$end,$env='*')
    {
        if (($env=='*') or ($env=='')) {
             return $this->createQueryBuilder('run')
-                ->Select('run.application','app.title','sum(run.alarms) as nb')
-                ->leftJoin('Arii\CoreBundle\Entity\Application','app',\Doctrine\ORM\Query\Expr\Join::WITH,'run.application = app.name')                
+                ->Select('run.app','app.title','sum(run.alarms) as nb')
+                ->leftJoin('Arii\CoreBundle\Entity\App','app',\Doctrine\ORM\Query\Expr\Join::WITH,'run.app = app.name')                
                 ->where('run.date >= :start')
                 ->andWhere('run.date <= :end')
-                ->groupBy('run.application,app.title')
+                ->groupBy('run.app,app.title')
                 ->orderBy('nb','DESC')
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
@@ -98,12 +102,12 @@ class RUNDayRepository extends EntityRepository
        }
        else {
             return $this->createQueryBuilder('run')
-                ->Select('run.application','app.title','sum(run.alarms) as nb')
-                ->leftJoin('Arii\CoreBundle\Entity\Application','app',\Doctrine\ORM\Query\Expr\Join::WITH,'run.application = app.name')                
+                ->Select('run.app','app.title','sum(run.alarms) as nb')
+                ->leftJoin('Arii\CoreBundle\Entity\App','app',\Doctrine\ORM\Query\Expr\Join::WITH,'run.app = app.name')                
                 ->where('run.date >= :start')
                 ->andWhere('run.date <= :end')
                 ->andWhere('run.env = :env')
-                ->groupBy('run.application,app.title')
+                ->groupBy('run.app,app.title')
                 ->orderBy('nb','DESC')
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
@@ -117,9 +121,9 @@ class RUNDayRepository extends EntityRepository
    {
        if (($env=='*') or ($env=='')) {
             return $this->createQueryBuilder('run')
-                ->Select('run.application','sum(run.alarms) as nb')
+                ->Select('run.app','sum(run.alarms) as nb')
                 ->where('run.date > :time')
-                ->groupBy('run.application')
+                ->groupBy('run.app')
                 ->orderBy('nb','DESC')
                 ->setParameter('time', $time)
                 ->getQuery()
@@ -127,10 +131,10 @@ class RUNDayRepository extends EntityRepository
        }
        else {
             return $this->createQueryBuilder('run')
-                ->Select('run.application','run.env','sum(run.alarms) as nb')
+                ->Select('run.app','run.env','sum(run.alarms) as nb')
                 ->where('run.date > :time')
                 ->andWhere('run.env = :env')
-                ->groupBy('run.application','run.env')
+                ->groupBy('run.app','run.env')
                 ->orderBy('nb','DESC')
                 ->setParameter('time', $time)
                 ->setParameter('env', $env)
@@ -142,10 +146,10 @@ class RUNDayRepository extends EntityRepository
    public function findAcks($time, $app='%', $env='P')
    {
         return $this->createQueryBuilder('run')
-            ->Select('run.application','run.env','sum(run.acks) as nb')
+            ->Select('run.app','run.env','sum(run.acks) as nb')
             ->where('run.date > :time')
             ->andWhere('run.env = :env')
-            ->groupBy('run.application','run.env')
+            ->groupBy('run.app','run.env')
             ->orderBy('nb','DESC')
             ->setParameter('time', $time)
             ->setParameter('env', $env)
@@ -181,11 +185,11 @@ class RUNDayRepository extends EntityRepository
        }
        elseif ($env=='*') {
             return $this->createQueryBuilder('run')
-                 ->Select('Year(run.date) as annee,Month(run.date) as mois,run.application,sum(run.warnings) as warnings,sum(run.alarms) as alarms,sum(run.acks) as acks,sum(run.executions) as executions')
+                 ->Select('Year(run.date) as annee,Month(run.date) as mois,run.app,sum(run.warnings) as warnings,sum(run.alarms) as alarms,sum(run.acks) as acks,sum(run.executions) as executions')
                  ->where('run.date >= :start')
                  ->andWhere('run.date <= :end')
-                 ->andWhere('run.application = :app')
-                 ->groupBy('annee,mois,run.application')
+                 ->andWhere('run.app = :app')
+                 ->groupBy('annee,mois,run.app')
                  ->setParameter('start', $start)
                  ->setParameter('end', $end)
                  ->setParameter('app', $app)
@@ -198,63 +202,7 @@ class RUNDayRepository extends EntityRepository
                  ->where('run.date >= :start')
                  ->andWhere('run.date <= :end')
                  ->andWhere('run.env = :env')
-                 ->andWhere('run.application = :app')
-                 ->groupBy('annee,mois')
-                 ->setParameter('start', $start)
-                 ->setParameter('end', $end)
-                 ->setParameter('env', $env)
-                 ->setParameter('app', $app)
-                 ->getQuery()
-                 ->getResult();
-       }
-   }
-
-   public function findExecutionsByMonth($start,$end, $env='P', $app='*')
-   {
-       if (($app=='*') and ($env=='*')) {
-           return $this->createQueryBuilder('run')
-                 ->Select('Year(run.date) as annee,Month(run.date) as mois,sum(run.warnings) as warnings,sum(run.alarms) as alarms,sum(run.acks) as acks,sum(run.executions) as executions')
-                 ->where('run.date >= :start')
-                 ->andWhere('run.date <= :end')
-                 ->groupBy('annee,mois')
-                 ->setParameter('start', $start)
-                 ->setParameter('end', $end)
-                 ->getQuery()
-                 ->getResult();
-       }
-       elseif ($app=='*') {
-            return $this->createQueryBuilder('run')
-                 ->Select('Year(run.date) as annee,Month(run.date) as mois,run.env,sum(run.warnings) as warnings,sum(run.alarms) as alarms,sum(run.acks) as acks,sum(run.executions) as executions')
-                 ->where('run.date >= :start')
-                 ->andWhere('run.date <= :end')
-                 ->andWhere('run.env = :env')
-                 ->groupBy('annee,mois,run.env')
-                 ->setParameter('start', $start)
-                 ->setParameter('end', $end)
-                 ->setParameter('env', $env)
-                 ->getQuery()
-                 ->getResult();
-       }
-       elseif ($env=='*') {
-            return $this->createQueryBuilder('run')
-                 ->Select('Year(run.date) as annee,Month(run.date) as mois,run.application,sum(run.warnings) as warnings,sum(run.alarms) as alarms,sum(run.acks) as acks,sum(run.executions) as executions')
-                 ->where('run.date >= :start')
-                 ->andWhere('run.date <= :end')
-                 ->andWhere('run.application = :app')
-                 ->groupBy('annee,mois,run.application')
-                 ->setParameter('start', $start)
-                 ->setParameter('end', $end)
-                 ->setParameter('app', $app)
-                 ->getQuery()
-                 ->getResult();
-       }
-       else {
-            return $this->createQueryBuilder('run')
-                 ->Select('Year(run.date) as annee,Month(run.date) as mois,sum(run.warnings) as warnings,sum(run.alarms) as alarms,sum(run.acks) as acks,sum(run.executions) as executions')
-                 ->where('run.date >= :start')
-                 ->andWhere('run.date <= :end')
-                 ->andWhere('run.env = :env')
-                 ->andWhere('run.application = :app')
+                 ->andWhere('run.app = :app')
                  ->groupBy('annee,mois')
                  ->setParameter('start', $start)
                  ->setParameter('end', $end)
@@ -265,33 +213,20 @@ class RUNDayRepository extends EntityRepository
        }
    }
    
-   public function findExecutionsByApp(\DateTime $time, $app='%', $env='')
+   public function findExecutionsByApp($day,$env='*')
    {
-       if (($env=='*') or ($env=='')) {
-           return $this->createQueryBuilder('run')
-                ->Select('Month(run.date) as mois,run.env,run.alarm,run.ack,count(run) as nb')
-                ->where('run.date > :time')
-                ->andWhere('run.application = :app')
-                ->groupBy('mois,run.env,run.alarm,run.ack')
-                ->setParameter('time', $time)
-                ->setParameter('app', $app)
-                ->getQuery()
-                ->getResult();
-       }
-       else {
-            return $this->createQueryBuilder('run')
-                ->Select('Month(run.date) as mois,run.env,run.alarm,run.ack,count(run) as nb')
-                ->where('run.date > :time')
-                ->andWhere('run.env = :env')
-                ->andWhere('run.application = :app')
-                ->groupBy('mois,run.env,run.alarm,run.ack')
-                ->setParameter('time', $time)
-                ->setParameter('app', $app)
-                ->setParameter('env', $env)
-                ->getQuery()
-                ->getResult();
-           
-       }
+        $query = $this->createQueryBuilder('run')
+             ->Select('run.app,run.date,run.env,run.alarms,run.acks,run.executions')
+             ->where('run.date = :day')
+             ->orderBy('run.app')
+             ->setParameter('day', $day);
+        
+        if ($env!='*')
+            $query->andWhere('run.env = :env')
+                ->setParameter('env', $env);
+        
+        return $query->getQuery()
+             ->getResult(); 
    }
    
    public function findLast()

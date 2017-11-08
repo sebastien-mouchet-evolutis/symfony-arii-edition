@@ -26,7 +26,8 @@ size=345
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
     
-    {% include "AriiReportBundle:Default:sidebar.html.twig" %}    
+    {% include "AriiReportBundle:Default:tree.js.twig" %}    
+    {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
     
     globalLayout.cells("a").hideHeader();
     globalLayout.cells("b").hideHeader();
@@ -55,50 +56,6 @@ size=345
         }    
     });
     
-    myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
-    myToolbar.loadStruct("{{ url('xml_Report_toolbar') }}?app="+app+"&env="+env, function() {
-        this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
-        this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
-        this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
-        this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
-    });
-    myToolbar.attachEvent( "onClick", function(id, value) {
-        var parent=this.getParentId(id);
-        switch (parent) {
-            case "APP":
-                this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
-                if (id=='_ALL_')
-                    app = '*';
-                else
-                    app = id;
-                GlobalRefresh();
-                break;
-            case "ENV":
-                this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
-                env = id;
-                GlobalRefresh();
-                break;
-            case "MONTH":
-                this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
-                month = id;
-                GlobalRefresh();
-                break;
-            case "DAY_PAST":
-                this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
-                day_past = id;
-                GlobalRefresh();
-                break;
-            case "YEAR":
-                this.setItemText("YEAR",this.getListOptionText("YEAR",this.getListOptionSelected("YEAR")));
-                year = id;
-                GlobalRefresh();
-                break;
-            default:
-//                alert(id);
-                GlobalRefresh();
-        }
-    });
     GlobalRefresh();
 });
 

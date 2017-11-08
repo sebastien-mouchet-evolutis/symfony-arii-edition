@@ -8,6 +8,7 @@
             "SymfonyStandard\\": "app/SymfonyStandard/"
         }
     },
+	"minimum-stability": "dev",
     "require": {
         "php": ">=5.6",
         "symfony/symfony": ">=2.8.13,<2.9",

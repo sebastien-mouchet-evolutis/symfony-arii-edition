@@ -205,8 +205,8 @@ class RunsController extends Controller
         $Chart = array();
         foreach ($Runs as $run) {
             $app = $run['application'];
-            if ($a=='') continue;            
             $date = sprintf("%04d%02d",$run['year'],$run['month']);
+            if (isset($Mois[$date]))
             $order = $Mois[$date]['order'];
             $Chart[$app]['application'] = $app;
             $Chart[$app]['month'.$order] = $run['executions'];
@@ -297,6 +297,7 @@ class RunsController extends Controller
             $xml .= '<cell>'.$run['start_time'].'</cell>';
             $xml .= '<cell>'.$run['end_time'].'</cell>';
             $xml .= '<cell>'.$run['times'].'</cell>';
+            $xml .= '<cell>'.$run['status'].'</cell>';            
             $xml .= '<cell>'.$run['alarm'].'</cell>';
             $xml .= '<cell>'.$run['alarm_time'].'</cell>';
             $xml .= '<cell>'.$run['ack'].'</cell>';

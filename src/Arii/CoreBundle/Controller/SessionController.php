@@ -38,6 +38,15 @@ class SessionController extends Controller
                 $session->setRefDate( $request->query->get( 'ref_date' ) );                
             }
         }
+        
+        // Date
+        if ($request->query->get( 'day' )) 
+            $portal->setDay( $request->query->get( 'day' ) );
+        if ($request->query->get( 'month' ))
+            $portal->setMonth( $request->query->get( 'month' ) );
+        if ($request->query->get( 'year' )) 
+            $portal->setYear( $request->query->get( 'year' ) );
+        
         if ($request->query->get( 'ref_past' )) 
             $session->setRefPast( $request->query->get( 'ref_past' ) );
 
@@ -54,6 +63,9 @@ class SessionController extends Controller
         if ($request->query->get( 'app' )) 
             $portal->setApp( $request->query->get( 'app' ) );
         
+        if ($request->query->get( 'tag' )) 
+            $portal->setTag( $request->query->get( 'tag' ) );
+        
         if ($request->query->get( 'filter' )) {
             $portal->setUserFilterById( $request->query->get( 'filter' ) );
         }
@@ -63,12 +75,10 @@ class SessionController extends Controller
             $Databases = $session->getDatabases();
             if (isset($Databases[$db])) {
                 $session->setDatabase($Databases[$db]);
-                print $Databases[$db]['name'];
-                exit();
+                throw new \Exception($Databases[$db]['name']);
             }
             else {
-                print "<font color='red'>$db ?!</font>";
-                exit();
+                throw new \Exception($db);
             }
         }
         
@@ -76,8 +86,6 @@ class SessionController extends Controller
         if ($request->query->get( 'node' )) {
             $node = $request->query->get( 'node' );
             $portal->setNode($node);
-            print $node;
-            exit();
         }
         
         if ($request->query->get( 'current_dir' )) {

@@ -1,0 +1,7 @@
+myTree = globalLayout.cells("a").attachTree();
+myTree.setImagePath("{{ asset('/bundles/ariicore/images/tree/') }}");
+myTree.load("{{ url('xml_Report_tree_menu') }}");
+myTree.attachEvent("onClick", function(itemid){
+    window.location = "{{ url('arii_Report_index') }}"+itemid;
+    return true;
+});

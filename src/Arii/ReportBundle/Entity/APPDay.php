@@ -24,9 +24,9 @@ class APPDay
     /**
      * @var string
      *
-     * @ORM\Column(name="application", type="string", length=64, nullable=true)
+     * @ORM\Column(name="app", type="string", length=64, nullable=true)
      */
-    private $application;
+    private $app;
     
     /**
      * @var string
@@ -53,26 +53,26 @@ class APPDay
     }
 
     /**
-     * Set application
+     * Set app
      *
      * @param string $application
      * @return APPDay
      */
-    public function setApplication($application)
+    public function setApp($app)
     {
-        $this->application = $application;
+        $this->app = $app;
 
         return $this;
     }
 
     /**
-     * Get application
+     * Get app
      *
      * @return string 
      */
-    public function getApplication()
+    public function getApp()
     {
-        return $this->application;
+        return $this->app;
     }
 
     /**

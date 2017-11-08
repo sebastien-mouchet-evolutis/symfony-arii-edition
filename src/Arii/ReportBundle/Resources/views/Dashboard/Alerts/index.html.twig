@@ -1,0 +1,205 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var app="{{ appl }}",
+    env="{{ env }}",
+    job_class="{{ tag }}",
+    day = {{ day }},
+    month={{ month }},
+    year={{ year }},
+    day_past=-7;
+
+dhtmlxEvent(window,"load",function(){     
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
+    globalLayout.cells("a").setWidth(345);
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("b").setText("{{ "Runs by Day" | trans }}");
+    
+    {% include "AriiReportBundle:Default:tree.js.twig" %}    
+    {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
+
+    myLayout = globalLayout.cells("b").attachLayout("2U");
+    myLayout.cells("a").setWidth(600);
+    
+    myTab = myLayout.cells("a").attachTabbar();
+    myTab.addTab("apps","{{ "Application" | trans }}","100px", null, true);
+    myTab.addTab("chart","{{ "Hour" | trans }}","100px");
+    myTab.addTab("list","{{ "List" | trans }}","100px");
+
+    jobsChart =  myTab.cells("apps").attachChart({
+        view:"barH",
+        padding: {
+            left:200
+        },
+        value:"#data6#",
+        label:"#data1#",
+        tooltip: "#data2#: #data6#",
+        gradient:true,
+        border:false,
+        shadow: 0,
+        group: {
+            by: "#data4#",
+            map:{
+                data6:["#data6#","sum"]
+            }
+        },
+        sort:{
+            by:"#data6#",
+            dir:"desc",
+            as:"int"
+        },
+        xAxis:{
+            title:"{{ "" | trans }}",
+            margin: { 
+                left: 200
+            }            
+        },
+        yAxis:{
+            lines:true,
+            template: "#data4#",
+            width: 300
+        }
+    });
+    jobsChart.attachEvent("onItemClick",function(id){ 
+        app = id;
+        window.location = "{{ url('arii_Report_index') }}application?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past;
+    });    
+
+    myChart = myTab.cells("list").attachGrid();
+    myChart.selMultiRows = true;
+    myChart.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myChart.setHeader("{{ "Date" | trans }},{{ "Day" | trans }},{{ "Hour" | trans }},{{ "Env" | trans }},{{ "App" | trans }},{{ "Class" | trans }},{{ "Alarms" | trans }},{{ "Acks" | trans }}");
+    myChart.attachHeader("#text_filter,#select_filter,#select_filter,#select_filter,#select_filter,#select_filter,#numeric_filter,#numeric_filter");
+    myChart.setColAlign("right,right,right,right,right,right,right,right");
+    myChart.setInitWidths( "*,*,*,*,*,*,*,*" );    
+    myChart.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");
+    myChart.setColSorting("date,int,int,str,str,str,int,int");
+    myChart.init();
+    // temporaire
+    myChart.setColumnHidden(1,true);
+
+    myRuns = myLayout.cells("b").attachGrid();
+    myLayout.cells("b").setText("{{ "Runs" | trans }}");
+    myLayout.cells("b").collapse();
+    
+    myRuns.selMultiRows = true;
+    myRuns.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRuns.setHeader("{{ "Job" | trans }},{{ "Type" | trans }},{{ "Class" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Status" | trans }},{{ "Alarm" | trans }},{{ "Alarm time" | trans }},{{ "Ack" | trans }},{{ "Ack time" | trans }}");
+    myRuns.attachHeader("#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter");
+    myRuns.setColAlign("left,left,left,right,right,right,left,left,left,left");
+    // myRuns.setInitWidths( "*,80,80,140,140,140,0,0,150,0" );    
+    myRuns.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro,ro");
+    myRuns.setColSorting("str,str,str,date,date,int,str,date,str,date");
+    myRuns.init();
+
+    scatterChart =  myTab.cells("chart").attachChart({
+        view: "scatter",
+        xValue:"#data1#",
+        yValue:"#data2#",
+        label: function (obj) {
+            return obj.data4;
+        },
+        item:{
+               borderColor:"black",
+               color: 'red',
+               radius: function (obj) {
+                    return obj.data6;
+               }
+           },
+        legend:{
+            values:[
+                { text: "{{ "Alarms" | trans }}",color:"red" },
+            ],
+            valign:"middle",
+            width:90,
+            layout:"x"
+        },
+        xAxis:{
+                lines:true,
+                title:"{{ "Day" | trans }}",
+                margin: { 
+                    left: 200
+                },
+                start: 0,
+                end: 31,
+                step: 1
+        },
+        yAxis:{
+                lines:true,
+                title:"{{ "Hour" | trans }}",
+                margin: { 
+                    left: 200
+                },
+                start: 0,
+                end: 24,
+                step: 1
+        }
+    });
+
+    myRuns.attachEvent("onRowSelect",function(id){ 
+        jira = this.cells(id,6).getValue();
+        
+        if (jira=='') {
+            dhtmlx.message({
+                type: "Notice",
+                expire: 5000,
+                width: "500px",
+                text: "{{ "No jira !" | trans }}" });
+                return false;
+        }
+        window.open("https://di.vaudoise.ch/browse/"+jira);
+        return true;
+    });    
+    scatterChart.attachEvent("onItemClick",function(id, event){
+       var status = (event.target||event.srcElement);
+       var data = this.get(id);
+       Execution(data.data1);
+    });
+    scatterChart.attachEvent("onMouseMoving",function(e){
+       var target = (e.target||e.srcElement);
+          document.body.style.cursor = (target.tagName == "AREA"?"pointer":"default");
+    })
+    GlobalRefresh();
+});
+
+function GlobalRefresh() {
+    myLayout.cells("b").collapse();
+    globalLayout.cells("b").progressOn();
+    // esthetique
+    myChart.setColumnHidden(3,env!='*');
+    myChart.setColumnHidden(4,app!='*');
+    myChart.setColumnHidden(5,job_class!='*');
+    myChart.load("{{ url('xml_Report_alerts_hour_grid')}}?app="+app+"&env="+env+"&day="+day+"&month="+month+"&year="+year+"&day_past="+day_past,function(){
+        scatterChart.clearAll();
+        scatterChart.parse(myChart,"dhtmlxgrid");
+        jobsChart.clearAll();
+        jobsChart.parse(myChart,"dhtmlxgrid");
+        globalLayout.cells("b").progressOff();
+    });
+};
+
+function Execution(id) {
+    myLayout.cells("b").expand();
+    myLayout.cells("b").progressOn();
+    myRuns.clearAll();
+//    alert("{{ url('xml_Report_runs_hour_jobs') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past+"&day="+day);
+    myRuns.load("{{ url('xml_Report_runs_day_jobs') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past+"&day="+id, function () {
+        myLayout.cells("b").progressOff();
+    });
+}
+</script>
+{% endblock %}

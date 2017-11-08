@@ -167,8 +167,8 @@ class MessagesController extends Controller
                 'text'  => $Message->getMsgText(),
                 'type'  => $Message->getMsgType(),
                 'sent'  => $Message->getMsgSent()->format('Y-m-d H:i:s'),
-                'read'  => (empty($Message->getMsgSent())?null:$Message->getMsgSent()->format('Y-m-d H:i:s')),
-                'ack'   => (empty($Message->getMsgAck())?null:$Message->getMsgAck()->format('Y-m-d H:i:s'))
+                'read'  => ($Message->getMsgSent()?$Message->getMsgSent()->format('Y-m-d H:i:s'):''),
+                'ack'   => ($Message->getMsgAck()?$Message->getMsgAck()->format('Y-m-d H:i:s'):'')
             ]);
     }
 

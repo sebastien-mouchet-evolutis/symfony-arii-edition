@@ -57,10 +57,17 @@ dhtmlxEvent(window,"load",function(){
     
     globalLayout.cells("a").hideHeader();
     
-    myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
-    myToolbar.loadStruct("{{ url('xml_Report_calendars_toolbar') }}");
-    myToolbar.attachEvent( "onClick", function(id, value) {
+    {% include "AriiReportBundle:Default:tree.js.twig" %}    
+    {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
+
+    myLayout = globalLayout.cells("b").attachLayout("2U");
+    myLayout.cells("a").setWidth(345);
+    myLayout.cells("a").hideHeader();
+    
+    CalToolbar = myLayout.cells("b").attachToolbar();
+    CalToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    CalToolbar.loadStruct("{{ url('xml_Report_calendars_toolbar') }}");
+    CalToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {
             case "pdf":
                 scheduler.exportToPDF();
@@ -79,7 +86,7 @@ dhtmlxEvent(window,"load",function(){
         }
     });
     
-    myCals = globalLayout.cells("a").attachGrid();
+    myCals = myLayout.cells("a").attachGrid();
     myCals.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
     myCals.setHeader("{{ "Calendar" | trans }},{{ "Next" | trans }},&nbsp;");
     myCals.attachHeader("#text_filter,#text_filter,#master_checkbox");
@@ -96,14 +103,14 @@ dhtmlxEvent(window,"load",function(){
                 Calendars.push(this.cells(id,0).getValue());
             }
         });
-        globalLayout.cells("b").progressOn();
+        myLayout.cells("b").progressOn();
         dhtmlxAjax.post("{{ url('xml_Report_calendars_days') }}","cals="+Calendars.join(','), function(loader){
             scheduler.clearAll();
             scheduler.parse(loader.xmlDoc.responseText);        
-            globalLayout.cells("b").progressOff();
+            myLayout.cells("b").progressOff();
         } );        
     });
-    globalLayout.cells("b").hideHeader();    
+    myLayout.cells("b").hideHeader();    
 
     //scheduler.locale.labels.section_custom="Section";
     scheduler.config.details_on_create=false;
@@ -118,7 +125,7 @@ dhtmlxEvent(window,"load",function(){
     scheduler.locale.labels.month_tab = "{{ "Month" | trans }}";
     scheduler.locale.labels.week_tab = "{{ "Week" | trans }}";
     scheduler.locale.labels.year_tab = "{{ "Year" | trans }}";
-*/    scheduler.locale.labels.agenda_tab = "{{ "Agenda" | trans }}";
+*/  scheduler.locale.labels.agenda_tab = "{{ "Agenda" | trans }}";
 
     scheduler.config.multi_day = true;
 
@@ -138,17 +145,17 @@ dhtmlxEvent(window,"load",function(){
     }
     scheduler.config.readonly = true;
     
-    globalLayout.cells("a").progressOn();
-    globalLayout.cells("b").progressOn();
+    myLayout.cells("a").progressOn();
+    myLayout.cells("b").progressOn();
     myCals.load("{{ url('xml_Report_calendars_grid') }}?cals="+cals, function () {
         myCals.checkAll();
-        globalLayout.cells("a").progressOff();
+        myLayout.cells("a").progressOff();
         scheduler.load( "{{ url('xml_Report_calendars_days') }}?cals="+cals, function() {
-            globalLayout.cells("b").progressOff();
+            myLayout.cells("b").progressOff();
         } );
     });
     
-    timeline  = globalLayout.cells("b").attachScheduler( new Date() , null, 'scheduler_here', scheduler);
+    timeline  = myLayout.cells("b").attachScheduler( new Date() , null, 'scheduler_here', scheduler);
     scheduler.init('scheduler_here', new Date(),"month");
     
     scheduler.templates.event_bar_date = function(start,end,ev){

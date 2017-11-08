@@ -106,7 +106,7 @@ class DashboardController extends Controller
             $JobApps[$a]=$Job['jobs'];
         }
         arsort($JobApps);
-        
+     
         $Runs = $em->getRepository("AriiReportBundle:RUNMonth")->findApplicationsByMonths($end->format('Y')*100+$end->format('m'),$end->format('Y')*100+$end->format('m'),$env);
         $RunApps=[];
         foreach ($Runs as $Run) {
@@ -157,8 +157,8 @@ class DashboardController extends Controller
         ksort($AllApps);
 
         // Evenements du mois en cours
-        $Events = $em->getRepository("AriiCoreBundle:Event")->findEvents($last,$end);   
-        $Issues = [];
+        $Issues = [];        
+        $Events = $em->getRepository("AriiCoreBundle:Event")->findEvents($last,$end);        
         foreach ($Events as $Event) {
             $App = $portal->getApplicationById($Event['application_id']);
             if (empty($App)) 
@@ -177,7 +177,7 @@ class DashboardController extends Controller
             ];
         }
         ksort($Issues); 
-        
+    
         return $this->render('AriiReportBundle:Dashboard:bootstrap.html.twig', 
             array(  'month' => $month,
                     'month_str' => $month_str,

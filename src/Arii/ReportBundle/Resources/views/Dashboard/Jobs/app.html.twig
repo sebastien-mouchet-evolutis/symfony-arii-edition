@@ -1,0 +1,169 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var app="{{ appl }}",
+    env="{{ env }}",
+    month={{ month }},
+    year={{ year }},
+    day={{ day }},
+    day_past={{ day_past }};
+
+dhtmlxEvent(window,"load",function(){     
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
+    globalLayout.cells("a").setWidth(345);
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    
+    globalLayout.cells("a").hideHeader();
+    
+    {% include "AriiReportBundle:Default:tree.js.twig" %}    
+    {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
+
+    myLayout = globalLayout.cells("b").attachLayout("2U");
+    
+    // Graphique
+    myTabbar = myLayout.cells("a").attachTabbar();
+    myTabbar.addTab("chart","{{ "Applications" | trans }}","120px",null,true);
+    myTabbar.addTab("list","{{ "List" | trans }}","120px");
+   
+    appChart =  myTabbar.cells("chart").attachChart({
+        view:"barH",
+        padding: {
+            left:200
+        },
+        value:"#jobs#",
+        label:"#jobs#",
+        tooltip: "#application#: #jobs#",
+        gradient:true,
+        border:false,
+        pieInnerText: "#application#",
+        shadow: 0,
+        xAxis:{
+            title:"{{ "Jobs" | trans }}",
+            margin: { 
+                left: 200
+            }            
+        },
+        yAxis:{
+            lines:true,
+            template: "#application#",
+            width: 300
+        }
+    });
+    
+    myApps = myTabbar.cells("list").attachGrid();
+    myApps.selMultiRows = true;
+    myApps.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myApps.setHeader("{{ "Application" | trans }}");
+    myApps.attachHeader("#text_filter");
+    myApps.setColAlign("left");
+    myApps.setColTypes("ro");
+    myApps.setColSorting("str");
+    myApps.init();
+
+    globalLayout.cells("b").hideHeader();
+
+    detailLayout = myLayout.cells("b").attachLayout("2E");
+    globalLayout.cells("b").setText("{{ "Detail" | trans }}");
+
+    myJobs = detailLayout.cells("a").attachGrid();
+    myJobs.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myJobs.setHeader("{{ "Jobname" | trans }},{{ "Env" | trans }},{{ "Type" | trans }},{{ "Class" | trans }},{{ "Creation" | trans }},{{ "Last change" | trans }},{{ "First execution" | trans }},{{ "Last execution" | trans }},{{ "Deleted" | trans }},{{ "Updated" | trans }}");
+    myJobs.attachHeader("#text_filter,#select_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
+    // myJobs.attachFooter("#stat_count");
+    myJobs.setColAlign("left,center,center,center,right,right,right,right,right,right");
+    myJobs.setInitWidths("*,80,80,80,100,0,140,140,100,0");
+    myJobs.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro,ro");
+    myJobs.setColSorting("str,str,str,str,date,date,date,date,date,date");
+    myJobs.init();
+    myStatus = detailLayout.cells("a").attachStatusBar();
+
+    detailLayout.cells("b").setWidth("400");
+    scatterChart =  detailLayout.cells("b").attachChart({
+        view:"scatter",
+        xValue: "#day#",
+        yValue: "#hour#",
+        color: "#color#",
+        item:{
+            label: "#day# #hour#:00",
+            borderColor: "#color#" ,
+            color: "#color#",
+            type: 'r'
+        },
+        yAxis:{
+            title: "{{ "Hour" | trans }}"
+        },
+        xAxis:{
+            title: "{{ "Day" | trans }}",
+            template: ""
+        }
+    });
+            
+    appChart.attachEvent("onItemClick",function(id){ 
+        app = id;
+        myLayout.cells("b").expand();
+        myLayout.cells("b").progressOn();  
+        dhx4.ajax.get( "{{ url('arii_session_update') }}?app="+app, function() {
+            myRibbon.setItemText( "app", id );
+            Jobs(id); 
+        });
+    });
+    myApps.attachEvent("onRowSelect",function(id){ 
+        app = id;
+        myLayout.cells("b").expand();
+        myLayout.cells("b").progressOn();        
+        dhx4.ajax.get( "{{ url('arii_session_update') }}?app="+app, function() {
+            myRibbon.setItemText( "app", app );
+            Jobs(id); 
+        });
+    });
+
+    scatterChart.attachEvent("onItemClick", function(id){
+        myJobs.selectRowById(id);
+    });    
+
+    myLayout.cells("a").setWidth(600);
+    myLayout.cells("b").collapse();
+    GlobalRefresh();
+    
+    detailLayout.cells("a").hideHeader();
+    detailLayout.cells("b").hideHeader();
+});
+
+function GlobalRefresh() {
+    appChart.clearAll();
+    appChart.load( "{{ url('xml_Report_jobs_applications_chart') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past+"&limit=99", function() {
+        myTabbar.cells("chart").progressOff();
+        myApps.load( "{{ url('xml_Report_apps_grid') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past, function() {
+            // bug dhtmlxribbon, on ne peut pas changer l'image de l'option
+            myRibbon.loadStruct("{{ url('json_Report_ribbon') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past);    
+            myTabbar.cells("list").progressOff();
+        });
+    });
+};
+
+function Jobs(id) {
+    myJobs.clearAll();
+    scatterChart.clearAll();
+    app = id;
+    myJobs.load("{{ url('xml_Report_jobs_app_grid') }}?app="+app+"&env="+env, function () {
+        scatterChart.load("{{ url('xml_Report_jobs_scatter') }}?app="+app+"&env="+env, function () {
+            myLayout.cells("b").progressOff(); 
+        });
+        myLayout.cells("b").showHeader();
+        myLayout.cells("b").setText("{{ "Jobs" | trans }}"+" "+app+": "+myJobs.getRowsNum());
+    });    
+}
+</script>
+{% endblock %}

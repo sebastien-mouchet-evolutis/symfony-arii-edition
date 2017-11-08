@@ -3,6 +3,9 @@
 namespace Arii\ReportBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
  * JOBRepository
@@ -12,7 +15,90 @@ use Doctrine\ORM\EntityRepository;
  */
 class JOBRepository extends EntityRepository
 {
-    public function findJobs($job_name,$command,$description)
+   // Liste des applications 
+   public function findApps($start,$end,$env='*',$class='*',$detail=false)
+   {
+        $Filter = [ 'job.app' ];
+        if ($detail) {
+            if ($env=='*')
+                array_push($Filter,'job.env');
+            if ($class=='*')
+                array_push($Filter,'job.job_class');
+        }
+
+        //création de l'expression OR
+        $qb = $this->createQueryBuilder('job');
+        
+        $orModule = $qb->expr()->orx();
+        $orModule->add('job.created < :start');
+        $orModule->add('job.deleted > :end');
+
+        $f = implode(',',$Filter);
+        $qb = $qb->Select($f.',count(job.date) as jobs,count(job.created) as created,count(job.deleted) as deleted')
+             ->where($orModule)
+             ->groupBy($f)
+             ->orderBy('job.app','ASC')
+             ->setParameter('start', $start)
+             ->setParameter('end', $end);
+        
+        if ($env!='*')
+            $qb->andWhere('job.env = :env')
+                 ->setParameter('env', $env);        
+        if ($class!='*')
+            $qb->andWhere('job.job_class = :class')
+                 ->setParameter('class', $class);
+        
+        return $qb->getQuery()
+             ->getResult();
+   }   
+
+   // Regroupement par jours
+   public function findDates()
+   {
+        $driver = $this->_em->getConnection()->getDriver()->getName();
+        switch ($driver) {
+            case 'oci8':
+                $sql = "SELECT TRUNC(job.created) as JOB_CREATED,TRUNC(job.updated) as JOB_UPDATED,TRUNC(job.deleted) as JOB_DELETED,job.spooler_name,job.app,job.env,job.job_class,count(*) as jobs
+                        FROM REPORT_JOB job 
+                        GROUP BY TRUNC(job.created),TRUNC(job.updated),TRUNC(job.deleted),job.spooler_name,job.app,job.env,job.job_class";
+
+                $rsm = new ResultSetMapping();
+                $rsm->addScalarResult('JOB_CREATED', 'created');
+                $rsm->addScalarResult('JOB_UPDATED', 'updated');
+                $rsm->addScalarResult('JOB_DELETED', 'deleted');
+                $rsm->addScalarResult('ENV', 'env');
+                $rsm->addScalarResult('APP', 'app');
+                $rsm->addScalarResult('JOB_CLASS', 'job_class');
+                $rsm->addScalarResult('SPOOLER_NAME', 'spooler_name');
+                $rsm->addScalarResult('JOBS', 'jobs');
+                $query = $this->_em->createNativeQuery($sql, $rsm);
+                
+                return $query->getResult();
+                break;
+            default:
+                $qb = $this->createQueryBuilder('job')
+                     ->Select('TRUNC(job.created),TRUNC(job.updated),TRUNC(job.deleted),job.spooler_name,job.app,job.env,job.job_class,count(job) as jobs')
+                     ->groupBy('TRUNC(job.created),TRUNC(job.updated),TRUNC(job.deleted),job.spooler_name,job.app,job.env,job.job_class');
+        }
+        return $qb->getQuery()
+             ->getResult();
+   }   
+      
+   public function findFilters(\DateTime $start, \DateTime $end)
+   {
+        return $this->createQueryBuilder('job')
+            ->Select('job.spooler_name,job.app,job.env,job.job_class')
+            ->distinct(true)                
+            ->where('job.last_execution >= :start')
+            ->andWhere('job.last_execution <= :end')    
+            ->orderBy('job.spooler_name,job.app,job.env,job.job_class')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+   }
+   
+   public function findJobs($job_name,$command,$description)
    {
         $query = $this->createQueryBuilder('job')
             ->Select('job.id,job.job_name,job.description,job.command')
@@ -22,34 +108,6 @@ class JOBRepository extends EntityRepository
         
             return $query->getQuery()
                     ->getResult();
-   }
-
-   public function findApplications($time,$env='*')
-   {       
-       if (($env=='*') or ($env=='')) {
-            return $this->createQueryBuilder('job')
-                ->Select('job.app','app.title','count(job) as nb')
-                ->leftJoin('Arii\CoreBundle\Entity\Application','app',\Doctrine\ORM\Query\Expr\Join::WITH,'job.app = app.name')                
-                ->where('job.last_execution >= :time')
-                ->groupBy('job.app,app.title')
-                ->orderBy('nb','DESC')
-                ->setParameter('time', $time)
-                ->getQuery()
-                ->getResult();
-       }
-       else {
-            return $this->createQueryBuilder('job')
-                ->Select('job.app','app.title','count(job) as nb')
-                ->leftJoin('Arii\CoreBundle\Entity\Application','app',\Doctrine\ORM\Query\Expr\Join::WITH,'job.app = app.name')                
-                ->where('job.last_execution >= :time')
-                ->andWhere('job.env = :env')
-                ->groupBy('job.app,app.title')
-                ->orderBy('nb','DESC')
-                ->setParameter('time', $time)
-                ->setParameter('env', $env)
-                ->getQuery()
-                ->getResult();
-       }
    }
 
    public function findCreationByMonth(\DateTime $time, $env='P')
@@ -121,5 +179,20 @@ class JOBRepository extends EntityRepository
             ->getQuery()
             ->getResult();
    }
-   
+
+   public function findErrors()
+   {
+        $qb = $this->createQueryBuilder('job');
+        //création de l'expression OR
+        $orModule = $qb->expr()->orx();
+        $orModule->add($qb->expr()->isNull('job.app'));
+        $orModule->add($qb->expr()->isNull('job.env'));
+        $orModule->add($qb->expr()->isNull('job.job_class'));
+
+        $q = $qb->select('job')
+            ->where($orModule)
+            ->getQuery();    
+        return $q->execute();
+   }
+
 }

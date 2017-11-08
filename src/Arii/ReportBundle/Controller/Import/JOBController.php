@@ -7,9 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class JOBController extends Controller
 {
-        
-    /* Agrégation des jobs par applications et par jours */
-    public function JobDayAction()
+
+    /* Nettoyage des donness */
+    public function cleanAction()
     {       
         set_time_limit(3600);        
         ini_set('memory_limit','-1');
@@ -24,17 +24,14 @@ class JOBController extends Controller
         // limiter par spooler ? 
         $Jobs = $em->getRepository("AriiReportBundle:JOB")->findAll();
         $upd_job = 0;
-        foreach ($Jobs as $Job) {
-            
+        foreach ($Jobs as $Job) {           
             $update = 0;
             
             $created =  $Job->getCreated();
             $first_execution = $Job->getFirstExecution();
-
-            // on supprime les jobs executés une seule fois           
-            // if ($first_execution==$Job->getLastExecution()) continue;
             
             // correction
+            // La date de creation est au moins la date de derniere execution
             if ($first_execution and ($first_execution<$created)) {
                 $Job->setCreated($first_execution);
                 $start = $first_execution;
@@ -43,7 +40,9 @@ class JOBController extends Controller
             else {
                 $start = $created;
             }
-            // calcul de la fin
+            
+            // Si un job a une nouvelle date d'execution
+            // c'est qu'il n'est pas supprimé
             $deleted =  $Job->getDeleted();
             $last_execution = $Job->getLastExecution();
             $end = new \DateTime(); 
@@ -57,89 +56,123 @@ class JOBController extends Controller
                     $end = $deleted; 
                 }
             }
-           
-            // la fin est la derniere mise a jour
-            $interval = \DateInterval::createFromDateString('1 day');
-            if (!$start) {
-                print $Job->getJobName();
-            }
-            
-            if ($start <'2016-01-01')
-                $start = new \DateTime('2016-01-01');
-            
-            $period = new \DatePeriod($start, $interval, $end);
-
-            // Preparation des données
-            $app = $Job->getApp();
-            $env = $Job->getEnv();
-            $id = "$app#$env#".$Job->getSpoolerType().'#'.$Job->getSpoolerName();
-            
-            // on ajoute directement le created
-            $id_created = $id.'#'.$Job->getCreated()->format("Y-m-d");            
-            if (isset($Created[$id_created]))
-                $Created[$id_created]++;
-            else
-                $Created[$id_created]=1;
-            
-            // eventuellement le delete
-            if ($Job->getDeleted()) {
-                $id_deleted = $id.'#'.$Job->getDeleted()->format("Y-m-d");            
-                if (isset($Deleted[$id_deleted]))
-                    $Deleted[$id_deleted]++;
-                else
-                    $Deleted[$id_deleted]=1;                
-            }                
-
-            foreach ( $period as $dt ) {
-                $date = $dt->format( "Y-m-d" );
-                $id_date = $id.'#'.$date;
-                if (isset($Exist[$id_date]))
-                    $Exist[$id_date]++;
-                else 
-                    $Exist[$id_date]=1;                
-            }
             
             // On ajoute ce job sur tous les mois concernés
             if ($update>0) {
                 $upd_job++;
                 $em->persist($Job);                
             }
+        }       
+        $em->flush();        
+        return new Response("Job clean($upd_job) [".(time()-$debut)."]");
+    }
+ 
+    /* Agrégation des jobs par applications et par jours */
+    public function JobDayAction()
+    {       
+        set_time_limit(3600);        
+        ini_set('memory_limit','-1');
+        if ($this->container->has('profiler')) {
+            $this->container->get('profiler')->disable();
+        }             
+
+        $debut = time();
+
+        $em = $this->getDoctrine()->getManager();
+        // Il faut reparser tous les jobs
+        // limiter par spooler ? 
+        // $Jobs = $em->getRepository("AriiReportBundle:JOB")->findDates();
+        
+        $Jobs = $em->getRepository("AriiReportBundle:JOB")->findDates();
+        
+        $upd_job = 0;
+        $nb=0;
+
+        foreach ($Jobs as $Job) {
+            // Preparation des données
+            $app       = $Job['app'];
+            $env       = $Job['env'];
+            $job_class = $Job['job_class'];            
+            $spooler   = $Job['spooler_name'];            
+            
+            $created = new \Datetime($Job['created']);
+            $deleted = new \Datetime($Job['deleted']);
+            $updated = new \Datetime($Job['updated']);
+            $end = ($Job['deleted']!=''?$deleted:$updated);
+            
+            $id = "$app#$env#$job_class#$spooler";
+            
+            // on ajoute directement le created et le deleted
+            $id_created = $id.'#'.$created->format("Y-m-d");            
+            if (!isset($Created[$id_created]))
+                $Created[$id_created] = 0;
+            $Created[$id_created] += $Job['jobs'];
+
+            // si on est dans le delete
+            if ($Job['deleted']!='') {
+                $id_deleted = $id.'#'.$deleted->format("Y-m-d");            
+                if (!isset($Deleted[$id_deleted]))
+                    $Deleted[$id_deleted] = 0;
+                $Deleted[$id_deleted] += $Job['jobs'];
+            }
+            
+            // la fin est la derniere mise a jour
+            $interval = \DateInterval::createFromDateString('1 day');            
+            $period = new \DatePeriod($created, $interval, $end);
+            
+            // On remplit chaque jour pour toute la période
+            foreach ( $period as $dt ) {
+                $date = $dt->format( "Y-m-d" );
+                $id_date = $id.'#'.$date;
+                if (!isset($Exist[$id_date]))
+                    $Exist[$id_date]=0;
+                $Exist[$id_date] += $Job['jobs'];
+            }
         }
         
-        // flush des mises à jour
-        // si il y en a regulierement, c'est un problème.
-        if ($upd_job>0) {
-            print "{UPDATE JOB ($upd_job)}";
-            $em->flush();
-        }
-       
-        $new = 0;
-        foreach ($Exist as $k=>$jobs) {
-            
-            list($app,$env,$spooler_type,$spooler_name,$date) = explode('#',$k);
+        // Mise en base de donnees
+        $new=0;
+        
+        // Truncate        
+        $connection = $em->getConnection();
+        $dbPlatform = $connection->getDatabasePlatform();
+        $q = $dbPlatform->getTruncateTableSql('REPORT_JOB_DAY');
+        $connection->executeUpdate($q);
+        
+        foreach ($Exist as $k=>$jobs) {            
+            list($app,$env,$job_class,$spooler_name,$date) = explode('#',$k);
+/*            
             // truncate ?! si on truncate on perd l'historique
-            $JobDay = $em->getRepository("AriiReportBundle:JOBDay")->findOneBy(array('application'=>$app,'env' =>$env,'date'=>new \DateTime($date)));
+            $JobDay = $em->getRepository("AriiReportBundle:JOBDay")->findOneBy(
+                array( 
+                    'app'=>$app,
+                    'env' =>$env,
+                    'job_class' =>$job_class,
+                    'spooler_name' =>$spooler_name,
+                    'date' => new \DateTime($date)
+                )
+            );
 
             if (!$JobDay) {
                 $JobDay = new \Arii\ReportBundle\Entity\JOBDay();
                 $new++;
             }
+*/
+            $JobDay = new \Arii\ReportBundle\Entity\JOBDay();
+            $new++;
             
-            $JobDay->setApplication($app);            
+            $JobDay->setApp($app);            
             $JobDay->setEnv($env);
-            $JobDay->setDate(new \DateTime($date));
-            
-            $JobDay->setSpoolerType($spooler_type);
+            $JobDay->setJobClass($job_class);
             $JobDay->setSpoolerName($spooler_name);
-            
+            $JobDay->setDate(new \DateTime($date));                        
             $JobDay->setJobs($jobs);
             
-            $id = "$app#$env#$date";
+            $id =  "$app#$env#$job_class#$spooler_name#$date";         
             if (isset($Created[$id]))
-                $JobDay->setCreated($Created[$id]);
+                $JobDay->setCreated($Created[$id]);            
             if (isset($Deleted[$id]))
-                $JobDay->setDeleted($Deleted[$id]);
-            
+                $JobDay->setDeleted($Deleted[$id]);            
             $em->persist($JobDay);        
         }        
         $em->flush();        
@@ -210,6 +243,102 @@ class JOBController extends Controller
     
     /* COMPLEMENTS */
     public function RulesAction()
+    {                  
+        $debut=time();
+        set_time_limit(3600);
+        if ($this->container->has('profiler'))
+            $this->container->get('profiler')->disable();        
+        
+        // on recupere les regles par niveaux
+        
+        $Rules = $this->getDoctrine()->getRepository("AriiReportBundle:JOBRule")->findAll( [ 'priority' => 'ASC' ]);
+        $Trans = [];
+        foreach ($Rules as $Rule) {
+            array_push( $Trans,
+                [
+                    'input' => $this->Rule2Array($Rule->getInput()),
+                    'output' => $this->Rule2Array($Rule->getOutput())
+                ]
+            );            
+        }
+        
+        // On traite les jobs
+        $em = $this->getDoctrine()->getManager();
+        $Jobs = $this->getDoctrine()->getRepository("AriiReportBundle:JOB")->findAll( [], [ 'job_name' => 'ASC' ]);        
+        foreach ($Jobs as $Job) {
+            $Info['job_name'] = $Job->getJobName();
+            $Info['job_type'] = $Job->getJobType();
+            
+            // Application des règles 
+            foreach ($Trans as $T) {
+                $found=true;
+                $Values = [];
+                $n=0; // nombre de remplacement
+                foreach ($T['input'] as $var => $val) {
+                    if (!isset($Info[$var])) 
+                        throw new \Exception("'$var' ?!");
+                    if (preg_match("/$val/",$Info[$var],$Matches)) {
+                        array_shift($Matches);
+                        foreach($Matches as $Match) {
+                            $n++;
+                            $Values[$n] = $Match;
+                        }
+                    }
+                    else {
+                        $found=false;
+                    }
+                }
+                if ($found) {
+                    print $Info['job_name']." ";
+                    foreach ($T['output'] as $var => $val) {
+                        if (preg_match("/\{\{(\d*)\}\}/",$val,$Matches)) {
+                            array_shift($Matches);
+                            foreach ($Matches as $Match) {
+                                $val = str_replace('{{'.$Match.'}}',$Values[$Match],$val);
+                            }
+                        }
+                        print "[$var=>$val]";
+                        switch($var) {
+                            case 'app':
+                                $Job->setApp($val);
+                                break;
+                            case 'env':
+                                $Job->setEnv($val);
+                                break;
+                            case 'class':
+                                $Job->setJobClass($val);
+                                break;
+                            case 'job_type':
+                                $Job->setJobType($val);
+                                break;
+                            default:
+                                throw new \Exception("'$var' ?!");
+                        }
+                        $em->persist($Job);
+                    }
+                    print "\n";
+                }
+            }
+        }
+        $em->flush();        
+        return new Response("Ok!");
+    }
+    
+    private function Rule2Array($rule) {
+        $Result = [];
+        $Members = explode('&',$rule);
+        foreach ($Members as $Member) {
+            if (($p=strpos($Member,'='))>0) {
+                $var = substr($Member,0,$p);
+                $val = substr($Member,$p+1);
+                $Result[$var] = $val ;
+            }
+        }
+        return $Result;
+    }
+
+    // SQL
+    public function RulesOLDAction()
     {
         $debut=time();
         set_time_limit(3600);
@@ -225,5 +354,6 @@ class JOBController extends Controller
         }
         return new Response("Ok!");
     }
+    
 }
 

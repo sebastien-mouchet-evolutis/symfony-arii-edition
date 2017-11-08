@@ -36,6 +36,13 @@ class JOB
     private $job_type;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="job_class", type="string", length=24, nullable=true)
+     */
+    private $job_class;
+    
+    /**
      * @var string
      *
      * @ORM\Column(name="command", type="string", length=1024, nullable=true )
@@ -71,13 +78,6 @@ class JOB
     private $machine;
         
 // Origine    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="spooler_type", type="string", length=32)
-     */
-    private $spooler_type;
-    
     /**
      * @var string
      *
@@ -168,6 +168,7 @@ class JOB
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
     private $updated;
+    
     /**
      * Constructor
      */
@@ -233,6 +234,29 @@ class JOB
     }
 
     /**
+     * Set job_class
+     *
+     * @param string $jobClass
+     * @return JOB
+     */
+    public function setJobClass($jobClass)
+    {
+        $this->job_class = $jobClass;
+
+        return $this;
+    }
+
+    /**
+     * Get job_class
+     *
+     * @return string 
+     */
+    public function getJobClass()
+    {
+        return $this->job_class;
+    }
+
+    /**
      * Set command
      *
      * @param string $command
@@ -253,6 +277,29 @@ class JOB
     public function getCommand()
     {
         return $this->command;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return JOB
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
@@ -302,29 +349,6 @@ class JOB
     }
 
     /**
-     * Set user
-     *
-     * @param string $user
-     * @return JOB
-     */
-    public function setRunAs($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return string 
-     */
-    public function getRunAs()
-    {
-        return $this->user;
-    }
-    
-    /**
      * Set machine
      *
      * @param string $machine
@@ -345,29 +369,6 @@ class JOB
     public function getMachine()
     {
         return $this->machine;
-    }
-
-    /**
-     * Set spooler_type
-     *
-     * @param string $spoolerType
-     * @return JOB
-     */
-    public function setSpoolerType($spoolerType)
-    {
-        $this->spooler_type = $spoolerType;
-
-        return $this;
-    }
-
-    /**
-     * Get spooler_type
-     *
-     * @return string 
-     */
-    public function getSpoolerType()
-    {
-        return $this->spooler_type;
     }
 
     /**
@@ -417,26 +418,26 @@ class JOB
     }
 
     /**
-     * Set application
+     * Set app
      *
-     * @param string $application
+     * @param string $app
      * @return JOB
      */
-    public function setApplication($application)
+    public function setApp($app)
     {
-        $this->application = $application;
+        $this->app = $app;
 
         return $this;
     }
 
     /**
-     * Get application
+     * Get app
      *
      * @return string 
      */
-    public function getApplication()
+    public function getApp()
     {
-        return $this->application;
+        return $this->app;
     }
 
     /**
@@ -654,51 +655,5 @@ class JOB
     public function getBox()
     {
         return $this->box;
-    }
-
-    /**
-     * Set app
-     *
-     * @param string $app
-     * @return JOB
-     */
-    public function setApp($app)
-    {
-        $this->app = $app;
-
-        return $this;
-    }
-
-    /**
-     * Get app
-     *
-     * @return string 
-     */
-    public function getApp()
-    {
-        return $this->app;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return JOB
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string 
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 }

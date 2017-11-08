@@ -27,7 +27,7 @@ class RUNRepository extends EntityRepository
             ->getResult();
    }
     
-   public function findApplications(\DateTime $time, $env='P')
+   public function findApps(\DateTime $time, $env='P')
    {
         return $this->createQueryBuilder('run')
             ->Select('run.app','count(run) as nb')
@@ -56,43 +56,42 @@ class RUNRepository extends EntityRepository
 
    public function findRunHours(\DateTime $from, \DateTime $to)
    {
-/*       
-        $qb = $this->createQueryBuilder('run')
-            ->Select('DATE(run.start_time) as start_date,HOUR(run.start_time) as start_hour,run.env,run.app,run.spooler_name,run.alarm,count(run) as executions,count(run.alarm) as alarms,count(run.ack) as acks')
-            ->where('run.start_time >= :from')
-            ->andWhere('run.end_time < :to')
-            ->groupBy('start_date,start_hour,run.env,run.app,run.spooler_name,run.alarm')
-            ->setParameter('from', $from)
-            ->setParameter('to', $to);
-        $query=$qb->getQuery();
-        print $query->getSQL();
-        exit();
-        return $query->getResult();
-*/
         $driver = $this->_em->getConnection()->getDriver()->getName();
         switch ($driver) {
             case 'oci8':
-                $sql = "SELECT TRUNC(run.start_time) as start_date,EXTRACT(HOUR from run.start_time) as start_hour,run.env,run.app,run.spooler_name,run.alarm,count(run) as executions,count(run.alarm) as alarms,count(run.ack) as acks
-                        FROM REPORT_RUN run
+                $sql = "SELECT TRUNC(run.start_time) as start_date,EXTRACT(HOUR from run.start_time) as start_hour,run.spooler_name,run.status,count(run.status) as executions,count(run.alarm) as alarms,count(run.ack) as acks,
+                            job.env,job.app,job.job_class
+                        FROM REPORT_RUN run    
+                        LEFT JOIN REPORT_JOB job 
+                        ON run.job_id = job.id
                         WHERE run.start_time >= :from
-                        AND run.end_time < :to
-                        GROUP BY TRUNC(run.start_time),EXTRACT(HOUR from run.start_time),run.env,run.app,run.spooler_name,run.alarm";
+                        AND run.start_time <= :to
+                        GROUP BY TRUNC(run.start_time),EXTRACT(HOUR from run.start_time),run.spooler_name,job.env,job.app,job.job_class,run.status
+                        ORDER BY TRUNC(run.start_time),EXTRACT(HOUR from run.start_time),run.spooler_name,job.env,job.app,job.job_class,run.status";
 
                 $rsm = new ResultSetMapping();
                 $rsm->addScalarResult('START_DATE', 'start_date');
                 $rsm->addScalarResult('START_HOUR', 'start_hour');
                 $rsm->addScalarResult('ENV', 'env');
                 $rsm->addScalarResult('APP', 'app');
+                $rsm->addScalarResult('JOB_CLASS', 'job_class');
                 $rsm->addScalarResult('SPOOLER_NAME', 'spooler_name');
+                $rsm->addScalarResult('STATUS', 'status');
                 $rsm->addScalarResult('EXECUTIONS', 'executions');
                 $rsm->addScalarResult('ALARMS', 'alarms');
                 $rsm->addScalarResult('ACKS', 'acks');
                 $query = $this->_em->createNativeQuery($sql, $rsm)
                         ->setParameter('from', $from )
                         ->setParameter('to', $to );
+/*                
+                        print $query->getSQL();
+                        print_r($query->getParameters());
+                        exit();
+*/                
                 return $query->getResult();
                 break;
             default:
+                // a aligner avec Oracle (jointure avec job et ajout du job_class)
                 return $this->createQueryBuilder('run')
                     ->Select('DATE(run.start_time) as start_date,HOUR(run.start_time) as start_hour,run.env,run.app,run.spooler_name,run.alarm,count(run) as executions,count(run.alarm) as alarms,count(run.ack) as acks')
                     ->where('run.start_time >= :from')
@@ -106,6 +105,7 @@ class RUNRepository extends EntityRepository
         }
    }
    
+ // Obsolete  
    public function findRunDays(\DateTime $time)
    {
 
@@ -122,15 +122,18 @@ class RUNRepository extends EntityRepository
         $driver = $this->_em->getConnection()->getDriver()->getName();
         switch ($driver) {
             case 'oci8':
-                $sql = "SELECT TRUNC(run.start_time) as start_date,run.env,run.app,run.spooler_name,run.alarm,count(run) as executions,count(run.alarm) as alarms,count(run.ack) as acks
-                        FROM REPORT_RUN run
-                        WHERE run.start_time >= :time
-                        GROUP BY TRUNC(run.start_time),run.env,run.app,run.spooler_name,run.alarm";
+                $sql = "SELECT TO_CHAR(run.end_time,'YYYY-MM-DD HH') as start_date,run.spooler_name,run.alarm,job.env,job.app,job.job_class as \"class\",count(run) as executions,count(run.alarm) as alarms,count(run.ack) as acks
+                        FROM REPORT_RUN run 
+                        LEFT JOIN REPORT_JOB job 
+                        ON run.job_id = job.id
+                        WHERE run.end_time >= :time
+                        GROUP BY TO_CHAR(run.end_time,'YYYY-MM-DD HH'),run.spooler_name,run.alarm,job.env,job.app,job.job_class";
 
                 $rsm = new ResultSetMapping();
                 $rsm->addScalarResult('START_DATE', 'start_date');
                 $rsm->addScalarResult('ENV', 'env');
                 $rsm->addScalarResult('APP', 'app');
+                $rsm->addScalarResult('CLASS', 'class');
                 $rsm->addScalarResult('SPOOLER_NAME', 'spooler_name');
                 $rsm->addScalarResult('EXECUTIONS', 'executions');
                 $rsm->addScalarResult('ALARMS', 'alarms');
@@ -141,7 +144,8 @@ class RUNRepository extends EntityRepository
                 break;
             default:
                 return $this->createQueryBuilder('run')
-                    ->Select('MONTH(run.start_time) as mois,run.app,run.env,run.alarm,run.ack,count(run) as nb')
+                    ->Select('MONTH(run.start_time) as mois,job.app,job.env,job.job_class as class,run.alarm,run.ack,count(run) as nb')
+                    ->leftJoin('Arii\ReportBundle\Entity\JOB','job',\Doctrine\ORM\Query\Expr\Join::WITH,'run.job = job.id')
                     ->where('run.start_time > :time')
                     ->groupBy('mois,run.app,run.env,run.alarm,run.ack')
                     ->setParameter('time', $time)
@@ -149,6 +153,31 @@ class RUNRepository extends EntityRepository
                     ->getResult();
                 break;
         }
+   }
+
+   public function findExecutionsByAppAndDay($start,$end,$app,$env='*',$class='*')
+   {
+        $query = $this->createQueryBuilder('run')
+            ->Select('job.job_name,job.env,job.job_type,job.job_class as class,run.start_time,run.end_time,run.status,run.alarm,run.alarm_time,run.ack')
+            ->leftJoin('Arii\ReportBundle\Entity\JOB','job',\Doctrine\ORM\Query\Expr\Join::WITH,'run.job = job.id')
+            ->where('run.end_time >= :start')
+            ->andWhere('run.end_time <= :end')
+            ->andWhere('job.app = :app')
+            ->orderBy('run.start_time')
+            ->setParameter('app', $app)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+        
+        if ($env != '*')
+            $query->andWhere('job.env = :env')
+                ->setParameter('env', $env);
+
+        if ($class != '*')
+            $query->andWhere('job.job_class = :class')
+                ->setParameter('class', $class);
+                
+        return $query->getQuery()
+            ->getResult();
    }
    
    public function findExecutions(\DateTime $time, $env='P')
@@ -168,11 +197,12 @@ class RUNRepository extends EntityRepository
    {       
         if (($app=='*') and ($env=='*')) {       
             return $this->createQueryBuilder('run')
-                ->Select('run.job_name,run.alarm,run.ack,run.ack_time,min(run.start_time) as start_time,max(run.end_time) as end_time,count(run) as times,max(run.alarm_time) as alarm_time')
+                ->Select('run.job_name,run.status,run.alarm,run.ack,run.ack_time,min(run.start_time) as start_time,max(run.end_time) as end_time,count(run) as times,max(run.alarm_time) as alarm_time')
                 ->where('run.start_time >= :start_time')
                 ->andWhere('run.end_time <= :end_time')
-                ->andWhere('run.alarm is not null')
-                ->groupBy('run.job_name,run.alarm,run.ack,run.ack_time')
+                ->andWhere('run.end_time is not null')                    
+                ->groupBy('run.job_name,run.status,run.alarm,run.ack,run.ack_time')
+                ->orderBy('run.job_name,run.status,run.alarm,run.ack')
                 ->setParameter('start_time', $start_time)
                 ->setParameter('end_time', $end_time)
                 ->getQuery()
@@ -180,12 +210,13 @@ class RUNRepository extends EntityRepository
         }
         elseif ($env=='*') {        
             return $this->createQueryBuilder('run')
-                ->Select('run.job_name,run.alarm,run.ack,run.ack_time,min(run.start_time) as start_time,max(run.end_time) as end_time,count(run) as times,max(run.alarm_time) as alarm_time')
+                ->Select('run.job_name,run.status,run.alarm,run.ack,run.ack_time,min(run.start_time) as start_time,max(run.end_time) as end_time,count(run) as times,max(run.alarm_time) as alarm_time')
                 ->where('run.start_time >= :start_time')
                 ->andWhere('run.end_time <= :end_time')
-                ->andWhere('run.alarm is not null')
                 ->andWhere('run.app = :app')
-                ->groupBy('run.job_name,run.alarm,run.ack,run.ack_time')
+                ->andWhere('run.end_time is not null')                    
+                ->groupBy('run.job_name,run.status,run.alarm,run.ack,run.ack_time')
+                ->orderBy('run.job_name,run.status,run.alarm,run.ack')
                 ->setParameter('start_time', $start_time)
                 ->setParameter('end_time', $end_time)
                 ->setParameter('app', $app)
@@ -194,12 +225,13 @@ class RUNRepository extends EntityRepository
         }
         elseif ($app=='*') {   
             return $this->createQueryBuilder('run')
-                ->Select('run.job_name,run.alarm,run.ack,run.ack_time,min(run.start_time) as start_time,max(run.end_time) as end_time,count(run) as times,max(run.alarm_time) as alarm_time')
+                ->Select('run.job_name,run.status,run.alarm,run.ack,run.ack_time,min(run.start_time) as start_time,max(run.end_time) as end_time,count(run) as times,max(run.alarm_time) as alarm_time')
                 ->where('run.start_time >= :start_time')
                 ->andWhere('run.end_time <= :end_time')
-                ->andWhere('run.alarm is not null')
                 ->andWhere('run.env = :env')
-                ->groupBy('run.job_name,run.alarm,run.ack,run.ack_time')
+                ->andWhere('run.end_time is not null')                    
+                ->groupBy('run.job_name,run.status,run.alarm,run.ack,run.ack_time')
+                ->orderBy('run.job_name,run.status,run.alarm,run.ack')
                 ->setParameter('start_time', $start_time)
                 ->setParameter('end_time', $end_time)
                 ->setParameter('env', $env)
@@ -208,13 +240,14 @@ class RUNRepository extends EntityRepository
         }
         else {
             return $this->createQueryBuilder('run')
-                ->Select('run.job_name,run.alarm,run.ack,max(run.ack_time) as ack_time,min(run.start_time) as start_time,max(run.end_time) as end_time,count(run) as times,max(run.alarm_time) as alarm_time')
+                ->Select('run.job_name,run.status,run.alarm,run.ack,max(run.ack_time) as ack_time,min(run.start_time) as start_time,max(run.end_time) as end_time,count(run) as times,max(run.alarm_time) as alarm_time')
                 ->where('run.start_time >= :start_time')
                 ->andWhere('run.end_time <= :end_time')
-                ->andWhere('run.alarm is not null')
                 ->andWhere('run.env = :env')
                 ->andWhere('run.app = :app')
-                ->groupBy('run.job_name,run.alarm,run.ack')
+                ->andWhere('run.end_time is not null')                    
+                ->groupBy('run.job_name,run.status,run.alarm,run.ack')
+                ->orderBy('run.job_name,run.status,run.alarm,run.ack')
                 ->setParameter('start_time', $start_time)
                 ->setParameter('end_time', $end_time)
                 ->setParameter('env', $env)
@@ -242,7 +275,7 @@ class RUNRepository extends EntityRepository
             ->getResult();
    }
    
-   public function findExecutionsByMonthAndApp(\DateTime $start_time, \DateTime $end_time, $app='%', $env='P')
+   public function findExecutionsByMonthAndApp($start_time,$end_time, $app='%', $env='P')
    {
         return $this->createQueryBuilder('run')
             ->Select('run.job_name,run.alarm,run.ack,run.start_time,run.end_time,run.alarm,run_ack')
@@ -258,22 +291,6 @@ class RUNRepository extends EntityRepository
             ->getResult();
    }
 
-   public function findExecutionsByDayAndApp(\DateTime $start_time, \DateTime $end_time, $app='%', $env='P')
-   {
-        return $this->createQueryBuilder('run')
-            ->Select('run.job_name,run.alarm,run.ack,run.start_time,run.end_time,run.alarm,run_ack')
-            ->where('run.start_time >= :start_time')
-            ->andWhere('run.start_time <= :end_time')
-            ->andWhere('run.env = :env')
-            ->andWhere('run.app = :app')
-            ->setParameter('start_time', $start_time)
-            ->setParameter('end_time', $end_time)
-            ->setParameter('app', $app)
-            ->setParameter('env', $env)
-            ->getQuery()
-            ->getResult();
-   }
- 
    public function findMinDates()
    {
         return $this->createQueryBuilder('run')
@@ -317,17 +334,21 @@ class RUNRepository extends EntityRepository
             ->getResult();
    }
 
-   public function UpdateAppEnv($jobs,$app,$env)
+   public function UpdateJobs($jobs,$app,$env,$type,$class)
    {
         $qb = $this->createQueryBuilder('run');
         //création de l'expression OR
         $orModule = $qb->expr()->orx();
         $orModule->add($qb->expr()->isNull('run.app'));
         $orModule->add($qb->expr()->isNull('run.env'));
+        $orModule->add($qb->expr()->isNull('run.job_type'));
+        $orModule->add($qb->expr()->isNull('run.job_class'));
 
         $q = $qb->update('Arii\ReportBundle\Entity\RUN','run')
             ->set('run.env',$qb->expr()->literal($env))
             ->set('run.app',$qb->expr()->literal($app))
+            ->set('run.env',$qb->expr()->literal($type))
+            ->set('run.app',$qb->expr()->literal($class))
             ->where('run.job_name like :jobs')
             ->andWhere($orModule)
             ->setParameter('jobs', $jobs)   
@@ -360,6 +381,16 @@ class RUNRepository extends EntityRepository
    {
         return $this->createQueryBuilder('run')
             ->Select('count(run) as NB,max(run.start_time) as lastUpdate')
+            ->getQuery()
+            ->getResult();
+   }
+
+   public function findErrors()
+   {
+        return $this->createQueryBuilder('run')
+            ->Select('run')
+            ->where('run.job is null')
+            ->orderBy('run.job_name')
             ->getQuery()
             ->getResult();
    }

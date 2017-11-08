@@ -36,49 +36,49 @@ class User extends BaseUser
     /**
      ** @var string $first_name
     *
-    * @ORM\Column(name="phone_number", type="string", length=20)
+    * @ORM\Column(name="phone_number", type="string", length=20, nullable=true)
     */
     private $phone_number;
     
     /**
      ** @var string $first_name
     *
-    * @ORM\Column(name="sms", type="string", length=64)
+    * @ORM\Column(name="sms", type="string", length=64, nullable=true)
     */
     private $sms;
 
     /**
      ** @var string $pushbullet_token
     *
-    * @ORM\Column(name="pushbullet_token", type="string", length=64)
+    * @ORM\Column(name="pushbullet_token", type="string", length=64, nullable=true)
     */
     private $pushbullet_token;
 
     /**
      ** @var string $pushbullet_devices
     *
-    * @ORM\Column(name="pushbullet_devices", type="string", length=255)
+    * @ORM\Column(name="pushbullet_devices", type="string", length=255, nullable=true)
     */
     private $pushbullet_devices;
 
     /**
      ** @var string $notify_info
     *
-    * @ORM\Column(name="notify_info", type="string", length=255)
+    * @ORM\Column(name="notify_info", type="string", length=255, nullable=true)
     */
     private $notify_info;
 
     /**
      ** @var string $notify_warning
     *
-    * @ORM\Column(name="notify_warning", type="string", length=255)
+    * @ORM\Column(name="notify_warning", type="string", length=255, nullable=true)
     */
     private $notify_warning;
 
     /**
      ** @var string $notify_alert
     *
-    * @ORM\Column(name="notify_alert", type="string", length=255)
+    * @ORM\Column(name="notify_alert", type="string", length=255, nullable=true)
     */
     private $notify_alert;    
     

@@ -13,6 +13,38 @@ use Doctrine\ORM\EntityRepository;
 class JOBMonthRepository extends EntityRepository
 {
 
+   // Liste des applications 
+   public function findApps($year,$month,$env='*',$class='*')
+   {
+        $Filter = [ 'job.app' ];
+/* Pour le detail
+        if ($env=='*')
+            array_push($Filter,'job.env');
+        if ($class=='*')
+            array_push($Filter,'job.job_class');
+*/        
+        $f = implode(',',$Filter);
+        $qb = $this->createQueryBuilder('job')
+             ->Select($f.',sum(job.jobs) as jobs')
+             ->where('job.year = :year')
+             ->andWhere('job.month = :month')                
+             ->groupBy($f)
+             ->orderBy('job.app','ASC')
+             ->setParameter('year', $year)
+             ->setParameter('month', $month);
+        
+        if ($env!='*')
+            $qb->andWhere('job.env = :env')
+                 ->setParameter('env', $env);        
+        if ($class!='*')
+            $qb->andWhere('job.job_class = :class')
+                 ->setParameter('class', $class);
+        
+        return $qb->getQuery()
+             ->getResult();
+   }   
+   
+    
    public function findJobsByMonth($start, $end, $env='P', $app='*')
    {
        if ($app=='*') {
@@ -31,11 +63,11 @@ class JOBMonthRepository extends EntityRepository
        }
        else {
             return $this->createQueryBuilder('job')
-                 ->Select('job.year,job.month,job.application,job.jobs,job.created,job.deleted')
+                 ->Select('job.year,job.month,job.app,job.jobs,job.created,job.deleted')
                  ->where('job.year*100+job.month >= :start')
                  ->andWhere('job.year*100+job.month <= :end')
                  ->andWhere('job.env = :env')
-                 ->andWhere('job.application = :app')
+                 ->andWhere('job.app = :app')
                  ->orderBy('job.year,job.month')
                  ->setParameter('start', $start)
                  ->setParameter('end', $end)
@@ -46,43 +78,14 @@ class JOBMonthRepository extends EntityRepository
        }
    }
 
-   // 19.05.2017: suppression des applications inactives
-   public function findApplications($year,$month,$env='*')
-   {
-       if (($env=='*') or ($env=='')) {
-            return $this->createQueryBuilder('job')
-                ->Select('job.application','job.jobs')
-                ->where('job.year = :year')
-                ->andWhere('job.month = :month')
-                ->orderBy('job.jobs','DESC')
-                ->setParameter('year', $year)
-                ->setParameter('month', $month)
-                ->getQuery()
-                ->getResult();
-       }
-       else {
-            return $this->createQueryBuilder('job')
-                ->Select('job.application','job.jobs')
-                ->where('job.year = :year')
-                ->andWhere('job.month = :month')                        
-                ->andWhere('job.env = :env')
-                ->orderBy('job.jobs','DESC')
-                ->setParameter('year', $year)
-                ->setParameter('month', $month)
-                ->setParameter('env', $env)
-                ->getQuery()
-                ->getResult();
-       }
-   }   
-   
-   public function findApplicationsByMonths($start,$end, $env='P')
+   public function findAppsByMonths($start,$end, $env='P')
    {
         if ($env=='*') {
             $qb = $this->createQueryBuilder('job')
-                ->Select('job.year,job.month,job.application,job.jobs,job.created,job.deleted')
+                ->Select('job.year,job.month,job.app,job.jobs,job.created,job.deleted')
                  ->where('(job.year*100+job.month) >= :start')
                  ->andWhere('(job.year*100+job.month) <= :end')
-                ->orderBy('job.year,job.month,job.application,job.jobs','DESC')
+                ->orderBy('job.year,job.month,job.app,job.jobs','DESC')
                 ->setParameter('start', $start)
                 ->setParameter('end', $end);
                 /*
@@ -94,11 +97,11 @@ class JOBMonthRepository extends EntityRepository
         }
         else {
             $qb = $this->createQueryBuilder('job')
-                ->Select('job.year,job.month,job.application,job.jobs,job.created,job.deleted')
+                ->Select('job.year,job.month,job.app,job.jobs,job.created,job.deleted')
                  ->where('(job.year*100+job.month) >= :start')
                  ->andWhere('(job.year*100+job.month) <= :end')
                 ->andWhere('job.env = :env')                        
-                ->orderBy('job.year,job.month,job.application,job.jobs','DESC')
+                ->orderBy('job.year,job.month,job.app,job.jobs','DESC')
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)            
                 ->setParameter('env', $env);

@@ -27,28 +27,46 @@ class BKP_REF2Controller extends Controller
         $inst = strtolower($request->query->get( 'inst' ));
         $db   = $request->query->get( 'db' );
 
+        $inst = str_replace('\\','/',$inst);
+        
         print "REF: $ref\n";
         print "INS: $inst\n";
         print "DB:  $db\n";
 
         $em = $this->getDoctrine()->getManager();
-        $Reference = $em->getRepository('AriiReportBundle:BKP_REF')->findOneBy(
-            [   'db_instance' => $inst,
-                'db_name' => $db ] );
-
         $response = new Response(); 
-        if (!$Reference) {
-            print "ERROR!!";
-            $response->setStatusCode( '417' );
-            return $response;
-        }
-        print "ENV: ".$Reference->getDbEnv()."\n";
-        print "REF: ".$Reference->getDbDesc()."\n";
-        print "DEL: ".($Reference->getDeleted()?$Reference->getDeleted()->format('Y-m-d H:i'):'')."\n";
-
-        $Reference->setDeleted(new \DateTime());
-        $Reference->setDbDesc($ref);
         
+        // Toutes les bases de donnees de l'instance
+        if ($db=='*') {
+            $References = $em->getRepository('AriiReportBundle:BKP_REF')->findBy(
+                [   'db_instance' => $inst ] );
+            if (!$References) {
+                print "[INST: $inst]";
+                $response->setStatusCode( '417' );
+                return $response;
+            }
+        }
+        else {
+            $References = $em->getRepository('AriiReportBundle:BKP_REF')->findBy(
+                [   'db_instance' => $inst,
+                    'db_name' => $db ] );
+            if (!$References) {
+                print "[INST: $inst][DB: $db]";
+                $response->setStatusCode( '417' );
+                return $response;
+            }
+        }
+        
+        
+        foreach ($References as $Reference) {
+            print "ENV: ".$Reference->getDbEnv()."\n";
+            print "DB : ".$Reference->getDbName()."\n";            
+            print "REF: ".$Reference->getDbDesc()."\n";
+            print "DEL: ".($Reference->getDeleted()?$Reference->getDeleted()->format('Y-m-d H:i'):'')."\n";
+
+            $Reference->setDeleted(new \DateTime());
+            $Reference->setDbDesc($ref);
+        }
         $em->persist($Reference);
         $em->flush();
         

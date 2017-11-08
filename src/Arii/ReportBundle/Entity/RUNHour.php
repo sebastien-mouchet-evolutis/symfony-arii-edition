@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Autosys
  *
- * @ORM\Table(name="REPORT_RUN_HOUR",indexes={@ORM\index(name="search_idx", columns={"application", "env", "run_date", "run_hour"})})
+ * @ORM\Table(name="REPORT_RUN_HOUR")
  * @ORM\Entity(repositoryClass="Arii\ReportBundle\Entity\RUNHourRepository")
  */
 class RUNHour
@@ -24,9 +24,9 @@ class RUNHour
     /**
      * @var string
      *
-     * @ORM\Column(name="application", type="string", length=64, nullable=true)
+     * @ORM\Column(name="app", type="string", length=64, nullable=true)
      */
-    private $application;
+    private $app;
     
     /**
      * @var string
@@ -35,6 +35,13 @@ class RUNHour
      */
     private $env;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="job_class", type="string", length=24, nullable=true)
+     */
+    private $job_class;
+    
     /**
      * @var date
      *
@@ -55,14 +62,6 @@ class RUNHour
      * @ORM\Column(name="spooler_name", type="string", length=32, nullable=true)
      */
     private $spooler_name;
-    
-    // Instance ou Id du spooler
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="spooler_type", type="string", length=12, nullable=true)
-     */
-    private $spooler_type;
     
     /**
      * @var string
@@ -103,26 +102,26 @@ class RUNHour
     }
 
     /**
-     * Set application
+     * Set app
      *
-     * @param string $application
+     * @param string $app
      * @return RUNDay
      */
-    public function setApplication($application)
+    public function setApp($app)
     {
-        $this->application = $application;
+        $this->app = $app;
 
         return $this;
     }
 
     /**
-     * Get application
+     * Get app
      *
      * @return string 
      */
-    public function getApplication()
+    public function getApp()
     {
-        return $this->application;
+        return $this->app;
     }
 
     /**
@@ -218,29 +217,6 @@ class RUNHour
     }
 
     /**
-     * Set spooler_type
-     *
-     * @param string $spoolerType
-     * @return RUNDay
-     */
-    public function setSpoolerType($spoolerType)
-    {
-        $this->spooler_type = $spoolerType;
-
-        return $this;
-    }
-
-    /**
-     * Get spooler_type
-     *
-     * @return string 
-     */
-    public function getSpoolerType()
-    {
-        return $this->spooler_type;
-    }
-
-    /**
      * Set executions
      *
      * @param string $executions
@@ -331,4 +307,29 @@ class RUNHour
     {
         return $this->acks;
     }
+    
+    /**
+     * Set job_class
+     *
+     * @param string $jobClass
+     * @return JOB
+     */
+    public function setJobClass($jobClass)
+    {
+        $this->job_class = $jobClass;
+
+        return $this;
+    }
+
+    /**
+     * Get job_class
+     *
+     * @return string 
+     */
+    public function getjobClass()
+    {
+        return $this->job_class;
+    }
+
+    
 }

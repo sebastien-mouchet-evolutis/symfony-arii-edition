@@ -24,9 +24,9 @@ class RUNDay
     /**
      * @var string
      *
-     * @ORM\Column(name="application", type="string", length=64, nullable=true)
+     * @ORM\Column(name="app", type="string", length=64, nullable=true)
      */
-    private $application;
+    private $app;
     
     /**
      * @var string
@@ -35,6 +35,13 @@ class RUNDay
      */
     private $env;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="job_class", type="string", length=24, nullable=true)
+     */
+    private $job_class;
+    
     /**
      * @var datetime
      *
@@ -49,39 +56,31 @@ class RUNDay
      */
     private $spooler_name;
     
-    // Instance ou Id du spooler
     /**
      * @var string
      *
-     * @ORM\Column(name="spooler_type", type="string", length=12, nullable=true)
-     */
-    private $spooler_type;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="executions", type="integer")
+     * @ORM\Column(name="executions", type="integer", nullable=true)
      */
     private $executions=0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="warnings", type="integer")
+     * @ORM\Column(name="warnings", type="integer", nullable=true)
      */
     private $warnings=0;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="alarms", type="integer")
+     * @ORM\Column(name="alarms", type="integer", nullable=true)
      */
     private $alarms=0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="acks", type="integer")
+     * @ORM\Column(name="acks", type="integer", nullable=true)
      */
     private $acks=0;
 
@@ -96,26 +95,26 @@ class RUNDay
     }
 
     /**
-     * Set application
+     * Set app
      *
-     * @param string $application
+     * @param string $app
      * @return RUNDay
      */
-    public function setApplication($application)
+    public function setApp($app)
     {
-        $this->application = $application;
+        $this->app = $app;
 
         return $this;
     }
 
     /**
-     * Get application
+     * Get app
      *
      * @return string 
      */
-    public function getApplication()
+    public function getApp()
     {
-        return $this->application;
+        return $this->app;
     }
 
     /**
@@ -185,29 +184,6 @@ class RUNDay
     public function getSpoolerName()
     {
         return $this->spooler_name;
-    }
-
-    /**
-     * Set spooler_type
-     *
-     * @param string $spoolerType
-     * @return RUNDay
-     */
-    public function setSpoolerType($spoolerType)
-    {
-        $this->spooler_type = $spoolerType;
-
-        return $this;
-    }
-
-    /**
-     * Get spooler_type
-     *
-     * @return string 
-     */
-    public function getSpoolerType()
-    {
-        return $this->spooler_type;
     }
 
     /**
@@ -301,4 +277,28 @@ class RUNDay
     {
         return $this->acks;
     }
+        
+    /**
+     * Set job_class
+     *
+     * @param string $jobClass
+     * @return JOB
+     */
+    public function setJobClass($jobClass)
+    {
+        $this->job_class = $jobClass;
+
+        return $this;
+    }
+
+    /**
+     * Get job_class
+     *
+     * @return string 
+     */
+    public function getjobClass()
+    {
+        return $this->job_class;
+    }
+
 }

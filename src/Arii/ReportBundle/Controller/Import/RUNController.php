@@ -13,6 +13,8 @@ class RUNController extends Controller
     }
     
     // Mise a jour des apps
+    // Obsolete
+    // un module ne doit pas changer le core.
     public function APPAction()            
     {
         $em = $this->getDoctrine()->getManager();
@@ -39,6 +41,7 @@ class RUNController extends Controller
     
     // Mise a jour des jobs
     // on peut les faire par cycle !
+    // Utile seulement pour un rattrapage
     public function JOBAction()            
     {
         $debut = time();
@@ -87,47 +90,54 @@ class RUNController extends Controller
         return new Response(time()-$debut);
     }
 
-    public function RunHourAction($force=true)
+    public function RunHourAction($force=1,$html=0)
     {
         // par défaut
         $request = Request::createFromGlobals();
-        // reprise sur 10j
-        if ($request->query->get( 'to' )=='')
-            $to = new \DateTime($request->query->get( 'to' ));
-        else
-            $to = new \DateTime();            
-        
-        if ($request->query->get( 'from' )=='') {
-            $from = clone $to;
-            $from->modify('-10 days');
+        // Mode automatique, reprise sur la semaine
+        if ($request->query->get( 'day' )=='') {
+            $end = new \DateTime();
+            $start = clone $end;
+            $start->modify('-7 days');
         }
-        else
-            $from = new \DateTime($request->query->get( 'from' ));
+        else {
+            $filter = $this->container->get('report.filter');
+            list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
+                $request->query->get( 'env' ),
+                $request->query->get( 'app' ),
+                $request->query->get( 'day_past' ),                
+                $request->query->get( 'day' ),
+                $request->query->get( 'month' ),
+                $request->query->get( 'year' )
+            );
+        }
         if ($request->query->get( 'force' )!='')
             $force = $request->query->get( 'force' );
+        if ($request->query->get( 'html' )!='')
+            $html = $request->query->get( 'html' );
         
-        
+                
         set_time_limit(3600);
-        ini_set('memory_limit', '-1');
-        
+        ini_set('memory_limit', '-1');        
         if ($this->container->has('profiler'))
             $this->container->get('profiler')->disable();
 
-        $em = $this->getDoctrine()->getManager();
-       
+        $em = $this->getDoctrine()->getManager();       
         
-        $Runs = $em->getRepository("AriiReportBundle:RUN")->findRunHours($from,$to);
+        $Runs = $em->getRepository("AriiReportBundle:RUN")->findRunHours($start,$end);
         $Run = array();
         foreach ($Runs as $run) {   
-
-            $app  = $run['app'];
-//            if ($app=='')
-//                continue;
-
-            $env  = $run['env'];
-            $date = str_replace('-','',$run['start_date']);
+            // supression des status inutiles
+            if ($run['status']=='INACTIVE') continue;
+                
+            $app    = $run['app'];
+            $env    = $run['env'];
+            $job_class  = $run['job_class'];
+            $spooler_name  = $run['spooler_name'];
+            
+            $date = substr(str_replace('-','',$run['start_date']),0,8);
             $hour = $run['start_hour'];
-            $id = "$app:$env:$date:$hour";
+            $id = "$spooler_name:$app:$env:$job_class:$date:$hour";
 
             if (!isset($Run[$id])) {
                 $Run[$id]['executions'] = 0;
@@ -142,36 +152,53 @@ class RUNController extends Controller
             $Run[$id]['app'] = $run['app'];
             $Run[$id]['spooler_name'] = $run['spooler_name'];
             $Run[$id]['env'] = $run['env'];
-
-            $Run[$id]['executions'] += $run['executions'];
+            $Run[$id]['job_class'] = $run['job_class'];
+            
+            switch ($run['status']) {
+                case 'SUCCESS':
+                case 'FAILURE':
+                case 'TERMINATED':
+                    $Run[$id]['executions'] += $run['executions'];
+                    break;
+                case 'MINRUNALARM':
+                case 'MAXRUNALARM':    
+                case 'RESTART':
+                    $Run[$id]['warnings'] += $run['alarms'];
+                    break;
+                
+            }
             $Run[$id]['acks'] += $run['acks'];
-            if (($run['alarms']=='MINRUNALARM')
-                or ($run['alarms']=='MAXRUNALARM')) {
-                $Run[$id]['warnings'] += $run['alarms'];             
-            }
-            else {
-                $Run[$id]['alarms'] += $run['alarms'];                
-            }
+            $Run[$id]['alarms'] += $run['alarms'];            
         }
 
-        $upd=$new=0;
+        $nb=$upd=$new=0;
         foreach ($Run as $run) {
             $date = new \Datetime($run['date']);
             $hour = $run['hour'];
             $Agg = $em->getRepository("AriiReportBundle:RUNHour")->findOneBy(
-                array( 'application'=> $run['app'] , 'env' => $run['env'], 'date' => $date, 'hour' => $hour ));
+                array(  'spooler_name' => $run['spooler_name'],
+                        'application'  => $run['app'], 
+                        'env' => $run['env'], 
+                        'job_class' => $run['job_class'], 
+                        'date' => $date, 
+                        'hour' => $hour ));
             if (!$Agg) {
                 $Agg = new \Arii\ReportBundle\Entity\RUNHour();
+                if ($html>0) {
+                    print $run['spooler_name']." ".$run['app']." ".$run['env']." ".$run['job_class']." ".$run['date']." ".$run['hour']."<br/>" ;
+                }
                 $new++;
             }
             else {
-                if (!$force) continue;
+                if (!$force>0) continue;
                 $upd++;
             }
             $Agg->setDate($date);
             $Agg->setHour($hour);
             $Agg->setEnv($run['env']);
+            $Agg->setJobClass($run['job_class']);      
             $Agg->setApplication($run['app']);
+
             if ($run['executions']=='') $run['executions']=0;
             $Agg->setExecutions($run['executions']);
             if ($run['alarms']=='') $run['alarms']=0;
@@ -181,73 +208,77 @@ class RUNController extends Controller
             if ($run['acks']=='') $run['acks']=0;
             $Agg->setAcks($run['acks']);
             $Agg->setSpoolerName($run['spooler_name']);
-            $Agg->setSpoolerType('ATS');
-            
+
             $em->persist($Agg);
+            if ($nb % 1000 == 0) {
+                print ".";
+                $em->flush();
+            }
+            $nb++;
         }        
         $em->flush();
-        return new Response("From ".$from->format('Y-m-d H:i:s')." to ".$to->format('Y-m-d H:i:s').": Runs/Hour New ($new) Update ($upd)");
+        return new Response("From ".$start->format('Y-m-d H:i:s')." to ".$end->format('Y-m-d H:i:s').": Runs/Hour New ($new) Update ($upd)");
     }
-    
+
+    // Regroupement des heures en jours
     public function RunDayAction()
     {
+        // par défaut
+        $request = Request::createFromGlobals();
+        if ($request->query->get( 'day' )=='') {
+            $end = new \DateTime();
+            $start = clone $end;
+            $start->modify('-7 days');
+        }
+        else {
+            $filter = $this->container->get('report.filter');
+            list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
+                $request->query->get( 'env' ),
+                $request->query->get( 'app' ),
+                $request->query->get( 'day_past' ),                
+                $request->query->get( 'day' ),
+                $request->query->get( 'month' ),
+                $request->query->get( 'year' )
+            );
+        }
+        if ($request->query->get( 'force' )!='')
+            $force = $request->query->get( 'force' );
+        if ($request->query->get( 'html' )!='')
+            $html = $request->query->get( 'html' );
+        
         set_time_limit(3600);
+        ini_set('memory_limit', '-1');        
         if ($this->container->has('profiler'))
             $this->container->get('profiler')->disable();
 
-        $em = $this->getDoctrine()->getManager();
-
-        $Runs = $em->getRepository("AriiReportBundle:RUN")->findRunDays(new \DateTime('2017-01-01'));
+        $em = $this->getDoctrine()->getManager();       
+        
+        $Runs = $em->getRepository("AriiReportBundle:RUNHour")->findRunsByDay($start,$end);
 
         $Run = array();
-        foreach ($Runs as $run) {
-            $app  = $run['app'];
-//            if ($app=='')
-//                continue;
-            
-            $env  = $run['env'];
-            $date = str_replace('-','',$run['start_date']);
-            $id = "$app:$env:$date";
-            
-            if (!isset($Run[$id])) {
-                $Run[$id]['executions'] = 0;
-                $Run[$id]['acks'] = 0;
-                $Run[$id]['warnings'] = 0;            
-                $Run[$id]['alarms'] = 0;             
-                $Run[$id]['date'] = $date;
-                $Run[$id]['warnings'] = 0;
-            }
-            
-            $Run[$id]['app'] = $run['app'];
-            $Run[$id]['spooler_name'] = $run['spooler_name'];
-            $Run[$id]['env'] = $run['env'];
-            
-            $Run[$id]['executions'] += $run['executions'];
-            $Run[$id]['acks'] += $run['acks'];
-            if (($run['alarms']=='MINRUNALARM')
-                or ($run['alarms']=='MAXRUNALARM')) {
-                $Run[$id]['warnings'] += $run['alarms'];             
-            }
-            else {
-                $Run[$id]['alarms'] += $run['alarms'];                
-            }
-        }
-
         $upd=$new=0;
-        foreach ($Run as $run) {
-            $date = new \Datetime($run['date']);
+        foreach ($Runs as $run) {
             $Agg = $em->getRepository("AriiReportBundle:RUNDay")->findOneBy(
-                array( 'application'=> $run['app'] , 'env' => $run['env'], 'date' => $date ));
+                array(  'date' => $run['date'], 
+                        'application'=> $run['application'] , 
+                        'env' => $run['env'], 
+                        'job_class' => $run['job_class'], 
+                        'spooler_name' => $run['spooler_name'] ) 
+            );
             if (!$Agg) {
                 $Agg = new \Arii\ReportBundle\Entity\RUNDay();
                 $new++;
             }
             else {
                 $upd++;
-            }
-            $Agg->setDate($date);
+            }            
+            $Agg->setDate($run['date']);
             $Agg->setEnv($run['env']);
-            $Agg->setApplication($run['app']);
+            $Agg->setApplication($run['application']);
+            $Agg->setSpoolerName($run['spooler_name']);
+            $Agg->setJobClass($run['job_class']);
+            
+            // doit etre inutile.
             if ($run['executions']=='') $run['executions']=0;
             $Agg->setExecutions($run['executions']);
             if ($run['alarms']=='') $run['alarms']=0;
@@ -256,51 +287,78 @@ class RUNController extends Controller
             $Agg->setWarnings($run['warnings']);
             if ($run['acks']=='') $run['acks']=0;
             $Agg->setAcks($run['acks']);
-            $Agg->setSpoolerName($run['spooler_name']);
-            $Agg->setSpoolerType('ATS');
             
             $em->persist($Agg);
         }        
         $em->flush();
-        return new Response("Runs/Day New ($new) Update ($upd)");
+        return new Response("From ".$start->format('Y-m-d H:i:s')." to ".$end->format('Y-m-d H:i:s').": Runs/Day New ($new) Update ($upd)");
     }
-
-    /* Agrégation des runs par jour */
+    
+    /* Agrégation des runs par mois */
     public function RunMonthAction()
     {       
+        // par défaut
+        $request = Request::createFromGlobals();
+        if ($request->query->get( 'day' )=='') {
+            $end = new \DateTime();
+            $start = clone $end;
+            $start->modify('-7 days');
+        }
+        else {
+            $filter = $this->container->get('report.filter');
+            list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
+                $request->query->get( 'env' ),
+                $request->query->get( 'app' ),
+                $request->query->get( 'day_past' ),                
+                $request->query->get( 'day' ),
+                $request->query->get( 'month' ),
+                $request->query->get( 'year' )
+            );
+        }
+        if ($request->query->get( 'force' )!='')
+            $force = $request->query->get( 'force' );
+        if ($request->query->get( 'html' )!='')
+            $html = $request->query->get( 'html' );
+ 
         set_time_limit(3600);
         ini_set('memory_limit','-1');
         if ($this->container->has('profiler')) {
             $this->container->get('profiler')->disable();
         }             
-
         $debut = time();
         
         $em = $this->getDoctrine()->getManager();
         // Il faut reparser tous les jobs
         // limiter par spooler ? 
-        $Runs = $em->getRepository("AriiReportBundle:RUNDay")->findRunsMonth();
-        $n = $new = 0;
+        $Runs = $em->getRepository("AriiReportBundle:RUNDay")->findRunsByMonth($start,$end);
+        $n = $new = $upd = 0;
         foreach ($Runs as $Run) {
             
             $app = $Run['application'];
             $env = $Run['env'];
             $month = $Run['run_month'];
             $year = $Run['run_year'];
-            $spooler_type = $Run['spooler_type'];
             $spooler_name = $Run['spooler_name'];
             $runs = $Run['runs'];
+            $warnings = $Run['warnings'];
             $alarms = $Run['alarms'];
             $acks = $Run['acks'];
             
-            // truncate ?! si on truncate on perd l'historique
             $RunMonth = $em->getRepository("AriiReportBundle:RUNMonth")->findOneBy(
-                    array('application'=>$app,'env' =>$env, 'spooler_type' => $spooler_type, 'spooler_name' => $spooler_name, 'month' => $month, 'year' => $year
-            ));
+                    array(  'application'=>$app,
+                            'env' =>$env, 
+                            'spooler_name' => $spooler_name, 
+                            'month' => $month, 
+                            'year' => $year
+                    )
+            );
 
             if (!$RunMonth) {
                 $RunMonth = new \Arii\ReportBundle\Entity\RUNMonth;
                 $new++;
+            }
+            else {
+                $upd++;
             }
             
             $RunMonth->setApplication($app);            
@@ -308,10 +366,10 @@ class RUNController extends Controller
             $RunMonth->setMonth($month);
             $RunMonth->setYear($year);
             
-            $RunMonth->setSpoolerType($spooler_type);
             $RunMonth->setSpoolerName($spooler_name);
             
             $RunMonth->setExecutions($runs);
+            $RunMonth->setWarnings($warnings);
             $RunMonth->setAlarms($alarms);
             $RunMonth->setAcks($acks);
             
@@ -320,7 +378,7 @@ class RUNController extends Controller
         }        
         $em->flush();        
 
-        return new Response("Runs/Month New($new) Update (".($n-$new).") [".(time()-$debut)."]");
+        return new Response("From ".$start->format('Y-m-d H:i:s')." to ".$end->format('Y-m-d H:i:s').": Runs/Month New ($new) Update ($upd)");
     }
     
     /* COMPLEMENTS */
@@ -336,7 +394,8 @@ class RUNController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         foreach ($Rules as $job=>$Values) {            
-            print "$job: ".$em->getRepository("AriiReportBundle:RUN")->UpdateAppEnv($job,$Values['OutApp'],$Values['OutEnv'])."\n";
+            print "$job: ".$em->getRepository("AriiReportBundle:RUN")->UpdateJobs($job,$Values['OutApp'],$Values['OutEnv'],$Values['OutType'],$Values['OutClass'])."\n";
+            
         }
         return new Response("Ok!");
     }

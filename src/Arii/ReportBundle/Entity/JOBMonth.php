@@ -24,9 +24,9 @@ class JOBMonth
     /**
      * @var string
      *
-     * @ORM\Column(name="application", type="string", length=64, nullable=true)
+     * @ORM\Column(name="app", type="string", length=64, nullable=true)
      */
-    private $application;
+    private $app;
     
     /**
      * @var string
@@ -35,6 +35,13 @@ class JOBMonth
      */
     private $env;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="job_class", type="string", length=64, nullable=true)
+     */
+    private $job_class;
+    
     /**
      * @var string
      *
@@ -55,14 +62,6 @@ class JOBMonth
      * @ORM\Column(name="spooler_name", type="string", length=32, nullable=true)
      */
     private $spooler_name;
-    
-    // Instance ou Id du spooler
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="spooler_type", type="string", length=12, nullable=true)
-     */
-    private $spooler_type;
     
     /**
      * @var string
@@ -96,26 +95,26 @@ class JOBMonth
     }
 
     /**
-     * Set application
+     * Set app
      *
-     * @param string $application
+     * @param string $app
      * @return JOBDay
      */
-    public function setApplication($application)
+    public function setApp($app)
     {
-        $this->application = $application;
+        $this->app = $app;
 
         return $this;
     }
 
     /**
-     * Get application
+     * Get app
      *
      * @return string 
      */
-    public function getApplication()
+    public function getApp()
     {
-        return $this->application;
+        return $this->app;
     }
 
     /**
@@ -185,29 +184,6 @@ class JOBMonth
     public function getSpoolerName()
     {
         return $this->spooler_name;
-    }
-
-    /**
-     * Set spooler_type
-     *
-     * @param string $spoolerType
-     * @return JOBDay
-     */
-    public function setSpoolerType($spoolerType)
-    {
-        $this->spooler_type = $spoolerType;
-
-        return $this;
-    }
-
-    /**
-     * Get spooler_type
-     *
-     * @return string 
-     */
-    public function getSpoolerType()
-    {
-        return $this->spooler_type;
     }
 
     /**
@@ -323,5 +299,28 @@ class JOBMonth
     public function getMonth()
     {
         return $this->month;
+    }
+
+    /**
+     * Set job_class
+     *
+     * @param string $jobClass
+     * @return JOBMonth
+     */
+    public function setJobClass($jobClass)
+    {
+        $this->job_class = $jobClass;
+
+        return $this;
+    }
+
+    /**
+     * Get job_class
+     *
+     * @return string 
+     */
+    public function getJobClass()
+    {
+        return $this->job_class;
     }
 }

@@ -13,8 +13,46 @@ use Doctrine\ORM\Query\ResultSetMapping;
  */
 class JOBDayRepository extends EntityRepository
 {
+    
+   public function findApps($start,$end,$env='*',$class='*',$detail=false)
+   {
+        $Filter = [ 'job.app' ];
+        if ($detail) {
+            if ($env=='*')
+                array_push($Filter,'job.env');
+            if ($class=='*')
+                array_push($Filter,'job.job_class');
+        }
 
-   public function findJobsByDay($start, $end, $env='P', $app='*')
+        //création de l'expression OR
+        $qb = $this->createQueryBuilder('job');
+        
+        $f = implode(',',$Filter);
+        $qb = $qb->Select($f.',max(job.jobs) as jobs,sum(job.created) as created,sum(job.deleted) as deleted')
+            ->where('job.date >= :start')
+            ->groupBy($f)
+            ->orderBy('job.app','ASC')
+            ->setParameter('start', $start);
+        
+        if (0) {
+            $query = $qb->getQuery();
+            print $query->getSQL();
+            print_r($query->getParameters());
+            exit();
+        }
+        
+        if ($env!='*')
+            $qb->andWhere('job.env = :env')
+                 ->setParameter('env', $env);
+        if ($class!='*')
+            $qb->andWhere('job.job_class = :class')
+                 ->setParameter('class', $class);
+        
+        return $qb->getQuery()
+             ->getResult();
+   }   
+    
+   public function findJobsByDay($day, $env='P', $app='*', $job_class='*')
    {
        if ($app=='*') {
             return $this->createQueryBuilder('job')
@@ -32,11 +70,11 @@ class JOBDayRepository extends EntityRepository
        }
        else {
             return $this->createQueryBuilder('job')
-                 ->Select('job.date,job.application,job.jobs,job.created,job.deleted')
+                 ->Select('job.date,job.app,job.jobs,job.created,job.deleted')
                  ->where('job.date >= :start')
                  ->andWhere('job.date <= :end')
                  ->andWhere('job.env = :env')
-                 ->andWhere('job.application = :app')
+                 ->andWhere('job.app = :app')
                  ->orderBy('job.date')
                  ->setParameter('start', $start)
                  ->setParameter('end', $end)
@@ -52,14 +90,14 @@ class JOBDayRepository extends EntityRepository
         $driver = $this->_em->getConnection()->getDriver()->getName();
         switch ($driver) {
             case 'oci8':
-                $sql = "SELECT EXTRACT(YEAR FROM job.job_date) as job_year,EXTRACT(MONTH FROM job.job_date) as job_month,job.application,job.env,job.spooler_type,job.spooler_name,max(job.jobs) as jobs,max(job.created) as created,max(job.deleted) as deleted
+                $sql = "SELECT EXTRACT(YEAR FROM job.job_date) as job_year,EXTRACT(MONTH FROM job.job_date) as job_month,job.app,job.env,job.spooler_type,job.spooler_name,max(job.jobs) as jobs,max(job.created) as created,max(job.deleted) as deleted
                         FROM REPORT_JOB_DAY job
-                        GROUP BY EXTRACT(YEAR FROM job.job_date),EXTRACT(MONTH FROM job.job_date),job.application,job.env,job.spooler_type,job.spooler_name";
+                        GROUP BY EXTRACT(YEAR FROM job.job_date),EXTRACT(MONTH FROM job.job_date),job.app,job.env,job.spooler_type,job.spooler_name";
 
                 $rsm = new ResultSetMapping();
                 $rsm->addScalarResult('JOB_YEAR', 'year');
                 $rsm->addScalarResult('JOB_MONTH', 'month');
-                $rsm->addScalarResult('APPLICATION', 'application');
+                $rsm->addScalarResult('APPLICATION', 'app');
                 $rsm->addScalarResult('ENV', 'env');
                 $rsm->addScalarResult('SPOOLER_TYPE', 'spooler_type');
                 $rsm->addScalarResult('SPOOLER_NAME', 'spooler_name');
@@ -71,8 +109,8 @@ class JOBDayRepository extends EntityRepository
                 break;
             default:
                 return $this->createQueryBuilder('job')
-                      ->Select('Year(job.date) as year,Month(job.date) as month,job.application,job.env,job.spooler_type,job.spooler_name,max(job.jobs) as jobs,max(job.created) as created,max(job.deleted) as deleted')
-                      ->groupBy('year,month,job.application,job.env,job.spooler_type,job.spooler_name')
+                      ->Select('Year(job.date) as year,Month(job.date) as month,job.app,job.env,job.spooler_type,job.spooler_name,max(job.jobs) as jobs,max(job.created) as created,max(job.deleted) as deleted')
+                      ->groupBy('year,month,job.app,job.env,job.spooler_type,job.spooler_name')
                       ->getQuery()
                       ->getResult();
                 break;
@@ -83,7 +121,7 @@ class JOBDayRepository extends EntityRepository
    {
        if (($app=='*') and ($env=='*')) {
            return $this->createQueryBuilder('job')
-                 ->Select('Year(job.date) as annee,Month(job.date) as mois,job.application,job.env,max(job.jobs) as jobs,min(job.jobs) as minjobs,sum(job.created) as created,sum(job.deleted) as deleted')
+                 ->Select('Year(job.date) as annee,Month(job.date) as mois,job.app,job.env,max(job.jobs) as jobs,min(job.jobs) as minjobs,sum(job.created) as created,sum(job.deleted) as deleted')
                  ->where('job.date >= :start')
                  ->andWhere('job.date <= :end')
                  ->groupBy('annee,mois')
@@ -94,7 +132,7 @@ class JOBDayRepository extends EntityRepository
        }
        elseif ($app=='*') {
             return $this->createQueryBuilder('job')
-                 ->Select('Year(job.date) as annee,Month(job.date) as mois,job.application,job.env,max(job.jobs) as jobs,min(job.jobs) as minjobs,sum(job.created) as created,sum(job.deleted) as deleted')
+                 ->Select('Year(job.date) as annee,Month(job.date) as mois,job.app,job.env,max(job.jobs) as jobs,min(job.jobs) as minjobs,sum(job.created) as created,sum(job.deleted) as deleted')
                  ->where('job.date >= :start')
                  ->andWhere('job.date <= :end')
                  ->andWhere('job.env = :env')
@@ -107,11 +145,11 @@ class JOBDayRepository extends EntityRepository
        }
        elseif ($env=='*') {
             return $this->createQueryBuilder('job')
-                 ->Select('Year(job.date) as annee,Month(job.date) as mois,job.application,job.env,max(job.jobs) as jobs,min(job.jobs) as minjobs,sum(job.created) as created,sum(job.deleted) as deleted')
+                 ->Select('Year(job.date) as annee,Month(job.date) as mois,job.app,job.env,max(job.jobs) as jobs,min(job.jobs) as minjobs,sum(job.created) as created,sum(job.deleted) as deleted')
                  ->where('job.date >= :start')
                  ->andWhere('job.date <= :end')
-                 ->andWhere('job.application = :app')
-                 ->groupBy('annee,mois,job.application')
+                 ->andWhere('job.app = :app')
+                 ->groupBy('annee,mois,job.app')
                  ->setParameter('start', $start)
                  ->setParameter('end', $end)
                  ->setParameter('app', $app)
@@ -120,11 +158,11 @@ class JOBDayRepository extends EntityRepository
        }
        else {
             return $this->createQueryBuilder('job')
-                 ->Select('Year(job.date) as annee,Month(job.date) as mois,job.application,job.env,max(job.jobs) as jobs,min(job.jobs) as minjobs,sum(job.created) as created,sum(job.deleted) as deleted')
+                 ->Select('Year(job.date) as annee,Month(job.date) as mois,job.app,job.env,max(job.jobs) as jobs,min(job.jobs) as minjobs,sum(job.created) as created,sum(job.deleted) as deleted')
                  ->where('job.date >= :start')
                  ->andWhere('job.date <= :end')
                  ->andWhere('job.env = :env')
-                 ->andWhere('job.application = :app')
+                 ->andWhere('job.app = :app')
                  ->groupBy('annee,mois')
                  ->setParameter('start', $start)
                  ->setParameter('end', $end)
@@ -132,38 +170,6 @@ class JOBDayRepository extends EntityRepository
                  ->setParameter('app', $app)
                  ->getQuery()
                  ->getResult();
-       }
-   }
-
-   public function findApplications($start,$end,$env='*')
-   {
-       if (($env=='*') or ($env=='')) {
-            return $this->createQueryBuilder('job')
-                ->Select('job.application','app.title','max(job.jobs) as jobs')
-                ->leftJoin('Arii\CoreBundle\Entity\Application','app',\Doctrine\ORM\Query\Expr\Join::WITH,'job.application = app.name')                
-                ->where('job.date >= :start')
-                ->andWhere('job.date <= :end')                        
-                ->groupBy('job.application,app.title')
-                ->orderBy('jobs','DESC')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->getQuery()
-                ->getResult();
-       }
-       else {
-            return $this->createQueryBuilder('job')
-                ->Select('job.application','app.title','max(job.jobs) as jobs')
-                ->leftJoin('Arii\CoreBundle\Entity\Application','app',\Doctrine\ORM\Query\Expr\Join::WITH,'job.application = app.name')                
-                ->where('job.date >= :start')
-                ->andWhere('job.date <= :end')                        
-                ->andWhere('job.env = :env')
-                ->groupBy('job.application,app.title')
-                ->orderBy('jobs','DESC')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('env', $env)
-                ->getQuery()
-                ->getResult();
        }
    }
 

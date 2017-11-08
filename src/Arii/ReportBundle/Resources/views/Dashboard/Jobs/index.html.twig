@@ -10,7 +10,7 @@ var app="{{ appl }}",
     day_past={{ day_past }};
 
 dhtmlxEvent(window,"load",function(){     
-    globalLayout = new dhtmlXLayoutObject(document.body,"3L");
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
     globalLayout.cells("a").setWidth(345);
 
     globalMenu = globalLayout.cells("a").attachMenu();
@@ -24,62 +24,24 @@ dhtmlxEvent(window,"load",function(){
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
-    
+
     globalLayout.cells("a").hideHeader();
     
-    myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
-    myToolbar.loadStruct("{{ url('xml_Report_toolbar') }}", function() {
-        this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
-        this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
-        this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
-        this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
-    });
-    myToolbar.attachEvent( "onClick", function(id, value) {
-        var parent=this.getParentId(id);
-        switch (parent) {
-            case "APP":
-                this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
-                app = id;
-                GlobalRefresh();
-                break;
-            case "ENV":
-                this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
-                env = id;
-                GlobalRefresh();
-                break;
-            case "MONTH":
-                this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
-                month = id;
-                GlobalRefresh();
-                break;
-            case "DAY_PAST":
-                this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
-                day_past = id;
-                GlobalRefresh();
-                break;
-            case "YEAR":
-                this.setItemText("YEAR",this.getListOptionText("YEAR",this.getListOptionSelected("YEAR")));
-                year = id;
-                GlobalRefresh();
-                break;
-            default:
-//                alert(id);
-                GlobalRefresh();
-        }
-    });
+    {% include "AriiReportBundle:Default:tree.js.twig" %}
+    {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
+
     // Graphique
-    myTabbar = globalLayout.cells("a").attachTabbar();
-    myTabbar.addTab("chart","{{ "Jobs" | trans }}","120px",null,true);
-    myTabbar.addTab("list","{{ "Applications" | trans }}","120px");
-   
-    donutChart =  myTabbar.cells("chart").attachChart({
+    myLayout = globalLayout.cells("b").attachLayout("2U");
+    myLayout.cells("a").setWidth(500);
+    myLayout.cells("a").hideHeader();
+    
+    donutChart =  myLayout.cells("a").attachChart({
         view:"barH",
         padding: {
             left:100
         },
         value:"#jobs#",
-        label:"",
+        label:"#jobs#",
         tooltip: "#application#: #jobs#",
         gradient:true,
         border:false,
@@ -94,25 +56,15 @@ dhtmlxEvent(window,"load",function(){
         }
     });
     
-    myApps = myTabbar.cells("list").attachGrid();
-    myApps.selMultiRows = true;
-    myApps.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
-    myApps.setHeader("{{ "Application" | trans }}");
-    myApps.attachHeader("#text_filter");
-    myApps.setColAlign("left");
-    myApps.setColTypes("ro");
-    myApps.setColSorting("str");
-    myApps.init();
+    detailLayout = myLayout.cells("b").attachLayout("2E");
+    detailLayout.cells("b").setText("{{ "Detail" | trans }}");
 
-    globalLayout.cells("b").hideHeader();
     // Graphique
-    myTabbar2 = globalLayout.cells("b").attachTabbar();
+    myTabbar2 = detailLayout.cells("a").attachTabbar();
     myTabbar2.addTab("month","{{ "A month" | trans }}","120px",null,true);
     myTabbar2.addTab("day","{{ "A day" | trans }}","120px");
-    myTabbar2.addTab("apps","{{ "Evolution" | trans }}","150px");
-
-   
-    barChartMonth =  myTabbar2.cells("month").attachChart({
+    
+    barChartMonth = myTabbar2.cells("month").attachChart({
         view: "bar",
         value:"#jobs#",
         color:"#00cccc",
@@ -133,50 +85,11 @@ dhtmlxEvent(window,"load",function(){
                 }
         },
         legend:{
-                values:[{text:"{{ "Jobs" | trans }}",color:"#00cccc"},{text:"{{ "Creation" | trans }}",color:"#00FF00"},{text:"{{ "Suppression" | trans }}",color:"#FF0000"}],
+                values:[{text:"{{ "Jobs" | trans }}",color:"#00cccc"}],
                 valign:"top",
                 align:"left",
                 width:100,
                 layout:"x"
-        }
-    });
-    barChartMonth.addSeries({
-        view:  "area",
-        value: function (obj) { return obj.deleted },
-        color: "#ff0000",
-        alpha: 0.6      
-    });
-    barChartMonth.addSeries({
-        view:  "line",
-        value: function (obj) { return obj.deleted },
-        item: {
-            borderColor: "#ff0000"
-        },
-        line: {
-            color: "#ff0000",
-            width: 3
-        },
-        label: ""
-    });    
-    barChartMonth.addSeries({
-        view: "line",
-        value:  function (obj) { return obj.created },
-        item: {
-            color:"#00ff00",
-            borderColor:"#ffffff",
-            width:5
-        },
-        line: {
-            color:"#00ff00",
-            width:3
-        },
-        label: function (obj) {
-            var str="";
-            if (obj.created>0) 
-                str += ' <p style="background-color:#00FF00;">+'+obj.created+'</p>';
-            if (obj.deleted>0) 
-                str += '<p style="background-color:#FF0000;">-'+obj.deleted+'</p>';
-            return str;
         }
     });
 
@@ -210,66 +123,7 @@ dhtmlxEvent(window,"load",function(){
         }
     });
 
-    stackedChart =  myTabbar2.cells("apps").attachChart({
-        view: "barH",
-        value: function (obj) {
-            if (obj.month3!=0)
-                return obj.month3;
-            return;
-        },
-        label:"#month3#",
-        color:"#00ffff",
-        width: 10,
-        origin:0, // represents positive and negative values     
-        yAxis:{
-            lines:true, 
-            template: "#application#",
-//            title:"{{ "Applications" | trans }}",    
-            margin: {
-                left: 200
-            }
-        },
-        xAxis:{
-            lines: true,
-            template: "",
-//            title:"{{ "Jobs" | trans }}"
-        },
-        legend:{
-            values:[
-                {text:"{{ "Month" | trans }}",color:"#00ffff"},
-                {text:"{{ "Month" | trans }}-1",color:"#00aaaa"}, 
-                {text:"{{ "Month" | trans }}",color:"#006666"}
-            ],
-            valign:"top",
-            align:"left",
-            width:100,
-            layout:"x"
-        }
-    });
-    stackedChart.addSeries({
-        value: "#month2#",
-        label: function (obj) {
-            if (obj.month2!=0)
-                return obj.month2;
-            return;
-        },
-        color:"#00aaaa"
-    });
-    
-    stackedChart.addSeries({
-        value: "#month1#",
-        label: function (obj) {
-            if (obj.month1!=0)
-                return obj.month1;
-            return;
-        },
-        color:"#006666"
-    });
-
-    detailLayout = globalLayout.cells("c").attachLayout("2U");
-    globalLayout.cells("c").setText("{{ "Detail" | trans }}");
-
-    myJobs = detailLayout.cells("a").attachGrid();
+    myJobs = detailLayout.cells("b").attachGrid();
     myJobs.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
     myJobs.setHeader("{{ "Jobname" | trans }},{{ "Env" | trans }},{{ "Creation" | trans }},{{ "Last change" | trans }},{{ "First execution" | trans }},{{ "Last execution" | trans }},{{ "Deleted" | trans }},{{ "Updated" | trans }}");
     myJobs.attachHeader("#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
@@ -278,36 +132,13 @@ dhtmlxEvent(window,"load",function(){
     myJobs.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");
     myJobs.setColSorting("str,str,date,date,date,date,date,date");
     myJobs.init();
+    detailLayout.cells("b").collapse();
     
-    detailLayout.cells("b").setWidth("400");
-    scatterChart =  detailLayout.cells("b").attachChart({
-        view:"scatter",
-        xValue: "#day#",
-        yValue: "#hour#",
-        color: "#color#",
-        item:{
-            label: "#day# #hour#:00",
-            borderColor: "#color#" ,
-            color: "#color#",
-            type: 'r'
-        },
-        yAxis:{
-            title: "{{ "Hour" | trans }}"
-        },
-        xAxis:{
-            title: "{{ "Day" | trans }}",
-            template: ""
-        }
-    });
-            
     donutChart.attachEvent("onItemClick",function(id){ 
         dhx4.ajax.get( "{{ url('arii_session_update') }}?app="+id, function() {
-            myRibbon.setItemText( "app", id );
+            globalLayout.cells("b").setText( id );
             GlobalRefresh();
         });
-    });
-    myApps.attachEvent("onRowSelect",function(id){ 
-        Application(id); 
     });
 
     barChartMonth.attachEvent("onItemClick",function(id, event){
@@ -318,10 +149,7 @@ dhtmlxEvent(window,"load",function(){
        var target = (e.target||e.srcElement);
           document.body.style.cursor = (target.tagName == "AREA"?"pointer":"default");
     })
-
-    scatterChart.attachEvent("onItemClick", function(id){
-        myJobs.selectRowById(id);
-    });    
+    
 
     GlobalRefresh();
     
@@ -330,32 +158,22 @@ dhtmlxEvent(window,"load",function(){
 });
 
 function GlobalRefresh() {
-    globalLayout.cells("a").progressOn();
-    globalLayout.cells("b").progressOn();
     donutChart.clearAll();
     donutChart.load( "{{ url('xml_Report_jobs_applications_chart') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past, function() {
         globalLayout.cells("a").progressOff();
         barChartMonth.clearAll();
         barChartMonth.load( "{{ url('xml_Report_jobs_chart') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past, function() {            
-            myApps.load( "{{ url('xml_Report_apps_grid') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past, function() {
-                barChartDay.clearAll();
-                barChartDay.load( "{{ url('xml_Report_jobs_chart_days') }}?app="+app+"&env="+env+"&day="+day+"&month="+month+"&year="+year+"&day_past="+day_past, function() {            
-                    stackedChart.clearAll();
-                    stackedChart.load( "{{ url('xml_Report_jobs_applications_month_chart') }}?app="+app+"&env="+env+"&day="+day+"&month="+month+"&year="+year+"&day_past="+day_past, function() {            
-                        // bug dhtmlxribbon, on ne peut pas changer l'image de l'option
-                        myRibbon.loadStruct("{{ url('json_Report_ribbon') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past);    
-                        globalLayout.cells("b").progressOff();
-                    });
-                });
+            barChartDay.clearAll();
+            barChartDay.load( "{{ url('xml_Report_jobs_chart_days') }}?app="+app+"&env="+env+"&day="+day+"&month="+month+"&year="+year+"&day_past="+day_past, function() {            
+                globalLayout.cells("b").progressOff();
             });
         });
     });
-    globalLayout.cells("c").collapse();    
+    myLayout.cells("c").collapse();    
 };
 
 function Application(id) {
     globalLayout.cells("b").setText(id);
-    globalLayout.cells("b").progressOn();
     barChartMonth.clearAll();
     barChartMonth.load( "{{ url('xml_Report_jobs_applications_chart') }}?app="+id, function() {
         globalLayout.cells("b").progressOff();
@@ -364,15 +182,10 @@ function Application(id) {
 
 function Jobs(id) {
     myJobs.clearAll();
-    scatterChart.clearAll();
-    globalLayout.cells("c").expand();
-    detailLayout.cells("a").progressOn();
-    detailLayout.cells("b").progressOn();    
+    detailLayout.cells("b").expand();
+    detailLayout.cells("b").progressOn(); 
     myJobs.load("{{ url('xml_Report_jobs_grid') }}?month="+id, function () {
-        detailLayout.cells("a").progressOff();
-        scatterChart.load("{{ url('xml_Report_jobs_scatter') }}?month="+id, function () {
-            detailLayout.cells("b").progressOff(); 
-        });
+        detailLayout.cells("b").progressOff(); 
     });
 }
 </script>

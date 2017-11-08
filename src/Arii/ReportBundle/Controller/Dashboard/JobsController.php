@@ -449,53 +449,6 @@ $month = 2;
         return $response;            
     }
     
-    public function applicationsAction($limit=10)
-    {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$application,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            -30,
-            $request->query->get( 'day' ), 
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
-
-        $em = $this->getDoctrine()->getManager();
-        $Jobs = $em->getRepository("AriiReportBundle:JOBMonth")->findApplications($year,$month,$env);
-
-        $portal = $this->container->get('arii_core.portal');
-        $App = $portal->getApplications();
-
-        $xml = "<?xml version='1.0' encoding='iso-8859-1'?><data>";
-        $nb=0;
-        foreach ($Jobs as $job) {
-            $a = $job['application'];
-            if ($a=='') continue;
-            if (isset($App[$a])) {
-                $title=$App[$a]['title'];
-                if ($App[$a]['active']==0)
-                    $job['jobs']=0;
-            }
-            else 
-                $title='['.$a.']';
-            
-            if ($job['jobs']>0) {
-                $xml .= '<item id="'.$a.'">';
-                $xml .= '<application>'.$title.'</application>';
-                $xml .= '<jobs>'.$job['jobs'].'</jobs>';
-                $xml .= '</item>';
-                $nb++;
-            }
-            if ($nb>=$limit) break;
-        }
-        $xml .= '</data>';
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');        
-        $response->setContent( $xml );
-        return $response;            
-    }
 
     public function Applications_MonthAction($app='',$env='',$mode='dashboard')
     {

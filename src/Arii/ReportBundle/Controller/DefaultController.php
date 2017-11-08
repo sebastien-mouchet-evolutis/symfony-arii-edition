@@ -11,31 +11,9 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        $request = Request::createFromGlobals();
-
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
-        if ($app=='') 
-            return $this->render('AriiReportBundle:Default:index.html.twig');
-        
-        return $this->render('AriiReportBundle:Dashboard:index.html.twig', 
-            array( 
-                'appl' => $app,
-                'env' => $env,
-                'month' => $month,
-                'year' => $year,
-                'day_past' => $day_past,
-                'header' => 0,
-                'footer' => 0
-                ) 
-            );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
+        $Filters['header']=$Filters['footer']=0;
+        return $this->render('AriiReportBundle:Dashboard:index.html.twig', $Filters ); 
     }
 
     public function publicAction()
@@ -98,45 +76,56 @@ class DefaultController extends Controller
 
     public function toolbarAction()
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
-        
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
+
         // Récuperer les applications
-        $Applications = array();
-        $em = $this->getDoctrine()->getManager();
-        $Apps = $em->getRepository("AriiCoreBundle:Application")->findApplications();
-        foreach ($Apps as $appl) {
+        $Applications = [];
+        foreach ($this->container->get('arii_core.portal')->getApplications() as $appl) {
+            if ($appl['active']==0) continue;
             $id = $appl['name'];
             if ($appl['title']!='')
                 $Applications[$id] = $appl['title'];
-            else 
+            else
                 $Applications[$id] = $appl['name'];
+        }
+        
+        // on cree la toolbar en focntion du contenu actif
+        $em = $this->getDoctrine()->getManager();
+        $Jobs = $em->getRepository("AriiReportBundle:Job")->findFilters($Filters['start'],$Filters['end']);
+        foreach ($Jobs as $Job) {            
+            $s = $Job['spooler_name'];
+            $Spoolers[$s]=1;
+            $e = $Job['env'];
+            $Envs[$e]=1;
+            $t = $Job['job_class'];
+            $Classes[$t]=1;
         }
         
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
         return $this->render('AriiReportBundle:Default:toolbar.xml.twig', 
-            array( 
-                'appl' => $app,
-                'env' => $env,                
-                'month' => $month,
-                'year' => $year,
-                'day_past' => $day_past,
-                'Applications' => $Applications ) 
-            , $response);
+            array_merge( 
+                $Filters,
+                [   
+                    'Env' => $Envs,
+                    'Applications' => $Applications,
+                    'Spoolers' => array_keys($Spoolers),
+                    'Classes' => array_keys($Classes)
+                ]), 
+            $response);
     }
 
     public function readmeAction()
     {
         return $this->render('AriiReportBundle:Default:readme.html.twig');
+    }
+
+    public function treeMenuAction()
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+        return $this->render('AriiReportBundle:Default:tree.xml.twig',[],$response);
+        return $response;
     }
     
     public function documentAction()
