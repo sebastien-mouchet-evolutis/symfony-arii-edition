@@ -1,0 +1,518 @@
+{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
+{% extends "AriiReportBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+var app="{{ appl }}",
+    env="{{ env }}",
+    job_class="{{ job_class }}",
+    category="{{ category }}",
+    day = {{ day }},
+    month={{ month }},
+    year={{ year }},
+    day_past={{ day_past }};
+
+dhtmlxEvent(window,"load",function(){     
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");
+    globalLayout.cells("a").setWidth(345);
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+    
+    globalLayout.cells("a").hideHeader();
+    
+    {% include "AriiReportBundle:Default:tree.js.twig" %}    
+    {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
+
+    myLayout = globalLayout.cells("b").attachLayout("3E");    
+    myLayoutUp = myLayout.cells("a").attachLayout("4W");
+    myLayoutMiddle = myLayout.cells("b").attachLayout("4W");
+    myLayoutDown = myLayout.cells("c").attachLayout("4W");
+    
+    myLayoutUp.cells("a").setText("{{ "Environments" | trans }}");
+    envChart =  myLayoutUp.cells("a").attachChart({
+            view:"donut",
+            value: "#count#",
+            label:"",
+            gradient: true,
+            tooltip: "#environment#: #count#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 100,
+                template: "#environment#",
+                valign:"bottom",
+                layout:"x"
+            } 
+    });
+    envChart.attachEvent("onItemClick",function(id){ 
+        env = id;
+        myToolbar.setItemText("ENV",myToolbar.getListOptionText("ENV",'e'+env));
+        dhx4.ajax.get( "{{ url('arii_session_update') }}?env="+env, function() {
+            GlobalRefresh();
+        });
+    });    
+
+    myLayoutUp.cells("b").setText("{{ "Domains" | trans }}");
+    domChart =  myLayoutUp.cells("b").attachChart({
+            view:"donut",
+            value: "#count#",
+            label:"",
+            gradient: true,
+            tooltip: "#domain#: #count#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 100,
+                template: "#domain#",
+                valign:"bottom",
+                layout:"x"
+            } 
+    });
+    domChart.attachEvent("onItemClick",function(id){ 
+        category = id;
+        myToolbar.setItemText("CAT",myToolbar.getListOptionText("CAT",'c'+category));
+        dhx4.ajax.get( "{{ url('arii_session_update') }}?category="+category, function() {
+            myToolbar.setItemText("APP",'{{ "All applications" | trans }}');
+            app = '*';
+            dhx4.ajax.get( "{{ url('arii_session_update') }}?app="+app, function() {
+                RefreshToolbar();
+                GlobalRefresh();
+            });    
+        });
+    });    
+
+    myLayoutUp.cells("c").setText("{{ "Classes" | trans }}");
+    jclChart =  myLayoutUp.cells("c").attachChart({
+            view:"donut",
+            value: "#count#",
+            label:"",
+            gradient: true,
+            tooltip: "#job_class#: #count#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#job_class#",
+                layout:"x"
+            } 
+    });
+    jclChart.attachEvent("onItemClick",function(id){ 
+        job_class = id;
+        myToolbar.setItemText("JOB_CLASS",myToolbar.getListOptionText("JOB_CLASS",job_class ));
+        dhx4.ajax.get( "{{ url('arii_session_update') }}?job_class="+job_class, function() {
+            GlobalRefresh();
+        });
+    });    
+
+    myLayoutUp.cells("d").setText("{{ "Spoolers" | trans }}");
+    spoolChart =  myLayoutUp.cells("d").attachChart({
+            view:"donut",
+            value: "#count#",
+            label:"",
+            gradient: true,
+            tooltip: "#spooler#: #count#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#spooler#",
+                layout:"x"
+            } 
+    });
+
+    myLayoutMiddle.cells("a").setText("{{ "Jobs" | trans }}");
+    jobsChart =  myLayoutMiddle.cells("a").attachChart({
+        view:"barH",
+        padding: {
+            top: 10,
+            left: 20,
+            bottom: 60
+        },
+        value: "#jobs#",
+        label: "#jobs#",
+        tooltip: "#application#: #jobs#",
+        gradient:true,
+        border:false,
+        xAxis:{
+            title: "",
+            margin: { 
+                bottom: 30
+            }       
+        },
+        yAxis:{
+            lines:true,
+            template: "",
+            width: 20
+        },
+        legend:{
+            width: 0,
+            template: "#application#",
+            layout:"x"
+        } 
+                
+    });
+    
+    myLayoutMiddle.cells("b").setText("{{ "Runs" | trans }}");
+    runsChart = myLayoutMiddle.cells("b").attachChart({
+        view:"barH",
+        padding: {
+            top: 10,
+            left: 20,
+            bottom: 60
+        },
+        value: "#runs#",
+        label: "#runs#",
+        tooltip: "#application#: #runs#",
+        gradient:true,
+        border:false,
+        xAxis:{
+            title: "",
+            margin: { 
+                bottom: 30
+            }       
+        },
+        yAxis:{
+            lines:    true,
+            template: "",
+            width:    20
+        },
+        legend:{
+            width: 0,
+            template: "#application#",
+            layout:"x"
+        }
+    });
+
+    myLayoutMiddle.cells("c").setText("{{ "Alerts" | trans }}");
+    alertsChart = myLayoutMiddle.cells("c").attachChart({
+        view:"bar",
+        value: "#alarms#",
+        gradient:true,
+        border:false,
+        tooltip:{
+            template:"#application#: #alarms#"
+        },
+        xAxis:{
+            template: "#application#",
+        },
+        yAxis:{
+            lines:true
+        }
+    });
+    
+    myLayoutMiddle.cells("d").setText("{{ "Meteo" | trans }} ({{ "Availability" | trans }} %)");
+    meteoList = myLayoutMiddle.cells("d").attachList({
+        type: {
+            template: function(obj) {
+                str = '<img src="{{ asset('/bundles/ariireport/images/dashboard/') }}'+obj.img+'" style="float: right; height: 35px"/><b>'+obj.application+'</b>: '+(100-obj.rate)+' %<br/><i>'+obj.alarms+' {{ "alarms" | trans }} / '+obj.runs+' {{ "runs" | trans }}</i>';
+                if (obj.rate>1) 
+                    return '<font color="red">'+str+'</font>';
+                else if (obj.rate>0.1) 
+                    return '<font color="darkorange">'+str+'</font>';
+                else
+                    return '<font color="green">'+str+'</font>';
+            }
+        }
+    });
+    
+/*
+    errorsChart = myLayoutMiddle.cells("d").attachChart({
+        view:"barH",
+         padding: {
+            top: 10,
+            left: 20,
+            bottom: 60
+        },
+        value: "#rate#",
+        label: function (obj) {
+            if (obj.alarms>0)
+                return obj.alarms;
+        },
+        tooltip: "#application#: #rate#",
+        gradient:true,
+        border:false,
+        xAxis:{
+            title: "",
+            margin: { 
+                bottom: 30
+            }       
+        },
+        yAxis:{
+            lines:true,
+            template: "",
+            width: 20
+        },
+        legend:{
+            width: 0,
+            template: "#application#",
+            layout:"x"
+        } 
+    });
+*/
+
+    myLayoutDown.cells("a").setText("{{ "Changes" | trans }}");
+    changesChart =  myLayoutDown.cells("a").attachChart({
+        view:  "line",
+        value: "#created#",
+        color:  "green",
+        tooltip: "#mois# #jour#: #created#",
+        yAxis:{
+        },
+        xAxis:{
+                lines:true,
+                template: function (obj) {
+                    if (obj.jour==1 )
+                        return 1;
+                    else if (obj.jour==15 )
+                        return 15;
+                    return;
+                },
+                title:"{{ "Days" | trans }}",
+                margin: { 
+                    left: 200
+                }
+        },
+        legend:{
+                values:[{text:"{{ "Creation" | trans }}",color:"green"},{text:"{{ "Suppression" | trans }}",color:"red"}],
+                valign:"top",
+                align:"left",
+                width:100,
+                layout:"x"
+        },
+        item: {
+            color: "green",
+            borderColor:"#ffffff",            
+            radius:3
+        },
+        line:{
+            color: "green",
+            width: 1
+        },                
+    });
+    
+    changesChart.addSeries({
+        view: "line",
+        value:  "#deleted#",
+        tooltip: "#mois# #jour#: #deleted#",
+        item: {
+            color: "red",
+            borderColor:"#ffffff",
+            radius:3
+        },
+        line:{
+            color:"red",
+            width: 1
+        },
+        label: ""
+    });
+    
+    myLayoutDown.cells("b").setText("{{ "Evolution" | trans }}");
+    evolChart =  myLayoutDown.cells("b").attachChart({
+        view:  "line",
+        value: "#runs#",
+        color:  "orange",
+        tooltip: "#date#: #runs#",
+        yAxis:{
+        },
+        xAxis:{
+                lines:true,
+                template: function (obj) {
+                    if (obj.day==1 )
+                        return 1;
+                    else if (obj.day==15 )
+                        return 15;
+                    return;
+                },
+                title:"{{ "Days" | trans }}",
+                margin: { 
+                    left: 200
+                }
+        },
+        legend:{
+                values:[{text:"{{ "Runs" | trans }}",color: "orange"}],
+                valign:"top",
+                align:"left",
+                width:100,
+                layout:"x"
+        },
+        item: {
+            color: "orange",
+            borderColor:"#ffffff",            
+            radius:3
+        },
+        line:{
+            color: "orange",
+            width: 1
+        },                
+    });    
+    
+    myLayoutDown.cells("c").setText("{{ "Evenements" | trans }}");
+    eventChart =  myLayoutDown.cells("c").attachChart({
+        view: "scatter",
+        xValue:"#day#",
+        yValue:"#hour#",
+        color:"yellow",
+        preset: 'square',
+        tooltip: '#event#',
+        item:{
+               borderColor:"#ffffff",
+               color: 'yellow',
+               alpha: 0.2,
+               radius: function (obj) {
+                    return obj.events*15;
+               }
+           },
+        legend:{
+            values:[
+                { text: "{{ "Alarms" | trans }}", color:"red" },
+                { text: "{{ "Events" | trans }}",color:"yellow" }
+            ],
+            valign:"middle",
+            width:90,
+            layout:"x"
+        },
+        xAxis:{
+                lines:true,
+                title:"{{ "Day" | trans }}",
+                template: function (obj) {
+                    if (obj.day==1 )
+                        return 1;
+                    else if (obj.day==15 )
+                        return 15;
+                    return;
+                },
+                margin: { 
+                    left: 200
+                },
+                start: 1,
+                end: 31,
+                step: 1
+        },
+        yAxis:{
+                lines:true,
+                title:"{{ "Hour" | trans }}",
+                template: function (obj) {
+                    if (obj.hour % 2)
+                        return obj.hour;
+                    return;
+                },                
+                margin: { 
+                    left: 200
+                },
+                start: 0,
+                end: 24,
+                step: 1
+        }        
+    });
+    
+    eventChart.addSeries({
+        view: "scatter",
+        xValue:"#day#",
+        yValue:"#hour#",
+        color: "red",
+        label: '',
+        preset: 'round',
+        item:{
+               borderColor:"#ffffff",
+               color: 'red',
+               radius: function (obj) {
+                    return obj.alarms;
+               }
+        }
+    });
+    
+    myLayoutDown.cells("d").setText("{{ "Calendars" | trans }}");
+    myCals = myLayoutDown.cells("d").attachGrid();
+    myCals.setImagePath( "/bundles/ariicore/images/treegrid/");
+    myCals.setHeader("{{ "Calendar" | trans }},{{ "Next" | trans }},&nbsp;");
+    myCals.attachHeader("#text_filter,#text_filter,#master_checkbox");
+    myCals.setColAlign("left,right,center");
+    myCals.setColTypes("ro,ro,ch");
+    myCals.setInitWidths("*,100,0");    
+    myCals.setColSorting("str,date,int");
+    myCals.init();
+    GlobalRefresh();
+});
+
+function GlobalRefresh() {
+    myLayoutUp.cells("a").progressOn();
+    envChart.clearAll();
+    envChart.load( "{{ url('xml_Report_reports_env') }}?job_class="+job_class, function() {
+        myLayoutUp.cells("a").progressOff();
+        myLayoutUp.cells("b").progressOn();
+        domChart.clearAll();
+        domChart.load( "{{ url('xml_Report_reports_dom') }}?env="+env, function() {
+            myLayoutUp.cells("b").progressOff();
+            myLayoutUp.cells("c").progressOn();
+            jclChart.clearAll();
+            jclChart.load( "{{ url('xml_Report_reports_jcl') }}?app=*" , function() {
+                myLayoutUp.cells("c").progressOff();
+                myLayoutUp.cells("d").progressOn();
+                spoolChart.clearAll();
+                spoolChart.load( "{{ url('xml_Report_reports_spool') }}?app=*" , function() {
+                    myLayoutUp.cells("d").progressOff();               
+                });
+            });
+        });
+    });
+
+    myLayoutMiddle.cells("a").progressOn();
+    jobsChart.clearAll();
+    jobsChart.load( "{{ url('xml_Report_reports_jobs') }}?limit=5", function() {
+        myLayoutMiddle.cells("a").progressOff();
+        myLayoutMiddle.cells("b").progressOn();
+        runsChart.clearAll();
+        runsChart.load( "{{ url('xml_Report_reports_runs') }}?limit=5" , function() {
+            myLayoutMiddle.cells("b").progressOff();
+            myLayoutMiddle.cells("c").progressOn();
+            alertsChart.clearAll();
+            alertsChart.load( "{{ url('xml_Report_reports_errors') }}?limit=3" , function() {
+                myLayoutMiddle.cells("c").progressOff();
+                myLayoutMiddle.cells("d").progressOn();
+                meteoList.clearAll();
+                meteoList.load( "{{ url('xml_Report_reports_errors') }}?limit=5" , function() {
+//                errorsChart.clearAll();
+//                errorsChart.load( "{{ url('xml_Report_reports_errors') }}?limit=5" , function() {
+                    myLayoutMiddle.cells("d").progressOff();               
+                });
+            });
+        });
+    });
+
+    myLayoutDown.cells("a").progressOn();
+    changesChart.clearAll();
+    changesChart.load(  "{{ url('xml_Report_app_jobs') }}", function() {
+        myLayoutDown.cells("a").progressOff();
+        myLayoutDown.cells("b").progressOn();
+        evolChart.clearAll();
+        evolChart.load( "{{ url('xml_Report_reports_evolution') }}" , function() {
+            myLayoutDown.cells("b").progressOff();
+            myLayoutDown.cells("c").progressOn();
+            eventChart.clearAll();
+            eventChart.load( "{{ url('xml_Report_runs_status_hour_chart') }}" , function() {
+                myLayoutDown.cells("c").progressOff();
+                myLayoutDown.cells("d").progressOn();
+                myCals.load("http://localhost/app_dev.php/report/fr/calendars/grid.xml?cals=*", function () {
+                    myLayoutDown.cells("d").progressOff();
+                });                
+            });
+        });
+    });
+
+};
+</script>
+<div id="CalObj"></div>
+{% endblock %}

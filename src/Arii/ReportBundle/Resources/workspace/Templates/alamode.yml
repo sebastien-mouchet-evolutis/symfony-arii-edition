@@ -1,0 +1,10 @@
+title:          Test Multibases
+description:    Connexion sur une base additionnelle
+header:         VAL
+icon:           error
+connection:     jobscheduler
+sql:
+    mysql: |
+        select APPLICATION,count(NAME) as NB
+        from REPORT_ATS
+        group by APPLICATION

@@ -1,0 +1,70 @@
+globalAcc = globalLayout.cells("a").attachAccordion({
+    icons_path: "{{ asset('/bundles/ariicore/images/ribbon/') }}",
+    items: [
+        {
+            id: "reports",                   // item id
+            text: "{{ "Reports" | trans }}",   // header's text
+            icon: "report.png"      // header's icon
+        },
+        {
+            id: "dashboards",                   // item id
+            text: "{{ "Dashboards" | trans }}",   // header's text
+            icon: "dashboard.png"      // header's icon
+        },
+        {
+            id: "documents",                   // item id
+            text: "{{ "Documents" | trans }}",   // header's text
+            icon: "doc.png"      // header's icon
+        },
+        {
+            id: "requests",                   // item id
+            text: "{{ "Requests" | trans }}",   // header's text
+            icon: "table.png"      // header's icon
+        },
+        {
+            id: "search",                   // item id
+            text: "{{ "Search" | trans }}",   // header's text
+            icon: "zoom.png"      // header's icon
+        },
+    ]
+});
+
+globalTabbar = globalAcc.cells("reports").attachTabbar();
+globalTabbar.addTab("global","{{ "Global" | trans }}","120px",null,true);
+globalTabbar.addTab("applications","{{ "Applications" | trans }}","120px");
+
+globalTree = globalTabbar.cells("global").attachTree();
+globalTree.setImagePath("{{ asset('/bundles/ariicore/images/tree/') }}");
+globalTree.load("{{ url('xml_Report_tree_menu') }}");
+globalTree.attachEvent("onClick", function(itemid){
+    window.location = "{{ url('arii_Report_index') }}"+itemid;
+    return true;
+});
+
+globalApps = globalTabbar.cells("applications").attachGrid();
+globalApps.selMultiRows = true;
+globalApps.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+globalApps.setHeader("{{ "Application" | trans }}");
+globalApps.attachHeader("#text_filter");
+globalApps.setColAlign("left");
+globalApps.setColTypes("ro");
+globalApps.setColSorting("str");
+globalApps.init();
+globalApps.load( "{{ url('xml_Report_apps_grid') }}" );
+globalApps.attachEvent("onRowDblClicked", function (id) {
+    window.location = "{{ url('arii_Report_app') }}?app="+id;
+});
+
+MyDocsTree = globalAcc.cells("documents").attachTree();
+MyDocsTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+MyDocsTree.load( "{{ url('xml_Report_snapshots_tree') }}");        
+
+myRequests = globalAcc.cells("requests").attachGrid();
+myRequests.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+myRequests.setHeader("#text_filter,#numeric_filter");
+myRequests.setColAlign("left,right");    
+myRequests.setInitWidths("*,70");
+myRequests.setColSorting("str,int");
+myRequests.init();
+myRequests.load( "{{ url('xml_Report_requests_list') }}");
+
