@@ -189,7 +189,6 @@ class ATSController extends Controller
                 
                 // On devrait pouvoir retrouver le spooler reference dans le portail, intérêt ?
                 $Job->setSpoolerName($Info['spooler_name']);
-                $Job->setSpoolerType('ATS');
 
                 $Job->setJobName($Info['job_name']);
                 $Job->setJobType('JOB'); # Si commande <>''
@@ -279,8 +278,9 @@ class ATSController extends Controller
             # Pour Autosys, un job est unique dans une meme instance
             $Job = $em->getRepository("AriiReportBundle:JOB")->findOneBy(
                 array( 
-                    'job_name'=> $Info['job_name'], 
-                    'spooler_name'=>  $Info['spooler_name']
+                    'spooler_name'=>  $Info['spooler_name'],
+                    'job_name'=> $Info['job_name']
+                    
                 )
             );
             
@@ -303,7 +303,6 @@ class ATSController extends Controller
 
             // On devrait pouvoir retrouver le spooler reference dans le portail, intérêt ?
             $Job->setSpoolerName($Info['spooler_name']);
-            $Job->setSpoolerType('ATS');
 
             $Job->setJobName($Info['job_name']);
             $Job->setJobType($Info['job_type']);
@@ -314,7 +313,7 @@ class ATSController extends Controller
             $Job->setCommand($Info['command']);
             $Job->setUser($Info['owner']);
             $Job->setMachine($Info['machine']);
-            $Job->setApplication($Info['application']);
+            $Job->setApp($Info['application']);
             $Job->setEnv($Info['env']);
 
             $Job->setDeleted(NULL);
@@ -445,7 +444,6 @@ class ATSController extends Controller
                     $Cal = $em->getRepository("AriiReportBundle:CAL")->findOneBy(
                                 array( 
                                     'name'  => $calendar,
-                                    'spooler_type' => 'ATS',
                                     'day'      => $day                                    
                                 ));            
                     if (!$Cal) {
@@ -455,8 +453,7 @@ class ATSController extends Controller
                     else {
                         $upd++;
                     }
-                    $Cal->setSpoolerName('VA1');
-                    $Cal->setSpoolerType('ATS');
+                    $Cal->setSpoolerName('.');
                     $Cal->setName($calendar);
                     $Cal->setDay($day);
                     

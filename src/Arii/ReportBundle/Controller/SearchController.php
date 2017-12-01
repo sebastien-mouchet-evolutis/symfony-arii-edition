@@ -28,16 +28,10 @@ class SearchController extends Controller
     public function gridAction()
     {
         $request = Request::createFromGlobals();        
-        $Filter = [];
-        foreach (['job_name', 'description','command'] as $f ) {
-            if ($request->get($f)!='')
-                $Filter[$f] = $request->get($f);
-        }
-
-        $Jobs = $this->getDoctrine()->getRepository("AriiReportBundle:JOB")->findJobs(
-            $request->get('job_name'),
-            $request->get('description'),                
-            $request->get('command')
+        $Jobs = $this->getDoctrine()->getRepository("AriiReportBundle:JOB")->findJob(
+            trim($request->get('job_name')),
+            trim($request->get('description')),                
+            trim($request->get('command'))
         );
         
         $render = $this->container->get('arii_core.render');     

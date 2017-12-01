@@ -5,9 +5,9 @@ namespace Arii\ReportBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Audit
+ * JOB
  *
- * @ORM\Table(name="REPORT_JOB",uniqueConstraints={@ORM\UniqueConstraint(name="job_idx", columns={"spooler_name", "job_name"})})
+ * @ORM\Table(name="REPORT_JOB",indexes={@ORM\Index(name="job_idx", columns={"spooler_name", "job_name"})})
  * @ORM\Entity(repositoryClass="Arii\ReportBundle\Entity\JOBRepository")
  */
 class JOB

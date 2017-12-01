@@ -1,0 +1,158 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SchedulerMonSysnotifications
+ *
+ * @ORM\Table(name="scheduler_mon_sysnotifications", indexes={@ORM\Index(name="SCHEDULER_MSN_N_ID", columns={"NOTIFICATION_ID"}), @ORM\Index(name="SCHEDULER_MSN_C_ID", columns={"CHECK_ID"}), @ORM\Index(name="SCHEDULER_MSN_S_ID", columns={"SYSTEM_ID"}), @ORM\Index(name="SCHEDULER_MSN_S_N", columns={"SERVICE_NAME"}), @ORM\Index(name="SCHEDULER_MSN_O_T", columns={"OBJECT_TYPE"}), @ORM\Index(name="SCHEDULER_MSN_RC", columns={"RETURN_CODE_FROM", "RETURN_CODE_TO"}), @ORM\Index(name="SCHEDULER_MSN_STEP", columns={"STEP_FROM", "STEP_TO"})})
+ * @ORM\Entity
+ */
+class SchedulerMonSysnotifications
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NOTIFICATION_ID", type="integer", nullable=false)
+     */
+    private $notificationId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="CHECK_ID", type="integer", nullable=false)
+     */
+    private $checkId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SYSTEM_ID", type="string", length=255, nullable=false)
+     */
+    private $systemId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SERVICE_NAME", type="string", length=255, nullable=false)
+     */
+    private $serviceName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="OBJECT_TYPE", type="integer", nullable=false)
+     */
+    private $objectType;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="RETURN_CODE_FROM", type="string", length=100, nullable=false)
+     */
+    private $returnCodeFrom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="RETURN_CODE_TO", type="string", length=100, nullable=false)
+     */
+    private $returnCodeTo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="STEP_FROM", type="string", length=100, nullable=false)
+     */
+    private $stepFrom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="STEP_TO", type="string", length=100, nullable=false)
+     */
+    private $stepTo;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="STEP_FROM_START_TIME", type="datetime", nullable=true)
+     */
+    private $stepFromStartTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="STEP_TO_END_TIME", type="datetime", nullable=true)
+     */
+    private $stepToEndTime;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NOTIFICATIONS", type="integer", nullable=false)
+     */
+    private $notifications;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="CURRENT_NOTIFICATION", type="integer", nullable=false)
+     */
+    private $currentNotification;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="MAX_NOTIFICATIONS", type="integer", nullable=false)
+     */
+    private $maxNotifications;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ACKNOWLEDGED", type="integer", nullable=false)
+     */
+    private $acknowledged;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="RECOVERED", type="integer", nullable=false)
+     */
+    private $recovered;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="SUCCESS", type="integer", nullable=false)
+     */
+    private $success;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+
+}

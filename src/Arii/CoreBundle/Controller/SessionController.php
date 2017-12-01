@@ -18,7 +18,6 @@ class SessionController extends Controller
 
         if ($request->query->get( 'scheduler' ))
             $portal->setJobScheduler($request->query->get( 'scheduler' ));
-
         
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
@@ -38,7 +37,7 @@ class SessionController extends Controller
                 $session->setRefDate( $request->query->get( 'ref_date' ) );                
             }
         }
-        
+
         // Date
         if ($request->query->get( 'day' )) 
             $portal->setDay( $request->query->get( 'day' ) );
@@ -46,25 +45,30 @@ class SessionController extends Controller
             $portal->setMonth( $request->query->get( 'month' ) );
         if ($request->query->get( 'year' )) 
             $portal->setYear( $request->query->get( 'year' ) );
-        
+
         if ($request->query->get( 'ref_past' )) 
-            $session->setRefPast( $request->query->get( 'ref_past' ) );
+            $portal->setRefPast( $request->query->get( 'ref_past' ) );
 
         if ($request->query->get( 'ref_future' )) 
-            $session->setRefFuture( $request->query->get( 'ref_future' ) );
+            $portal->setRefFuture( $request->query->get( 'ref_future' ) );
 
-        if ($request->query->get( 'refresh' )) {
+        if ($request->query->get( 'refresh' ))
             $portal->setRefresh( $request->query->get( 'refresh' ) );
-        }
-        
+
         if ($request->query->get( 'env' )) 
             $portal->setEnv( $request->query->get( 'env' ) );
-        
+
         if ($request->query->get( 'app' )) 
             $portal->setApp( $request->query->get( 'app' ) );
-        
+
+        if ($request->query->get( 'job_class' )) 
+            $portal->setJobClass( $request->query->get( 'job_class' ) );
+
         if ($request->query->get( 'tag' )) 
             $portal->setTag( $request->query->get( 'tag' ) );
+
+        if ($request->query->get( 'category' )) 
+            $portal->setCategory( $request->query->get( 'category' ) );
         
         if ($request->query->get( 'filter' )) {
             $portal->setUserFilterById( $request->query->get( 'filter' ) );
@@ -82,7 +86,6 @@ class SessionController extends Controller
             }
         }
         
-
         if ($request->query->get( 'node' )) {
             $node = $request->query->get( 'node' );
             $portal->setNode($node);

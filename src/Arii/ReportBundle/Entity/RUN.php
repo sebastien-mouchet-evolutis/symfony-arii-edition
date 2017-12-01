@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Autosys
  *
- * @ORM\Table(name="REPORT_RUN",indexes={@ORM\Index(name="run_idx", columns={"job_id","start_time"}),@ORM\Index(name="job_idx", columns={"spooler_name","job_name","start_time"})})
+ * @ORM\Table(name="REPORT_RUN",indexes={@ORM\Index(name="run_idx", columns={"spooler_name", "job_name", "start_time"})})
  * @ORM\Entity(repositoryClass="Arii\ReportBundle\Entity\RUNRepository")
  */
 class RUN
@@ -18,7 +18,6 @@ class RUN
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *     
      */
     private $id;
 
@@ -32,10 +31,17 @@ class RUN
     /**
      * @var string
      *
-     * @ORM\Column(name="job_name", type="string", length=64)
+     * @ORM\Column(name="job_name", type="string", length=255)
      */
     private $job_name;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="job_trigger", type="string", length=255, nullable=true)
+     */
+    private $job_trigger;
+    
     /**
      * @var string
      *
@@ -171,6 +177,29 @@ class RUN
     public function getJobName()
     {
         return $this->job_name;
+    }
+
+    /**
+     * Set job_trigger
+     *
+     * @param string $jobName
+     * @return RUN
+     */
+    public function setJobTrigger($jobName)
+    {
+        $this->job_trigger = $jobName;
+
+        return $this;
+    }
+
+    /**
+     * Get job_trigger
+     *
+     * @return string 
+     */
+    public function getJobTrigger()
+    {
+        return $this->job_trigger;
     }
 
     /**

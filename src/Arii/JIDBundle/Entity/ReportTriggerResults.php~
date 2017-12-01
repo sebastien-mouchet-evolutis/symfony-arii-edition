@@ -1,0 +1,95 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ReportTriggerResults
+ *
+ * @ORM\Table(name="report_trigger_results", indexes={@ORM\Index(name="REPORTING_RTR_TID", columns={"TRIGGER_ID"})})
+ * @ORM\Entity
+ */
+class ReportTriggerResults
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SCHEDULER_ID", type="string", length=100, nullable=false)
+     */
+    private $schedulerId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="HISTORY_ID", type="integer", nullable=false)
+     */
+    private $historyId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="TRIGGER_ID", type="integer", nullable=false)
+     */
+    private $triggerId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="START_CAUSE", type="string", length=50, nullable=false)
+     */
+    private $startCause;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="STEPS", type="integer", nullable=false)
+     */
+    private $steps;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="ERROR", type="boolean", nullable=false)
+     */
+    private $error;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ERROR_CODE", type="string", length=50, nullable=true)
+     */
+    private $errorCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ERROR_TEXT", type="string", length=255, nullable=true)
+     */
+    private $errorText;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+
+}

@@ -11,46 +11,18 @@ class RunsDayController extends Controller
     
     public function indexAction()
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),                
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
-        
-        return $this->render('AriiReportBundle:Dashboard\Runs:day.html.twig', 
-            array( 
-                'appl' => $app,
-                'env' => $env,
-                'day' => $day,
-                'month' => $month,
-                'year' => $year,
-                'day_past' => $day_past
-                ) 
-            );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
+        return $this->render('AriiReportBundle:Dashboard\Runs:day.html.twig', $Filters );
     }
 
     public function gridAction($limit=999)
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$application,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            0,
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
         
         // date fixe pour les jours
-        $date = new \DateTime(sprintf("%04d-%02d-%02d",$year,$month,$day));
+        $date = new \DateTime(sprintf("%04d-%02d-%02d",$Filters['year'],$Filters['month'],$Filters['day']));
         $em = $this->getDoctrine()->getManager();        
-        $Runs = $em->getRepository("AriiReportBundle:RUNDay")->findExecutionsByApp($date,$env);
+        $Runs = $em->getRepository("AriiReportBundle:RUNDay")->findExecutionsByApp($date,$Filters['env']);
         
         $portal = $this->container->get('arii_core.portal');
         $App = $portal->getApplications();
@@ -60,12 +32,12 @@ class RunsDayController extends Controller
         $nb=0;
         foreach ($Runs as $run) {
             if ($run['executions']>0) { 
-                $a = $run['application'];
+                $a = $run['app'];
                 if (!isset($App[$a])) continue;
                 if ($App[$a]['active']!=1) continue;
-                $xml .= '<row id="'.$run['application'].'">';
+                $xml .= '<row id="'.$a.'">';
                 $xml .= '<cell>'.$App[$a]['title'].'</cell>';
-                $xml .= '<cell>'.$run['application'].'</cell>';                
+                $xml .= '<cell>'.$a.'</cell>';                
                 $xml .= '<cell>'.$run['executions'].'</cell>';
                 $xml .= '<cell>'.$run['alarms'].'</cell>';
                 $xml .= '<cell>'.$run['acks'].'</cell>';
@@ -83,17 +55,7 @@ class RunsDayController extends Controller
 
     public function jobsAction($application='%',$env='P')
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$application,$day_past,$day,$month,$year,$start,$end,$class) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            0,
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' ),
-            $request->query->get( 'class' )
-        );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         $em = $this->getDoctrine()->getManager();
         // date fixe pour les jours

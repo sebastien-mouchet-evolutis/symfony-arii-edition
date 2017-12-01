@@ -1,0 +1,64 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SosftpFilesPositions
+ *
+ * @ORM\Table(name="sosftp_files_positions", uniqueConstraints={@ORM\UniqueConstraint(name="LOCAL_FILENAME", columns={"LOCAL_FILENAME"})})
+ * @ORM\Entity
+ */
+class SosftpFilesPositions
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HOST", type="string", length=128, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $host;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="REMOTE_DIR", type="string", length=255, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $remoteDir;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="REMOTE_FILENAME", type="string", length=255, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $remoteFilename;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="LOCAL_FILENAME", type="string", length=255, nullable=false)
+     */
+    private $localFilename;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FILE_SIZE", type="bigint", nullable=false)
+     */
+    private $fileSize;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="POSITION", type="integer", nullable=false)
+     */
+    private $position;
+
+
+}

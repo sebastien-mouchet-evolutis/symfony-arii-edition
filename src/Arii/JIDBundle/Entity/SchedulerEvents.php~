@@ -1,0 +1,109 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SchedulerEvents
+ *
+ * @ORM\Table(name="scheduler_events", indexes={@ORM\Index(name="SCHEDULER_EVENTS_EVENT", columns={"EVENT_CLASS", "EVENT_ID"})})
+ * @ORM\Entity
+ */
+class SchedulerEvents
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SPOOLER_ID", type="string", length=100, nullable=false)
+     */
+    private $spoolerId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="REMOTE_SCHEDULER_HOST", type="string", length=100, nullable=true)
+     */
+    private $remoteSchedulerHost;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="REMOTE_SCHEDULER_PORT", type="integer", nullable=true)
+     */
+    private $remoteSchedulerPort;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="JOB_CHAIN", type="string", length=250, nullable=true)
+     */
+    private $jobChain;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ORDER_ID", type="string", length=250, nullable=true)
+     */
+    private $orderId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="JOB_NAME", type="string", length=100, nullable=true)
+     */
+    private $jobName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EVENT_CLASS", type="string", length=100, nullable=false)
+     */
+    private $eventClass;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EVENT_ID", type="string", length=100, nullable=false)
+     */
+    private $eventId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="EXIT_CODE", type="string", length=100, nullable=true)
+     */
+    private $exitCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PARAMETERS", type="text", nullable=true)
+     */
+    private $parameters;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="EXPIRES", type="datetime", nullable=true)
+     */
+    private $expires;
+
+
+}

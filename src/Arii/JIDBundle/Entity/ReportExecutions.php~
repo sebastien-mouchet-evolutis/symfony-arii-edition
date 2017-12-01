@@ -1,0 +1,158 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ReportExecutions
+ *
+ * @ORM\Table(name="report_executions", indexes={@ORM\Index(name="REPORTING_RE_SID", columns={"SCHEDULER_ID"}), @ORM\Index(name="REPORTING_RE_TID", columns={"TRIGGER_ID"}), @ORM\Index(name="REPORTING_RE_STIME", columns={"START_TIME"}), @ORM\Index(name="REPORTING_RE_SUSP", columns={"SUSPENDED"}), @ORM\Index(name="REPORTING_RE_NAME", columns={"NAME"})})
+ * @ORM\Entity
+ */
+class ReportExecutions
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SCHEDULER_ID", type="string", length=100, nullable=false)
+     */
+    private $schedulerId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="HISTORY_ID", type="integer", nullable=false)
+     */
+    private $historyId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="TRIGGER_ID", type="integer", nullable=false)
+     */
+    private $triggerId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="STEP", type="integer", nullable=false)
+     */
+    private $step;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="NAME", type="string", length=255, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="BASENAME", type="string", length=255, nullable=false)
+     */
+    private $basename;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TITLE", type="string", length=255, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="START_TIME", type="datetime", nullable=false)
+     */
+    private $startTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="END_TIME", type="datetime", nullable=true)
+     */
+    private $endTime;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="STATE", type="string", length=255, nullable=false)
+     */
+    private $state;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CAUSE", type="string", length=50, nullable=false)
+     */
+    private $cause;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="ERROR", type="boolean", nullable=false)
+     */
+    private $error;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ERROR_CODE", type="string", length=50, nullable=true)
+     */
+    private $errorCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ERROR_TEXT", type="string", length=255, nullable=true)
+     */
+    private $errorText;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="AGENT_URL", type="string", length=100, nullable=true)
+     */
+    private $agentUrl;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="IS_RUNTIME_DEFINED", type="boolean", nullable=false)
+     */
+    private $isRuntimeDefined;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="SUSPENDED", type="boolean", nullable=false)
+     */
+    private $suspended;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+
+}

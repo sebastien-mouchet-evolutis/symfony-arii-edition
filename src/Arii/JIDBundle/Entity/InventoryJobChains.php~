@@ -1,0 +1,137 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InventoryJobChains
+ *
+ * @ORM\Table(name="inventory_job_chains", uniqueConstraints={@ORM\UniqueConstraint(name="INVENTORY_IJC_UNIQUE", columns={"FILE_ID"})}, indexes={@ORM\Index(name="REPORTING_IJC_INST_ID", columns={"INSTANCE_ID"}), @ORM\Index(name="REPORTING_IJC_FILE_ID", columns={"FILE_ID"}), @ORM\Index(name="REPORTING_IJC_NAME", columns={"NAME"})})
+ * @ORM\Entity
+ */
+class InventoryJobChains
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="INSTANCE_ID", type="integer", nullable=false)
+     */
+    private $instanceId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FILE_ID", type="integer", nullable=false)
+     */
+    private $fileId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="START_CAUSE", type="string", length=50, nullable=false)
+     */
+    private $startCause;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="NAME", type="string", length=255, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="BASENAME", type="string", length=255, nullable=false)
+     */
+    private $basename;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TITLE", type="string", length=255, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="MAX_ORDERS", type="integer", nullable=true)
+     */
+    private $maxOrders;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="DISTRIBUTED", type="integer", nullable=false)
+     */
+    private $distributed;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PROCESS_CLASS", type="string", length=255, nullable=true)
+     */
+    private $processClass;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PROCESS_CLASS_NAME", type="string", length=255, nullable=false)
+     */
+    private $processClassName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PROCESS_CLASS_ID", type="integer", nullable=false)
+     */
+    private $processClassId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FW_PROCESS_CLASS", type="string", length=255, nullable=true)
+     */
+    private $fwProcessClass;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="FW_PROCESS_CLASS_NAME", type="string", length=255, nullable=false)
+     */
+    private $fwProcessClassName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FW_PROCESS_CLASS_ID", type="integer", nullable=false)
+     */
+    private $fwProcessClassId;
+
+
+}

@@ -7,10 +7,20 @@
 {% endblock dhtmlx_plus %}
 {% block body %}
 <script>
+var app="{{ appl }}",
+    env="{{ env }}",
+    job_class="{{ job_class }}",
+    category="{{ category }}",
+    day = {{ day }},
+    month={{ month }},
+    year={{ year }},
+    day_past={{ day_past }};
+
 dhtmlxEvent(window,"load",function(){ 
 var size=345;
 
     globalLayout = new dhtmlXLayoutObject(document.body,"3W");
+    globalLayout.cells("a").hideHeader();
     globalLayout.cells("a").setWidth(size);
     globalLayout.cells("c").hideHeader();
     globalLayout.cells("b").setWidth(600); 
@@ -25,14 +35,11 @@ var size=345;
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
- 
-    myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
-    globalLayout.cells("b").progressOn();
-    myTree.load( "{{ url('xml_Report_snapshots_tree') }}", function (id) {
-        globalLayout.cells("b").progressOff();
-    });        
 
+    MyDocsTree = globalLayout.cells("a").attachTree();
+    MyDocsTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    MyDocsTree.load( "{{ url('xml_Report_snapshots_tree') }}");        
+    
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.setHeader("{{ "File" | trans }},{{ "Type" | trans }},{{ "Date" | trans }},{{ "Size" | trans }}");
     myGrid.attachHeader("#text_filter,#select_filter,#text_filter,#numeric_filter");
@@ -45,7 +52,7 @@ var size=345;
     myGrid.load("{{ url('xml_Report_snapshots_grid') }}");
  
     // Clic sur l'arbre => Liste les fichiers    
-    myTree.attachEvent("onClick",function(id){
+    MyDocsTree.attachEvent("onClick",function(id){
         globalLayout.cells("b").progressOn();
         myGrid.load("{{ url('xml_Report_snapshots_grid') }}?path="+id, function() {
             globalLayout.cells("c").attachHTMLString('');
@@ -57,8 +64,6 @@ var size=345;
     myGrid.attachEvent("onRowDblClicked", function(id) {
         globalLayout.cells("c").attachURL("{{ url('html_Report_snapshots_view') }}?file="+encodeURIComponent(id),false)
     });
-
-    globalLayout.cells("a").hideHeader();
 });
 
 function GlobalRefresh() {

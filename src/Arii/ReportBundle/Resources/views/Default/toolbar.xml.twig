@@ -1,30 +1,36 @@
 <toolbar>    
-    <item type="buttonTwoState" id="D_BUSINESS" tooltip="{{ "Business" | trans }}"{% if app=='B'%} selected="true"{% endif %} img="business.png"/>
-    <item type="buttonTwoState" id="D_INFRA" tooltip="{{ "Exploitation" | trans }}"{% if app=='B'%} selected="true"{% endif %} img="exploitation.png"/>
-    <item type="separator" id="sep0"/>
+    <item type="buttonSelect" id="ENV" text="{{ env }}">
+        <item type="button" id="eP" text="{{ "Production" | trans }}"{% if env=='P' %} selected="true"{% endif %}>
+        </item>
+        <item type="button" id="eR" text="{{ "Recette" | trans }}"{% if env=='R' %} selected="true"{% endif %}/>
+        <item type="button" id="eI" text="{{ "Integration" | trans }}"{% if env=='I' %} selected="true"{% endif %}/>
+        <item type="button" id="eT" text="{{ "Test" | trans }}"{% if env=='T' %} selected="true"{% endif %}/>
+    </item>
+    <item type="separator" id="sep3"/>
+    <item type="buttonSelect" id="CAT" text="{{ category }}" img="category.png">
+        {% for cat,apps in Categories %}
+            <userdata name="{{ cat }}">{{ apps }}</userdata>
+        {% endfor %}
+        <item type="button" id="_CAT_" text="{{ category }}"{% if category=='*'%} selected="true"{% endif %}/>
+        <item type="separator" id="sep3"/>
+        {% for cat,apps in Categories %}
+            <item type="button" id="c{{ cat }}" text="{{ cat | trans }}"{% if cat==category%} selected="true"{% endif %}/>
+        {% endfor %}
+    </item>
     <item type="buttonSelect" id="APP" text="{{ appl }}" img="bricks.png">
     <item type="button" id="_APP_" text="{{ "All applications" | trans }}"{% if app=='*'%} selected="true"{% endif %}/>
     <item type="separator" id="sep1"/>
 {% for app,application in Applications %}
-    <item type="button" id="{{ app }}" text="{{ application }}"{% if app==appl%} selected="true"{% endif %}/>
+    <item type="button" id="a{{ app }}" text="{{ application }}"{% if app==appl%} selected="true"{% endif %}/>
 {% endfor %}        
     </item>
-    <item type="buttonSelect" id="ENV" text="{{ env }}">
-<!--
-        <item type="button" id="_ENV_" text="{{ "All environments" | trans }}"{% if env=='*'%} selected="true"{% endif %}/>
-        <item type="separator" id="sep2"/>
--->
-        <item type="button" id="P" text="{{ "Production" | trans }}"{% if env=='P' %} selected="true"{% endif %}/>
-        <item type="button" id="R" text="{{ "Recette" | trans }}"{% if env=='R' %} selected="true"{% endif %}/>
-        <item type="button" id="I" text="{{ "Integration" | trans }}"{% if env=='I' %} selected="true"{% endif %}/>
-        <item type="button" id="T" text="{{ "Test" | trans }}"{% if env=='T' %} selected="true"{% endif %}/>
-    </item>
-    <item type="separator" id="sep3"/>
-    <item type="buttonSelect" id="JOB_CLASS" text="{{ tag }}" img="cog.png">
-        <item type="button" id="_JCL_" text="{{ "All types" | trans }}"{% if tag=='*'%} selected="true"{% endif %}/>
+    <item type="separator" id="sep0"/>
+    <item type="buttonSelect" id="JOB_CLASS" text="{{ job_class }}" img="cog.png">
+        <item type="button" id="_JCL_" text="{{ "All types" | trans }}"{% if job_class=='*'%} selected="true"{% endif %}/>
         <item type="separator" id="sep3"/>
         {% for jcl in Classes %}
-            <item type="button" id="{{ jcl }}" text="{{ jcl | trans }}"{% if tag==jcl%} selected="true"{% endif %}/>
+            {% set jcl_text =  "class." ~ jcl %}
+            <item type="button" id="{{ jcl }}" text="{{ jcl_text | trans }}"{% if job_class==jcl%} selected="true"{% endif %}/>
         {% endfor %}        
     </item>
     <item type="separator" id="sep4"/>    
@@ -34,32 +40,24 @@
     {% endfor %}
     </item>
     <item type="buttonSelect" id="MONTH" text="{{ month }}">
-        <item type="button" id="1" text="{{ "month.1" | trans }}"{% if month==1%} selected="true"{% endif %}/>
-        <item type="button" id="2" text="{{ "month.2" | trans }}"{% if month==2%} selected="true"{% endif %}/>
-        <item type="button" id="3" text="{{ "month.3" | trans }}"{% if month==3%} selected="true"{% endif %}/>
-        <item type="button" id="4" text="{{ "month.4" | trans }}"{% if month==4%} selected="true"{% endif %}/>
-        <item type="button" id="5" text="{{ "month.5" | trans }}"{% if month==5%} selected="true"{% endif %}/>
-        <item type="button" id="6" text="{{ "month.6" | trans }}"{% if month==6%} selected="true"{% endif %}/>
-        <item type="button" id="7" text="{{ "month.7" | trans }}"{% if month==7%} selected="true"{% endif %}/>
-        <item type="button" id="8" text="{{ "month.8" | trans }}"{% if month==8%} selected="true"{% endif %}/>
-        <item type="button" id="9" text="{{ "month.9" | trans }}"{% if month==9%} selected="true"{% endif %}/>
-        <item type="button" id="10" text="{{ "month.10" | trans }}"{% if month==10%} selected="true"{% endif %}/>
-        <item type="button" id="11" text="{{ "month.11" | trans }}"{% if month==11%} selected="true"{% endif %}/>
-        <item type="button" id="12" text="{{ "month.12" | trans }}"{% if month==12%} selected="true"{% endif %}/>
+        <item type="button" id="m1" text="{{ "month.1" | trans }}"{% if month==1%} selected="true"{% endif %}/>
+        <item type="button" id="m2" text="{{ "month.2" | trans }}"{% if month==2%} selected="true"{% endif %}/>
+        <item type="button" id="m3" text="{{ "month.3" | trans }}"{% if month==3%} selected="true"{% endif %}/>
+        <item type="button" id="m4" text="{{ "month.4" | trans }}"{% if month==4%} selected="true"{% endif %}/>
+        <item type="button" id="m5" text="{{ "month.5" | trans }}"{% if month==5%} selected="true"{% endif %}/>
+        <item type="button" id="m6" text="{{ "month.6" | trans }}"{% if month==6%} selected="true"{% endif %}/>
+        <item type="button" id="m7" text="{{ "month.7" | trans }}"{% if month==7%} selected="true"{% endif %}/>
+        <item type="button" id="m8" text="{{ "month.8" | trans }}"{% if month==8%} selected="true"{% endif %}/>
+        <item type="button" id="m9" text="{{ "month.9" | trans }}"{% if month==9%} selected="true"{% endif %}/>
+        <item type="button" id="m10" text="{{ "month.10" | trans }}"{% if month==10%} selected="true"{% endif %}/>
+        <item type="button" id="m11" text="{{ "month.11" | trans }}"{% if month==11%} selected="true"{% endif %}/>
+        <item type="button" id="m12" text="{{ "month.12" | trans }}"{% if month==12%} selected="true"{% endif %}/>
     </item>
     <item type="buttonSelect" id="YEAR" text="{{ year }}" img="">
 {% for i in 2000..2030 %}
     <item type="button" id="{{ i }}" text="{{ i }}"{% if i==year%} selected="true"{% endif %}/>
 {% endfor %}
     </item>
-<!--    
-    <item type="separator" id="sep5"/>    
-    <item type="buttonSelect" id="HOUR" text="{{ hour }}" img="time.png">
-    {% for i in 0..23 %}
-        <item type="button" id="h{{ i }}" text="{{ i }}"{% if hour==i %} selected="true"{% endif %}/>
-    {% endfor %}
-    </item>
--->
     <item type="separator" id="sep6"/>
     <item type="buttonSelect" id="DAY_PAST" text="{{ day_past }}" img="timeline.png">
         <item type="button" id="-1" text="1 {{ "Day" | trans }}"{% if day_past==-1%} selected="true"{% endif %}/>
@@ -69,16 +67,4 @@
         <item type="button" id="-180" text="6 {{ "Months" | trans }}"{% if day_past==-180%} selected="true"{% endif %}/>
         <item type="button" id="-365" text="1 {{ "Year" | trans }}"{% if day_past==-365%} selected="true"{% endif %}/>
     </item>
-    <item type="separator" id="sep7"/>    
-    <item type="buttonSelect" id="SPOOLER" text="{{ "Spooler" | trans }}" img="cog.png">
-    {% for spool in Spoolers %}        
-        <item type="button" id="s{{ spool }}" text="{{ spool }}"{% if spool==spooler %} selected="true"{% endif %}/>
-    {% endfor %}
-    </item>
-<!--
-    <item type="buttonTwoState" id="tech_job" tooltip="{{ "Technical jobs" | trans }}" img="spooler_on.png" imgdis="spooler_off.png" selected="false"/>
-    <item type="buttonTwoState" id="temp_job" tooltip="{{ "Temporary jobs" | trans }}" img="bin.png" imgdis="bin_closed.png" selected="false"/>
-    <item type="separator" id="sep1"/>    
-    <item type="button" id="get" title="{{ "Download" | trans }}" img="pdf.png"/>
--->
 </toolbar>

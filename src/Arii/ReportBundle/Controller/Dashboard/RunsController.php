@@ -11,26 +11,8 @@ class RunsController extends Controller
     
     public function indexAction()
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),                
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
-        
-        return $this->render('AriiReportBundle:Dashboard\Runs:index.html.twig', 
-            array( 
-                'appl' => $app,
-                'env' => $env,
-                'month' => $month,
-                'year' => $year,
-                'day_past' => $day_past
-                ) 
-            );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
+        return $this->render('AriiReportBundle:Dashboard\Runs:index.html.twig', $Filters );
     }
 
     public function gridAction()
@@ -57,17 +39,7 @@ class RunsController extends Controller
     
     public function executionsChartAction($limit=10)
     {
-        
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$application,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            -30,
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         $em = $this->getDoctrine()->getManager();
         $Runs = $em->getRepository("AriiReportBundle:RUNMonth")->findApplicationsExecutions($year*1,$month*1,$env);
@@ -100,16 +72,7 @@ class RunsController extends Controller
 
     public function alarmsChartAction($limit=10)
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$application,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            -30,
-            $request->query->get( 'day' ),                
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         $em = $this->getDoctrine()->getManager();
         $Runs = $em->getRepository("AriiReportBundle:RUNMonth")->findApplicationsAlarms($year,$month,$env);
@@ -137,16 +100,7 @@ class RunsController extends Controller
      
      public function StatusChartAction($app='',$env='',$mode='dashboard')
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         $em = $this->getDoctrine()->getManager();
         $Runs = $em->getRepository("AriiReportBundle:RUNMonth")->findExecutionsByMonth($start->format('Y')*100+$start->format('m'),$end->format('Y')*100+$end->format('m'),$env,$app);
@@ -172,16 +126,7 @@ class RunsController extends Controller
     // bloqué sur 3 mois
     public function ApplicationsChartAction($app='',$env='',$mode='dashboard')
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            -120,
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
         
         $em = $this->getDoctrine()->getManager();
         $Runs = $em->getRepository("AriiReportBundle:RUNMonth")->findApplicationsByMonths($start->format('Y')*100+$start->format('m'),$end->format('Y')*100+$end->format('m'),$env,$app);
@@ -316,22 +261,10 @@ class RunsController extends Controller
 
      public function StatusPerHourChartAction($app='*',$env='P',$mode='dashboard')
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
-
-        $em = $this->getDoctrine()->getManager();
-        $from = clone $end->modify('first day of this month');
-        $to = clone $end->modify('last day of this month');
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
         
-        $R = $em->getRepository("AriiReportBundle:RUNHour")->findExecutionsByHour($from,$to,$env,$app);
+        $em = $this->getDoctrine()->getManager();
+        $R = $em->getRepository("AriiReportBundle:RUNHour")->findRuns($Filters['start'],$Filters['end'],$Filters['env'],$Filters['appl'],$Filters['job_class']);
         $Runs = array();        
         foreach ($R as $run) {
             $id = $run['date']->format('Ymd').':'.sprintf("%02d",$run['hour']);
@@ -340,7 +273,7 @@ class RunsController extends Controller
         } 
      
         // complement avec les evenements
-        $Events = $em->getRepository("AriiCoreBundle:Event")->findEventsPerHour($from,$to);        
+        $Events = $em->getRepository("AriiCoreBundle:Event")->findEventsPerHour($Filters['start'],$Filters['end']);        
         foreach ($Events as $event) {
             $begin = clone $event['start_time'];
             $interval = $event['start_time']->diff( $event['end_time'] );

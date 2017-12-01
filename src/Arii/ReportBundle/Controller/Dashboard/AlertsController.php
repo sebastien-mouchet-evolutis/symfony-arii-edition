@@ -19,7 +19,7 @@ class AlertsController extends Controller
         $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         $em = $this->getDoctrine()->getManager();
-        $Runs = $em->getRepository("AriiReportBundle:RUNHour")->findAlerts($Filters['start'],$Filters['end'],$Filters['env'],$Filters['appl'],$Filters['tag']);        
+        $Runs = $em->getRepository("AriiReportBundle:RUNHour")->findAlerts($Filters['start'],$Filters['end'],$Filters['env'],$Filters['appl'],$Filters['job_class']);        
 
         $xml = "<?xml version='1.0' encoding='iso-8859-1'?><rows>";
         $xml .= '<head><afterInit><call command="clearAll"/></afterInit></head>';

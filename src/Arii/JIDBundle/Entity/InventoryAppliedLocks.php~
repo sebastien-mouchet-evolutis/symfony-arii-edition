@@ -1,0 +1,53 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InventoryAppliedLocks
+ *
+ * @ORM\Table(name="inventory_applied_locks", uniqueConstraints={@ORM\UniqueConstraint(name="INVENTORY_IAL_UNIQUE", columns={"JOB_ID", "LOCK_ID"})})
+ * @ORM\Entity
+ */
+class InventoryAppliedLocks
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="JOB_ID", type="integer", nullable=false)
+     */
+    private $jobId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="LOCK_ID", type="integer", nullable=false)
+     */
+    private $lockId;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+
+}

@@ -15,6 +15,7 @@ class RUNController extends Controller
     // Mise a jour des apps
     // Obsolete
     // un module ne doit pas changer le core.
+    // et les applications sont liées à un job
     public function APPAction()            
     {
         $em = $this->getDoctrine()->getManager();
@@ -94,22 +95,16 @@ class RUNController extends Controller
     {
         // par défaut
         $request = Request::createFromGlobals();
-        // Mode automatique, reprise sur la semaine
+        // Mode automatique, reprise sur 10 jours
         if ($request->query->get( 'day' )=='') {
             $end = new \DateTime();
             $start = clone $end;
-            $start->modify('-7 days');
+            $start->modify('-10 days');
         }
         else {
-            $filter = $this->container->get('report.filter');
-            list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-                $request->query->get( 'env' ),
-                $request->query->get( 'app' ),
-                $request->query->get( 'day_past' ),                
-                $request->query->get( 'day' ),
-                $request->query->get( 'month' ),
-                $request->query->get( 'year' )
-            );
+            $Filters = $this->container->get('report.filter')->getRequestFilter();
+            $end = $Filters['end'];
+            $start = $Filters['start'];
         }
         if ($request->query->get( 'force' )!='')
             $force = $request->query->get( 'force' );
@@ -177,7 +172,7 @@ class RUNController extends Controller
             $hour = $run['hour'];
             $Agg = $em->getRepository("AriiReportBundle:RUNHour")->findOneBy(
                 array(  'spooler_name' => $run['spooler_name'],
-                        'application'  => $run['app'], 
+                        'app'  => $run['app'], 
                         'env' => $run['env'], 
                         'job_class' => $run['job_class'], 
                         'date' => $date, 
@@ -197,7 +192,7 @@ class RUNController extends Controller
             $Agg->setHour($hour);
             $Agg->setEnv($run['env']);
             $Agg->setJobClass($run['job_class']);      
-            $Agg->setApplication($run['app']);
+            $Agg->setApp($run['app']);
 
             if ($run['executions']=='') $run['executions']=0;
             $Agg->setExecutions($run['executions']);
@@ -228,18 +223,12 @@ class RUNController extends Controller
         if ($request->query->get( 'day' )=='') {
             $end = new \DateTime();
             $start = clone $end;
-            $start->modify('-7 days');
+            $start->modify('-30 days');
         }
         else {
-            $filter = $this->container->get('report.filter');
-            list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-                $request->query->get( 'env' ),
-                $request->query->get( 'app' ),
-                $request->query->get( 'day_past' ),                
-                $request->query->get( 'day' ),
-                $request->query->get( 'month' ),
-                $request->query->get( 'year' )
-            );
+            $Filters = $this->container->get('report.filter')->getRequestFilter();
+            $end = $Filters['end'];
+            $start = $Filters['start'];            
         }
         if ($request->query->get( 'force' )!='')
             $force = $request->query->get( 'force' );
@@ -260,7 +249,7 @@ class RUNController extends Controller
         foreach ($Runs as $run) {
             $Agg = $em->getRepository("AriiReportBundle:RUNDay")->findOneBy(
                 array(  'date' => $run['date'], 
-                        'application'=> $run['application'] , 
+                        'app'=> $run['app'] , 
                         'env' => $run['env'], 
                         'job_class' => $run['job_class'], 
                         'spooler_name' => $run['spooler_name'] ) 
@@ -274,7 +263,7 @@ class RUNController extends Controller
             }            
             $Agg->setDate($run['date']);
             $Agg->setEnv($run['env']);
-            $Agg->setApplication($run['application']);
+            $Agg->setApp($run['app']);
             $Agg->setSpoolerName($run['spooler_name']);
             $Agg->setJobClass($run['job_class']);
             
@@ -302,18 +291,12 @@ class RUNController extends Controller
         if ($request->query->get( 'day' )=='') {
             $end = new \DateTime();
             $start = clone $end;
-            $start->modify('-7 days');
+            $start->modify('-10 days');
         }
         else {
-            $filter = $this->container->get('report.filter');
-            list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-                $request->query->get( 'env' ),
-                $request->query->get( 'app' ),
-                $request->query->get( 'day_past' ),                
-                $request->query->get( 'day' ),
-                $request->query->get( 'month' ),
-                $request->query->get( 'year' )
-            );
+            $Filters = $this->container->get('report.filter')->getRequestFilter();
+            $end = $Filters['end'];
+            $start = $Filters['start'];            
         }
         if ($request->query->get( 'force' )!='')
             $force = $request->query->get( 'force' );
@@ -333,8 +316,7 @@ class RUNController extends Controller
         $Runs = $em->getRepository("AriiReportBundle:RUNDay")->findRunsByMonth($start,$end);
         $n = $new = $upd = 0;
         foreach ($Runs as $Run) {
-            
-            $app = $Run['application'];
+            $app = $Run['app'];
             $env = $Run['env'];
             $month = $Run['run_month'];
             $year = $Run['run_year'];
@@ -345,7 +327,7 @@ class RUNController extends Controller
             $acks = $Run['acks'];
             
             $RunMonth = $em->getRepository("AriiReportBundle:RUNMonth")->findOneBy(
-                    array(  'application'=>$app,
+                    array(  'app'=>$app,
                             'env' =>$env, 
                             'spooler_name' => $spooler_name, 
                             'month' => $month, 
@@ -361,7 +343,7 @@ class RUNController extends Controller
                 $upd++;
             }
             
-            $RunMonth->setApplication($app);            
+            $RunMonth->setApp($app);            
             $RunMonth->setEnv($env);
             $RunMonth->setMonth($month);
             $RunMonth->setYear($year);

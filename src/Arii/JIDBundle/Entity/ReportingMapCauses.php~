@@ -1,0 +1,53 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ReportingMapCauses
+ *
+ * @ORM\Table(name="reporting_map_causes", indexes={@ORM\Index(name="REPORTING_INX_RMC_CAUSE", columns={"CAUSE"})})
+ * @ORM\Entity
+ */
+class ReportingMapCauses
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CAUSE", type="string", length=100, nullable=false)
+     */
+    private $cause;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="MAPPED_CAUSE", type="string", length=255, nullable=false)
+     */
+    private $mappedCause;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+
+}

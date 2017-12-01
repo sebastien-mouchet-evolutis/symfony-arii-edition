@@ -18,59 +18,7 @@ function StateRibbon (itemid,state) {
 }
 
 function ClickRibbon (itemid,state) {
-    switch(itemid) {
-    case '-30': case '-60': case '-90': case '-120': case '-180':
-    case '-365':
-        dhx4.ajax.get( "{{ url('arii_session_update') }}?day_past="+itemid, function() {
-            var currentTime = new Date();
-            var newTime = new Date();
-            newTime.setDate(currentTime.getDate() + Number(itemid) );
-            var day = newTime.getDate();
-            var month = newTime.getMonth()+1;
-            var year = newTime.getFullYear();
-            if (day < 10){
-            day = "0" + day;
-            }
-            if (month < 10){
-            month = "0" + month;
-            }
-            myRibbon.setItemText( "day_past", year + "-" + month + "-" +  day );
-            GlobalRefresh();
-        });
-        break;
-        case 'menu_index':
-            window.location = "{{ url('arii_Report_index') }}";
-            break;
-        case 'import':
-            window.location = "{{ url('arii_Report_import') }}";
-            break;
-        case 'edit':
-            window.location = "{{ url('arii_Report_edit') }}";
-            break;
-        default:    
-            // Index numeric 
-            if (Number.isInteger(itemid)) {
-                window.location = "{{ url('arii_Report_index') }}";
-            }
-            else {    
-                if (itemid.substr(0,7)=='request') {
-                    window.location = "{{ url('arii_Report_requests') }}?request="+itemid.substr(8);
-                }
-                else if (itemid.substr(0,4)=='env.') {
-                    dhx4.ajax.get( "{{ url('arii_session_update') }}?env="+itemid.substr(4), function() {
-                        GlobalRefresh();
-                    });
-                }
-                else if (itemid.substr(0,4)=='app.') {
-                    dhx4.ajax.get( "{{ url('arii_session_update') }}?app="+itemid.substr(4), function() {
-                        GlobalRefresh();
-                    });
-                }
-                else {
-                    window.location = "{{ url('arii_Report_index') }}"+itemid;
-                }
-            }
-    }
+    window.location = "{{ url('arii_Report_index') }}"+itemid;
 }
 
 </script>

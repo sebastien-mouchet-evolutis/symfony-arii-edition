@@ -1,0 +1,83 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SchedulerOrderStepHistory
+ *
+ * @ORM\Table(name="scheduler_order_step_history", indexes={@ORM\Index(name="SCHEDULER_OSH_TASK_ID", columns={"TASK_ID"})})
+ * @ORM\Entity
+ */
+class SchedulerOrderStepHistory
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="HISTORY_ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $historyId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="STEP", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $step;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="TASK_ID", type="integer", nullable=false)
+     */
+    private $taskId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="STATE", type="string", length=100, nullable=true)
+     */
+    private $state;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="START_TIME", type="datetime", nullable=false)
+     */
+    private $startTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="END_TIME", type="datetime", nullable=true)
+     */
+    private $endTime;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ERROR", type="integer", nullable=true)
+     */
+    private $error;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ERROR_CODE", type="string", length=50, nullable=true)
+     */
+    private $errorCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ERROR_TEXT", type="string", length=250, nullable=true)
+     */
+    private $errorText;
+
+
+}

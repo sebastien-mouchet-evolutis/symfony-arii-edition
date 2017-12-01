@@ -10,29 +10,8 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end,$class) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' ),
-            $request->query->get( 'job_class' )    
-        );
-        
-        return $this->render('AriiReportBundle:Import:aggregation.html.twig', 
-            array( 
-                'appl' => $app,
-                'env' => $env,
-                'job_class' => $class,
-                'month' => $month,
-                'day' => $day,
-                'year' => $year,
-                'day_past' => $day_past
-                ) 
-            );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
+        return $this->render('AriiReportBundle:Import:aggregation.html.twig', $Filters );
     }
     
     public function toolbarAction()

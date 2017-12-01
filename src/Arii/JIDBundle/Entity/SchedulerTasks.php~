@@ -1,0 +1,74 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SchedulerTasks
+ *
+ * @ORM\Table(name="scheduler_tasks")
+ * @ORM\Entity
+ */
+class SchedulerTasks
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="TASK_ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $taskId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SPOOLER_ID", type="string", length=100, nullable=false)
+     */
+    private $spoolerId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CLUSTER_MEMBER_ID", type="string", length=100, nullable=true)
+     */
+    private $clusterMemberId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="JOB_NAME", type="string", length=255, nullable=false)
+     */
+    private $jobName;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="ENQUEUE_TIME", type="datetime", nullable=true)
+     */
+    private $enqueueTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="START_AT_TIME", type="datetime", nullable=true)
+     */
+    private $startAtTime;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PARAMETERS", type="text", nullable=true)
+     */
+    private $parameters;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TASK_XML", type="text", nullable=true)
+     */
+    private $taskXml;
+
+
+}

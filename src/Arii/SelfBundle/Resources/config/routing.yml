@@ -54,6 +54,10 @@ xml_Self_grid_menu:
     path:  /request/menu.xml
     defaults: { _controller: AriiSelfBundle:Request:menu }
 
+xml_Self_grid_menu2:
+    path:  /request/menu2.xml
+    defaults: { _controller: AriiSelfBundle:Request:menu2 }
+
 json_Self_form:
     path:  /request/form.json
     defaults: { _controller: AriiSelfBundle:Request:form }

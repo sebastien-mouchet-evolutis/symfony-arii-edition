@@ -13,35 +13,13 @@ class DefaultController extends Controller
     {
         $Filters = $this->container->get('report.filter')->getRequestFilter();
         $Filters['header']=$Filters['footer']=0;
-        return $this->render('AriiReportBundle:Dashboard:index.html.twig', $Filters ); 
+        return $this->render('AriiReportBundle:Default:index.html.twig', $Filters ); 
     }
 
     public function publicAction()
     {
-        $request = Request::createFromGlobals();
-
-        // par defaut: mois precedent.
-        $date = new \DateTime('now');
-        $date->modify('last day of previous month');
-
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),                
-            ($request->query->get( 'month' )!=''?$request->query->get( 'month' ):$date->format('m')),
-            ($request->query->get( 'year' )!=''?$request->query->get( 'year' ):$date->format('Y'))
-        );
-        return $this->render('AriiReportBundle:Default:public.html.twig', 
-            array( 
-                'appl' => $app,
-                'env' => $env,
-                'month' => $month,
-                'year' => $year,
-                'day_past' => $day_past
-                ) 
-            );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
+        return $this->render('AriiReportBundle:Default:public.html.twig', $Filters );
     }
     
     public function summaryAction()
@@ -80,19 +58,31 @@ class DefaultController extends Controller
 
         // Récuperer les applications
         $Applications = [];
+        $Categories = [];
         foreach ($this->container->get('arii_core.portal')->getApplications() as $appl) {
             if ($appl['active']==0) continue;
+            $cat = $appl['category'];
             $id = $appl['name'];
+
+            if (isset($Categories[$cat]))
+                $Categories[$cat] .= ",$id";
+            else 
+                $Categories[$cat] = $id;
+            
             if ($appl['title']!='')
                 $Applications[$id] = $appl['title'];
             else
-                $Applications[$id] = $appl['name'];
+                $Applications[$id] = $appl['name'];            
         }
         
-        // on cree la toolbar en focntion du contenu actif
+        // on cree la toolbar en fonction du contenu actif
         $em = $this->getDoctrine()->getManager();
-        $Jobs = $em->getRepository("AriiReportBundle:Job")->findFilters($Filters['start'],$Filters['end']);
-        foreach ($Jobs as $Job) {            
+        // on cree la liste sur le mois en cours
+        $start = $Filters['start']->sub( \DateInterval::createFromDateString('300 days'));
+        
+        $Jobs = $em->getRepository("AriiReportBundle:Job")->findFilters($start,$Filters['end']);
+        $Spoolers = $Classes = $Envs = [];
+        foreach ($Jobs as $Job) {  
             $s = $Job['spooler_name'];
             $Spoolers[$s]=1;
             $e = $Job['env'];
@@ -100,17 +90,23 @@ class DefaultController extends Controller
             $t = $Job['job_class'];
             $Classes[$t]=1;
         }
-        
+            
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
+        // Esthetique
+        ksort($Categories);
+        $S = array_keys($Spoolers);   sort($S);
+        $J = array_keys($Classes);    sort($J);
+        asort($Applications);
         return $this->render('AriiReportBundle:Default:toolbar.xml.twig', 
             array_merge( 
                 $Filters,
                 [   
                     'Env' => $Envs,
                     'Applications' => $Applications,
-                    'Spoolers' => array_keys($Spoolers),
-                    'Classes' => array_keys($Classes)
+                    'Spoolers' =>   $S,
+                    'Classes' =>    $J,
+                    'Categories' => $Categories
                 ]), 
             $response);
     }
@@ -316,4 +312,72 @@ class DefaultController extends Controller
         $portal = $this->container->get('arii_core.portal');        
         return $portal->getWorkspace().'/Report/Requests/'.$lang;        
     }    
+    
+    public function testAction($output='html',$req='')
+    {
+            set_time_limit(300);
+            $url = "https://autosys:VB8ej90KP!@git.vaudoise.ch/rest/api/1.0/projects/JIL/repos?limit=999";
+            $ch = curl_init();
+            
+            curl_setopt($ch,CURLOPT_URL,$url);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            //execute post
+            $content = curl_exec($ch);
+            if ($content === FALSE) {
+                throw new \Exception( sprintf("cUrl error (#%d): %s", curl_errno($ch),htmlspecialchars(curl_error($ch))));
+            }
+            curl_close($ch);
+            
+            $Content = json_decode($content, true);
+            $Repos=$Content['values'];
+            $Files = $Table = [];
+            foreach ($Repos as $n=>$Repo) {
+                // On parse Le projet pour lire les repos
+                $repo = $Repo['slug'];
+                if ($repo=='global') continue;
+                
+                $url = "https://autosys:VB8ej90KP!@git.vaudoise.ch/rest/api/1.0/projects/JIL/repos/".$repo.'/last-modified?at=head';
+                $ch = curl_init();
+
+                curl_setopt($ch,CURLOPT_URL,$url);
+                curl_setopt($ch, CURLOPT_VERBOSE, true);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                
+                $content = curl_exec($ch);
+                $R = json_decode($content, true);
+                if (!isset($R['files'])) continue;
+                
+                foreach ($R['files'] as $file=>$Info) {
+                    $Files[$file]=1;                    
+                    $message = $Info['message'];                    
+                    $Table[$repo][$file] = $message;
+                }
+                curl_close($ch);
+            }
+            
+            // tableau croisé
+            print "<table width='100%' border='1'>";
+            print "<tr><td></td>";
+            foreach ($Files as $k=>$v) {
+                print "<th>$k</th>";
+            }
+            print "</tr>";
+            foreach ($Repos as $n=>$Repo) {
+                $repo = $Repo['slug'];
+                print "<tr><th>$repo</td>";
+                foreach ($Files as $file=>$v) {
+                    if (isset($Table[$repo][$file]))
+                        print "<td>".$Table[$repo][$file]."</td>";
+                    else 
+                        print "<td>?</td>";
+                }
+                print "</tr>";
+            }
+            print "</table>";            
+            exit();
+    }
+    
 }

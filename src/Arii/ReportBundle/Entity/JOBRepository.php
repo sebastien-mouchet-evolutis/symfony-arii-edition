@@ -26,16 +26,11 @@ class JOBRepository extends EntityRepository
                 array_push($Filter,'job.job_class');
         }
 
-        //création de l'expression OR
-        $qb = $this->createQueryBuilder('job');
-        
-        $orModule = $qb->expr()->orx();
-        $orModule->add('job.created < :start');
-        $orModule->add('job.deleted > :end');
-
         $f = implode(',',$Filter);
-        $qb = $qb->Select($f.',count(job.date) as jobs,count(job.created) as created,count(job.deleted) as deleted')
-             ->where($orModule)
+        $qb = $this->createQueryBuilder('job')
+            ->Select($f.',count(job.date) as jobs,count(job.created) as created,count(job.deleted) as deleted')
+            ->where('job.created <= :end')
+            ->andWhere('((job.deleted is null) OR (job.deleted >= :start))')
              ->groupBy($f)
              ->orderBy('job.app','ASC')
              ->setParameter('start', $start)
@@ -50,8 +45,126 @@ class JOBRepository extends EntityRepository
         
         return $qb->getQuery()
              ->getResult();
-   }   
+   }
 
+   // Liste des environnements 
+   public function findEnv($start,$end,$app='*',$job_class='*')
+   {
+        //création de l'expression OR
+        $qb = $this->createQueryBuilder('job')
+            ->Select('job.env,count(job) as envs')
+            ->where('job.created <= :start')
+            ->andWhere('job.deleted is null OR job.deleted >= :end')
+            ->groupBy('job.env')
+            ->orderBy('job.env','ASC')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if ($app!='*')
+            $qb->andWhere('job.app = :app')
+                 ->setParameter('app', $app);
+
+        if ($job_class!='*')
+            $qb->andWhere('job.job_class = :job_class')
+                 ->setParameter('job_class', $job_class);
+        
+        return $qb->getQuery()
+             ->getResult();
+   }
+
+   // Liste des applications 
+   public function findApp($start,$end,$env='*',$job_class='*')
+   {
+        $qb = $this->createQueryBuilder('job')
+            ->Select('job.app,count(job) as apps')
+            ->where('job.created <= :end')
+            ->andWhere('(job.deleted is null OR job.deleted >= :start)')
+            ->groupBy('job.app')
+            ->orderBy('job.app','ASC')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if ($env!='*')
+            $qb->andWhere('job.env = :env')
+                 ->setParameter('env', $env);
+        if ($job_class!='*')
+            $qb->andWhere('job.job_class = :job_class')
+                 ->setParameter('job_class', $job_class);
+
+        return $qb->getQuery()
+             ->getResult();
+   }
+
+   // Liste des classes de job
+   public function findJcl( $start,$end,$env='*')
+   {
+        //création de l'expression OR
+        $qb = $this->createQueryBuilder('job')
+            ->Select('job.job_class as jcl,count(job) as jcls')
+            ->where('job.created <= :start')
+            ->andWhere('job.deleted is null OR job.deleted >= :end')
+            ->groupBy('job.job_class')
+            ->orderBy('job.job_class','ASC')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if ($env!='*')
+            $qb->andWhere('job.env = :env')
+                 ->setParameter('env', $env);
+
+        return $qb->getQuery()
+             ->getResult();
+   }
+
+   // Liste des classes de job
+   public function findSpool( $start,$end,$env='*',$app='*')
+   {
+        //création de l'expression OR
+        $qb = $this->createQueryBuilder('job')
+            ->Select('job.spooler_name as spooler,count(job) as spoolers')
+            ->where('job.created <= :start')
+            ->andWhere('job.deleted is null OR job.deleted >= :end')
+            ->groupBy('job.spooler_name')
+            ->orderBy('job.spooler_name','ASC')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if ($env!='*')
+            $qb->andWhere('job.env = :env')
+                 ->setParameter('env', $env);
+
+        return $qb->getQuery()
+             ->getResult();
+   }
+   
+   // Liste des domaines 
+   public function findDom($start,$end,$env='*',$job_class='*')
+   {
+        //création de l'expression OR
+        $qb = $this->createQueryBuilder('job')
+            ->Select('cat.name as dom,cat.title as domain,count(job.id) as doms')
+            ->leftJoin('Arii\CoreBundle\Entity\Application','app',\Doctrine\ORM\Query\Expr\Join::WITH,'job.app = app.name')                                
+            ->leftJoin('Arii\CoreBundle\Entity\Category','cat',\Doctrine\ORM\Query\Expr\Join::WITH,'app.category = cat')                                
+            ->where('job.created <= :start')
+            ->andWhere('job.deleted is null OR job.deleted >= :end')
+            ->andWhere('app.active = 1')
+            ->groupBy('cat.name,cat.title')
+            ->orderBy('cat.title','ASC')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if ($env!='*')
+            $qb->andWhere('job.env = :env')
+                 ->setParameter('env', $env);
+
+        if ($job_class!='*')
+            $qb->andWhere('job.job_class = :job_class')
+                 ->setParameter('job_class', $job_class);
+        
+        return $qb->getQuery()
+             ->getResult();
+   }
+   
    // Regroupement par jours
    public function findDates()
    {
@@ -98,15 +211,54 @@ class JOBRepository extends EntityRepository
             ->getResult();
    }
    
-   public function findJobs($job_name,$command,$description)
+   // Liste des jobs
+   public function findJobs($start,$end,$env='*',$app='*',$job_class='*')
    {
-        $query = $this->createQueryBuilder('job')
+        $qb = $this->createQueryBuilder('job')
+            ->Select('job')
+            ->Where('job.created < :start')
+            ->andWhere('job.updated > :end')
+            ->orderBy('job.job_name')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+        
+        if ($app!='*')
+            $qb->andWhere('job.app = :app')
+                 ->setParameter('app', $app);        
+        if ($env!='*')
+            $qb->andWhere('job.env = :env')
+                 ->setParameter('env', $env);        
+        if ($job_class!='*')
+            $qb->andWhere('job.job_class = :job_class')
+                 ->setParameter('job_class', $job_class);
+        
+        return $qb->getQuery()
+                ->getResult();
+   }
+
+   // Trouver un job particulier         
+   public function findJob($job_name,$command,$description)
+   {
+        $qb = $this->createQueryBuilder('job')
             ->Select('job.id,job.job_name,job.description,job.command')
             ->Where('job.job_name like :job_name')
-            ->setParameter('job_name', ($job_name!=''?$job_name:'') )
+            ->setParameter('job_name', ($job_name!=''?$job_name:'%') )
             ->orderBy('job.job_name');
-        
-            return $query->getQuery()
+
+        if ($description!='')
+            $qb->andWhere('job.description like :description')
+            ->setParameter('description', ($description!=''?$description:'%') );
+        if ($command!='')        
+            $qb->andWhere('job.command like :command')
+            ->setParameter('command', ($command!=''?$command:'%') );
+
+/*        
+    $query = $qb->getQuery();
+    print $query->getSQL();
+    print_r($query->getParameters());
+    exit();
+*/        
+            return $qb->getQuery()
                     ->getResult();
    }
 
@@ -173,9 +325,9 @@ class JOBRepository extends EntityRepository
    public function findLastBySpooler()
    {
         return $this->createQueryBuilder('job')
-            ->Select('job.spooler_type,job.spooler_name,count(job) as nb,max(job.updated) as last')
-            ->groupBy('job.spooler_type,job.spooler_name')   
-            ->orderBy('job.spooler_type,job.spooler_name')   
+            ->Select('job.spooler_name,count(job) as nb,max(job.updated) as last')
+            ->groupBy('job.spooler_name')   
+            ->orderBy('job.spooler_name')   
             ->getQuery()
             ->getResult();
    }

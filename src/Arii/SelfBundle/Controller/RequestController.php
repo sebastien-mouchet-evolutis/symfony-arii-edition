@@ -32,6 +32,13 @@ class RequestController extends Controller
         return $this->render('AriiSelfBundle:Request:menu.xml.twig',[], $response);
     }
     
+    public function menu2Action()
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+        return $this->render('AriiSelfBundle:Request:menu2.xml.twig',[], $response);
+    }
+    
     public function formAction($form='') {
         $request = Request::createFromGlobals();
         if ($request->get('form')!='')

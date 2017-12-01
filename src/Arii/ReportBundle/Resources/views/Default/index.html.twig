@@ -1,10 +1,23 @@
 {% extends "AriiReportBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
+var app="{{ appl }}",
+    env="{{ env }}",
+    job_class="{{ job_class }}",
+    category="{{ category }}",
+    day = {{ day }},
+    month={{ month }},
+    year={{ year }},
+    day_past={{ day_past }},
+    header = {{ header }},
+    footer = {{ footer }};
+
 dhtmlxEvent(window,"load",function(){    
 size=345
     globalLayout = new dhtmlXLayoutObject(document.body,"2U");
     globalLayout.cells("a").setWidth(size);
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("b").hideHeader();
     
     globalMenu = globalLayout.cells("a").attachMenu();
     globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
@@ -16,10 +29,9 @@ size=345
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
     
-    {% include "AriiReportBundle:Default:tree.html.twig" %}    
+    {% include "AriiReportBundle:Default:tree.js.twig" %}    
+    {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
     
-    globalLayout.cells("a").hideHeader();
-    globalLayout.cells("b").hideHeader();
     globalLayout.cells("b").attachURL('{{ url('html_Report_summary') }}'); 
 });
 </script>

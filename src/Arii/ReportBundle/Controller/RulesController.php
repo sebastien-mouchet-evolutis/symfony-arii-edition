@@ -9,7 +9,8 @@ class RulesController extends Controller{
 
     public function indexAction()
     {
-        return $this->render('AriiReportBundle:Rules:index.html.twig');
+        $Filters = $this->container->get('report.filter')->getRequestFilter();        
+        return $this->render('AriiReportBundle:Rules:index.html.twig', $Filters);
     }
 
     public function toolbarAction()

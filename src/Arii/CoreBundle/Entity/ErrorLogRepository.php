@@ -3,7 +3,6 @@
 namespace Arii\CoreBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-
 /**
  * ErrorLogRepository
  *
@@ -15,9 +14,14 @@ class ErrorLogRepository extends EntityRepository
     
    public function findErrors()
    {
+       // a mettre en parametre
+       $date = new \DateTime();
+       $date->sub(new \DateInterval('P7D')); 
         return $this->createQueryBuilder('e')
               ->Select('e.logtime,e.module,e.username,e.message,e.ip,e.trace,e.code,e.file_name')
+              ->Where('e.logtime > :start ')
               ->orderBy('e.logtime','DESC')
+              ->setParameter('start', $date)
               ->getQuery()
               ->getResult();
    }

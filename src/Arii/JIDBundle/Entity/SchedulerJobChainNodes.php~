@@ -1,0 +1,59 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SchedulerJobChainNodes
+ *
+ * @ORM\Table(name="scheduler_job_chain_nodes")
+ * @ORM\Entity
+ */
+class SchedulerJobChainNodes
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SPOOLER_ID", type="string", length=100, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $spoolerId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CLUSTER_MEMBER_ID", type="string", length=100, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $clusterMemberId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="JOB_CHAIN", type="string", length=255, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $jobChain;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ORDER_STATE", type="string", length=100, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $orderState;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ACTION", type="string", length=100, nullable=true)
+     */
+    private $action;
+
+
+}

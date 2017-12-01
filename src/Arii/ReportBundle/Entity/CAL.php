@@ -31,13 +31,6 @@ class CAL
     /**
      * @var string
      *
-     * @ORM\Column(name="spooler_type", type="string", length=10)
-     */
-    private $spooler_type;
-    
-    /**
-     * @var string
-     *
      * @ORM\Column(name="name", type="string", length=50)
      */
     private $name;
@@ -80,29 +73,6 @@ class CAL
     public function getSpoolerName()
     {
         return $this->spooler_name;
-    }
-
-    /**
-     * Set spooler_type
-     *
-     * @param string $spoolerType
-     * @return CAL
-     */
-    public function setSpoolerType($spoolerType)
-    {
-        $this->spooler_type = $spoolerType;
-
-        return $this;
-    }
-
-    /**
-     * Get spooler_type
-     *
-     * @return string 
-     */
-    public function getSpoolerType()
-    {
-        return $this->spooler_type;
     }
 
     /**

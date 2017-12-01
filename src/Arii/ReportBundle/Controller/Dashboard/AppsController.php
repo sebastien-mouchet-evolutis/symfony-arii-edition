@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AppsController extends Controller
 {
-    
+
     public function indexAction()
     {          
         $Filters = $this->container->get('report.filter')->getRequestFilter();
@@ -32,8 +32,26 @@ class AppsController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');        
         $response->setContent( $xml );
-        return $response;    
-        
+        return $response;
+    }
+    
+    // Prepare un graphique
+    private function DrawBar($Data) { 
+        // liste triee
+        asort($Data); 
+        $xml = "<?xml version='1.0' encoding='iso-8859-1'?><data>";
+        foreach ($Data as $k=>$data) {
+            $xml .= '<item id="'.$k.'">';
+            foreach ($data as $k=>$v) {
+                $xml .= '<'.$k.'>'.$v.'</'.$k.'>';
+            }
+            $xml .= '</item>';
+        }
+        $xml .= '</data>';
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');        
+        $response->setContent( $xml );
+        return $response;            
     }
     
     // Nombre de jobs par applications
@@ -42,41 +60,37 @@ class AppsController extends Controller
         $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         $em = $this->getDoctrine()->getManager();
-        $Jobs = $em->getRepository("AriiReportBundle:JOBDay")->findApps($Filters['start'],$Filters['end'],$Filters['env'],$Filters['tag'],false);
+        $DBJobs = $em->getRepository("AriiReportBundle:JOBDay")->findApps($Filters['start'],$Filters['end'],$Filters['env'],$Filters['job_class'],false);
 
         $portal = $this->container->get('arii_core.portal');
         $App = $portal->getApplications();
 
-        $xml = "<?xml version='1.0' encoding='iso-8859-1'?><data>";
         $nb=0;
         
-        foreach ($Jobs as $job) {
+        $Jobs =[];
+        foreach ($DBJobs as $job) {
             $a = $job['app'];
-            if ($a=='') continue;
-            if (isset($App[$a])) {
-                $title=$App[$a]['title'];
-                if ($App[$a]['active']==0)
-                    $job['jobs']=0;
-            }
-            else 
-                $title='['.$a.']';
             
-            if ($job['jobs']>0) {
-                $xml .= '<item id="'.$a.'">';
-                $xml .= '<application>'.$title.'</application>';
-                $xml .= '<jobs>'.$job['jobs'].'</jobs>';
-                $xml .= '<created>'.$job['created'].'</created>';
-                $xml .= '<deleted>'.$job['deleted'].'</deleted>';
-                $xml .= '</item>';
-                $nb++;
-            }
-            if ($nb>=$Filters['limit']) break;
+            // Filtre par categorie
+            if (!isset($App[$a])) continue;
+
+            $title=$App[$a]['title'];
+            if ($App[$a]['active']==0) continue;            
+            if ($job['jobs']==0) continue;
+            
+            // filtre des categories
+            if (($Filters['category']!='*') and ($App[$a]['category']!=$Filters['category'])) continue;
+            
+            if ($nb++ >= $Filters['limit']) break;
+            
+            $Jobs[$a] = [
+                'application' => $title,
+                'jobs' =>    $job['jobs'],
+                'created' => $job['created'],
+                'deleted' => $job['deleted']
+            ];
         }
-        $xml .= '</data>';
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');        
-        $response->setContent( $xml );
-        return $response;            
+        return $this->DrawBar($Jobs);
     }
 
     // Nombre d'exécution par applications
@@ -85,38 +99,32 @@ class AppsController extends Controller
         $Filters = $this->container->get('report.filter')->getRequestFilter();
         
         $em = $this->getDoctrine()->getManager();
-        $Runs = $em->getRepository("AriiReportBundle:RUNMonth")->findApps($Filters['year'],$Filters['month'],$Filters['env'],$Filters['tag']);
+        $DBRuns = $em->getRepository("AriiReportBundle:RUNDay")->findApps($Filters['start'],$Filters['end'],$Filters['env'],$Filters['job_class']);
         
         $portal = $this->container->get('arii_core.portal');
         $App = $portal->getApplications();
 
-        $xml = "<?xml version='1.0' encoding='iso-8859-1'?><data>";
+        $Runs = [];
         $nb=0;
-        foreach ($Runs as $run) {
+        foreach ($DBRuns as $run) {
             $a = $run['app'];
-            if ($a=='') continue;
-            if (isset($App[$a])) {
-                $title=$App[$a]['title'];
-                if ($App[$a]['active']==0)
-                    $run['runs']=0;
-            }
-            else 
-                $title='['.$a.']';
             
-            if ($run['runs']>0) {
-                $xml .= '<item id="'.$a.'">';
-                $xml .= '<application>'.$title.'</application>';
-                $xml .= '<runs>'.$run['runs'].'</runs>';
-                $xml .= '</item>';
-                $nb++;
-            }
-            if ($nb>=$Filters['limit']) break;
+            if (!isset($App[$a])) continue;
+            $title=$App[$a]['title'];
+            if ($App[$a]['active']==0) continue;
+            if ($run['runs']==0) continue;
+            
+            // filtre des categories
+            if (($Filters['category']!='*') and ($App[$a]['category']!=$Filters['category'])) continue;
+            
+            if ($nb++ >= $Filters['limit']) break;
+            
+            $Runs[$a] = [
+                'application' => $title,
+                'runs' =>    $run['runs'],
+            ];
         }
-        $xml .= '</data>';
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');        
-        $response->setContent( $xml );
-        return $response;            
+        return $this->DrawBar($Runs);
     }
 
     // Nombre d'exécution par applications
@@ -125,38 +133,32 @@ class AppsController extends Controller
         $Filters = $this->container->get('report.filter')->getRequestFilter();
         
         $em = $this->getDoctrine()->getManager();
-        $Runs = $em->getRepository("AriiReportBundle:RUNMonth")->findApps($Filters['year'],$Filters['month'],$Filters['env'],$Filters['tag']);
+        $DBRuns = $em->getRepository("AriiReportBundle:RUNDay")->findApps($Filters['start'],$Filters['end'],$Filters['env'],$Filters['job_class']);
         
         $portal = $this->container->get('arii_core.portal');
         $App = $portal->getApplications();
 
-        $xml = "<?xml version='1.0' encoding='iso-8859-1'?><data>";
+        $Runs = [];
         $nb=0;
-        foreach ($Runs as $run) {
+        foreach ($DBRuns as $run) {
             $a = $run['app'];
-            if ($a=='') continue;
-            if (isset($App[$a])) {
-                $title=$App[$a]['title'];
-                if ($App[$a]['active']==0)
-                    $run['runs']=0;
-            }
-            else 
-                $title='['.$a.']';
             
-            if ($run['runs']>0) {
-                $xml .= '<item id="'.$a.'">';
-                $xml .= '<application>'.$title.'</application>';
-                $xml .= '<alarms>'.$run['alarms'].'</alarms>';
-                $xml .= '</item>';
-                $nb++;
-            }
-            if ($nb>=$Filters['limit']) break;
+            if (!isset($App[$a])) continue;
+            $title=$App[$a]['title'];
+            if ($App[$a]['active']==0) continue;
+            if ($run['runs']==0) continue;
+            
+            // filtre des categories
+            if (($Filters['category']!='*') and ($App[$a]['category']!=$Filters['category'])) continue;
+            
+            if ($nb++ >= $Filters['limit']) break;
+            
+            $Runs[$a] = [
+                'application' => $title,
+                'alarms' =>    $run['alarms'],
+            ];
         }
-        $xml .= '</data>';
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');        
-        $response->setContent( $xml );
-        return $response;            
+        return $this->DrawBar($Runs);
     }
     
 }

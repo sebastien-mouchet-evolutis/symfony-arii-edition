@@ -1,0 +1,151 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InventoryOrders
+ *
+ * @ORM\Table(name="inventory_orders", uniqueConstraints={@ORM\UniqueConstraint(name="INVENTORY_IO_UNIQUE", columns={"FILE_ID"})}, indexes={@ORM\Index(name="REPORTING_IO_INST_ID", columns={"INSTANCE_ID"}), @ORM\Index(name="REPORTING_IO_FILE_ID", columns={"FILE_ID"}), @ORM\Index(name="REPORTING_IO_JC_NAME", columns={"JOB_CHAIN_NAME"})})
+ * @ORM\Entity
+ */
+class InventoryOrders
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="INSTANCE_ID", type="integer", nullable=false)
+     */
+    private $instanceId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FILE_ID", type="integer", nullable=false)
+     */
+    private $fileId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="NAME", type="string", length=255, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="BASENAME", type="string", length=255, nullable=false)
+     */
+    private $basename;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TITLE", type="string", length=255, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ORDER_ID", type="string", length=255, nullable=false)
+     */
+    private $orderId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="JOB_CHAIN_NAME", type="string", length=255, nullable=false)
+     */
+    private $jobChainName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="IS_RUNTIME_DEFINED", type="integer", nullable=false)
+     */
+    private $isRuntimeDefined;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="JOB_CHAIN_ID", type="integer", nullable=false)
+     */
+    private $jobChainId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="INITIAL_STATE", type="string", length=100, nullable=true)
+     */
+    private $initialState;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="END_STATE", type="string", length=100, nullable=true)
+     */
+    private $endState;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PRIORITY", type="integer", nullable=true)
+     */
+    private $priority;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SCHEDULE", type="string", length=255, nullable=true)
+     */
+    private $schedule;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SCHEDULE_NAME", type="string", length=255, nullable=false)
+     */
+    private $scheduleName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="SCHEDULE_ID", type="integer", nullable=false)
+     */
+    private $scheduleId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="RUN_TIME_IS_TEMPORARY", type="integer", nullable=false)
+     */
+    private $runTimeIsTemporary;
+
+
+}

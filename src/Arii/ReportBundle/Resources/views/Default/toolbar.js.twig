@@ -1,15 +1,51 @@
 myToolbar = globalLayout.cells("b").attachToolbar();
 myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
-myToolbar.loadStruct("{{ url('xml_Report_toolbar') }}?app="+app+"&day_past="+day_past, function() {
+myToolbar.loadStruct("{{ url('xml_Report_toolbar') }}?env="+env+"&category="+category+"&app="+app+"&joib_class="+job_class+"&day_past="+day_past, function() {
+    this.setItemText("CAT",this.getListOptionText("CAT",this.getListOptionSelected("CAT")));
     this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
     this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
+    this.setItemText("JOB_CLASS",this.getListOptionText("JOB_CLASS",this.getListOptionSelected("JOB_CLASS")));
     this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
     this.setItemText("DAY",this.getListOptionText("DAY",this.getListOptionSelected("DAY")));
     this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
+    RefreshToolbar()
 });
+
+function RefreshToolbar(){
+    // mise a jour de la liste
+    if (category==='*') {
+        myToolbar.forEachListOption("APP", function(optionId) {
+            myToolbar.showListOption("APP",optionId);
+        });
+    }
+    else {
+        // pas de in_array en javascript ?!
+        myToolbar.forEachListOption("APP", function(optionId){
+            myToolbar.hideListOption("APP",optionId);
+        });
+        var apps = myToolbar.getUserData("CAT",category).split(',');
+        // console.log(apps);
+        apps.forEach(function(optionId){
+            myToolbar.showListOption("APP",'a'+optionId);
+        });
+    }
+};
+
 myToolbar.attachEvent( "onClick", function(id, value) {
     var parent=this.getParentId(id);
     switch (parent) {
+        case "CAT":
+            if (id=='_CAT_') {
+                this.setItemText("CAT",'{{ "All categories" | trans }}');
+                category = '*';
+            }
+            else {
+                this.setItemText("CAT",this.getListOptionText("CAT",this.getListOptionSelected("CAT")));
+                category = id.substr(1);
+            }
+            dhx4.ajax.get( "{{ url('arii_session_update') }}?category="+category, function() {
+            });
+            id = '_APP_';
         case "APP":
             if (id=='_APP_') {
                 this.setItemText("APP",'{{ "All applications" | trans }}');
@@ -17,9 +53,11 @@ myToolbar.attachEvent( "onClick", function(id, value) {
             }
             else {
                 this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
-                app = id;
+                app = id.substr(1);
+                // window.location = "{{ url('arii_Report_index') }}application?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past;
             }
             dhx4.ajax.get( "{{ url('arii_session_update') }}?app="+app, function() {
+                RefreshToolbar();
                 GlobalRefresh();
             });            
             break;
@@ -30,11 +68,11 @@ myToolbar.attachEvent( "onClick", function(id, value) {
             }
             else {
                 this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
-                env = id;
+                env = id.substr(1);
             }
             dhx4.ajax.get( "{{ url('arii_session_update') }}?env="+env, function() {
                 GlobalRefresh();
-            });            
+            });
             break;
         case "JOB_CLASS":
             if (id=='_JCL_') {
@@ -58,7 +96,7 @@ myToolbar.attachEvent( "onClick", function(id, value) {
             break;
         case "MONTH":
             this.setItemText("MONTH",this.getListOptionText("MONTH",this.getListOptionSelected("MONTH")));
-            month = id;
+            month = id.substr(1);
             dhx4.ajax.get( "{{ url('arii_session_update') }}?month="+month, function() {
                 GlobalRefresh();
             });
@@ -73,7 +111,9 @@ myToolbar.attachEvent( "onClick", function(id, value) {
         case "DAY_PAST":
             this.setItemText("DAY_PAST",this.getListOptionText("DAY_PAST",this.getListOptionSelected("DAY_PAST")));
             day_past = id;
-            GlobalRefresh();
+            dhx4.ajax.get( "{{ url('arii_session_update') }}?ref_past="+day_past, function() {
+                GlobalRefresh();
+            });
             break;
         default:
 //                alert(id);

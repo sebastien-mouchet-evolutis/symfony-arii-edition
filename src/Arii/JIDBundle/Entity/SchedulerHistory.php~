@@ -1,0 +1,144 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SchedulerHistory
+ *
+ * @ORM\Table(name="scheduler_history", indexes={@ORM\Index(name="SCHEDULER_HISTORY_START_TIME", columns={"START_TIME"}), @ORM\Index(name="SCHEDULER_HISTORY_SPOOLER_ID", columns={"SPOOLER_ID"}), @ORM\Index(name="SCHEDULER_HISTORY_JOB_NAME", columns={"JOB_NAME"}), @ORM\Index(name="SCHEDULER_H_CLUSTER_MEMBER", columns={"CLUSTER_MEMBER_ID"})})
+ * @ORM\Entity
+ */
+class SchedulerHistory
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SPOOLER_ID", type="string", length=100, nullable=true)
+     */
+    private $spoolerId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CLUSTER_MEMBER_ID", type="string", length=100, nullable=true)
+     */
+    private $clusterMemberId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="JOB_NAME", type="string", length=255, nullable=true)
+     */
+    private $jobName;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="START_TIME", type="datetime", nullable=false)
+     */
+    private $startTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="END_TIME", type="datetime", nullable=true)
+     */
+    private $endTime;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CAUSE", type="string", length=50, nullable=true)
+     */
+    private $cause;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="STEPS", type="integer", nullable=true)
+     */
+    private $steps;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="EXIT_CODE", type="integer", nullable=true)
+     */
+    private $exitCode;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ERROR", type="integer", nullable=true)
+     */
+    private $error;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ERROR_CODE", type="string", length=50, nullable=true)
+     */
+    private $errorCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ERROR_TEXT", type="string", length=250, nullable=true)
+     */
+    private $errorText;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="PARAMETERS", type="text", nullable=true)
+     */
+    private $parameters;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="LOG", type="blob", nullable=true)
+     */
+    private $log;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ITEM_START", type="string", length=250, nullable=true)
+     */
+    private $itemStart;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ITEM_STOP", type="string", length=250, nullable=true)
+     */
+    private $itemStop;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PID", type="integer", nullable=true)
+     */
+    private $pid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="AGENT_URL", type="string", length=100, nullable=true)
+     */
+    private $agentUrl;
+
+
+}

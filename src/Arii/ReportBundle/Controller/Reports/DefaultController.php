@@ -162,8 +162,10 @@ class DefaultController extends Controller
         $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         $em = $this->getDoctrine()->getManager();
-        $DBJobs = $em->getRepository("AriiReportBundle:JOBDay")->findApps($Filters['start'],$Filters['end'],$Filters['env'],$Filters['job_class'],false,'jobs','DESC');
-
+        $end = clone $Filters['start'];
+        $end = $end->add(\DateInterval::createFromDateString('1 day'));
+        $DBJobs = $em->getRepository("AriiReportBundle:JOBDay")->findApps($Filters['start'],$end,$Filters['env'],$Filters['job_class'],true,'jobs','DESC');
+        
         $portal = $this->container->get('arii_core.portal');
         $App = $portal->getApplications();
 
@@ -172,14 +174,13 @@ class DefaultController extends Controller
         $Jobs =[];
         foreach ($DBJobs as $job) {
             $a = $job['app'];
-
             // Filtre par categorie
             if (!isset($App[$a])) continue;
 
             $title=$App[$a]['title'];
             if ($App[$a]['active']==0) continue;            
             if ($job['jobs']==0) continue;
-            
+
             // filtre des categories
             if (($Filters['category']!='*') and ($App[$a]['category']!=$Filters['category'])) continue;
             

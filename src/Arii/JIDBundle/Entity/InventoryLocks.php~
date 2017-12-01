@@ -1,0 +1,74 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InventoryLocks
+ *
+ * @ORM\Table(name="inventory_locks", uniqueConstraints={@ORM\UniqueConstraint(name="INVENTORY_IL_UNIQUE", columns={"FILE_ID"})})
+ * @ORM\Entity
+ */
+class InventoryLocks
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="INSTANCE_ID", type="integer", nullable=false)
+     */
+    private $instanceId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FILE_ID", type="integer", nullable=false)
+     */
+    private $fileId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="NAME", type="string", length=255, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="BASENAME", type="string", length=255, nullable=false)
+     */
+    private $basename;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="MAX_NON_EXCLUSIVE", type="integer", nullable=true)
+     */
+    private $maxNonExclusive;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+
+}

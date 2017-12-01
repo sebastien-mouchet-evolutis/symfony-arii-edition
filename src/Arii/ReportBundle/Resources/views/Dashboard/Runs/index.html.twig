@@ -4,6 +4,9 @@
 <script language="javascript">
 var app="{{ appl }}",
     env="{{ env }}",
+    job_class="{{ job_class }}",
+    category="{{ category }}",
+    day = {{ day }},
     month={{ month }},
     year={{ year }},
     day_past={{ day_past }};
@@ -32,56 +35,7 @@ dhtmlxEvent(window,"load",function(){
     myTabs = globalLayout.cells("b").attachTabbar();
     myTabs.addTab("exec","{{ "Executions" | trans }}","150px",null,true);
     myTabs.addTab("alarms","{{ "Alarms" | trans }}","150px");
-    myTabs.addTab("event","{{ "Events" | trans }}","150px");
-    myTabs.addTab("apps","{{ "Evolution" | trans }}","150px");
 
-    stackedChart =  myTabs.cells("apps").attachChart({
-        view: "barH",
-        value:"#month3#",
-        label:"#month3#",
-        color:"#00ffff",
-        width: 10,
-        origin:0, // represents positive and negative values
-        padding: {
-            left:100
-        },        
-        yAxis:{
-            lines:true,
-            template: "#application#",
-//            title:"{{ "Applications" | trans }}",    
-            margin: {
-                left: 200
-            }
-        },
-        xAxis:{
-            lines: true,
-            template: "",
-//            title:"{{ "Executions" | trans }}"
-        },
-        legend:{
-            values:[
-                {text:"{{ "Month" | trans }}",color:"#00ffff"},
-                {text:"{{ "Month" | trans }}-1",color:"#00aaaa"},
-                {text:"{{ "Month" | trans }}",color:"##006666"}
-            ],
-            valign:"top",
-            align:"left",
-            width:100,
-            layout:"x"
-        }
-    });
-    stackedChart.addSeries({
-        value:"#month2#",
-        label:"#month2#",
-        color:"#00aaaa"
-    });
-    
-    stackedChart.addSeries({
-        value:"#month1#",
-        label:"#month1#",
-        color:"#006666"        
-    });
-                        
     barChart =  myTabs.cells("exec").attachChart({
         view: "bar",
         value:"#executions#",
@@ -168,89 +122,6 @@ dhtmlxEvent(window,"load",function(){
         }
     });
 
-    scatterChart =  myTabs.cells("event").attachChart({
-        view: "scatter",
-        xValue:"#day#",
-        yValue:"#hour#",
-        color:"#00cccc",
-        preset: 'diamond',
-        label: '#event#',
-        item:{
-               borderColor:"#ffffff",
-               color: 'red',
-               alpha: 0.2,
-               radius: function (obj) {
-                    return obj.events*15;
-               }
-           },
-        legend:{
-            values:[
-                { text: "{{ "Alarms" | trans }}", color:"yellow" },
-                { text: "{{ "Events" | trans }}",color:"red" },
-                { text: "{{ "Acks" | trans }}",color:"orange"}
-            ],
-            valign:"middle",
-            width:90,
-            layout:"x"
-        },
-        xAxis:{
-                lines:true,
-                title:"{{ "Day" | trans }}",
-                margin: { 
-                    left: 200
-                },
-                start: 1,
-                end: 31,
-                step: 1
-        },
-        yAxis:{
-                lines:true,
-                title:"{{ "Hour" | trans }}",
-                margin: { 
-                    left: 200
-                },
-                start: 0,
-                end: 24,
-                step: 1
-        }        
-    });
-    
-    scatterChart.addSeries({
-        view: "scatter",
-        xValue:"#day#",
-        yValue:"#hour#",
-        color:"#00cccc",
-        label: '',  
-        preset: 'round',        
-        item:{
-               borderColor:"#ffffff",
-               color: 'yellow',
-               alpha: 0.4,               
-               radius: function (obj) {
-                    return obj.alarms;
-                }
-        }        
-    });
-
-    scatterChart.addSeries({
-        view: "scatter",
-        xValue:"#day#",
-        yValue:"#hour#",
-        color:"#00cccc",
-        label: '',
-        tooltip: '#acks#',
-        preset: 'round',      
-        item:{
-               borderColor:"#ffffff",
-               color: 'orange',
-               type: 's',
-               alpha: 0.8,               
-               radius: function (obj) {
-                    return obj.acks;
-                }
-        }        
-    });
-
     myRuns = globalLayout.cells("c").attachGrid();
     globalLayout.cells("c").setText("{{ "Runs" | trans }}");
     globalLayout.cells("c").collapse();
@@ -303,22 +174,12 @@ function GlobalRefresh() {
     globalLayout.cells("b").progressOn();
     globalLayout.cells("c").collapse();
 
-    stackedChart.clearAll();
-    stackedChart.load( "{{ url('xml_Report_runs_applications_chart') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past, function() {
-        barChart.clearAll();
-        barChart.load( "{{ url('xml_Report_runs_status_chart') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past, function() {
-        // A corriger, on devrait parser !
+    barChart.clearAll();
+    barChart.load( "{{ url('xml_Report_runs_status_chart') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past, function() {
         barChart2.clearAll();
         barChart2.load( "{{ url('xml_Report_runs_status_chart') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past);
-            scatterChart.clearAll();
-            scatterChart.load( "{{ url('xml_Report_runs_status_hour_chart') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past, function() {
-                globalLayout.cells("b").progressOff();
-                globalLayout.cells("a").progressOff();
-                myRibbon.loadStruct("{{ url('json_Report_ribbon') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past, function () {                    
-                });                
-            });
-        });
     });
+
 };
 
 function Application(id) {

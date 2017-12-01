@@ -20,7 +20,7 @@ class RunsHourController extends Controller
         $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         $em = $this->getDoctrine()->getManager();
-        $Runs = $em->getRepository("AriiReportBundle:RUNHour")->findRuns($Filters['start'],$Filters['end'],$Filters['env'],$Filters['app'],$Filters['tag']);        
+        $Runs = $em->getRepository("AriiReportBundle:RUNHour")->findRuns($Filters['start'],$Filters['end'],$Filters['env'],$Filters['appl'],$Filters['job_class']);        
 //        if (!$Runs)
 //            throw new \Exception("Start: ".$start->format('Y-m-d')."\nEnd: ".$end->format('Y-m-d')."\nApp: ".$app."\nEnv: ".$env."\nClass: ".$job_class);
 

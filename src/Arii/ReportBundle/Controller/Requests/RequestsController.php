@@ -14,7 +14,8 @@ class RequestsController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('AriiReportBundle:Requests:index.html.twig');
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
+        return $this->render('AriiReportBundle:Requests:index.html.twig', $Filters);
     }
 
     public function toolbarAction()
@@ -388,7 +389,7 @@ class RequestsController extends Controller
 
         $em->persist($Check);
         $em->flush();
-        
+
         if ($output=='html') {
             return $this->render('AriiATSBundle:Requests:bootstrap.html.twig', array('result' => $value, 
                 'infos' => [ 
@@ -436,17 +437,7 @@ class RequestsController extends Controller
 
             return $response;                      
         }
-        
-        $twig = file_get_contents('../src/Arii/ATSBundle/Resources/views/Requests/dompdf.pdf.twig');
-        $content = $this->get('arii_ats.twig_string')->render( $twig, array('result' => $value ) );      
-        require_once('../vendor/dompdf/dompdf_config.inc.php');
-        header('Content-Type: application/pdf');
-        $dompdf = new \DOMPDF();
-        $dompdf->load_html($content);
-        $dompdf->render();
-        $dompdf->stream("sample.pdf");
-                
-        exit();        
+  
         switch ($output) {
             case 'csv':
                 $response = new Response();
@@ -528,7 +519,6 @@ class RequestsController extends Controller
                 if ($nb>0) {
                     $sep = "|";
                     $response->headers->set('Content-type', 'text/plain');
-                    $response->headers->set("Content-disposition", "attachment; filename=$req.csv"); 
                     $csv = "||".implode('||',$value['columns'])."||\n";
                     if (isset($value['lines'])) {
                         foreach ($value['lines'] as $k=>$l) {

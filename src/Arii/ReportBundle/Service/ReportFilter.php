@@ -21,19 +21,28 @@ class ReportFilter
         $Default = [
             'env' => 'P',
             'app' => '*',
-            'tag' => '*',
-            'spooler' => '*',
             'day_past' => -30,
+            'job_class' => '*',
+            'spooler' => '*',
             'hour' => $date->format('h'),
             'day' => $date->format('d'),
             'month' => $date->format('m'),
             'year' => $date->format('Y'),
-            'limit' => 10
+            'hour' => $date->format('H'),
+            'minute' => $date->format('i'),
+            'second' => $date->format('s'),
+            'limit' => 10,
+            'category' => '*',
+            'monthday' => $date->format('m').$date->format('d')  // code jour
         ];
         
         $request = Request::createFromGlobals();
         $User = $this->portal->getUserInterface();    
-        foreach (['env','app','day_past','month','day','year','hour','minute','second','tag','spooler','limit'] as $f) {
+
+        // le jour est la reference
+        $User['day_past'] = $User['ref_past'];
+        
+        foreach (array_keys($Default) as $f) {
             // cas speciaux
             switch ($f) {
                 case 'month':
@@ -46,27 +55,50 @@ class ReportFilter
                     if ($request->query->get($f)!='') {
                         $User[$f] = $request->query->get($f);
                     }
-                    elseif (isset($Default[$f])) {
+                    elseif (!isset($User[$f]) or ($User[$f]=='')) {
                         $User[$f] = $Default[$f];
                     }
                     break;
             }
         }       
         
+        // date par defaut
+        // normalement c'est fait a l'initialisation du portail
+        // On complete
+        if (!isset($User['date']) or ($User['date']==''))
+            $User['date'] = new \DateTime();
+        if (!isset($User['year']) or ($User['year']==''))
+            $User['year'] =   $User['date']->format('Y');
+        if (!isset($User['month']) or ($User['month']==''))
+            $User['month'] =  $User['date']->format('m');
+        if (!isset($User['day']) or ($User['day']==''))
+            $User['day'] =    $User['date']->format('d');
+        if (!isset($User['hour']) or ($User['hour']==''))
+            $User['hour'] =   $User['date']->format('H');
+        if (!isset($User['minute']) or ($User['minute']==''))
+            $User['minute'] = $User['date']->format('i');
+        if (!isset($User['second']) or ($User['second']==''))
+            $User['second'] = $User['date']->format('s');                
+        
         // Calcul fixe
-        $end = new \DateTime($User['year'].'-'.$User['month'].'-'.$User['day']);
+        $end = new \DateTime($User['year'].'-'.$User['month'].'-'.$User['day'].' 23:59:59');
         $start = clone $end;
-        $start->add(\DateInterval::createFromDateString($User['day_past'].' day'));
+        $start->add(\DateInterval::createFromDateString(($User['day_past']*86400+1).' seconds'));
         
         $User['start'] = $start;
         $User['end'] = $end;
         
+        // forcer les entiers
+        $User['day'] = $User['day']*1;
+        $User['month'] = $User['month']*1;
+        // 
         // Conflit avec app.request de twig
+        $User['ref_past'] = $User['day_past'];
         $Filters = $this->portal->setUserInterface($User);
+        
         $Filters['appl']=$Filters['app'];
         unset($Filters['app']);
-        // compatibilite
-        $Filters['job_class']=$Filters['tag'];  
+        
         return $Filters;
     }
     

@@ -13,6 +13,32 @@ use Doctrine\ORM\Query\ResultSetMapping;
  */
 class RUNDayRepository extends EntityRepository
 {
+   /* liste d'apps concernée par les excutions */
+   public function findApps($start,$end,$env='*',$class='*',$sort='run.app',$order='ASC')
+   {
+        $qb = $this->createQueryBuilder('run')
+            ->Select('run.app,sum(run.executions) as runs,sum(run.alarms) as alarms,(sum(run.alarms)/sum(run.executions)) as rate')
+            ->where('run.date >= :start')
+            ->andWhere('run.date <= :end')
+            ->andWhere('run.executions > 0')
+            ->groupBy('run.app')
+            ->orderBy($sort,$order)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if ($env!='*')
+            $qb->andWhere('run.env = :env')
+                 ->setParameter('env', $env);
+
+        if ($class!='*')
+            $qb->andWhere('run.job_class = :class')
+                 ->setParameter('class', $class);        
+
+        return $qb->getQuery()
+            ->getResult();
+   }
+
+    
    public function findRunsByMonth(\DateTime $from, \DateTime $to)
    {
         $driver = $this->_em->getConnection()->getDriver()->getName();
@@ -27,7 +53,7 @@ class RUNDayRepository extends EntityRepository
                 $rsm = new ResultSetMapping();
                 $rsm->addScalarResult('RUN_YEAR', 'run_year');
                 $rsm->addScalarResult('RUN_MONTH', 'run_month');                
-                $rsm->addScalarResult('APPLICATION', 'app');
+                $rsm->addScalarResult('APP', 'app');
                 $rsm->addScalarResult('ENV', 'env');
                 $rsm->addScalarResult('SPOOLER_NAME', 'spooler_name');
                 $rsm->addScalarResult('RUNS', 'runs');
@@ -49,74 +75,52 @@ class RUNDayRepository extends EntityRepository
         }
    }
 
-   public function findRunsDay($start,$end,$env='*') {
-       if (($env=='*') or ($env=='')) {
-            return $this->createQueryBuilder('run')
-                ->Select('run.date,run.app,run.env,run.spooler_name,sum(run.executions) as executions,sum(run.alarms) as alarms,sum(run.acks) as acks')
-                ->where('run.date >= :start')
-                ->andWhere('run.date <= :end')
-                ->groupBy('run.date,run.env,run.spooler_name')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->getQuery()
-                ->getResult();
+   public function findByDay($start,$end,$env='*',$app='*',$class='*',$detail=false) {
+       
+       // champs
+       if ($detail) {
+           $f = 'run.app,run.env,run.spooler.name,';
        }
        else {
-            return $this->createQueryBuilder('run')
-                ->Select('run.date,run.app,run.env,run.spooler_name,run.executions,run.alarms,run.acks')
-                ->where('run.date >= :start')
-                ->andWhere('run.date <= :end')
-                ->andWhere('run.env = :env')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('env', $env)
-                ->getQuery()
-                ->getResult();
+           $f = '';
        }
+       $g = '';
+       // regroupement
+       if ($app!='*')
+           $g .= ',run.app';
+       if ($env!='*')
+           $g .= ',run.env';
+       if ($class!='*')
+           $g .= ',run.job_class';
+
+        $qb = $this->createQueryBuilder('run')
+            ->Select('run.date,'.$f.'sum(run.executions) as runs,sum(run.alarms) as alarms,sum(run.acks) as acks')
+            ->where('run.date >= :start')
+            ->andWhere('run.date <= :end')
+            ->groupBy('run.date'.$g)
+            ->orderBy('run.date'.$g)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if ($env!='*')
+            $qb->andWhere('run.env = :env')
+                 ->setParameter('env', $env);
+        if ($app!='*')
+            $qb->andWhere('run.app = :app')
+                 ->setParameter('app', $app);
+        if ($class!='*')
+            $qb->andWhere('run.job_class = :class')
+                 ->setParameter('class', $class);
+/*        
+    $query = $qb->getQuery();
+    print $query->getSQL();
+    print_r($query->getParameters());
+    exit();
+*/           
+        return $qb->getQuery()
+            ->getResult();
 }
    
-   public function findByDay()
-   {
-        return $this->createQueryBuilder('run')
-              ->Select('run.date,run.env,run.spooler_name,sum(run.alarms) as runs')
-              ->groupBy('run.date,run.env,run.spooler_name')
-              ->getQuery()
-              ->getResult();
-   }
-
-   /* liste d'apps concernée par les excutions */
-   public function findApps($start,$end,$env='*')
-   {
-       if (($env=='*') or ($env=='')) {
-            return $this->createQueryBuilder('run')
-                ->Select('run.app','app.title','sum(run.alarms) as nb')
-                ->leftJoin('Arii\CoreBundle\Entity\App','app',\Doctrine\ORM\Query\Expr\Join::WITH,'run.app = app.name')                
-                ->where('run.date >= :start')
-                ->andWhere('run.date <= :end')
-                ->groupBy('run.app,app.title')
-                ->orderBy('nb','DESC')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->getQuery()
-                ->getResult();
-       }
-       else {
-            return $this->createQueryBuilder('run')
-                ->Select('run.app','app.title','sum(run.alarms) as nb')
-                ->leftJoin('Arii\CoreBundle\Entity\App','app',\Doctrine\ORM\Query\Expr\Join::WITH,'run.app = app.name')                
-                ->where('run.date >= :start')
-                ->andWhere('run.date <= :end')
-                ->andWhere('run.env = :env')
-                ->groupBy('run.app,app.title')
-                ->orderBy('nb','DESC')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('env', $env)
-                ->getQuery()
-                ->getResult();
-       }
-   }
-
    public function findAlarms($time, $app='%', $env='P')
    {
        if (($env=='*') or ($env=='')) {

@@ -2422,7 +2422,7 @@ class AriiPortal
         $User['past'] = $this->CalcDate( $User['ref_date'], $hours );
         return $this->session->set('UserInterface',$User);
     }
-
+    
     public function setRefFuture($hours)
     {
         $User = $this->getUserInterface();
@@ -2458,7 +2458,21 @@ class AriiPortal
         $User['tag'] = $tag;                
         return $this->session->set('UserInterface',$User);
     }
+
+    public function setJobClass($job_class)
+    {
+        $User = $this->getUserInterface();        
+        $User['job_class'] = $job_class;                
+        return $this->session->set('UserInterface',$User);
+    }
     
+    public function setCategory($category)
+    {
+        $User = $this->getUserInterface();        
+        $User['category'] = $category;                
+        return $this->session->set('UserInterface',$User);
+    }
+
     public function setDay($day)
     {
         $User = $this->getUserInterface();        
@@ -2485,6 +2499,15 @@ class AriiPortal
      **************************************/                
     private function CalcDate($date,$days) 
     {
+        // compatibilite datetime et localtime
+        if (is_object($date)) {
+            $date->add(\DateInterval::createFromDateString($days.' days'));
+            return $date->format('Y-m-d H:i:s');
+        }
+        elseif ($date=='') {
+            $tm = localtime(time()+($days*86400),true);
+            return sprintf("%04d-%02d-%02d %02d:%02d:%02d",$tm['tm_year']+1900,$tm['tm_mon']+1,$tm['tm_mday'],$tm['tm_hour'],$tm['tm_min'],$tm['tm_sec']);
+        }        
         $year = substr($date,0,4);
         $month = substr($date,5,2);
         $day = substr($date,8,2);

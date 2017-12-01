@@ -382,7 +382,7 @@ dhtmlxEvent(window,"load",function(){
     });
    
     loaded = false;
-    jobAppsChart.load( '{{ url('xml_Report_jobs_applications_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {
+    jobAppsChart.load( '{{ url('arii_Report_jobs_app') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {
         jobNbChart.load( '{{ url('xml_Report_jobs_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {
 //            jobADChart.load( '{ { url('xml_Report_jobs_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {
                 runExecutionsChart.load( '{{ url('xml_Report_runs_executions_chart') }}?app={{ app }}&env={{ env }}&month={{ month }}&year={{ year}}&day_past={{ day_past }}', function() {

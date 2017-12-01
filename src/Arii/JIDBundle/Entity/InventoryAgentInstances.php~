@@ -1,0 +1,88 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InventoryAgentInstances
+ *
+ * @ORM\Table(name="inventory_agent_instances", uniqueConstraints={@ORM\UniqueConstraint(name="INVENTORY_IAI_UNIQUE", columns={"INSTANCE_ID", "URL"})})
+ * @ORM\Entity
+ */
+class InventoryAgentInstances
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="INSTANCE_ID", type="integer", nullable=false)
+     */
+    private $instanceId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="OS_ID", type="integer", nullable=false)
+     */
+    private $osId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HOSTNAME", type="string", length=100, nullable=true)
+     */
+    private $hostname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="VERSION", type="string", length=30, nullable=true)
+     */
+    private $version;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="URL", type="string", length=100, nullable=false)
+     */
+    private $url;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="STATE", type="integer", nullable=false)
+     */
+    private $state;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="STARTED_AT", type="datetime", nullable=true)
+     */
+    private $startedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+
+}

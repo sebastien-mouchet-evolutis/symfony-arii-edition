@@ -4,18 +4,21 @@
 <script language="javascript">
 var app="{{ appl }}",
     env="{{ env }}",
+    job_class="{{ job_class }}",
+    category="{{ category }}",
+    day = {{ day }},
     month={{ month }},
     year={{ year }},
     day_past={{ day_past }};
-    header = {{ header }};
-    footer = {{ footer }};
     
 dhtmlxEvent(window,"load",function(){    
 size=345
 
     globalLayout = new dhtmlXLayoutObject(document.body,"2U");
     globalLayout.cells("a").setWidth(size);
-    
+    globalLayout.cells("a").setText("{{ "Dashboards" | trans }}");
+    globalLayout.cells("b").hideHeader();
+        
     globalMenu = globalLayout.cells("a").attachMenu();
     globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
@@ -26,41 +29,25 @@ size=345
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
     
-    {% include "AriiReportBundle:Default:tree.js.twig" %}    
     {% include "AriiReportBundle:Default:toolbar.js.twig" %}    
-    
-    globalLayout.cells("a").hideHeader();
-    globalLayout.cells("b").hideHeader();
-
-    myTabbar = globalLayout.cells("b").attachTabbar();
-//    myTabbar.addTab("charts","{{ "Charts" | trans }}","120px", null, true);
-    myTabbar.addTab("dashboard","{{ "Dashboard" | trans }}","200px", null, true);
-    myTabbar.attachEvent("onContentLoaded", function(id){
-        this.cells("dashboard").progressOff();
-    });    
-    myToolbarDashboard = myTabbar.cells("dashboard").attachToolbar();
-    myToolbarDashboard.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
-    myToolbarDashboard.loadStruct("{{ url('xml_Report_dashboard_toolbar') }}?app="+app+"&env="+env);
-    myToolbarDashboard.attachEvent("onStateChange", function(id, state) {        
-        switch(id) {
-            case 'header':
-                if (state) 
-                    header = 1;
-                else
-                    header = 0;
-                GlobalRefresh();
-                break;
-            default:
-                alert(id);
-                break;
-        }    
+    view = globalLayout.cells("a").attachDataView({
+        container:"data_container",
+        type:{
+            template:"<b>#Dashboard#</b><p>#Description#<br/><i>Version #Version#</i></p>",
+            width: size
+        }
     });
-    
+    view.add({
+        Dashboard: "Global",
+        Description: "Vue synthétique de l'ensemble des traitements",
+        Version:"1.0" 
+    });
+
     GlobalRefresh();
 });
 
 function GlobalRefresh() {
-    myTabbar.cells("dashboard").attachURL( "{{url('html_Report_dashboard') }}?app="+app+"&env="+env+"&month="+month+"&year="+year+"&day_past="+day_past+"&header="+header+"&footer="+footer );                      
+    globalLayout.cells("b").attachURL( "{{url('html_Report_dashboard') }}" );                      
 };
 </script>
 {% endblock %}

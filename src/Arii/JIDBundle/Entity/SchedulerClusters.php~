@@ -1,0 +1,109 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SchedulerClusters
+ *
+ * @ORM\Table(name="scheduler_clusters")
+ * @ORM\Entity
+ */
+class SchedulerClusters
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="MEMBER_ID", type="string", length=100, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $memberId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SCHEDULER_ID", type="string", length=100, nullable=false)
+     */
+    private $schedulerId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PRECEDENCE", type="integer", nullable=true)
+     */
+    private $precedence;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="LAST_HEART_BEAT", type="integer", nullable=true)
+     */
+    private $lastHeartBeat;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="NEXT_HEART_BEAT", type="integer", nullable=true)
+     */
+    private $nextHeartBeat;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ACTIVE", type="integer", nullable=true)
+     */
+    private $active;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="EXCLUSIVE", type="integer", nullable=true)
+     */
+    private $exclusive;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="DEAD", type="integer", nullable=true)
+     */
+    private $dead;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="COMMAND", type="string", length=250, nullable=true)
+     */
+    private $command;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HTTP_URL", type="string", length=100, nullable=true)
+     */
+    private $httpUrl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DEACTIVATING_MEMBER_ID", type="string", length=100, nullable=true)
+     */
+    private $deactivatingMemberId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="XML", type="text", nullable=true)
+     */
+    private $xml;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PAUSED", type="integer", nullable=true)
+     */
+    private $paused;
+
+
+}

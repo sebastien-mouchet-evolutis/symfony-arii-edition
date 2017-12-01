@@ -1,0 +1,88 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SchedulerOrderHistory
+ *
+ * @ORM\Table(name="scheduler_order_history", indexes={@ORM\Index(name="SCHEDULER_O_HISTORY_SPOOLER_ID", columns={"SPOOLER_ID"}), @ORM\Index(name="SCHEDULER_O_HISTORY_JOB_CHAIN", columns={"JOB_CHAIN", "ORDER_ID"}), @ORM\Index(name="SCHEDULER_O_HISTORY_START_TIME", columns={"START_TIME"})})
+ * @ORM\Entity
+ */
+class SchedulerOrderHistory
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="HISTORY_ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $historyId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="JOB_CHAIN", type="string", length=255, nullable=false)
+     */
+    private $jobChain;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ORDER_ID", type="string", length=255, nullable=false)
+     */
+    private $orderId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SPOOLER_ID", type="string", length=100, nullable=true)
+     */
+    private $spoolerId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TITLE", type="string", length=200, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="STATE", type="string", length=100, nullable=true)
+     */
+    private $state;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="STATE_TEXT", type="string", length=100, nullable=true)
+     */
+    private $stateText;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="START_TIME", type="datetime", nullable=false)
+     */
+    private $startTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="END_TIME", type="datetime", nullable=true)
+     */
+    private $endTime;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="LOG", type="blob", nullable=true)
+     */
+    private $log;
+
+
+}

@@ -10,43 +10,52 @@ class JobsController extends Controller
 {
     public function indexAction()
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
-        
-        return $this->render('AriiReportBundle:Dashboard\Jobs:index.html.twig', 
-            array( 
-                'appl' => $app,
-                'env' => $env,
-                'month' => $month,
-                'day' => $day,
-                'year' => $year,
-                'day_past' => $day_past
-                ) 
-            );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();        
+        return $this->render('AriiReportBundle:Dashboard\Jobs:index.html.twig', $Filters );
     }
 
+    // Jobs par jours
+    public function dayAction()
+    {       
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
+
+        // on recalcule la date temporaire
+        $month = substr($Filters['monthday'],0,2);
+        $day   = substr($Filters['monthday'],2);
+        $start = new \DateTime($Filters['year']."-$month-$day 00:00:00");
+        $end   = new \DateTime($Filters['year']."-$month-$day 23:59:59");
+
+        $em = $this->getDoctrine()->getManager(); 
+        $Jobs = $em->getRepository("AriiReportBundle:JOB")->findJobs($start,$end,$Filters['env'],$Filters['appl'],$Filters['job_class']);
+        
+        $xml = "<?xml version='1.0' encoding='iso-8859-1'?><rows>";
+        $xml .= '<head><afterInit><call command="clearAll"/></afterInit></head>';        
+        foreach ($Jobs as $Job) {
+            $xml .= '<row id="'.$Job->getId().'">';
+            $xml .= '<cell>'.$Job->getJobName().'</cell>';
+            $xml .= '<cell>'.$Job->getEnv().'</cell>';
+            $xml .= '<cell>'.$Job->getJobClass().'</cell>';
+            $xml .= '<cell>'.$Job->getCreated()->format('Y-m-d').'</cell>';
+            $xml .= '<cell>'.$Job->getUpdated()->format('Y-m-d').'</cell>';
+            $xml .= '<cell>'.($Job->getFirstExecution()!=''?$Job->getFirstExecution()->format('Y-m-d'):'').'</cell>';
+            $xml .= '<cell>'.($Job->getLastExecution()!=''?$Job->getLastExecution()->format('Y-m-d'):'').'</cell>';
+            $xml .= '<cell>'.($Job->getDeleted()!=''?$Job->getDeleted()->format('Y-m-d'):'').'</cell>';
+            $xml .= '</row>';
+        }
+        $xml .= '</rows>';
+        
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');        
+        $response->setContent( $xml );
+        return $response;           
+    }
+    
     public function chartAction($mode="dashboard")
     {        
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         // on recule d'un mois pour le delta des changements
+        $start = $Filters['start'];
         $start->modify('-1 month');
 
         $em = $this->getDoctrine()->getManager(); 
@@ -73,49 +82,6 @@ class JobsController extends Controller
         $response->headers->set('Content-Type', 'text/xml');        
         $response->setContent( $xml );
         return $response;           
-    }
-
-    public function chart_daysAction($mode="dashboard")
-    {        
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
-
-        // on recule d'un mois pour le delta des changements
-        $start->modify('-1 month');
-
-        $em = $this->getDoctrine()->getManager(); 
-        $Jobs = $em->getRepository("AriiReportBundle:JOBDay")->findJobsByDay($start,$end,$env,$app);
-        
-        $xml = "<?xml version='1.0' encoding='iso-8859-1'?><data>";
-        $last = $n = 0;
-        foreach ($Jobs as $Job) {
-            if ($n>0) {
-                $xml .= '<item id="'.$Job['date']->format('md').'">';
-                $xml .= '<mois>'.$this->get('translator')->trans('month.'.($Job['date']->format('m'))*1).'</mois>';
-                $xml .= '<jour>'.$Job['date']->format('d').'</jour>';
-                $xml .= '<jobs>'.$Job['jobs'].'</jobs>';
-                $xml .= '<created>'.$Job['created'].'</created>';
-                $xml .= '<deleted>'.$Job['deleted'].'</deleted>';
-                $xml .= '<delta>'.($Job['jobs'] - $last).'</delta>';                
-                $xml .= '</item>';
-            }
-            $last = $Job['jobs'];
-            $n++;
-        }
-        $xml .= '</data>';
-        
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');        
-        $response->setContent( $xml );
-        return $response;            
     }
     
     // methode par les jobs

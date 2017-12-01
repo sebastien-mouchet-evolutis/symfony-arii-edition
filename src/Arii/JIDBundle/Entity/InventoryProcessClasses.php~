@@ -1,0 +1,81 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InventoryProcessClasses
+ *
+ * @ORM\Table(name="inventory_process_classes", uniqueConstraints={@ORM\UniqueConstraint(name="INVENTORY_IPC_UNIQUE", columns={"INSTANCE_ID", "FILE_ID"})})
+ * @ORM\Entity
+ */
+class InventoryProcessClasses
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="INSTANCE_ID", type="integer", nullable=false)
+     */
+    private $instanceId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FILE_ID", type="integer", nullable=false)
+     */
+    private $fileId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="NAME", type="string", length=255, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="BASENAME", type="string", length=255, nullable=false)
+     */
+    private $basename;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="MAX_PROCESSES", type="integer", nullable=true)
+     */
+    private $maxProcesses;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="HAS_AGENTS", type="integer", nullable=false)
+     */
+    private $hasAgents;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+
+}

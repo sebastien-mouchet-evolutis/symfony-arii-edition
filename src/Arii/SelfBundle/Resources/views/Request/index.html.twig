@@ -53,6 +53,12 @@ var size=300;
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_Self_grid_menu') }}");
 
+    // Pour les demandes traites
+    myGridMenu2 = new dhtmlXMenuObject(null);
+    myGridMenu2.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    myGridMenu2.renderAsContextMenu();
+    myGridMenu2.loadStruct("{{ url('xml_Self_grid_menu2') }}");
+
     myTabbar = globalLayout.cells("c").attachTabbar();
     myTabbar.addTab("request","{{ "Requests" | trans }}","120px",null,true);
     myTabbar.addTab("history","{{ "Processed" | trans }}","120px");
@@ -118,8 +124,9 @@ var size=300;
     myProcessed.setColAlign("left,left,left,center,right,right,right,right,right");
     myProcessed.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");
     myProcessed.setColSorting("str,str,str,str,date,date,date,str");
+    myProcessed.enableContextMenu(myGridMenu2);    
     myProcessed.init();
-    myProcessed.load( "{{ url('xml_Self_history_grid') }}?request="+last);    
+    myProcessed.load("{{ url('xml_Self_history_grid') }}?request="+last);    
     
     {% if request is not empty %}
     form("{{request}}");
@@ -194,6 +201,29 @@ var size=300;
         }
         return true;
     });
+    myGridMenu2.attachEvent("onClick", function (menuitemId, type) {
+        var data = myProcessed.contextID.split("_");
+        //rowInd_colInd;
+        var rId = data[0];
+        var cInd = data[1];
+        switch (menuitemId) {
+            case "log":
+                logRequest(rId);
+                break;
+            case "queue":
+                dhx4.ajax.get( "{{ url('html_Self_queuing') }}?id="+rId, function() {
+                    globalLayout.cells("c").progressOn();
+                    GridRefresh();
+                });
+                break;
+        break;
+            default:
+                alert("inconnu ! "+menuitemId);    
+        }
+        return true;
+    });
+    
+    
     globalLayout.cells('b').hideHeader();
     autorefresh = setInterval( "GridRefresh()",update*1000);        
 });

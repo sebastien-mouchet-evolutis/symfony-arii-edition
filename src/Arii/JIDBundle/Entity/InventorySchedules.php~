@@ -1,0 +1,109 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InventorySchedules
+ *
+ * @ORM\Table(name="inventory_schedules", uniqueConstraints={@ORM\UniqueConstraint(name="INVENTORY_IS_UNIQUE", columns={"FILE_ID"})})
+ * @ORM\Entity
+ */
+class InventorySchedules
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="INSTANCE_ID", type="integer", nullable=false)
+     */
+    private $instanceId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="FILE_ID", type="integer", nullable=false)
+     */
+    private $fileId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="NAME", type="string", length=255, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="BASENAME", type="string", length=255, nullable=false)
+     */
+    private $basename;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TITLE", type="string", length=255, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SUBSTITUTE", type="string", length=255, nullable=true)
+     */
+    private $substitute;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SUBSTITUTE_NAME", type="string", length=255, nullable=false)
+     */
+    private $substituteName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="SUBSTITUTE_ID", type="integer", nullable=false)
+     */
+    private $substituteId;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="SUBSTITUTE_VALID_FROM", type="datetime", nullable=true)
+     */
+    private $substituteValidFrom;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="SUBSTITUTE_VALID_TO", type="datetime", nullable=true)
+     */
+    private $substituteValidTo;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+
+}

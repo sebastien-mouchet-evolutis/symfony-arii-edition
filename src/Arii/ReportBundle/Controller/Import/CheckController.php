@@ -15,17 +15,7 @@ class CheckController extends Controller
     
     public function RunHourAction($force=1,$html=0)
     {
-        // par défaut
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),                
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
 
         set_time_limit(3600);
         ini_set('memory_limit', '-1');        
@@ -34,7 +24,7 @@ class CheckController extends Controller
 
         $em = $this->getDoctrine()->getManager();       
         
-        $Runs = $em->getRepository("AriiReportBundle:RUN")->findRunHours($start,$end);
+        $Runs = $em->getRepository("AriiReportBundle:RUN")->findRunHours($Filters['start'],$Filters['end']);
      
         $xml = "<?xml version='1.0' encoding='iso-8859-1'?><rows>";
         $xml .= '<head><afterInit><call command="clearAll"/></afterInit></head>';

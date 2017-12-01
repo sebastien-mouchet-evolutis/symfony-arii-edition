@@ -46,7 +46,6 @@ class MIGController extends Controller
 
             // On devrait pouvoir retrouver le spooler reference dans le portail, intérêt ?
             $Job->setSpoolerName($Info['spooler_name']);
-            $Job->setSpoolerType('ATS');
 
             $Job->setJobName($Info['job_name']);
             $Job->setJobType($Info['job_type']);

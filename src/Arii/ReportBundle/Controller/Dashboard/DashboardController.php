@@ -98,19 +98,19 @@ class DashboardController extends Controller
         $last->modify('first day of this month');        
         
         // Merge des requetes ?
-        $Jobs = $em->getRepository("AriiReportBundle:JOBMonth")->findApplicationsByMonths($end->format('Y')*100+$end->format('m'),$end->format('Y')*100+$end->format('m'),$env);
+        $Jobs = $em->getRepository("AriiReportBundle:JOBMonth")->findAppsByMonths($end->format('Y')*100+$end->format('m'),$end->format('Y')*100+$end->format('m'),$env);
         $JobApps=[];
         foreach ($Jobs as $Job) {
-            $a = $Job['application'];
+            $a = $Job['app'];
             if ($Job['jobs']>=$jobs_max)
             $JobApps[$a]=$Job['jobs'];
         }
         arsort($JobApps);
      
-        $Runs = $em->getRepository("AriiReportBundle:RUNMonth")->findApplicationsByMonths($end->format('Y')*100+$end->format('m'),$end->format('Y')*100+$end->format('m'),$env);
+        $Runs = $em->getRepository("AriiReportBundle:RUNMonth")->findAppsByMonths($end->format('Y')*100+$end->format('m'),$end->format('Y')*100+$end->format('m'),$env);
         $RunApps=[];
         foreach ($Runs as $Run) {
-            $a = $Run['application'];
+            $a = $Run['app'];
             $RunApps[$a]=$Run['executions'];
         }
         arsort($RunApps);

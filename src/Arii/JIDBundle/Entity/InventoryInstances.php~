@@ -1,0 +1,151 @@
+<?php
+
+namespace Arii\JIDBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InventoryInstances
+ *
+ * @ORM\Table(name="inventory_instances", uniqueConstraints={@ORM\UniqueConstraint(name="INVENTORY_II_UNIQUE", columns={"SCHEDULER_ID", "HOSTNAME", "PORT"})}, indexes={@ORM\Index(name="REPORTING_II_SCHEDULER_ID", columns={"SCHEDULER_ID"}), @ORM\Index(name="REPORTING_II_HOST", columns={"HOSTNAME", "PORT"})})
+ * @ORM\Entity
+ */
+class InventoryInstances
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="SCHEDULER_ID", type="string", length=100, nullable=false)
+     */
+    private $schedulerId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HOSTNAME", type="string", length=100, nullable=false)
+     */
+    private $hostname;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PORT", type="integer", nullable=false)
+     */
+    private $port;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="LIVE_DIRECTORY", type="string", length=255, nullable=false)
+     */
+    private $liveDirectory;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CREATED", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="MODIFIED", type="datetime", nullable=false)
+     */
+    private $modified;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="OS_ID", type="integer", nullable=false)
+     */
+    private $osId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="VERSION", type="string", length=30, nullable=false)
+     */
+    private $version;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="COMMAND_URL", type="string", length=100, nullable=false)
+     */
+    private $commandUrl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="URL", type="string", length=100, nullable=false)
+     */
+    private $url;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TIMEZONE", type="string", length=30, nullable=false)
+     */
+    private $timezone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="CLUSTER_TYPE", type="string", length=30, nullable=false)
+     */
+    private $clusterType;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="PRECEDENCE", type="integer", nullable=true)
+     */
+    private $precedence;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DBMS_NAME", type="string", length=30, nullable=false)
+     */
+    private $dbmsName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="DBMS_VERSION", type="string", length=100, nullable=true)
+     */
+    private $dbmsVersion;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="STARTED_AT", type="datetime", nullable=true)
+     */
+    private $startedAt;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="SUPERVISOR_ID", type="integer", nullable=true)
+     */
+    private $supervisorId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="AUTH", type="string", length=255, nullable=true)
+     */
+    private $auth;
+
+
+}

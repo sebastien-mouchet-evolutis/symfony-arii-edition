@@ -10,27 +10,8 @@ class CalendarsController extends Controller
 {
     public function indexAction()
     {
-        $request = Request::createFromGlobals();
-        $filter = $this->container->get('report.filter');
-        list($env,$app,$day_past,$day,$month,$year,$start,$end) = $filter->getFilter(
-            $request->query->get( 'env' ),
-            $request->query->get( 'app' ),
-            $request->query->get( 'day_past' ),
-            $request->query->get( 'day' ),
-            $request->query->get( 'month' ),
-            $request->query->get( 'year' )
-        );
-        
-        return $this->render('AriiReportBundle:Dashboard\Calendars:index.html.twig', 
-            array( 
-                'appl' => $app,
-                'env' => $env,
-                'month' => $month,
-                'day' => $day,
-                'year' => $year,
-                'day_past' => $day_past
-                ) 
-            );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();        
+        return $this->render('AriiReportBundle:Dashboard\Calendars:index.html.twig', $Filters);
     }
  
     public function toolbarAction()

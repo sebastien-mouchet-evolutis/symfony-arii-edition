@@ -117,7 +117,8 @@ class JOBController extends Controller
             }
             
             // la fin est la derniere mise a jour
-            $interval = \DateInterval::createFromDateString('1 day');            
+            $interval = \DateInterval::createFromDateString('1 day');
+            $end->add($interval);            
             $period = new \DatePeriod($created, $interval, $end);
             
             // On remplit chaque jour pour toute la période
@@ -141,8 +142,9 @@ class JOBController extends Controller
         
         foreach ($Exist as $k=>$jobs) {            
             list($app,$env,$job_class,$spooler_name,$date) = explode('#',$k);
-/*            
+            
             // truncate ?! si on truncate on perd l'historique
+/*            
             $JobDay = $em->getRepository("AriiReportBundle:JOBDay")->findOneBy(
                 array( 
                     'app'=>$app,
@@ -182,13 +184,12 @@ class JOBController extends Controller
     
     /* Agrégation des jobs par mois */
     public function JobMonthAction()
-    {       
+    {
         set_time_limit(3600);        
         ini_set('memory_limit','-1');
-        
         if ($this->container->has('profiler')) {
             $this->container->get('profiler')->disable();
-        }             
+        }
 
         $debut = time();
         
@@ -199,11 +200,10 @@ class JOBController extends Controller
         $new = $upd = 0;
         foreach ($Jobs as $Job) {
             
-            $app = $Job['application'];
+            $app = $Job['app'];
             $env = $Job['env'];
             $month = $Job['month'];
             $year = $Job['year'];
-            $spooler_type = $Job['spooler_type'];
             $spooler_name = $Job['spooler_name'];
             $jobs = $Job['jobs'];
             $created = $Job['created'];
@@ -211,7 +211,7 @@ class JOBController extends Controller
             
             // truncate ?! si on truncate on perd l'historique
             $JobMonth = $em->getRepository("AriiReportBundle:JOBMonth")->findOneBy(
-                array('application'=>$app,'env' =>$env, 'spooler_type' => $spooler_type, 'spooler_name' => $spooler_name, 'month' => $month, 'year' => $year
+                array('app'=>$app,'env' =>$env, 'spooler_name' => $spooler_name, 'month' => $month, 'year' => $year
             ));
 
             if (!$JobMonth) {
@@ -222,12 +222,11 @@ class JOBController extends Controller
                 $upd++;
             }
             
-            $JobMonth->setApplication($app);            
+            $JobMonth->setApp($app);            
             $JobMonth->setEnv($env);
             $JobMonth->setMonth($month);
             $JobMonth->setYear($year);
             
-            $JobMonth->setSpoolerType($spooler_type);
             $JobMonth->setSpoolerName($spooler_name);
             
             $JobMonth->setJobs($jobs);
@@ -251,24 +250,25 @@ class JOBController extends Controller
         
         // on recupere les regles par niveaux
         
-        $Rules = $this->getDoctrine()->getRepository("AriiReportBundle:JOBRule")->findAll( [ 'priority' => 'ASC' ]);
+        $Rules = $this->getDoctrine()->getRepository("AriiReportBundle:JOBRule")->findBy( [],[ 'priority' => 'ASC' ]);
         $Trans = [];
         foreach ($Rules as $Rule) {
             array_push( $Trans,
                 [
+                    'priority' => $Rule->getPriority(),
                     'input' => $this->Rule2Array($Rule->getInput()),
                     'output' => $this->Rule2Array($Rule->getOutput())
                 ]
             );            
         }
-        
+
         // On traite les jobs
         $em = $this->getDoctrine()->getManager();
         $Jobs = $this->getDoctrine()->getRepository("AriiReportBundle:JOB")->findAll( [], [ 'job_name' => 'ASC' ]);        
         foreach ($Jobs as $Job) {
             $Info['job_name'] = $Job->getJobName();
             $Info['job_type'] = $Job->getJobType();
-            
+
             // Application des règles 
             foreach ($Trans as $T) {
                 $found=true;
