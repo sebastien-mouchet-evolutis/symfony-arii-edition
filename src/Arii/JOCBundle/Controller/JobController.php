@@ -13,7 +13,7 @@ class JobController extends Controller {
         $request = Request::createFromGlobals();
         $id = $request->get('id');
         $sql = $this->container->get('arii_core.sql');      
-        $qry = $sql->Select(array('s.ID','p.NAME as SPOOLER_ID','s.PATH','s.NAME','s.TITLE','s.STATE','s.STATE_TEXT','s.ALL_STEPS','s.ALL_TASKS','s.ORDERED','s.HAS_DESCRIPTION','s.TASKS','s.IN_PERIOD','s.ENABLED','s.LAST_WRITE_TIME','s.LAST_INFO','s.LAST_WARNING','s.LAST_ERROR','s.ERROR','s.NEXT_START_TIME','s.WAITING_FOR_PROCESS','s.HIGHEST_LEVEL','s.LEVEL','s.ERROR_CODE','s.ERROR_TEXT','s.PROCESS_CLASS','s.SCHEDULE'))
+        $qry = $sql->Select(array('s.ID','p.NAME as SPOOLER_ID','s.PATH','s.NAME','s.TITLE','s.STATE','s.STATE_TEXT','s.ALL_STEPS','s.ALL_TASKS','s.ORDERED','s.HAS_DESCRIPTION','s.TASKS','s.IN_PERIOD','s.ENABLED','s.LAST_WRITE_TIME','s.LAST_INFO','s.LAST_WARNING','s.LAST_ERROR','s.ERROR','s.NEXT_START_TIME','s.WAITING_FOR_PROCESS','s.HIGHEST_LEVEL','s.LOG_LEVEL','s.ERROR_CODE','s.ERROR_TEXT','s.PROCESS_CLASS','s.SCHEDULE'))
                 .$sql->From(array('JOC_JOBS s'))
                 .$sql->LeftJoin('JOC_SPOOLERS p',array('s.SPOOLER_ID','p.ID'))
                 .$sql->Where(array('s.ID' => $id));
@@ -21,7 +21,7 @@ class JobController extends Controller {
         $dhtmlx = $this->container->get('arii_core.db');
         $data = $dhtmlx->Connector('form');
         $data->event->attach("beforeRender",array($this,"form_render"));
-        $data->render_sql($qry,'s.ID','ID,FOLDER,NAME,TITLE,STATE,STATE_TEXT,ALL_STEPS,ALL_TASKS,ORDERED,HAS_DESCRIPTION,TASKS,IN_PERIOD,ENABLED,LAST_WRITE_TIME,LAST_INFO,LAST_WARNING,LAST_ERROR,ERROR,NEXT_START_TIME,WAITING_FOR_PROCESS,HIGHEST_LEVEL,LEVEL,ERROR_CODE,ERROR_TEXT,PROCESS_CLASS,SCHEDULE,SPOOLER_ID');
+        $data->render_sql($qry,'s.ID','ID,FOLDER,NAME,TITLE,STATE,STATE_TEXT,ALL_STEPS,ALL_TASKS,ORDERED,HAS_DESCRIPTION,TASKS,IN_PERIOD,ENABLED,LAST_WRITE_TIME,LAST_INFO,LAST_WARNING,LAST_ERROR,ERROR,NEXT_START_TIME,WAITING_FOR_PROCESS,HIGHEST_LEVEL,LOG_LEVEL,ERROR_CODE,ERROR_TEXT,PROCESS_CLASS,SCHEDULE,SPOOLER_ID');
     }
     
     function form_render ($data){
@@ -55,13 +55,13 @@ class JobController extends Controller {
         $request = Request::createFromGlobals();
         $id = $request->get('id');
         $sql = $this->container->get('arii_core.sql');      
-        $qry = $sql->Select(array('ID','NAME','VALUE'))
+        $qry = $sql->Select(array('ID','NAME','PARAM_VALUE'))
                 .$sql->From(array('JOC_JOB_PARAMS'))
                 .$sql->Where(array('JOB_ID' => $id));
 
         $dhtmlx = $this->container->get('arii_core.db');
         $data = $dhtmlx->Connector('grid');
-        $data->render_sql($qry,'ID','NAME,VALUE');
+        $data->render_sql($qry,'ID','NAME,PARAM_VALUE');
     }
     
     public function detailAction( )

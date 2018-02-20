@@ -1,0 +1,20 @@
+title:          "Dashboard: Runs"
+description:    Nombre d'exécutions par mois et par applications pour la production
+header:         APP,CODE,YEAR,MONTH,SPOOLER_NAME,RUNS,CAT,JOB_CLASS
+icon:           dashboard
+sql:
+    oracle: |
+        select A.TITLE as APP,
+            J.APP as CODE,J.RUN_YEAR as YEAR,J.RUN_MONTH as MONTH,J.SPOOLER_NAME,J.EXECUTIONS as RUNS,J.JOB_CLASS,
+            C.TITLE as CAT
+        from REPORT_RUN_MONTH J
+        left join ARII_APPLICATION A 
+            on J.APP=A.NAME
+        left join ARII_CATEGORY C 
+            on A.CATEGORY_ID=C.ID
+        where SPOOLER_NAME='VA1' 
+            and ENV like 'P' 
+            and RUN_YEAR=2017
+            and A.ACTIVE=1
+            and C.name='applications'
+        order by A.TITLE,YEAR DESC,MONTH DESC

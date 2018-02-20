@@ -36,9 +36,9 @@ class SYNC
     private $entity;
 
     /**
-     * @var integer
+     * @var bigint
      *
-     * @ORM\Column(name="last_id", type="integer")
+     * @ORM\Column(name="last_id", type="bigint")
      */
     private $last_id;
 

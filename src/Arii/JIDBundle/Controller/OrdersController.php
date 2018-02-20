@@ -16,14 +16,115 @@ class OrdersController extends Controller
           $this->images = $request->getUriForPath('/../bundles/ariicore/images/wa');  
     }
 
-    public function indexAction()
+    public function indexAction($db)
     {
-        $portal = $this->container->get('arii_core.portal');
-        if (!$portal->getDatabase())
-            return $this->render('AriiJIDBundle:Default:index.html.twig');
-        return $this->render('AriiJIDBundle:Orders:index.html.twig');
+        return $this->render('AriiJIDBundle:Orders:index.html.twig', [ 'db' => $db ]);
     }
 
+    public function pieAction($db,$history_max=0,$nested=false,$only_warning=true)
+    {
+        $request = Request::createFromGlobals();
+        if ($request->get('history')>0) {
+            $history_max = $request->get('history');
+        }
+        $nested = $request->get('chained');
+        $only_warning = $request->get('only_warning');
+
+        $history = $this->container->get('arii_jid.history');
+        $history->setDB($db);        
+        $Orders = $history->Orders($history_max,$nested,$only_warning);
+        
+        foreach ($Orders as $k=>$order) {
+            $status = $order['STATUS'];
+            if (isset($Status[$status])) {
+                $Status[$status]++;
+            }
+            else {
+                $Status[$status]=1;
+            }
+        }
+        
+        $pie = '<data>';
+        if (!isset($Status['SUCCESS'])) {
+            $Status['SUCCESS']=0;
+        }
+        ksort($Status);
+
+        $portal = $this->container->get('arii_core.portal');
+        $ColorStatus = $portal->getColors();
+        
+        foreach ($Status as $k=>$v) {
+            $pie .= '<item id="'.$k.'"><STATUS>'.str_replace(' ','_',$k).'</STATUS><JOBS>'.$v.'</JOBS><COLOR>'.(isset($ColorStatus[$k]['bgcolor'])?$ColorStatus[$k]['bgcolor']:'black').'</COLOR></item>';
+        }
+        $pie .= '</data>';
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+        $response->setContent( $pie );
+        return $response;
+    }
+
+    public function gridAction($db,$history_max=0,$nested=false,$only_warning=true,$sort='last')
+    {
+        $request = Request::createFromGlobals();
+        if ($request->get('history')>0) {
+            $history_max = $request->get('history');
+        }
+        $nested = $request->get('chained');
+        $only_warning = $request->get('only_warning');
+        $sort = $request->get('sort');
+
+        $history = $this->container->get('arii_jid.history');
+        $history->setDB($db);
+        $Orders = $history->Orders($history_max,$nested,$only_warning,$sort);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+        $list = '<?xml version="1.0" encoding="UTF-8"?>';
+        $list .= "<rows>\n";
+        $list .=  '<head>
+            <afterInit>
+                <call command="clearAll"/>
+            </afterInit>
+        </head>';
+        
+        $portal = $this->container->get('arii_core.portal');
+        $ColorStatus = $portal->getColors();
+
+        // ksort($Orders);
+        foreach ($Orders as $k=>$line) {
+            $spooler = $line['SPOOLER_ID'];
+            $status = $line['STATUS'];
+             
+            if (isset($ColorStatus[$status]['bgcolor'])) $color=$ColorStatus[$status]['bgcolor'];
+                else $color='yellow';
+            $list .=  '<row id="'.$line['HISTORY_ID'].'"  style="background-color: '.$color.';">';
+            
+            # Cell color pour identifier le point de blocage
+            $cellcolor='';
+            $list .=  '<cell'.$cellcolor.'>'.$line['SPOOLER_ID'].'</cell>';
+            $cellcolor='';
+            $list .=  '<cell>'.$line['FOLDER'].'</cell>';
+            if ($status == 'CHAIN STOP.') $cellcolor=' style="background-color: red;"';
+            $list .=  '<cell'.$cellcolor.'>'.$line['NAME'].'</cell>';
+            $cellcolor='';
+            $list .=  '<cell>'.$line['ORDER_ID'].'</cell>';
+            $cellcolor='';
+            if ($status == 'NODE STOP.') $cellcolor=' style="background-color: red;"';
+            if ($status == 'NODE SKIP.') $cellcolor=' style="background-color: orange;"';
+            $list .=  '<cell'.$cellcolor.'>'.$line['STATE'].'</cell>';
+            $list .=  '<cell>'.$status.'</cell>';
+            $list .=  '<cell>'.$line['START_TIME'].'</cell>';
+            $list .=  '<cell>'.$line['END_TIME'].'</cell>';
+            $list .=  '<cell>'.$line['NEXT_TIME'].'</cell>';
+            $list .=  '<cell>'.$line['STATE_TEXT'].'</cell>';
+            $list .=  '</row>';
+        }
+        
+        $list .=  "</rows>\n";
+        $response->setContent( $list );
+        return $response;        
+    }
+    
     public function folder_toolbarAction()
     {
         $response = new Response();
@@ -491,47 +592,6 @@ class OrdersController extends Controller
         return $this->render('AriiJIDBundle:Orders:timeline.html.twig', array('refresh' => $refresh, 'Timeline' => $Timeline ) );
     }
 
-    public function pieAction($history_max=0,$nested=false,$only_warning=true)
-    {
-        $request = Request::createFromGlobals();
-        if ($request->get('history')>0) {
-            $history_max = $request->get('history');
-        }
-        $nested = $request->get('chained');
-        $only_warning = $request->get('only_warning');
-
-        $history = $this->container->get('arii_jid.history');
-        $Orders = $history->Orders($history_max,$nested,$only_warning);
-        
-        foreach ($Orders as $k=>$order) {
-            $status = $order['STATUS'];
-            if (isset($Status[$status])) {
-                $Status[$status]++;
-            }
-            else {
-                $Status[$status]=1;
-            }
-        }
-        
-        $pie = '<data>';
-        if (!isset($Status['SUCCESS'])) {
-            $Status['SUCCESS']=0;
-        }
-        ksort($Status);
-
-        $portal = $this->container->get('arii_core.portal');
-        $ColorStatus = $portal->getColors();
-        
-        foreach ($Status as $k=>$v) {
-            $pie .= '<item id="'.$k.'"><STATUS>'.str_replace(' ','_',$k).'</STATUS><JOBS>'.$v.'</JOBS><COLOR>'.(isset($ColorStatus[$k]['bgcolor'])?$ColorStatus[$k]['bgcolor']:'black').'</COLOR></item>';
-        }
-        $pie .= '</data>';
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');
-        $response->setContent( $pie );
-        return $response;
-    }
-
     public function barAction()
     {
         $dhtmlx = $this->container->get('arii_core.dhtmlx');
@@ -583,66 +643,6 @@ $qry = $sql->Select(array('soh.START_TIME','sosh.ERROR'))
         return $response;
     }
 
-    public function gridAction($history_max=0,$nested=false,$only_warning=true,$sort='last')
-    {
-        $request = Request::createFromGlobals();
-        if ($request->get('history')>0) {
-            $history_max = $request->get('history');
-        }
-        $nested = $request->get('chained');
-        $only_warning = $request->get('only_warning');
-        $sort = $request->get('sort');
-
-        $history = $this->container->get('arii_jid.history');     
-        $Orders = $history->Orders($history_max,$nested,$only_warning,$sort);
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');
-        $list = '<?xml version="1.0" encoding="UTF-8"?>';
-        $list .= "<rows>\n";
-        $list .=  '<head>
-            <afterInit>
-                <call command="clearAll"/>
-            </afterInit>
-        </head>';
-        
-        $portal = $this->container->get('arii_core.portal');
-        $ColorStatus = $portal->getColors();
-
-        // ksort($Orders);
-        foreach ($Orders as $k=>$line) {
-            $spooler = $line['SPOOLER_ID'];
-            $status = $line['STATUS'];
-             
-            if (isset($ColorStatus[$status]['bgcolor'])) $color=$ColorStatus[$status]['bgcolor'];
-                else $color='yellow';
-            $list .=  '<row id="'.$line['HISTORY_ID'].'"  style="background-color: '.$color.';">';
-            
-            # Cell color pour identifier le point de blocage
-            $cellcolor='';
-            $list .=  '<cell'.$cellcolor.'>'.$line['SPOOLER_ID'].'</cell>';
-            $cellcolor='';
-            $list .=  '<cell>'.$line['FOLDER'].'</cell>';
-            if ($status == 'CHAIN STOP.') $cellcolor=' style="background-color: red;"';
-            $list .=  '<cell'.$cellcolor.'>'.$line['NAME'].'</cell>';
-            $cellcolor='';
-            $list .=  '<cell>'.$line['ORDER_ID'].'</cell>';
-            $cellcolor='';
-            if ($status == 'NODE STOP.') $cellcolor=' style="background-color: red;"';
-            if ($status == 'NODE SKIP.') $cellcolor=' style="background-color: orange;"';
-            $list .=  '<cell'.$cellcolor.'>'.$line['STATE'].'</cell>';
-            $list .=  '<cell>'.$status.'</cell>';
-            $list .=  '<cell>'.$line['START_TIME'].'</cell>';
-            $list .=  '<cell>'.$line['END_TIME'].'</cell>';
-            $list .=  '<cell>'.$line['NEXT_TIME'].'</cell>';
-            $list .=  '<cell>'.$line['STATE_TEXT'].'</cell>';
-            $list .=  '</row>';
-        }
-        
-        $list .=  "</rows>\n";
-        $response->setContent( $list );
-        return $response;        
-    }
 
     public function gridFullAction($history=0)
     {

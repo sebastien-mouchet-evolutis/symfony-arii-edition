@@ -77,7 +77,11 @@ services:
     arii_core.exec:
         class: Arii\CoreBundle\Service\AriiExec
         arguments: [ "@arii_core.portal" ]
-
+        
+    arii_core.requests:
+        class: Arii\CoreBundle\Service\AriiRequests
+        arguments: [ "@arii_core.portal", @doctrine, "@arii_core.date", @templating ]
+        
     arii_core.mermaid:
         class: Arii\CoreBundle\Service\AriiMermaid
         arguments: [ "@service_container", "@arii_core.portal" ]

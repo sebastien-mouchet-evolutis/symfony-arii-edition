@@ -1,0 +1,11 @@
+title:          "Dashboard: Runs par heure"
+description:    Vérification du remplissage pour l'application {APP} dans l'environnement {ENV}.
+header:         SPOOLER_NAME,APP,ENV,RUN_DATE,RUN_HOUR,UPDATED/JOB_CLASS/EXECUTIONS
+args:           APP(ARI)&ENV(P)
+icon:           dashboard
+sql:
+    oracle: |
+        select SPOOLER_NAME,APP,ENV,JOB_CLASS,substr(RUN_DATE,0,10) as RUN_DATE,RUN_HOUR,EXECUTIONS,UPDATED
+        from REPORT_RUN_HOUR
+        where APP='{APP}' and ENV='{ENV}'
+        order by RUN_DATE DESC

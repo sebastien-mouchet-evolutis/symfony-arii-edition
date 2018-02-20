@@ -1,111 +1,356 @@
-{# src/Arii/JOCBundle/Resources/views/index.html.twig #}
+{# src/Arii/JOCBundle/Resources/views/Default/index.html.twig #}
 {% extends "AriiJOCBundle::layout.html.twig" %}
 {% block body %}
-<script>
-var dhxLayout = new dhtmlXLayoutObject(document.body,"2U");
+<script type="text/javascript">
+var update=10;
+var page = 1;
+var autorefresh;
+dhtmlxEvent(window,"load",function(){     
+var size=400;
+    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
+    globalLayout.cells("a").setWidth(size); 
+    
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
-var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
-toolbar.loadStruct("{{ url('arii_JID_toolbar') }}");
-toolbar.attachEvent( "onClick", function(id, value) {
-    switch (id) {
-    case "menu":
-        document.location.href = "{{ url('arii_JOC_index') }}";
-        break;
-    case "menu_history":
-        document.location.href = "{{ url('arii_JOC_jobs') }}";
-        break;
-    case "menu_orders":
-        document.location.href = "{{ url('arii_JOC_orders') }}";
-        break;
-    case "menu_chains":
-        document.location.href = "{{ url('arii_JID_chains') }}";
-        break;
-    case "menu_planned":
-        document.location.href = "{{ url('arii_JID_planned') }}";
-        break;
-    case "menu_spoolers":
-        document.location.href = "{{ url('arii_JOC_spoolers') }}";
-        break;
-    case "menu_ha":
-        document.location.href = "{{ url('arii_JOC_spoolers') }}";
-        break;
-    case "menu_msg":
-        document.location.href = "{{ url('arii_JID_messages') }}";
-        break;
-        case "refresh":
-            GlobalRefresh();
-        break;
-        default:
-            alert(id);
-    }
-});
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_JOC_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
 
-dhxLayout.cells("a").setText("{{ 'Jobs' | trans }}");
-bar =  dhxLayout.cells("a").attachChart ({
-        view:"donut",
-        value:"#JOBS#",
-        label:"",
-        tooltip: "#JOBS# #STATUS#",
-        color: "#COLOR#",
-        gradient:true,
-        border:false,
-        pieInnerText: "#JOBS#",
-        shadow: 0
-});
-bar.load( "{{ url('xml_JOC_jobs_pie') }}");
-bar.attachEvent("onItemClick",function(id, event){
-    switch (id) {
-        case 'pending':
-            window.location = "{{ url("arii_JOC_jobs") }}"; 
-            break;
-        default:
-            window.location = "{{ url("arii_JOC_jobs") }}?status="+id.toUpperCase(); 
-            break;
-    }
-});
-bar.attachEvent("onMouseMoving",function(e){
-   var target = (e.target||e.srcElement);
-      document.body.style.cursor = (target.tagName == "AREA"?"pointer":"default");
-})
-
-dhxLayout.cells("b").setText("{{ 'Orders' | trans }}");
-bar2 =  dhxLayout.cells("b").attachChart ({
-        view:"donut",
-        value:"#JOBS#",
-        label:"",
-        tooltip: "#JOBS# #STATUS#",
-        color: "#COLOR#",
-        gradient:true,
-        border:false,
-        pieInnerText: "#JOBS#",
-        shadow: 0
-});
-bar2.load( "{{ url('xml_JOC_orders_pie') }}");
-bar2.attachEvent("onItemClick",function(id, event){
-    switch (id) {
-        default:
-            window.location = "{{ url("arii_JOC_orders") }}?status="+id.toUpperCase(); 
-            break;
-    }
-});
-bar2.attachEvent("onMouseMoving",function(e){
-   var target = (e.target||e.srcElement);
-      document.body.style.cursor = (target.tagName == "AREA"?"pointer":"default");
-})
-
-GlobalRefresh();
-function GlobalRefresh() {
-    bar.load( "{{ url('xml_JOC_jobs_pie') }}", function() {
-        var currentTime = new Date();
-        var nextTime = new Date(currentTime.getTime() +(refreshing*1000));
-        toolbar.setItemText( "refresh", FormatTime(nextTime));
-        bar2.load( "{{ url('xml_JOC_orders_pie') }}", function() {
-            var currentTime = new Date();
-            var nextTime = new Date(currentTime.getTime() +(refreshing*1000));
-            toolbar.setItemText( "refresh", FormatTime(nextTime));
-        });
+    myDataView = globalLayout.cells("a").attachDataView({
+        type:{
+            template: function (obj) {
+                var result = '<p class="title"/><img src="{{ asset('/bundles/ariicore/images/wa/') }}'+obj.img+'.png"/>&nbsp;'+obj.name;
+                var color = '#ffffff';
+                if (obj.warning>0) {
+                    result += '&nbsp;&nbsp;&nbsp;<span class="warning">'+obj.warning+'</span>';
+                    color = '#ffffcc';
+                }
+                if (obj.error>0) {
+                    result += '&nbsp;&nbsp;&nbsp;<span class="error">'+obj.error+'</span>';
+                    color = '#fbb4ae';
+                }
+                return '<div  style="background-color: '+color+'">'+result+'</div>';
+            },
+            css: "arii",
+            height:15,
+            width: size
+        }
     });
+ 
+    myCarousel  = globalLayout.cells("b").attachCarousel({
+        effect: "cards"
+    });
+    Carousel=[];                        
+    Carousel[0] = myCarousel.addCell();
+    SpoolersLayout =  myCarousel.cells(Carousel[0]).attachLayout("2U");    
+    SpoolersLayout.cells("a").setText("{{ "Status" | trans }}");
+    SpoolersLayout.cells("b").hideHeader();
+    
+    SpoolersGrid = SpoolersLayout.cells("b").attachGrid();
+    SpoolersGrid.setHeader("{{ "Spooler" | trans }},{{ "Status" | trans }},{{ "Time" | trans }}");
+    SpoolersGrid.attachHeader("#text_filter,#select_filter,#text_filter");
+    SpoolersGrid.setInitWidths("*,100,150");
+    SpoolersGrid.setColAlign("left,center,right");
+    SpoolersGrid.setColTypes("ro,ro,ro");
+    SpoolersGrid.setColSorting("str,str,date");
+    SpoolersGrid.enableAlterCss("even_row","odd_row");  
+    SpoolersGrid.init();
+    SpoolersGrid.enableSmartRendering(true,50); 
+    
+    SpoolersChart = SpoolersLayout.cells("a").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#STATUS#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "#STATUS#: <b>#NB#</b>",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#STATUS#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+
+    Carousel[1] = myCarousel.addCell();
+    ChainsLayout =  myCarousel.cells(Carousel[1]).attachLayout("2U");    
+    ChainsLayout.cells("b").hideHeader();
+    ChainsLayout.cells("a").setText("{{ "Job chains" | trans }}");
+    
+    ChainsGrid = ChainsLayout.cells("b").attachGrid();
+    ChainsGrid.setHeader("{{ "Spooler" | trans }},{{ "Path" | trans }},{{ "Status" | trans }},{{ "Orders" | trans }},{{ "Time" | trans }}");
+    ChainsGrid.attachHeader("#select_filter,#text_filter,#select_filter,#text_filter,#text_filter");
+    ChainsGrid.setInitWidths("*,*,120,100,150");
+    ChainsGrid.setColAlign("left,left,center,center,right");
+    ChainsGrid.setColTypes("ro,ro,ro,ro,ro");
+    ChainsGrid.setColSorting("str,str,str,str,date");
+    ChainsGrid.enableAlterCss("even_row","odd_row");  
+    ChainsGrid.init();
+    ChainsGrid.enableSmartRendering(true,50);    
+
+    ChainsChart = ChainsLayout.cells("a").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#NAME#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#NAME#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+
+    Carousel[2] = myCarousel.addCell();
+    OrdersLayout =  myCarousel.cells(Carousel[2]).attachLayout("2U");    
+    OrdersLayout.cells("b").hideHeader();
+    OrdersLayout.cells("a").setText("{{ "Spoolers" | trans }}");
+    
+    OrdersGrid = OrdersLayout.cells("b").attachGrid();
+    OrdersGrid.setHeader("{{ "Spooler" | trans }},{{ "Path" | trans }},{{ "Order" | trans }},{{ "State" | trans }},{{ "Status" | trans }},{{ "Time" | trans }}");
+    OrdersGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter");
+    OrdersGrid.setInitWidths("*,*,*,120,120,150");
+    OrdersGrid.setColAlign("left,left,left,center,center,right");
+    OrdersGrid.setColTypes("ro,ro,ro,ro,ro,ro");
+    OrdersGrid.setColSorting("str,str,str,str,str,date");
+    OrdersGrid.enableAlterCss("even_row","odd_row");  
+    OrdersGrid.init();
+    OrdersGrid.enableSmartRendering(true,50);    
+
+    OrdersChart = OrdersLayout.cells("a").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#NAME#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#NAME#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+
+    Carousel[3] = myCarousel.addCell();
+    JobsLayout =  myCarousel.cells(Carousel[3]).attachLayout("2U");    
+    JobsLayout.cells("b").hideHeader();
+    JobsLayout.cells("a").setText("{{ "Jobs" | trans }}");
+    
+    JobsGrid = JobsLayout.cells("b").attachGrid();
+    JobsGrid.setHeader("{{ "Spooler" | trans }},{{ "Job" | trans }},{{ "Status" | trans }},{{ "Time" | trans }}");
+    JobsGrid.attachHeader("#select_filter,#text_filter,#select_filter,#numeric_filter,#text_filter");
+    JobsGrid.setInitWidths("*,*,120,150");
+    JobsGrid.setColAlign("left,left,center,right");
+    JobsGrid.setColTypes("ro,ro,ro,ro");
+    JobsGrid.setColSorting("str,str,str,str,date");
+    JobsGrid.enableAlterCss("even_row","odd_row");  
+    JobsGrid.init();
+    JobsGrid.enableSmartRendering(true,50);    
+
+    JobsChart = JobsLayout.cells("a").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#NAME#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#NAME#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+
+    Carousel[3] = myCarousel.addCell();
+    ClassesLayout =  myCarousel.cells(Carousel[3]).attachLayout("2U");    
+    ClassesLayout.cells("b").hideHeader();
+    ClassesLayout.cells("a").setText("{{ "Process classes" | trans }}");
+    
+    ClassesGrid = ClassesLayout.cells("b").attachGrid();
+    ClassesGrid.setHeader("{{ "Spooler" | trans }},{{ "Job" | trans }},{{ "Status" | trans }},{{ "Remote" | trans }},{{ "Time" | trans }}");
+    ClassesGrid.attachHeader("#select_filter,#text_filter,#select_filter,#text_filter,#text_filter");
+    ClassesGrid.setInitWidths("*,*,120,*,150");
+    ClassesGrid.setColAlign("left,left,center,left,right");
+    ClassesGrid.setColTypes("ro,ro,ro,ro,ro");
+    ClassesGrid.setColSorting("str,str,str,str,str,date");
+    ClassesGrid.enableAlterCss("even_row","odd_row");  
+    ClassesGrid.init();
+    ClassesGrid.enableSmartRendering(true,50);    
+
+    ClassesChart = ClassesLayout.cells("a").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#NAME#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#NAME#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+
+    Carousel[5] = myCarousel.addCell();
+    LocksAllLayout = myCarousel.cells(Carousel[5]).attachLayout("2E");    
+    LocksLayout =  LocksAllLayout.cells("a").attachLayout("2U");    
+    LocksLayout.cells("b").hideHeader();
+    LocksLayout.cells("a").setText("{{ "Locks" | trans }}");
+    
+    LocksGrid = LocksLayout.cells("b").attachGrid();
+    LocksGrid.setHeader("{{ "Spooler" | trans }},{{ "Path" | trans }},{{ "Lock" | trans }},{{ "Status" | trans }},{{ "Time" | trans }}");
+    LocksGrid.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#text_filter");
+    LocksGrid.setInitWidths("*,*,120,120,150");
+    LocksGrid.setColAlign("left,left,left,center,right");
+    LocksGrid.setColTypes("ro,ro,ro,ro,ro");
+    LocksGrid.setColSorting("str,str,str,str,date");
+    LocksGrid.enableAlterCss("even_row","odd_row");  
+    LocksGrid.init();
+    LocksGrid.enableSmartRendering(true,50);    
+
+    LocksChart = LocksLayout.cells("a").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#NAME#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#NAME#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+
+    LocksUseLayout =  LocksAllLayout.cells("b").attachLayout("2U");    
+    LocksUseLayout.cells("b").hideHeader();
+    LocksUseLayout.cells("a").setText("{{ "Locks use" | trans }}");
+    
+    LocksUseGrid = LocksUseLayout.cells("b").attachGrid();
+    LocksUseGrid.setHeader("{{ "Spooler" | trans }},{{ "Path" | trans }},{{ "Lock" | trans }},{{ "Status" | trans }},{{ "Time" | trans }}");
+    LocksUseGrid.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#text_filter");
+    LocksUseGrid.setInitWidths("*,*,120,120,150");
+    LocksUseGrid.setColAlign("left,left,left,center,right");
+    LocksUseGrid.setColTypes("ro,ro,ro,ro,ro");
+    LocksUseGrid.setColSorting("str,str,str,str,date");
+    LocksUseGrid.enableAlterCss("even_row","odd_row");  
+    LocksUseGrid.init();
+    LocksUseGrid.enableSmartRendering(true,50);    
+
+    LocksUseChart = LocksUseLayout.cells("a").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#NAME#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#NAME#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+
+    myDataView.attachEvent("onItemClick", function(id){
+        myCarousel.cells(Carousel[id]).setActive();
+    });
+    
+    globalLayout.cells("a").hideHeader(); 
+    globalLayout.cells("b").hideHeader(); 
+    
+    autorefresh = setInterval( "GlobalRefresh()",update*10000);
+    GlobalRefresh();
+});
+
+function GlobalRefresh() {
+    myDataView.load("{{ url('xml_JOC_menu') }}", function () {
+        SpoolersChart.load( "{{ url('xml_JOC_spoolers_pie') }}", function () {
+            SpoolersLayout.cells("b").progressOn();
+            SpoolersGrid.load("{{ url('xml_JOC_spoolers_list') }}", function () {
+                SpoolersGrid.refreshFilters();
+                SpoolersGrid.filterByAll();
+                SpoolersLayout.cells("b").progressOff();
+                OrdersChart.load("{{ url('xml_JOC_orders_pie') }}", function () {
+                    OrdersLayout.cells("b").progressOn();
+                    OrdersGrid.load("{{ url('xml_JOC_orders_list') }}", function () {                        
+                        OrdersGrid.refreshFilters();
+                        OrdersGrid.filterByAll();
+                        OrdersLayout.cells("b").progressOff();
+                        ChainsChart.load("{{ url('xml_JOC_chains_pie') }}", function () {
+                            ChainsLayout.cells("b").progressOn();
+                            ChainsGrid.load("{{ url('xml_JOC_chains_list') }}", function () {
+                                ChainsLayout.cells("b").progressOff();
+                                ChainsGrid.refreshFilters();
+                                ChainsGrid.filterByAll();
+                                JobsChart.load("{{ url('xml_JOC_jobs_pie') }}", function () {
+                                    JobsLayout.cells("b").progressOn();
+                                    JobsGrid.load("{{ url('xml_JOC_jobs_list') }}", function () {
+                                        JobsGrid.refreshFilters();
+                                        JobsGrid.filterByAll();
+                                        JobsLayout.cells("b").progressOff();
+                                        ClassesChart.load("{{ url('xml_JOC_process_classes_pie') }}", function () {
+                                            ClassesLayout.cells("b").progressOn();
+                                            ClassesGrid.load("{{ url('xml_JOC_process_classes_list') }}", function () {
+                                                ClassesLayout.cells("b").progressOff();
+                                                ClassesGrid.refreshFilters();
+                                                ClassesGrid.filterByAll();
+                                                LocksChart.load("{{ url('xml_JOC_locks_pie') }}", function () {
+                                                    LocksLayout.cells("b").progressOn();
+                                                    LocksGrid.load("{{ url('xml_JOC_locks_list') }}", function () {
+                                                        LocksGrid.refreshFilters();
+                                                        LocksGrid.filterByAll();       
+                                                        LocksLayout.cells("b").progressOff();
+                                                        LocksUseChart.load("{{ url('xml_JOC_locks_use_pie') }}", function () {
+                                                            LocksUseLayout.cells("b").progressOn();
+                                                            LocksUseGrid.load("{{ url('xml_JOC_locks_use_list') }}", function () {
+                                                                LocksUseGrid.refreshFilters();
+                                                                LocksUseGrid.filterByAll();                                        
+                                                                LocksUseLayout.cells("b").progressOff();
+                                                                if (myCarousel.getActiveIndex() > 5)
+                                                                    myCarousel.goFirst();
+                                                                else
+                                                                    myCarousel.goNext();                                        
+                                                                myDataView.select(myCarousel.getActiveIndex()+1);
+                                                            });
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }); 
 }
 </script>
 {% endblock %}

@@ -46,7 +46,24 @@ class OrdersController extends Controller
       return $this->render('AriiJOCBundle:Orders:index.html.twig' );
     }
 
-   public function grid_toolbarAction()
+    public function listAction()
+    {
+        $state = $this->container->get('arii.joc');
+        list($Orders,$Status) = $state->getOrders($sort=['start_time' => 'ASC']);
+                
+        $Render = $this->container->get('arii_core.render');
+        return $Render->Grid($Orders,'SPOOLER,PATH,ORDER,STATE,STATUS,UPDATED','COLOR');
+    }
+
+    public function pieAction() {
+        $state = $this->container->get('arii.joc');
+        list($Orders,$Status) = $state->getOrders($sort=['start_time' => 'ASC']);
+                
+        $Render = $this->container->get('arii_core.render');
+        return $Render->Pie($Status,'STATE','COLOR');
+    }
+    
+    public function grid_toolbarAction()
     {
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
@@ -72,11 +89,6 @@ class OrdersController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
         return $this->render('AriiJOCBundle:Orders:grid_menu.xml.twig',array(), $response );
-    }
-
-    public function listAction()
-    {
-        return $this->render('AriiJOCBundle:Orders:list.html.twig');
     }
 
     public function gridAction($sort='last')
@@ -262,42 +274,6 @@ class OrdersController extends Controller
             }
         }
         return $return;
-    }
-/*******************************************/
-    public function pieAction()
-    {
-        $request = Request::createFromGlobals();        
-        $nested = $request->get('chained');
-        $only_warning = $request->get('only_warning');
-        $sort = $request->get('sort');
-
-        $state = $this->container->get('arii_joc.state');
-        $Orders = $state->Orders($nested,$only_warning,$sort);
-        
-        $S = array('SUSPENDED','SETBACK','RUNNING','WAITING','DONE');
-        foreach ($S as $status) {
-            $Status[$status]=0;
-        }
-        foreach ($Orders as $order) {
-            $status = $order['STATUS'];
-            if (isset($Status[$status]))
-                $Status[$status]++;
-            else 
-                $Status[$status]=1;
-        }
-        $pie = "<?xml version='1.0' encoding='utf-8' ?>";
-        $pie .= "<data>";
-        foreach ($S as $status) {
-            $pie .= '<item id="'.$status.'"><STATUS>'.$status.'</STATUS>';
-            $pie .= '<JOBS>'.$Status[$status].'</JOBS>';
-            $pie .= '<COLOR>'.$this->ColorStatus[$status].'</COLOR></item>';
-        }
-        $pie .= "</data>";
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');
-        $response->setContent( $pie );
-        return $response;
-//        return $this->render('AriiJOCBundle:Menu:global.xml.twig', array( 'update' => $refresh, 'database' => $database ), $response);
     }
 
 }

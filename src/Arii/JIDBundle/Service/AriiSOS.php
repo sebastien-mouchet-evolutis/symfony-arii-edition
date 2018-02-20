@@ -223,7 +223,7 @@ class AriiSOS
 
        $dhtmlx = $this->db;
        $data = $dhtmlx->Connector('data');
-
+              
         // indexé ?
         if (substr($id,0,2)=='O:') {
             $Infos = explode('/',substr($id,2));

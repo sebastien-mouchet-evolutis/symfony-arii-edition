@@ -1,89 +1,75 @@
-{# src/Arii/JOCBundle/Resources/views/Ajax/job.html.twig #}
-{% extends "AriiJOCBundle:Ajax:layout.html.twig" %}
-{% block content %}
-<div id="dhx_win" style="width:100%; height:100%;overflow:auto">
-<style>
-tr.log {
-    border: 0;
-    background-color: white;
-    padding: 0;
-    margin: 0;
-}
-td.log {
-    font-family: courier;
-    background-image: none;   
-    padding-left: 3px;
-    margin: 0;
-    line-height: 14px;
-}
-td.info {
-    font-family: courier;
-    background-image: none;   
-    padding: 0;
-    margin: 0;
-    color: blue;
-    line-height: 14px;
-}
-td.ERROR {
-    font-family: courier;
-    background-image: none;   
-    padding: 0;
-    margin: 0;
-    color: red;
-    line-height: 14px;
-}
-td.WARN {
-    font-family: courier;
-    background-image: none;   
-    padding: 0;
-    margin: 0;
-    color: orange;
-    line-height: 14px;
-}
-th.SUCCESS {
-    background-color: green;
-    color: white;
-}
-th.FAILURE {
-    background-color: red;
-    color: white;
-}
-th.RUNNING {
-    background-color: orange;
-    color: white;
-}
-th.SUSPENDED {
-    background-color: lightsalmon;
-    color: white;
-}
-th.droite {
-    text-align: right;
-}
-</style>
-<div class="table_wrapper">
-        <div class="table_wrapper_inner">
-<table width="100%"
-<tr>
-    <th colspan="2">{{ ORDER_ID }}</th>
-    <td>{{ "Status" | trans }}</td>
-    <th class="{{STATUS}}" colspan=3>{{ STATUS }}</th>
-</tr>
-<tr class="first">
-    <th colspan="4">{{ TITLE | raw }}</font></th>
-</tr>
-<tr class="first">
-    <th colspan="4">{{ STATE_TEXT }}</font></th>
-</tr>
-<tr class="first">
-    <td>{{ "Job chain" | trans }}</td><th>{{ JOB_CHAIN }}</th>
-    <td>{{ "State" | trans }}</td><th>{{ STATE }}</th>
-</tr>
-<tr class="first">
-    <td>{{ "Start time" | trans }}</td><th class="droite">{{ START_TIME }}</th>
-    <td>{{ "End time" | trans }}</td><th class="droite">{{ END_TIME }}</th>
-</tr>
-</table>
-</div>
-</div>
-</div>
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+{% endblock %}
+{% block body %}
+<body class="bg-light">
+<div class="container-fluid">
+    <form>
+    <div class="row">
+      <div class="col-xs-12 col-md-10 form-group" >
+        <h2>{{ ORDER }}<h2/>
+      </div>
+      <div class="col-xs-12 col-md-2 form-group">
+        <button type="button" class="btn btn-success btn-lg">&nbsp;&nbsp;{{ STATUS }}&nbsp;&nbsp;</button>
+      </div>      
+    </div>
+    <div class="row">   
+        <div class="col-xs-12 col-md-12 form-group">
+          <label for="title">{{ "Title" | trans }}</label>
+          <input class="form-control" id="title" value="{{ TITLE }}"/>
+        </div>  
+    </div>
+    <div class="row">  
+        <div class="col-xs-12 col-md-8 form-group">
+        <label for="path">{{ "Folder" | trans }}</label>
+        <input class="form-control" id="path" value="{{ FOLDER }}"/>
+        </div>
+        <div class="col-xs-12 col-md-4 form-group">
+        <label for="chain">{{ "Chain" | trans }}</label>
+        <input class="form-control" id="chain" value="{{ CHAIN }}"/>
+        </div>
+    </div>    
+    <div class="row">
+        <h2>{{ "State" | trans }}</h2>      
+        <div class="col-xs-12 col-md-4 form-group">
+          <label for="initial_state">{{ "Initial" | trans }}</label>
+          <input class="form-control" id="initial_state" value="{{ INITIAL_STATE }}"/>
+        </div>  
+        <div class="col-xs-12 col-md-4 form-group">
+          <label for="state">{{ "State" | trans }}</label>
+          <input class="form-control" id="state" value="{{ STATE }}"/>
+        </div>  
+        <div class="col-xs-12 col-md-4 form-group">
+          <label for="end_state">{{ "End" | trans }}</label>
+          <input class="form-control" id="end_state" value="{{ END_STATE }}"/>
+        </div>  
+    </div>   
+    <div class="row">   
+        <div class="col-xs-12 col-md-12 form-group">
+          <label for="end_state">{{ "Text" | trans }}</label>
+          <input class="form-control" id="state_text" value="{{ STATE_TEXT }}"/>
+        </div>  
+    </div>   
+    <div class="row">   
+        <h2>{{ "Schedule" | trans }}</h2>      
+        <div class="col-xs-12 col-md-6 form-group">
+          <label for="active">{{ "Active schedule" | trans }}</label>
+          <input class="form-control" id="initial_state" value="{{ SCHEDULE }}"/>
+        </div>  
+        <div class="col-xs-12 col-md-3 form-group">
+          <label for="end_state">{{ "Start time" | trans }}</label>
+          <input class="form-control" id="end_state" value="{{ START_TIME }}"/>
+        </div>  
+        <div class="col-xs-12 col-md-3 form-group">
+          <label for="state">{{ "Next start" | trans }}</label>
+          <input class="form-control" id="state" value="{{ NEXT_START_TIME }}"/>
+        </div>  
+    </div>    
+    </form>
+</div>     
+</body>
 {% endblock %}

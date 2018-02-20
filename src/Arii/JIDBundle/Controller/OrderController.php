@@ -8,6 +8,50 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller {
 
+    
+/* ==================================================================================
+ * PASSAGE EN DOCTRINE
+ * ==================================================================================
+ */
+        
+    public function logAction($id=-1,$db='')
+    {
+        if ($id<0) {
+            $request = Request::createFromGlobals();
+            $id = $request->get('id');
+        }
+        
+        $JID = $this->container->get('arii.JID');
+        $log = $JID->getOrderLog($id,$db);
+        if (!$log) {
+            $sos = $this->container->get('arii_jid.sos');
+            // $log = $sos->Log($spooler, '/show_log?order='.$order.'&history_id='.$id);
+        }
+        
+        $response = new Response();
+        $response->setContent($log);
+        return $response;
+    }
+    
+    public function historyAction($spooler='',$job_chain='',$order_id='', $db='' )
+    {
+        $request = Request::createFromGlobals();
+        if ($request->get('spooler')!='')
+            $spooler = $request->get('spooler');
+        if ($request->get('job_chain')!='')
+            $job_chain = $request->get('job_chain');
+        if ($request->get('order')!='')
+            $order_id = $request->get('order');
+        
+        $JID = $this->container->get('arii.JID');
+        $History = $JID->getOrderHistory($spooler, $job_chain, $order_id, $db );
+
+        // Grid XML
+        $Render = $this->container->get('arii_core.Render');
+        return $Render->grid($History,$fields='SPOOLER_ID,JOB_CHAIN,START_TIME,END_TIME,STATE',$color='color');
+    }        
+    
+    /* ANCIENNES FONCTIONS */
     public function indexAction()
     {
        $request = Request::createFromGlobals();
@@ -24,6 +68,35 @@ class OrderController extends Controller {
 
         return $this->render('AriiJIDBundle:Order:index.html.twig',
                 array('id' => $id, 'spooler' => $Infos['SPOOLER_ID'], 'chain' => $Infos['JOB_CHAIN'], 'order' => $Infos['ORDER_ID'] ) );
+    }
+
+    public function historyByIdAction($db)
+    {
+        $request = Request::createFromGlobals();
+        $id = $request->get('id');
+        
+        $dhtmlx = $this->container->get('arii_core.dhtmlx');
+        $dhtmlx->setDB($db);
+
+        $sql = $this->container->get('arii_core.sql');
+
+        // Recherche des informations
+        $qry = $sql->Select(array('SPOOLER_ID','JOB_CHAIN','ORDER_ID'))
+                .$sql->From(array('SCHEDULER_ORDER_HISTORY'))
+                .$sql->Where(array('HISTORY_ID' => $id));
+
+        $data = $dhtmlx->Connector('data');
+        $res = $data->sql->query( $qry );
+        if ($line = $data->sql->get_next($res)) {
+            $spooler = $line['SPOOLER_ID'];
+            $job_chain = $line['JOB_CHAIN'];
+            $order = $line['ORDER_ID'];
+        }
+        else {
+            exit();
+        }
+        
+        return $this->historyByNameAction($db,$spooler,$job_chain,$order);
     }
 
     public function historyPageAction()
@@ -195,39 +268,6 @@ class OrderController extends Controller {
         $data->set_value('ERROR_CODE',substr($data->get_value('ERROR_CODE'),15));
     }
 
-    public function historyAction()
-    {
-        $request = Request::createFromGlobals();
-        $id = $request->get('id');
-        $sql = $this->container->get('arii_core.sql');
-
-        // Recherche des informations
-        $dhtmlx = $this->container->get('arii_core.dhtmlx');
-        $qry = $sql->Select(array('SPOOLER_ID','JOB_CHAIN','ORDER_ID'))
-                .$sql->From(array('SCHEDULER_ORDER_HISTORY'))
-                .$sql->Where(array('HISTORY_ID' => $id));
-        $data = $dhtmlx->Connector('data');
-        $res = $data->sql->query( $qry );
-        if ($line = $data->sql->get_next($res)) {
-            $spooler = $line['SPOOLER_ID'];
-            $job_chain = $line['JOB_CHAIN'];
-            $order = $line['ORDER_ID'];
-        }
-        else {
-            exit();
-        }
-        $qry = $sql->Select(array('soh.HISTORY_ID','soh.STATE','soh.STATE_TEXT','soh.START_TIME','soh.END_TIME','soh.END_TIME','sosh.ERROR','sosh.ERROR_TEXT'))
-                .$sql->From(array('SCHEDULER_ORDER_HISTORY soh'))
-                .$sql->LeftJoin('SCHEDULER_ORDER_STEP_HISTORY sosh',array('soh.HISTORY_ID','sosh.HISTORY_ID'))
-                .$sql->Where(array('soh.SPOOLER_ID' => $spooler,'soh.JOB_CHAIN' => $job_chain,'soh.ORDER_ID' => $order))
-                .$sql->OrderBy(array('soh.HISTORY_ID desc'))
-                .$sql->Limit(50);
-
-        $data2 = $dhtmlx->Connector('grid');
-        $data2->event->attach("beforeRender",array($this,"grid_render"));
-        $data2->render_sql($qry,'HISTORY_ID','START_TIME,END_TIME,STATE,ERROR,MESSAGE');
-    }
-
     function grid_render ($data){
         if ($data->get_value('ERROR')==0) {
             $data->set_row_color("#ccebc5");
@@ -283,6 +323,7 @@ class OrderController extends Controller {
         }
     }
 
+// rien a faire ici    
     public function paramsAction() {
         // recherche des infos
         $request = Request::createFromGlobals();
@@ -319,34 +360,8 @@ class OrderController extends Controller {
         return $response;
     }
 
-    // http://xxadarlon:4444/show_log?history_id=3071310
-    public function logAction()
+    public function logDBAction($db)
     {
-        $request = Request::createFromGlobals();
-        $id = $request->get('id');
-        
-        $dhtmlx = $this->container->get('arii_core.dhtmlx');
-        $sql = $this->container->get('arii_core.sql');
-        $data = $dhtmlx->Connector('data');
-        $qry = $sql->Select(array('LOG','END_TIME','SPOOLER_ID','ORDER_ID'))
-                .$sql->From(array('SCHEDULER_ORDER_HISTORY'))
-                .$sql->Where(array('HISTORY_ID' => $id));
-        $res = $data->sql->query( $qry );
-        $Infos = $data->sql->get_next($res);
-        $spooler = $Infos['SPOOLER_ID'];
-        $order = $Infos['ORDER_ID'];
-
-        $sos = $this->container->get('arii_jid.sos');
-        $log = $sos->Log($spooler, '/show_log?order='.$order.'&history_id='.$id);
-        
-        $response = new Response();
-        $response->setContent($log);
-        return $response;
-    }
-        
-    public function logDBAction()
-    {
-
         # Il est preferable de connaitre le type de base plutot que le deviner
         $portal = $this->container->get('arii_core.portal');
         $db = $portal->getDatabase();
@@ -888,7 +903,6 @@ private function recursive($array){
       $response->headers->set('Content-Type', 'text/xml');
 
       return $response;
-
-
     }
+
 }

@@ -11,11 +11,6 @@ var autorefresh;
 var job = -1;
 
 dhtmlxEvent(window,"load",function(){ 
-    menu = new dhtmlXMenuObject(null);
-    menu.setIconsPath( "{{ asset('bundles/ariicore/images/menu/') }}" );
-    menu.renderAsContextMenu();
-    menu.attachEvent("onClick", onButtonClick);
-    menu.loadStruct("{{ url('arii_JOC_menu_history') }}");
 
     globalLayout = new dhtmlXLayoutObject(document.body,"3L");
     globalLayout.cells("a").setWidth(410); 
@@ -90,6 +85,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").hideHeader();
     globalLayout.cells("c").setHeight(300);
 
+    myGridMenu = new dhtmlXMenuObject(null);
+    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.renderAsContextMenu();
+    myGridMenu.loadStruct("{{ url('xml_JOC_jobs_menu') }}");
+
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
     myGrid.setHeader("{{ "Spooler" | trans }},{{ "Folder" | trans }},{{ "Job" | trans }},{{ "Title" | trans }},{{ "State" | trans }},{{ "Message" | trans }},{{ "Information" | trans }},{{ "Next start" | trans }},{{ "Schedule" | trans }},{{ "Process class" | trans }}");
@@ -97,7 +97,7 @@ dhtmlxEvent(window,"load",function(){
     myGrid.setInitWidths("100,*,200,250,150,*,*,200,200,200");
     myGrid.setColAlign("left,left,left,left,center,left,left,right,left,left");
     myGrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro,ro");
-    myGrid.enableContextMenu(menu);
+    myGrid.enableContextMenu(myGridMenu);
     myGrid.enableAlterCss("","");
     myGrid.init();
     myGrid.load( "{{ url('xml_JOC_jobs_grid') }}?chained="+chained+"&only_warning="+only_warning );
@@ -215,6 +215,21 @@ dhtmlxEvent(window,"load",function(){
     myTasks.enableAlterCss("","");
     myTasks.init();
 
+    myGridMenu.attachEvent("onClick", function (menuitemId, type) {
+        var data = myGrid.contextID.split("_");
+        var rId = data[0];
+        var cInd = data[1];
+        job = myGrid.cells(rId,1).getValue();
+        switch (menuitemId) {
+           case "job_history":
+                document.location.href = "{{ url('arii_ATS_job_history') }}?joid="+rId;
+            break;
+            default:
+                alert("inconnu ! "+menuitemId);    
+        }
+        return true;
+    });
+
     autorefresh = setInterval( "GridRefresh()",update*1000);
 });
 
@@ -231,6 +246,8 @@ function GridRefresh() {
     }
     myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
     myGrid.load( "{{ url('xml_JOC_jobs_grid') }}?chained="+chained+"&only_warning="+only_warning, function () {
+        myGrid.refreshFilters();
+        myGrid.filterByAll();
         globalLayout.cells("b").progressOff();
         myDonut.load( "{{ url('xml_JOC_jobs_pie') }}?chained="+chained+"&only_warning="+only_warning, function () {
             myDonut.refresh();

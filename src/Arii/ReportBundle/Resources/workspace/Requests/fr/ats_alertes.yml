@@ -1,0 +1,19 @@
+cat:            /Autosys
+title:          "[ATS] Alarmes"
+description:    Alarmes en cours
+header:         ALARM,ALARM_TIME(timestamp),JOB_NAME,STATE,THE_USER,EVENT_COMMENT,RESPONSE
+connection:     ats_db2
+icon:           ats
+sql:
+    oracle: |
+        select 
+            a.ALARM_TIME,( CASE WHEN a.STATE = 43 THEN 'OPEN' ELSE 'ACK.' END) as STATE,a.THE_USER,a.EVENT_COMMENT,a.RESPONSE,
+            j.JOB_NAME,
+            i.TEXT as ALARM
+        from UJO_ALARM a
+        left join UJO_JOB j
+        on a.JOID = j.JOID
+        left join UJO_INTCODES i
+        on a.ALARM = i.CODE
+        where a.STATE<45 and i.FLD='alarm'
+        order by a.ALARM_TIME desc

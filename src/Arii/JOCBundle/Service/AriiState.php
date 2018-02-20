@@ -7,14 +7,17 @@ namespace Arii\JOCBundle\Service;
 
 class AriiState
 {
+    protected $em;
     protected $db;
     protected $sql;
     protected $date;
     
     public function __construct (  
+            \Doctrine\ORM\EntityManager $entityManager,
             \Arii\CoreBundle\Service\AriiDB $db, 
             \Arii\CoreBundle\Service\AriiSQL $sql,
             \Arii\CoreBundle\Service\AriiDate $date ) {
+        $this->em = $entityManager;
         $this->db = $db;
         $this->sql = $sql;
         $this->date = $date;
@@ -40,7 +43,7 @@ class AriiState
             $Fields['{!pending}'] = 'j.STATE';
         }
         $qry = $sql->Select(array('s.NAME as SPOOLER',
-                        'j.ID','j.PATH','j.STATE','j.STATE_TEXT','j.TITLE','j.UPDATED','j.ORDERED','j.NEXT_START_TIME','j.LAST_INFO','j.LEVEL','j.HIGHEST_LEVEL','j.LAST_WARNING','j.LAST_ERROR','j.ERROR','j.WAITING_FOR_PROCESS','j.ORDERED','j.PROCESS_CLASS','j.SCHEDULE' ))
+                        'j.ID','j.PATH','j.STATE','j.STATE_TEXT','j.TITLE','j.UPDATED','j.ORDERED','j.NEXT_START_TIME','j.LAST_INFO','j.LOG_LEVEL','j.HIGHEST_LEVEL','j.LAST_WARNING','j.LAST_ERROR','j.ERROR','j.WAITING_FOR_PROCESS','j.ORDERED','j.PROCESS_CLASS','j.SCHEDULE' ))
                 .$sql->From(array('JOC_JOBS j'))
                 .$sql->LeftJoin('JOC_SPOOLERS s',array('j.SPOOLER_ID','s.ID'))
                 .$sql->Where($Fields)
@@ -165,7 +168,7 @@ class AriiState
         return $RemoteSchedulers;
    }
    
-   public function Orders( $nested=0, $only_warning= true, $sort='last', $id=0) {
+   public function Orders( $nested=0, $only_warning= true, $sort='last', $id=-1) {
         $date = $this->date;
         $sql = $this->sql;
         $db = $this->db;
@@ -174,7 +177,7 @@ class AriiState
         $Fields = array( '{spooler}' => 'fs.NAME',
                          '{job_chain}'   => 'fo.PATH',
                          '{order_id}' => 'fo.NAME' );
-        if ($id>0)
+        if ($id>=0)
             $Fields['fo.ID'] = $id;
         
         switch ($sort) {
@@ -188,8 +191,8 @@ class AriiState
                 $Sort = array('fo.NEXT_START_TIME desc','fo.START_TIME desc','fs.NAME','fo.PATH');
                 break;
         }
-        
-        $qry = $sql->Select(array( 'fs.NAME as SPOOLER_ID','fo.PATH','fo.ID','fo.NAME','fo.START_TIME','fo.NEXT_START_TIME','fo.TITLE','fo.STATE','fo.STATE_TEXT','fo.SUSPENDED','fo.IN_PROCESS_SINCE','fo.TASK_ID','fo.HISTORY_ID','fo.SETBACK','fo.SETBACK_COUNT' ))
+    
+        $qry = $sql->Select(array( 'fs.NAME as SPOOLER_ID','fs.HOST','fo.PATH','fo.ID','fo.NAME','fo.START_TIME','fo.NEXT_START_TIME','fo.TITLE','fo.STATE','fo.STATE_TEXT','fo.SUSPENDED','fo.IN_PROCESS_SINCE','fo.TASK_ID','fo.HISTORY_ID','fo.SETBACK','fo.SETBACK_COUNT' ))
                 .$sql->From(array('JOC_ORDERS fo'))
                 .$sql->LeftJoin('JOC_JOB_CHAIN_NODES fn',array('fo.JOB_CHAIN_NODE_ID','fn.ID'))
                 .$sql->LeftJoin('JOC_JOB_CHAINS fc',array('fn.JOB_CHAIN_ID','fc.ID'))
@@ -237,6 +240,8 @@ class AriiState
             else {
                 $Orders[$id]['NEXT_START_TIME'] = $date->Date2Local($line['NEXT_START_TIME'],$line['SPOOLER_ID']);
             }
+            if ($line['SPOOLER_ID']!=$line['HOST'])
+                $Orders[$id]['SPOOLER_ID'] .= '/'.$line['HOST'];
         }
         return $Orders;
    }
@@ -249,7 +254,7 @@ class AriiState
         
         // Jobs
         $Fields = array( '{spooler}' => 's.NAME' );
-        $qry = $sql->Select(array('s.NAME as SPOOLER','l.ID','l.NAME','l.PATH','l.MAX_NON_EXCLUSIVE','l.IS_FREE','l.STATE'))
+        $qry = $sql->Select(array('s.NAME as SPOOLER','s.HOST','l.ID','l.NAME','l.PATH','l.MAX_NON_EXCLUSIVE','l.IS_FREE','l.STATE'))
                .$sql->From(array('JOC_LOCKS l'))
                .$sql->LeftJoin('JOC_SPOOLERS s',array('l.SPOOLER_ID','s.ID'))
                .$sql->Where($Fields)
@@ -262,6 +267,8 @@ class AriiState
             $id = $line['ID'];
             $Locks[$id]=$line;
             $Locks[$id]['FOLDER'] = dirname($line['PATH']);
+            if (strtolower($line['SPOOLER'])!=strtolower($line['HOST']))
+                $Locks[$id]['SPOOLER'] .= '/'.$line['HOST'];
         }
         return $Locks;
    }
@@ -276,7 +283,7 @@ class AriiState
         $Fields = array( '{spooler}' => 's.NAME' );
         $qry = $sql->Select(array(  'j.STATE',
                                     's.NAME as SPOOLER',
-                                    'l.PATH','max(l.EXCLUSIVE) as EXCLUSIVE','max(l.IS_MISSING) as IS_MISSING','count(j.ID) as JOBS'
+                                    'l.PATH','max(l.EXCLUSIVE_USE) as EXCLUSIVE','max(l.IS_MISSING) as IS_MISSING','count(j.ID) as JOBS'
                                     ))
                .$sql->From(array('JOC_LOCKS_USE l'))
                .$sql->LeftJoin('JOC_JOBS j',array('l.JOB_ID','j.ID'))

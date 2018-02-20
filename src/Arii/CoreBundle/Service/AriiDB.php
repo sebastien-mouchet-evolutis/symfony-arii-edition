@@ -12,7 +12,7 @@ class AriiDB
         $this->conn = $entityManager->getConnection();
         $this->driver = $this->conn->getDriver()->getName();
         
-        $this->dhtmlx_path = '../vendor/dhtmlx/connector-php/codebase';
+        $this->dhtmlx_path = '../vendor/dhtmlxConnector/codebase';
     }
 
     public function getDriver() {

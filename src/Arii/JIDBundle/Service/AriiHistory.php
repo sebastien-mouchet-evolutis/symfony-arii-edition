@@ -33,6 +33,12 @@ class AriiHistory
         $this->sql->setDriver($driver);        
     }
 
+    // on force la DB
+    public function setDB($name) {
+        $this->db->setDB($name);
+        $driver = $this->db->getDriver();
+        $this->sql->setDriver($driver);        
+    }
 /*********************************************************************
  * Informations de connexions
  *********************************************************************/
@@ -405,3 +411,4 @@ class AriiHistory
     }
     
 }
+

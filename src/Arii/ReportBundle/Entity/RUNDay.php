@@ -85,6 +85,13 @@ class RUNDay
     private $acks=0;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="issues", type="integer", nullable=true)
+     */
+    private $issues=0;
+    
+    /**
      * Get id
      *
      * @return integer 
@@ -276,6 +283,29 @@ class RUNDay
     public function getAcks()
     {
         return $this->acks;
+    }
+
+    /**
+     * Set issues
+     *
+     * @param integer $issues
+     * @return RUNDay
+     */
+    public function setIssues($issues)
+    {
+        $this->acks = $issues;
+
+        return $this;
+    }
+
+    /**
+     * Get issues
+     *
+     * @return integer 
+     */
+    public function getIssues()
+    {
+        return $this->issues;
     }
         
     /**

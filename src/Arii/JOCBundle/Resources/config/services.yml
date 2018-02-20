@@ -17,12 +17,19 @@ services:
 
     arii_joc.state:
         class: Arii\JOCBundle\Service\AriiState
-        arguments: ["@arii_core.db", "@arii_core.sql", "@arii_core.date"]
-
-    arii_joc.focus:
-        class: Arii\JOCBundle\Service\AriiFocus
-        arguments: [ "@arii_core.tools", "@arii_core.db" ]
+        arguments: ["@doctrine.orm.default_entity_manager", "@arii_core.db", "@arii_core.sql", "@arii_core.date"]
 
     arii_joc.focus2:
         class: Arii\JOCBundle\Service\AriiFocus2
         arguments: [ "@arii_core.tools", "@doctrine.orm.default_entity_manager" ]
+
+# V2 en ORM
+    arii.joc:
+        class: Arii\JOCBundle\Service\AriiJOC
+        arguments: [ "@arii_core.portal", @doctrine, "@arii_core.requests" ]
+
+# Obsolete
+    arii_joc.focus:
+        class: Arii\JOCBundle\Service\AriiFocus
+        arguments: [ "@arii_core.tools", "@arii_core.db" ]
+

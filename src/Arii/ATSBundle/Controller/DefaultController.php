@@ -20,7 +20,17 @@ class DefaultController extends Controller
             $portal->setDatabaseById($request->get('db_id'));
         return $this->render('AriiATSBundle:Default:index.html.twig');
     }
-
+    
+    // Index sur la base de données
+    public function dbAction($db)
+    {
+        // La db est en parametre ?
+        $request = Request::createFromGlobals();
+            $portal = $this->container->get('arii_core.portal');
+        $portal->setDatabaseByName($db);
+        return $this->render('AriiATSBundle:Default:index.html.twig');
+    }
+    
     public function summaryAction()
     {
         $portal = $this->container->get('arii_core.portal');

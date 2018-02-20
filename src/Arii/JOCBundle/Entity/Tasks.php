@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * state_tasks
  *
  * @ORM\Table(name="JOC_TASKS")
-* @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\TasksRepository")
+* @ORM\Entity
  */
 class Tasks
 {
@@ -58,7 +58,7 @@ class Tasks
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=128)
+     * @ORM\Column(name="name", type="string", length=128, nullable=true)
      */
     private $name;
 
@@ -156,7 +156,7 @@ class Tasks
     /**
      * @var string
      *
-     * @ORM\Column(name="level", type="string", length=10, nullable=true)
+     * @ORM\Column(name="log_level", type="string", length=10, nullable=true)
      */
     private $level;
 

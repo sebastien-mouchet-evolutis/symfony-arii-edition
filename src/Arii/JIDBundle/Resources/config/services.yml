@@ -22,3 +22,9 @@ services:
     arii_jid.graphviz:
         class: Arii\JIDBundle\Service\AriiGraphviz
         arguments: [  "@arii_core.tools", "@arii_core.dhtmlx", "@arii_core.sql"  ]
+
+# V2 en ORM
+    arii.jid:
+        class: Arii\JIDBundle\Service\AriiJID
+        arguments: [ "@arii_core.portal", @doctrine, "@arii_core.date", "@arii_core.tools" ]
+        

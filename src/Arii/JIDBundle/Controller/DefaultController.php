@@ -23,19 +23,12 @@ class DefaultController extends Controller
         $this->CurrentDate = date('Y-m-d');
     }
 
-    public function indexAction()
+    public function indexAction($db)
     {
-        // La db est en parametre ?
-        $request = Request::createFromGlobals();
-            $portal = $this->container->get('arii_core.portal');
-        if ($request->get('db')!='')
-            $portal->setDatabaseByName($request->get('db'));
-        if ($request->get('db_id')!='')
-            $portal->setDatabaseById($request->get('db_id'));
-        return $this->render('AriiJIDBundle:Default:index.html.twig');
+        return $this->render('AriiJIDBundle:Default:index.html.twig', [ 'db' => $db ]);
     }
 
-    public function summaryAction()
+    public function summaryAction($db)
     {
         $portal = $this->container->get('arii_core.portal');
         $Module = $portal->getModule('JID');
@@ -61,6 +54,7 @@ class DefaultController extends Controller
         
         // Base de donnees courante ?
         // passée en variable        
+/*
         $request = Request::createFromGlobals();
             $portal = $this->container->get('arii_core.portal');
         if ($request->get('db')!='')
@@ -74,7 +68,7 @@ class DefaultController extends Controller
             $db = $Database['name'];
         else
             $db = "?";
-
+*/
         // base de données
         $Nodes=$portal->getNodesBy('vendor', 'ojs');
   

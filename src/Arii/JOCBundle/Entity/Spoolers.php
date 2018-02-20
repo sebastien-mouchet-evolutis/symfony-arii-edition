@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * state_schedulers
  *
  * @ORM\Table(name="JOC_SPOOLERS")
- * @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\SpoolersRepository")
+ * @ORM\Entity
  *  */
 class Spoolers
 {
@@ -120,7 +120,7 @@ class Spoolers
     /**
      * @var string
      *
-     * @ORM\Column(name="db", type="string", length=255, nullable=true)
+     * @ORM\Column(name="db", type="text", nullable=true)
      */
     private $db;
 

@@ -1,3 +1,7 @@
+arii_JOC_rest:
+    resource: "@AriiJOCBundle/Resources/config/rest.yml"
+    prefix:   /api
+
 arii_JOC_command:
     path:  /XML/command
     defaults: { _controller: AriiJOCBundle:SOS:XMLCommand }
@@ -16,7 +20,7 @@ arii_JOC_sync_all:
 # --------------------------------------------------------------------------
 arii_JOC_index:
     path:  /
-    defaults: { _controller: AriiJOCBundle:Orders:index }
+    defaults: { _controller: AriiJOCBundle:Default:index }
 
 arii_JOC_readme:
     path:  /readme
@@ -25,6 +29,10 @@ arii_JOC_readme:
 json_JOC_ribbon:
     path:  /ribbon.json
     defaults: { _controller: AriiJOCBundle:Default:ribbon }
+
+xml_JOC_menu:
+    path:  /menu.xml
+    defaults: { _controller: AriiJOCBundle:Default:menu }
 
 arii_JOC_jobs_dashboard:
     path:  /jobs/dashboard
@@ -108,6 +116,10 @@ arii_JOC_locks:
     path:  /locks
     defaults: { _controller: AriiJOCBundle:Locks:index }
 
+xml_JOC_locks_list:
+    path:  /locks/list.xml
+    defaults: { _controller: AriiJOCBundle:Locks:list}
+    
 xml_JOC_locks:
     path:  /locks/grid.xml
     defaults: { _controller: AriiJOCBundle:Locks:grid}
@@ -127,6 +139,18 @@ xml_JOC_locks_use:
 xml_JOC_locks_pie:
     path:  /locks/pie.xml
     defaults: { _controller: AriiJOCBundle:Locks:pie}
+    
+# --------------------------------------------------------------------------
+# Locks Use
+# --------------------------------------------------------------------------
+xml_JOC_locks_use_list:
+    path:  /locks/use/list.xml
+    defaults: { _controller: AriiJOCBundle:LocksUse:list}
+
+xml_JOC_locks_use_pie:
+    path:  /locks/use/pie.xml
+    defaults: { _controller: AriiJOCBundle:LocksUse:pie}
+    
 # --------------------------------------------------------------------------
 # Remote Schedulers
 # --------------------------------------------------------------------------
@@ -177,6 +201,14 @@ xml_JOC_connections:
 arii_JOC_jobs:
     path:  /jobs
     defaults: { _controller: AriiJOCBundle:Jobs:index}
+
+xml_JOC_jobs_list:
+    path:  /jobs/list.xml
+    defaults: { _controller: AriiJOCBundle:Jobs:list }
+    
+xml_JOC_jobs_pie:
+    path:  /jobs/pie.xml
+    defaults: { _controller: AriiJOCBundle:Jobs:pie }
 
 json_JOC_jobs_form:
     path:  /jobs/form.json
@@ -275,7 +307,7 @@ xml_JOC_job_tasks:
 
 arii_JOC_jobchains:
     path:  /jobchains
-    defaults: { _controller: AriiJOCBundle:JobChains:list}
+    defaults: { _controller: AriiJOCBundle:JobChains:index}
 
 xml_JOC_jobchains_list:
     path:  /jobchains/list.xml
@@ -305,22 +337,14 @@ xml_JOC_orders_form_toolbar:
     path:  /orders/form_toolbar.json
     defaults: { _controller: AriiJOCBundle:Orders:form_toolbar}
 
-arii_JOC_orders_list:
-    path:  /orders
-    defaults: { _controller: AriiJOCBundle:Orders:list}
-    
 xml_JOC_orders_list:
     path:  /orders/list.xml
-    defaults: { _controller: AriiJOCBundle:Orders:list_xml}
-
+    defaults: { _controller: AriiJOCBundle:Orders:list}
+    
 arii_JOC_orders_charts:
     path:  /orders/charts
     defaults: { _controller: AriiJOCBundle:Orders:charts }
     
-xml_JOC_orders_list:
-    path:  /orders/list.xml
-    defaults: { _controller: AriiJOCBundle:Orders:list_xml }
-
 xml_JOC_add_order_parameters:
     path:  /add_order/parameters
     defaults: { _controller: AriiJOCBundle:Toolbar:add_order_parameters}
@@ -357,6 +381,10 @@ arii_JOC_order_detail:
     path:  /order/detail
     defaults: { _controller: AriiJOCBundle:Order:detail }
 
+xml_JOC_order_history:
+    path:  /order/history.xml
+    defaults: { _controller: AriiJOCBundle:Order:history }
+
 xml_JOC_order_params:
     path:  /order/parameters.xml
     defaults: { _controller: AriiJOCBundle:Order:params }
@@ -378,19 +406,15 @@ svg_JOC_process_steps:
 # --------------------------------------------------------------------------
 arii_JOC_chains:
     path:  /chains
-    defaults: { _controller: AriiJOCBundle:Chains:list}
+    defaults: { _controller: AriiJOCBundle:Chains:index}
 
-arii_JOC_chains_list:
-    path:  /chains
-    defaults: { _controller: AriiJOCBundle:Chains:list}
-    
 arii_JOC_chains_charts:
     path:  /chains/charts
     defaults: { _controller: AriiJOCBundle:Chains:charts }
     
 xml_JOC_chains_list:
     path:  /chains/list.xml
-    defaults: { _controller: AriiJOCBundle:Chains:list_xml }
+    defaults: { _controller: AriiJOCBundle:Chains:list }
 
 arii_JOC_chains_timeline:
     path:  /chains/timeline
@@ -474,8 +498,8 @@ xml_JOC_spoolers_menu:
     path:  /spoolers/menu.xml
     defaults: { _controller: AriiJOCBundle:Spoolers:menu }
 
-arii_JOC_spoolers_list:
-    path:  /spoolers/list
+xml_JOC_spoolers_list:
+    path:  /spoolers/list.xml
     defaults: { _controller: AriiJOCBundle:Spoolers:list }
 
 arii_JOC_spoolers_charts:
@@ -543,10 +567,17 @@ arii_JOC_process_classes:
     path:  /process_classes
     defaults: { _controller: AriiJOCBundle:ProcessClasses:index }
 
-xml_JOC_process_classes:
+xml_JOC_process_classes_grid:
     path:  /process_classes/grid.xml
     defaults: { _controller: AriiJOCBundle:ProcessClasses:grid}
 
+xml_JOC_process_classes_list:
+    path:  /process_classes/list.xml
+    defaults: { _controller: AriiJOCBundle:ProcessClasses:list}
+
+xml_JOC_process_classes_pie:
+    path:  /process_classes/pie.xml
+    defaults: { _controller: AriiJOCBundle:ProcessClasses:pie}
 
 # --------------------------------------------------------------------------
 # PAGES PRINCIPALES
@@ -617,6 +648,8 @@ arii_JOC_select_start_state:
 arii_JOC_select_end_state:
     path:  /dhtmlx/select_end_state
     defaults: { _controller: AriiJOCBundle:Form:select_end_state }
+
+
 
 
 arii_JOC_form_kill_job:
@@ -786,17 +819,6 @@ arii_JOC_schedules:
 xml_JOC_schedules:
     path:  /schedules/grid.xml
     defaults: { _controller: AriiJOCBundle:Schedules:grid }
-
-# ===============================================================================
-# FOCUS
-# -------------------------------------------------------------------------------
-arii_Focus_get:
-    path:  /{spooler}/{port}/get
-    defaults: { _controller: AriiJOCBundle:Focus:get }
-
-arii_Focus_refresh:
-    path:  /refresh
-    defaults: { _controller: AriiJOCBundle:Focus:refresh }
 
 # ===============================================================================
 # FOCUS

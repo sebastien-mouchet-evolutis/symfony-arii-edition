@@ -66,31 +66,45 @@ class RUNHour
     /**
      * @var string
      *
-     * @ORM\Column(name="executions", type="integer")
+     * @ORM\Column(name="executions", type="integer", nullable=true)
      */
     private $executions=0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="warnings", type="integer")
+     * @ORM\Column(name="warnings", type="integer", nullable=true)
      */
     private $warnings=0;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="alarms", type="integer")
+     * @ORM\Column(name="alarms", type="integer", nullable=true)
      */
     private $alarms=0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="acks", type="integer")
+     * @ORM\Column(name="acks", type="integer", nullable=true)
      */
     private $acks=0;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="issues", type="integer", nullable=true)
+     */
+    private $issues=0;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=true)
+     */
+    private $updated;
+    
     /**
      * Get id
      *
@@ -309,6 +323,29 @@ class RUNHour
     }
     
     /**
+     * Set issues
+     *
+     * @param integer $issues
+     * @return RUNDay
+     */
+    public function setIssues($issues)
+    {
+        $this->issues = $issues;
+
+        return $this;
+    }
+
+    /**
+     * Get issues
+     *
+     * @return integer 
+     */
+    public function getIssues()
+    {
+        return $this->issues;
+    }
+    
+    /**
      * Set job_class
      *
      * @param string $jobClass
@@ -331,5 +368,28 @@ class RUNHour
         return $this->job_class;
     }
 
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return JOB
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
     
 }

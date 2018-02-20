@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * lock_use
  *
  * @ORM\Table(name="JOC_ORDER_ID_SPACES")
- * @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\OrderIdSpacesRepository")
+ * @ORM\Entity
  */
 class OrderIdSpaces
 {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Connections
  *
  * @ORM\Table(name="JOC_CONNECTIONS")
- * @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\ConnectionsRepository")
+ * @ORM\Entity
  */
 class Connections
 {
@@ -30,7 +30,7 @@ class Connections
     /**
      * @var string
      *
-     * @ORM\Column(name="operation_type", type="string", length=5)
+     * @ORM\Column(name="operation_type", type="string", length=5,nullable=true)
      */
     private $operation_type;
 

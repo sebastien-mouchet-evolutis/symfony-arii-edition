@@ -1,0 +1,12 @@
+cat:            /Dashboard
+title:          "[Dashboard CHECK] Applications"
+description:    Liste des applications à partir de la table des jobs.
+header:         APP,ENV,JOBS,CREATED,UPDATED
+icon:           dashboard
+sql:
+    oracle: |
+        select APP,ENV,count(*) as JOBS,min(CREATED) as CREATED,max(UPDATED) as UPDATED
+        from REPORT_JOB
+        where DELETED is NULL
+        group by APP,ENV
+        order by APP,ENV

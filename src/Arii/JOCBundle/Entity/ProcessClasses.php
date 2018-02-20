@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * state_process_classes
  *
  * @ORM\Table(name="JOC_PROCESS_CLASSES")
- * @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\ProcessClassesRepository")
+ * @ORM\Entity
  */
 class ProcessClasses
 {
@@ -29,21 +29,21 @@ class ProcessClasses
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="path", type="string", length=255)
+     * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
     private $path;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="max_processes", type="integer")
+     * @ORM\Column(name="max_processes", type="integer", nullable=true)
      */
     private $max_processes;
 
@@ -57,7 +57,7 @@ class ProcessClasses
     /**
      * @var integer
      *
-     * @ORM\Column(name="processes", type="integer")
+     * @ORM\Column(name="processes", type="integer", nullable=true)
      */
     private $processes;
 

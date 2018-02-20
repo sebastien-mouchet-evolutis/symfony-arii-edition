@@ -1,0 +1,14 @@
+title:          "[Dashboard] Jiras"
+description:    Liste des Jiras
+header:         JOB_NAME,MONTH,JIRAS
+args:           YEAR(2018)&ENV(P)
+icon:           dashboard
+sql:
+    oracle: |
+        select substr(JOB_NAME,1,instr(JOB_NAME,'.')-2) as JOB_NAME,extract(MONTH from r.ACK_TIME) as MONTH,count(*) as JIRAS
+        from REPORT_RUN r
+        where extract(YEAR from r.ACK_TIME)='{YEAR}' 
+            and ACK is not null
+            and substr(JOB_NAME,instr(JOB_NAME,'.')-1,1)='{ENV}'
+        group by substr(JOB_NAME,1,instr(JOB_NAME,'.')-2),extract(MONTH from r.ACK_TIME)
+        order by extract(MONTH from r.ACK_TIME) desc,substr(JOB_NAME,1,instr(JOB_NAME,'.')-2)

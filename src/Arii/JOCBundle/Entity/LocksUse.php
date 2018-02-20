@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * lock_use
  *
  * @ORM\Table(name="JOC_LOCKS_USE")
- * @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\LocksUseRepository")
+ * @ORM\Entity
  */
 class LocksUse
 {
@@ -45,28 +45,28 @@ class LocksUse
     /**
      * @var integer
      *
-     * @ORM\Column(name="exclusive", type="boolean")
+     * @ORM\Column(name="exclusive_use", type="boolean",nullable=true)
      */
     private $exclusive;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="is_available", type="boolean")
+     * @ORM\Column(name="is_available", type="boolean",nullable=true)
      */
     private $is_available;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="is_missing", type="boolean")
+     * @ORM\Column(name="is_missing", type="boolean",nullable=true)
      */
     private $is_missing;
 
     /**
      * @var datetime
      *
-     * @ORM\Column(name="updated", type="datetime")
+     * @ORM\Column(name="updated", type="datetime",nullable=true)
      */
     private $updated;
 

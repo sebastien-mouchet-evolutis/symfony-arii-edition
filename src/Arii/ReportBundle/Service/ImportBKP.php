@@ -46,10 +46,18 @@ class ImportBKP {
             for($i=0;$i<count($Infos);$i++) {
                 $Data[$Head[$i]] = $Infos[$i];
             }
-            
+            print "-----------------------------\n";
+            print "SERVER:   ".$Data['server']."\n";
+            print "DATABASE: ".$Data['database']."\n";
+            print "LOG_FILE: ".$Data['log_file']."\n";
+            #print "COPYTIME: ".$Data['copytime']."\n";
+                        
             // pas de log, pas de sauvegarde
             if ($Data['log_file']=='') continue;
             
+            $create = new \Datetime($Data['mtime']);
+            print "MTIME:    ".$create->format('Y-m-d H:i:s')."\n";
+
             // Retourver la référence
             $Ref = $this->em->getRepository("AriiReportBundle:BKP_REF")->findOneBy(
                 array(  'db_instance'=> $Data['server'],
@@ -58,9 +66,15 @@ class ImportBKP {
             );
             if (!$Ref) {
                 $Ref= new \Arii\ReportBundle\Entity\BKP_REF(); 
+                print "NOREF!\n";
             }
-            $create = new \Datetime($Data['mtime']);
-                
+            else {
+                print "Ref:\n";
+                print "\tDB_ENV:      ".$Ref->getDbEnv()."\n";
+                print "\tDB_INSTANCE: ".$Ref->getDbInstance()."\n";
+                print "\tDB_NAME:     ".$Ref->getDbName()."\n";
+            }
+
             $Bkp = $this->em->getRepository("AriiReportBundle:BKP_BAK")->findOneBy(
                 array(  'bkp_ref'=> $Ref,
                         'created'=> $create
@@ -71,8 +85,17 @@ class ImportBKP {
             if ($Data['archive_size']>0)
                 $Data['archived']=1;
             
-            if (!$Bkp)
+            if (!$Bkp) {
+                print " Nouveau backup\n";
                 $Bkp= new \Arii\ReportBundle\Entity\BKP_BAK();
+            }
+            else {
+                print "Backup:\n";
+                print "\tCREATED:     ".$Bkp->getCreated()->format('Y.m.d')."\n";
+                if ($Bkp->getDeleted())
+                    print "\tARCHIVED:    ".$Bkp->getDeleted()->format('Y.m.d')."\n";
+                print "\tARCHIVED:    ".$Bkp->getArchived()."\n";
+            }
                         
             $Ref->setDbType('sqlsrv');
             $Ref->setDbEnv($Data['env']);
@@ -91,8 +114,8 @@ class ImportBKP {
             $this->em->persist($Ref);
             
             $Bkp->setBkpRef($Ref);
-            $Bkp->setCreated($create);             
-            $Bkp->setArchived($Data['archived']);             
+            $Bkp->setCreated($create);
+            $Bkp->setArchived($Data['archived']);
             $Bkp->setFileName(basename($Data['backup_file']));
             $Bkp->setLogFile(basename($Data['log_file']));
             $Bkp->setBkpSize($Data['size']);
@@ -109,14 +132,21 @@ class ImportBKP {
             
             // Archivé ?
             if ($Data['archived']==1) {
+                print "ARCHIVED\n";
                 $Arc = $this->em->getRepository("AriiReportBundle:BKP_ARC")->findOneBy(
                     array(  'bkp_bak'=> $Bkp,
                             'id_archive'=> $id_archive
                     )
                 );
-                if (!$Arc)
+                if (!$Arc) {
+                    print " Nouvelle archive\n";
                     $Arc = new \Arii\ReportBundle\Entity\BKP_ARC();  
-                
+                }
+                else {
+                    if ($Bkp->getArchived())
+                        print "\tCREATED:     ".$Arc->getCreated()->format('Y.m.d')."\n";
+                    
+                }
                 $Arc->setBkpRef($Ref);
                 $Arc->setBkpBak($Bkp);
                 $Arc->setIdArchive($id_archive);

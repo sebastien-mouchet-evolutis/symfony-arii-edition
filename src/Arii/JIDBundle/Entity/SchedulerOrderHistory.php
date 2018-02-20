@@ -19,7 +19,7 @@ class SchedulerOrderHistory
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $historyId;
+    private $history;
 
     /**
      * @var string
@@ -87,13 +87,13 @@ class SchedulerOrderHistory
 
 
     /**
-     * Get historyId
+     * Get history
      *
      * @return integer 
      */
-    public function getHistoryId()
+    public function getHistory()
     {
-        return $this->historyId;
+        return $this->history;
     }
 
     /**

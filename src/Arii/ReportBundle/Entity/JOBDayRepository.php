@@ -98,14 +98,15 @@ class JOBDayRepository extends EntityRepository
         $driver = $this->_em->getConnection()->getDriver()->getName();
         switch ($driver) {
             case 'oci8':
-                $sql = "SELECT EXTRACT(YEAR FROM job.job_date) as job_year,EXTRACT(MONTH FROM job.job_date) as job_month,job.app,job.env,job.spooler_name,max(job.jobs) as jobs,max(job.created) as created,max(job.deleted) as deleted
+                $sql = "SELECT EXTRACT(YEAR FROM job.job_date) as job_year,EXTRACT(MONTH FROM job.job_date) as job_month,job.app,job.env,job.job_class,job.spooler_name,max(job.jobs) as jobs,max(job.created) as created,max(job.deleted) as deleted
                         FROM REPORT_JOB_DAY job
-                        GROUP BY EXTRACT(YEAR FROM job.job_date),EXTRACT(MONTH FROM job.job_date),job.app,job.env,job.spooler_name";
+                        GROUP BY EXTRACT(YEAR FROM job.job_date),EXTRACT(MONTH FROM job.job_date),job.app,job.env,job.job_class,job.spooler_name";
                 $rsm = new ResultSetMapping();
                 $rsm->addScalarResult('JOB_YEAR', 'year');
                 $rsm->addScalarResult('JOB_MONTH', 'month');
                 $rsm->addScalarResult('APP', 'app');
                 $rsm->addScalarResult('ENV', 'env');
+                $rsm->addScalarResult('JOB_CLASS', 'job_class');
                 $rsm->addScalarResult('SPOOLER_NAME', 'spooler_name');
                 $rsm->addScalarResult('JOBS', 'jobs');
                 $rsm->addScalarResult('CREATED', 'created');
@@ -115,7 +116,7 @@ class JOBDayRepository extends EntityRepository
                 break;
             default:
                 return $this->createQueryBuilder('job')
-                      ->Select("Year(job.date) as year,Month(job.date) as month,job.app,job.env,job.spooler_name,max(job.jobs) as jobs,max(job.created) as created,max(job.deleted) as deleted")
+                      ->Select("Year(job.date) as year,Month(job.date) as month,job.app,job.env,job.job_class,job.spooler_name,max(job.jobs) as jobs,max(job.created) as created,max(job.deleted) as deleted")
                       ->groupBy('year,month,job.app,job.env,job.spooler_name')
                       ->getQuery()
                       ->getResult();

@@ -54,6 +54,18 @@ class RUNRepository extends EntityRepository
             ->getResult();
    }
 
+   public function findIssues()
+   {
+       // Ne pas prendre le ack_time car les acquittements ne sont pas traités la nuit.
+        return $this->createQueryBuilder('run')
+            ->Select('run.ack','job.spooler_name','job.app','job.env','job.job_class','min(run.ack_time) as date','count(run) as nb')
+            ->leftJoin('Arii\ReportBundle\Entity\JOB','job',\Doctrine\ORM\Query\Expr\Join::WITH,'run.job = job.id')
+            ->Where('run.ack is not null')
+            ->groupBy('run.ack','job.spooler_name','job.app','job.env','job.job_class')
+            ->getQuery()
+            ->getResult();
+   }   
+
    public function findRunHours(\DateTime $from, \DateTime $to)
    {
         $driver = $this->_em->getConnection()->getDriver()->getName();

@@ -1,0 +1,11 @@
+cat:            /Dashboard/Vérifications
+title:          "[Dashboard CHECK] Doublons de Runs"
+description:    Execution en double (meme job, meme heure de départ)
+header:         SPOOLER_NAME,JOB_NAME,START_TIME,NB
+icon:           dashboard
+sql:
+    oracle: |
+        select SPOOLER_NAME,JOB_NAME,START_TIME,count(*) as NB
+        from REPORT_RUN
+        group by SPOOLER_NAME,JOB_NAME,START_TIME
+        having count(*)>1

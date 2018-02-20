@@ -1,0 +1,13 @@
+category:       /Suivi
+title:          "[MONITORING] Alertes récurrentes"
+description:    
+header:         JOB,PREMIERE_ALERTE,DERNIERE_ALERTE,NB
+icon:           file
+args:           DATE(2018-01-01)
+sql:
+    oracle: |
+        select  JOB_NAME as JOB,min(ACK_TIME) as PREMIERE_ALERTE,max(ACK_TIME) as DERNIERE_ALERTE,count(*) as NB
+        from REPORT_RUN
+        where JOB_NAME not like '%T.%' and JOB_NAME like '%P.%' and ACK_TIME > TO_DATE('{DATE}', 'YYYY-MM-DD')
+        group by JOB_NAME
+        order by count(*) desc

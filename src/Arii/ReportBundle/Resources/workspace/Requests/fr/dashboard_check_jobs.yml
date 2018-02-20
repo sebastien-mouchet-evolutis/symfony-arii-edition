@@ -1,0 +1,11 @@
+cat:            /Dashboard/Vérifications
+title:          "[Dashboard CHECK] Jobs"
+description:    Liste des jobs pour WHL
+header:         JOB_NAME,APP,ENV,JOB_CLASS
+icon:           dashboard
+sql:
+    oracle: |
+        select JOB_NAME,APP,ENV,JOB_CLASS
+        from REPORT_JOB
+        where APP='WHL'
+        order by JOB_NAME

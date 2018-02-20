@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * statelocks
  *
  * @ORM\Table(name="JOC_LOCKS")
- * @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\LocksRepository")
+ * @ORM\Entity
  */
 class Locks
 {

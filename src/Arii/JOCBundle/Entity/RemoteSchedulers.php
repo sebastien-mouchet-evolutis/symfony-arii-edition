@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * RemoteSchedulers
  *
  * @ORM\Table(name="JOC_REMOTE_SCHEDULERS")
- * @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\RemoteSchedulersRepository")
+ * @ORM\Entity
  */
 class RemoteSchedulers
 {

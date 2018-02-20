@@ -1,0 +1,20 @@
+title:          "Dashboard: Jobs"
+description:    Nombre de jobs par mois et par applications pour la production
+header:         APP,CODE,JOB_CLASS,YEAR,MONTH,SPOOLER_NAME,JOBS,CAT
+icon:           dashboard
+sql:
+    oracle: |
+        select A.TITLE as APP,
+            J.APP as CODE,J.JOB_CLASS,J.JOB_YEAR as YEAR,J.JOB_MONTH as MONTH,J.SPOOLER_NAME,J.JOBS,J.CREATED,J.DELETED as ARCHIVE,
+            C.TITLE as CAT
+        from REPORT_JOB_MONTH J
+        left join ARII_APPLICATION A 
+            on J.APP=A.NAME
+        left join ARII_CATEGORY C 
+            on A.CATEGORY_ID=C.ID
+        where SPOOLER_NAME='VA1' 
+            and ENV like 'P' 
+            and JOB_YEAR=2017
+            and A.ACTIVE=1
+            and C.name='applications'
+        order by A.TITLE,YEAR DESC,MONTH DESC

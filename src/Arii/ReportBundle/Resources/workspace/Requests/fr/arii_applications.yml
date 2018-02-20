@@ -1,0 +1,11 @@
+cat:            /Arii
+title:          "[ARII] Applications"
+description:    Liste des applications actives
+header:         TITLE,CODE,DESCRIPTION,CONTACT
+icon:           internal
+sql:
+    oracle: |
+        select TITLE,NAME as CODE,DESCRIPTION,CONTACT
+        from ARII_APPLICATION
+        where active>0
+        order by TITLE

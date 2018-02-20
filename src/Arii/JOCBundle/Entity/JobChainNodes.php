@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * state_job_chain_nodes
  *
  * @ORM\Table(name="JOC_JOB_CHAIN_NODES")
- * @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\JobChainNodesRepository")
+ * @ORM\Entity
  */
 class JobChainNodes
 {

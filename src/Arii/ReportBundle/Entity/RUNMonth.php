@@ -66,31 +66,38 @@ class RUNMonth
     /**
      * @var string
      *
-     * @ORM\Column(name="executions", type="integer")
+     * @ORM\Column(name="executions", type="integer", nullable=true)
      */
     private $executions=0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="warnings", type="integer")
+     * @ORM\Column(name="warnings", type="integer", nullable=true)
      */
     private $warnings=0;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="alarms", type="integer")
+     * @ORM\Column(name="alarms", type="integer", nullable=true)
      */
     private $alarms=0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="acks", type="integer")
+     * @ORM\Column(name="acks", type="integer", nullable=true)
      */
     private $acks=0;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="issues", type="integer", nullable=true)
+     */
+    private $issues=0;
+    
     /**
      * Get id
      *
@@ -285,6 +292,29 @@ class RUNMonth
         return $this->acks;
     }
 
+    /**
+     * Set issues
+     *
+     * @param integer $issues
+     * @return RUNDay
+     */
+    public function setIssues($issues)
+    {
+        $this->acks = $issues;
+
+        return $this;
+    }
+
+    /**
+     * Get issues
+     *
+     * @return integer 
+     */
+    public function getIssues()
+    {
+        return $this->issues;
+    }
+        
     /**
      * Set year
      *

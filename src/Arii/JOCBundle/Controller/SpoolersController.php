@@ -8,13 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SpoolersController extends Controller
 {
-    protected $ColorStatus = array (
-            'RUNNING' => '#ccebc5',
-            'PAUSED' => '#ffffcc',
-            'UNKNOWN' => '#fbb4ae',
-            'LOST' => '#FF0000'
-          );
-
+    
     public function indexAction()   
     {
         return $this->render('AriiJOCBundle:Spoolers:index.html.twig' );
@@ -40,98 +34,94 @@ class SpoolersController extends Controller
         $response->headers->set('Content-Type', 'text/xml');
         return $this->render("AriiJOCBundle:Spoolers:grid_toolbar.xml.twig", array(), $response);
     }
-
-    public function chartsAction()   
-    {
-        $session = $this->container->get('arii_core.session');
-        
-        // Une date peut etre passe en get
-        $request = Request::createFromGlobals();
-        if ($request->query->get( 'ref_date' )) {
-            $ref_date   = $request->query->get( 'ref_date' );
-            $session->setRefDate( $ref_date );
-        } else {
-            $ref_date   = $session->getRefDate();
-        }
-        $Timeline['ref_date'] = $ref_date;
-        
-        $past   = $session->getRefPast();
-        $future = $session->getRefFuture();
-        
-        // On prend 24 fuseaux entre maintenant et le passe
-        // on trouve le step en minute
-        $step = ($future-$past)*2.5; // heure * 60 minutes / 24 fuseaux
-        $Timeline['step'] = $step;
     
-        // on recalcule la date courante moins la plage de passé 
-        $year = substr($ref_date, 0, 4);
-        $month = substr($ref_date, 5, 2);
-        $day = substr($ref_date, 8, 2);
-        
-        $start = substr($session->getPast(),11,2);
-        $Timeline['start'] = (60/$step)*$start;
-        $Timeline['js_date'] = $year.','.($month - 1).','.$day;
-        
-        $refresh = $session->GetRefresh();
-        
-        // Liste des spoolers pour cette plage
-        
-        $dhtmlx = $this->container->get('arii_core.dhtmlx');
-        $data = $dhtmlx->Connector('data');
-        
-        $sql = $this->container->get('arii_core.sql');
-        $Fields = array (
-            'spooler'    => 'SPOOLER_ID',
-            'start_time' => 'START_TIME',
-            'end_time'   => 'END_TIME' );
-
-        $qry = 'SELECT DISTINCT SPOOLER_ID 
-                FROM SCHEDULER_HISTORY
-                where '.$sql->History($Fields).'
-                ORDER BY SPOOLER_ID';
-        
-        $SPOOLERS = array();
-        $res = $data->sql->query( $qry );
-        while ($line = $data->sql->get_next($res)) {
-            array_push( $SPOOLERS,$line['SPOOLER_ID'] ); 
+    public function listAction() {        
+        $em = $this->getDoctrine()->getManager();
+        $Spoolers = $em->getRepository("AriiJOCBundle:Spoolers")->findBy([],['updated' => 'ASC']);          
+        $Status = [
+            'RUNNING'   => 0,
+            'PAUSED'    => 0,
+            'LOST'      => 0
+        ];    
+        $Grid = [];
+        foreach ($Spoolers as $Spooler) {
+            $spooler_id = $Spooler->getName();
+            $host = $Spooler->getHost();
+            if ($spooler_id == $host)
+                $name = $spooler_id;
+            else
+                $name = $spooler_id.'/'.$host;
+            $status = strtoupper($Spooler->getState());
+            $time = $Spooler->getUpdated()->format('Y-m-d H:i:s');
+            $last = time() - strtotime( $time );
+            if (($status=='RUNNING') and ($last>120))
+                $status = 'LOST';
+            $id  = $Spooler->getId();
+            $Grid[$id] = [
+                'id'        => $id,
+                'spooler'   => $name,
+                'status'    => $status,
+                'updated'   => $time,
+                'color'     => 'SPOOLER '.$status
+            ];
+            $Status[$status]++;
         }
-        $Timeline['spoolers'] = $SPOOLERS;
+
+        // On sauvegarde les resultats
+        $Requests = $this->container->get('arii_core.requests');
+        $Requests->writeStatus([
+            'name'    => 'SPOOLERS LOST',
+            'title'   => 'Spoolers not responding',
+            'results' => $Status['LOST'],
+            'status'  => 0
+            ]
+            , 'JOC');
+        $Requests->writeStatus([
+            'name'    => 'SPOOLERS PAUSED',
+            'title'   => 'Spoolers PAUSED',
+            'results' => $Status['PAUSED'],
+            'status'  => 0
+            ]
+            , 'JOC');
         
-        
-        return $this->render('AriiJOCBundle:Spoolers:charts.html.twig', array('refresh' => $refresh, 'Timeline' => $Timeline ) );
+        // On sauvegarde les infos
+        $Render = $this->container->get('arii_core.render');
+        return $Render->Grid($Grid,'spooler,status,updated','color');
     }
 
-    public function pieAction($history_max=0,$ordered = 0, $only_warning = 1) {        
-
-        $request = Request::createFromGlobals();
-
-        $state = $this->container->get('arii_joc.state');
-        $Spoolers = $state->Spoolers();
-        $State = array('RUNNING' => 0,'PAUSED'=>0,'LOST'=>0);
-        foreach ($Spoolers as $k=>$spooler) {
-            $state = $spooler['STATUS'];
-            if (isset($State[$state])) 
-                $State[$state]++;
-            else 
-                $State[$state]=1;
+    public function pieAction() {
+        $em = $this->getDoctrine()->getManager();
+        $Spoolers = $em->getRepository("AriiJOCBundle:Spoolers")->findAll();          
+        $Status = [
+            'RUNNING'   => 0,
+            'PAUSED'    => 0,
+            'STOPPING'  => 0,
+            'LOST'      => 0            
+        ];        
+        foreach ($Spoolers as $Spooler) {
+            $status = strtoupper($Spooler->getState());
+            $time = $Spooler->getUpdated()->format('Y-m-d H:i:s');
+            $last = time() - strtotime( $time );
+            if (($status=='RUNNING') and ($last>120))
+                $status = 'LOST';
+            $Status[$status]++;
         }
         
+        $portal = $this->container->get('arii_core.portal');
+        $ColorStatus = $portal->getColors();
+        
         $pie = '<data>';
-        // ksort($State);
-        foreach (array_keys($State) as $k) {
-            if (isset($this->ColorStatus[$k])) 
-                $color = $this->ColorStatus[$k];
-            else
-                $color = 'black';
-            $pie .= '<item id="'.$k.'"><STATUS>'.$k.'</STATUS><JOBS>'.$State[$k].'</JOBS><COLOR>'.$color.'</COLOR></item>';
-        }
+        foreach (['RUNNING','PAUSED','LOST'] as $status)
+            $pie .= '<item id="'.$status.'"><STATUS>'.$status.'</STATUS><NB>'.$Status[$status].'</NB><COLOR>'.$ColorStatus["SPOOLER $status"]['bgcolor'].'</COLOR></item>';
         $pie .= '</data>';
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
         $response->setContent( $pie );
         return $response;
+        
     }
-
+/* Fonctions à revoir */
+    
     public function timelineAction()
     {
         $dhtmlx = $this->container->get('arii_core.dhtmlx');
@@ -305,7 +295,7 @@ class SpoolersController extends Controller
                 .$sql->From(array('JOC_ORDERS j'))
                 .$sql->LeftJoin('JOC_SPOOLERS s',array('j.SPOOLER_ID','s.ID'))
                 .$sql->Where($Fields)
-                .$sql->GroupBy(array('s.NAME','j.SUSPENDED'))
+                .$sql->GroupBy(array('s.NAME','j.SUSPENDED','j.RUNNING'))
                 .$sql->OrderBy(array('s.NAME'));
 
         $res = $data->sql->query( $qry );

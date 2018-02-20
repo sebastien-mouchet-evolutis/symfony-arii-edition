@@ -228,7 +228,7 @@ class AriiSQL
                    break;
                case '{job_chain}':
                     // Plus le filtre utilisateur
-                   if ($this->job_chain != '%')
+                   if (($this->job_chain != '') and ($this->job_chain != '%'))
                         array_push($Where, '( '.$this->Column($Fields['{job_chain}'])." like '".$this->job_chain."' )");
                    break;
                case '{job|job_chain}':
@@ -243,7 +243,7 @@ class AriiSQL
                    break;
                case '{order_id}':
                    // Plus le filtre utilisateur
-                   if ($this->job_chain != '%')
+                   if (($this->job_chain != '') and ($this->job_chain != '%'))
                         array_push($Where, '( '.$this->Column($Fields['{order_id}'])." like '".$this->order_id."' )");
                    break;
                case '{status}':

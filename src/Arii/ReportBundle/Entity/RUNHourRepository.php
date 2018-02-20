@@ -42,16 +42,24 @@ class RUNHourRepository extends EntityRepository
         if ($job_class!='*')
             $q->andWhere('run.job_class = :job_class')
                 ->setParameter('job_class', $job_class);
-/*        
+      
                         $query = $q->getQuery();
                         print $query->getSQL();
                         print_r($query->getParameters());
                         exit();
-*/                        
+                        
         return $q->getQuery()              
             ->getResult();
     }   
 
+   public function findIssues()
+   {
+        return $this->createQueryBuilder('run')
+            ->Where('run.issues is not null')
+            ->getQuery()
+            ->getResult();
+   }   
+    
    public function findAlerts($start, $end, $env='*', $app='*',$job_class='*')
     {
         $Filter = [ 'run.date','run.hour' ];   

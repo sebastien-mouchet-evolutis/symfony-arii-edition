@@ -80,7 +80,7 @@ class DefaultController extends Controller
         // on cree la liste sur le mois en cours
         $start = $Filters['start']->sub( \DateInterval::createFromDateString('300 days'));
         
-        $Jobs = $em->getRepository("AriiReportBundle:Job")->findFilters($start,$Filters['end']);
+        $Jobs = $em->getRepository("AriiReportBundle:JOB")->findFilters($start,$Filters['end']);
         $Spoolers = $Classes = $Envs = [];
         foreach ($Jobs as $Job) {  
             $s = $Job['spooler_name'];
@@ -274,7 +274,7 @@ class DefaultController extends Controller
         $response->setContent($content);
         return $response;
     }
-    
+
     protected function Decodage($text) {
         if ($this->charset != 'UTF-8')
             return utf8_decode($text);
@@ -306,17 +306,17 @@ class DefaultController extends Controller
         $response->setContent($form);
         return $response;
     }
-    
+
     private function getBaseDir() {
         $lang = $this->getRequest()->getLocale();        
         $portal = $this->container->get('arii_core.portal');        
         return $portal->getWorkspace().'/Report/Requests/'.$lang;        
     }    
-    
+
     public function testAction($output='html',$req='')
     {
             set_time_limit(300);
-            $url = "https://autosys:VB8ej90KP!@git.vaudoise.ch/rest/api/1.0/projects/JIL/repos?limit=999";
+            $url = "https://git.vaudoise.ch/rest/api/1.0/projects/JIL/repos?limit=999";
             $ch = curl_init();
             
             curl_setopt($ch,CURLOPT_URL,$url);
@@ -331,14 +331,17 @@ class DefaultController extends Controller
             curl_close($ch);
             
             $Content = json_decode($content, true);
+            if (!isset($Content['values']))
+                throw new \Exception( "?!" );
             $Repos=$Content['values'];
+            
             $Files = $Table = [];
             foreach ($Repos as $n=>$Repo) {
                 // On parse Le projet pour lire les repos
                 $repo = $Repo['slug'];
                 if ($repo=='global') continue;
                 
-                $url = "https://autosys:VB8ej90KP!@git.vaudoise.ch/rest/api/1.0/projects/JIL/repos/".$repo.'/last-modified?at=head';
+                $url = "https://git.vaudoise.ch/rest/api/1.0/projects/JIL/repos/".$repo.'/last-modified?at=head';
                 $ch = curl_init();
 
                 curl_setopt($ch,CURLOPT_URL,$url);

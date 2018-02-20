@@ -1,0 +1,20 @@
+cat:            /Dashboard/Vérifications
+title:          "[Dashboard CHECK] Nombre d'execution par mois"
+description:    Execution en double (meme job, meme heure de départ)
+header:         APP,NB
+icon:           dashboard
+sql:
+    oracle2: |
+        select APP,count(*) as NB        
+        from REPORT_RUN        
+        where ENV='P' and extract(MONTH from START_TIME)='10' and extract(YEAR from START_TIME)='2017'
+        group by APP
+        order by APP
+    oracle: |
+        select J.APP,count(*) as NB
+        from REPORT_RUN R
+        left join REPORT_JOB J
+        ON R.job_id = J.id
+        where J.ENV='P' and extract(MONTH from START_TIME)='10' and extract(YEAR from START_TIME)='2017' and job_class='B'
+        group by J.APP
+        order by J.APP

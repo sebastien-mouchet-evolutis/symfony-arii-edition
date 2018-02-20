@@ -55,6 +55,23 @@ class LocksController extends Controller {
         return $this->render('AriiJOCBundle:Locks:grid_toolbar.xml.twig',array(), $response );
     }
     
+    public function listAction()
+    {
+        $state = $this->container->get('arii.joc');
+        list($Locks,$Status) = $state->getLocks($sort=['updated' => 'ASC']);
+                
+        $Render = $this->container->get('arii_core.render');
+        return $Render->Grid($Locks,'SPOOLER,PATH,LOCK,STATUS,UPDATED','COLOR');
+    }
+
+    public function pieAction() {
+        $state = $this->container->get('arii.joc');
+        list($Locks,$Status) = $state->getLocks([]);
+                
+        $Render = $this->container->get('arii_core.render');
+        return $Render->Pie($Status,'STATE','COLOR');
+    }
+        
     public function gridAction($sort='last')
     {
         $request = Request::createFromGlobals();        
@@ -168,8 +185,14 @@ class LocksController extends Controller {
             $list .= '<cell>'.$line['FOLDER'].'</cell>';
             $list .= '<cell>'.$line['NAME'].'</cell>';
             $list .= '<cell>'.$status.'</cell>';
-            $list .= '<cell>'.$line['PENDING'].'</cell>';
-            $list .= '<cell>'.$line['RUNNING'].'</cell>';
+            if (isset($line['PENDING']))
+                $list .= '<cell>'.$line['PENDING'].'</cell>';
+            else
+                $list .= '<cell/>';
+            if (isset($line['RUNNING']))
+                $list .= '<cell>'.$line['RUNNING'].'</cell>';
+            else
+                $list .= '<cell/>';
             $list .= '</row>';
         }
 
@@ -188,39 +211,6 @@ class LocksController extends Controller {
         else {
             $data->set_value('STATUS','WAITING');
         }
-    }
-
-    public function pieAction() {        
-
-        $request = Request::createFromGlobals();
-        $sql = $this->container->get('arii_core.sql');
-
-        $dhtmlx = $this->container->get('arii_core.db');           
-        $qry = $sql->Select(array( 'IS_FREE','count(ID) as NB'))
-                .$sql->From(array('JOC_LOCKS'))
-                .$sql->GroupBy(array('IS_FREE'));
-        $data = $dhtmlx->Connector('data');
-        // Verifier qu'il y en a bien qu'un
-        $res = $data->sql->query($qry);
-        $State['FREE'] = $State['LOCKED'] = 0;
-        while ($line = $data->sql->get_next($res)) {
-            if ($line['IS_FREE']>0) {
-                $status = 'FREE';
-            }
-            else {
-                $status = 'LOCKED';
-            }
-            $State[$status] = $line['NB'];
-        }
-        
-        $pie = '<data>';
-        $pie .= '<item id="FREE"><STATUS>FREE</STATUS><JOBS>'.$State['FREE'].'</JOBS><COLOR>'.$this->ColorStatus['FREE'].'</COLOR></item>';
-        $pie .= '<item id="LOCKED"><STATUS>LOCKED</STATUS><JOBS>'.$State['LOCKED'].'</JOBS><COLOR>'.$this->ColorStatus['LOCKED'].'</COLOR></item>';
-        $pie .= '</data>';
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');
-        $response->setContent( $pie );
-        return $response;
     }
 
 }

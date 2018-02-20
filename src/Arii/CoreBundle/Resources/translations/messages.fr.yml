@@ -20,8 +20,6 @@ summary.DS: Plan prévisionnel et vérification des exécutions
 text.DS: Calcul du plan et vérification des exécutions en utilisant les informations fournies respectivement par le CreateDaysSchedule et le CheckDaysSchedule.
 summary.JOC: Synchronisation des moteurs
 text.JOC: Synchronisation des données avec les moteurs distants pour une vision globale et en temps réel des traitements.
-summary.GVZ: Visualisation graphiques des fichiers XML
-text.GVZ: Affichage des fichiers XML sous forme graphique pour concevoir ou auditer les chaînes de traitements.
 summary.MFT: Suivi des transferts de fichiers
 text.MFT: Gestion et suivi des transferts de fichiers exécutés par Jade ou à travers les moteurs.
 summary.JOE: Conception des traitements et des chaînes

@@ -1,7 +1,6 @@
 {# src/Arii/JOCBundle/Resources/views/Default/history.html.twig #}
 {% extends "AriiJOCBundle::layout.html.twig" %}
 {% block body %}
-<!--[if !IE]>end section<![endif]-->
 <script language="javascript">
 var only_warning = 0; // que les problemes
 var chained = 0;
@@ -10,14 +9,16 @@ var autorefresh;
 var status;
 
 dhtmlxEvent(window,"load",function(){ 
-    
+var size=410;
+
     menu = new dhtmlXMenuObject(null);
     menu.setIconsPath( "{{ asset('bundles/ariicore/images/wa/') }}" );
     menu.renderAsContextMenu();
     menu.loadStruct("{{ url('xml_JOC_orders_menu') }}");
 
     globalLayout = new dhtmlXLayoutObject(document.body,"3L");
-    globalLayout.cells("a").setWidth(410); 
+    globalLayout.cells("a").setWidth(size); 
+    globalLayout.cells("c").setText("{{ "Detail" | trans }}"); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
     globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
@@ -90,28 +91,32 @@ dhtmlxEvent(window,"load",function(){
 {% endif %}
     globalLayout.cells("a").hideHeader();
     globalLayout.cells("b").hideHeader();
-    globalLayout.cells("c").setHeight(300);
+    // globalLayout.cells("c").setHeight(300);
 
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
     myGrid.setHeader("{{ "Spooler" | trans }},{{ "Chain" | trans }},{{ "Order" | trans }},{{ "State" | trans }},{{ "Output" | trans }},{{ "Status" | trans }},{{ "Start time" | trans }},{{ "Title" | trans }}");
     myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter");
-    myGrid.setInitWidths("100,*,200,100,150,100,150,200");
+    myGrid.setInitWidths("*,*,*,100,150,100,150,200");
     myGrid.setColAlign("left,left,left,left,left,left,left,left");
     myGrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");
     myGrid.enableContextMenu(menu);
     myGrid.enableAlterCss("","");
     myGrid.enableSmartRendering(true,50);
     myGrid.init();
-    myGrid.load( "{{ url('xml_JOC_orders_grid') }}?chained="+chained+"&only_warning="+only_warning );
-    myGrid.setColumnHidden(0,true); 
+    globalLayout.cells("b").progressOn();
+    myGrid.load( "{{ url('xml_JOC_orders_grid') }}?chained="+chained+"&only_warning="+only_warning, function() {
+        globalLayout.cells("b").progressOff();
+    } );
+    // myGrid.setColumnHidden(0,true); 
     myGrid.setColumnHidden(4,true); 
     myGrid.setColumnHidden(7,true); 
-    
     myTabbar = globalLayout.cells("c").attachTabbar();
     myTabbar.addTab("order","{{ "Order" | trans }}","120px", null, true);
     myTabbar.addTab("execution","{{ "Execution" | trans }}","120px");
     myTabbar.addTab("schema","{{ "Schema" | trans }}","120px");
+    myTabbar.addTab("history","{{ "History" | trans }}","120px");
+    myTabbar.addTab("log","{{ "Log" | trans }}","120px");
 /*  myTabbar.addTab("spooler","{{ "Spooler" | trans }}","120px");
     myTabbar.addTab("target","{{ "Target" | trans }}","120px");
     myTabbar.addTab("locks","{{ "Locks" | trans }}","120px");
@@ -200,7 +205,8 @@ dhtmlxEvent(window,"load",function(){
                 dhtmlx.message({
                 type: "Notice",
                 text: Text });
-                globalLayout.cells("b").progressOn();        
+                globalLayout.cells("b").progressOn();  
+                // alert("{{ url('arii_JOC_command') }}?command="+itemid+"&params="+encodeURIComponent(params)+"&time="+start_time+"&id="+id);
                 dhx4.ajax.post("{{ url('arii_JOC_command') }}","command="+itemid+"&params="+encodeURIComponent(params)+"&time="+start_time+"&id="+id,function(loader,response){
                     dhtmlx.message({
                     type: "Notice",
@@ -230,10 +236,36 @@ dhtmlxEvent(window,"load",function(){
         return true;
     });
 {% endif %}    
+
+    myHistory = myTabbar.cells("history").attachGrid();
+    myHistory.setHeader("{{ "Start" | trans }},{{ "End" | trans }},{{ "State" | trans }},!,{{ "Message" | trans }}");
+    myHistory.attachHeader("#text_filter,#text_filter,#select_filter,#select_filter,#text_filter");
+    myHistory.setInitWidths("160,160,150,40,*");
+    myHistory.setColAlign("right,right,right,center,left");
+    myHistory.setColTypes("ro,ro,ro,ro,ro");
+    myHistory.setColSorting("date,date,str,str,str");
+    myHistory.init();
+    myHistory.enableSmartRendering(true,50);
+    myHistory.enableAlterCss("","");
+{% if is_granted('ROLE_OPERATOR') %}     
+    myParametersToolbar.attachEvent("onClick",function(itemid){
+        switch(itemid) {
+            case "new":
+                myParameters.addRow(myParameters.getRowsNum()+1,"");
+                break;
+            default:
+                break;
+        }
+        return true;
+    });
+{% endif %}
+
+    globalLayout.cells("c").collapse(); 
     autorefresh = setInterval( "GridRefresh()",update*1000);
 });
 
 function OrderDetail(id) {
+    globalLayout.cells("c").expand(); 
     myTabbar.cells("order").progressOn();
     myTabbar.cells("execution").progressOn();
     myTabbar.cells("schema").progressOn();
@@ -256,6 +288,17 @@ function OrderDetail(id) {
                 myTabbar.cells("execution").progressOff();
             });
         });
+
+// Historique par JID
+        myTabbar.cells("history").progressOn();
+        // alert("{{ url('xml_JID_order_history') }}?id="+id);
+        myHistory.clearAndLoad("{{ url('xml_JID_order_history') }}?id="+id, function() {                   
+            myTabbar.cells("history").progressOff();    
+        });  
+alert("{{ url('xml_JID_order_history') }}?id="+id);
+        // myTabbar.cells("log").attachUrl("{{ url('xml_JID_order_history') }}?id="+id);
+    
+
     });
 }
 

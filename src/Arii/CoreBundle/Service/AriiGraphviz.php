@@ -94,7 +94,7 @@ bgcolor=white
             1 => array("pipe", "w"),  // stdout est un pipe où le processus va écrire
             2 => array("pipe", "w") // stderr est un fichier
          );
-        
+
         $process = proc_open($gvz_cmd, $descriptorspec, $pipes);
         if (is_resource($process)) {
             fwrite($pipes[0], $digraph );

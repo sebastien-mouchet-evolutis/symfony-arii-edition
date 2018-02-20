@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * state_orders
  *
  * @ORM\Table(name="JOC_ORDERS")
- * @ORM\Entity(repositoryClass="Arii\JOCBundle\Entity\OrdersRepository")
+ * @ORM\Entity
  */
 class Orders
 {
@@ -31,35 +31,42 @@ class Orders
     /**
      * @var string
      *
-     * @ORM\Column(name="id_order", type="string", length=255 )
+     * @ORM\Column(name="id_order", type="string", length=255 , nullable=true )
      */
     private $id_order;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="spooler_id", type="integer")
+     * @ORM\Column(name="spooler_id", type="integer", nullable=true )
      */
     private $spooler_id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="job_chain_id", type="integer", nullable=true )
+     */
+    private $job_chain_id;
     
     /**
      * @var string
      *
-     * @ORM\Column(name="state", type="string", length=100)
+     * @ORM\Column(name="state", type="string", length=100, nullable=true )
      */
     private $state;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true )
      */
     private $name;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="path", type="string", length=255)
+     * @ORM\Column(name="path", type="string", length=255, nullable=true )
      */
     private $path;
 
@@ -257,6 +264,29 @@ class Orders
     public function getSpoolerId()
     {
         return $this->spooler_id;
+    }
+
+    /**
+     * Set job_chain_id
+     *
+     * @param integer $$jobChainId
+     * @return Orders
+     */
+    public function setJobChainId($jobChainId)
+    {
+        $this->job_chain_id = $jobChainId;
+
+        return $this;
+    }
+
+    /**
+     * Get job_chain_id
+     *
+     * @return integer 
+     */
+    public function getJobChainId()
+    {
+        return $this->job_chain_id;
     }
 
     /**

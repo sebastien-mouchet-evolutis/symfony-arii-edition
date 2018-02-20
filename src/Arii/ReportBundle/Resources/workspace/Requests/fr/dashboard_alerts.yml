@@ -1,0 +1,22 @@
+cat:            /Dashboard
+title:          "Dashboard: Alerts"
+description:    Nombre d'alertes par mois et par applications pour la production
+header:         APP,CODE,YEAR,MONTH,SPOOLER_NAME,JIRA,CAT,JOB_CLASS
+icon:           dashboard
+sql:
+    oracle: |
+        select A.TITLE as APP,
+            J.APP as CODE,J.RUN_YEAR as YEAR,J.RUN_MONTH as MONTH,sum(J.ACKS) as JIRA
+        from REPORT_RUN_MONTH J
+        left join ARII_APPLICATION A 
+            on J.APP=A.NAME
+        left join ARII_CATEGORY C 
+            on A.CATEGORY_ID=C.ID
+        where SPOOLER_NAME='VA1' 
+            and ENV like 'P' 
+            and RUN_YEAR=2017
+            and A.ACTIVE=1
+            and not C.name='applications'
+            and RUN_YEAR>8
+        group by A.TITLE,J.APP,J.RUN_YEAR,J.RUN_MONTH
+        order by A.TITLE,YEAR DESC,MONTH DESC

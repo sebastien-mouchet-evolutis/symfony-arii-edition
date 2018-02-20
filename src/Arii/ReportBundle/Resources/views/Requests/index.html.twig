@@ -40,12 +40,14 @@ dhtmlxEvent(window,"load",function(){
 
     myGrid.attachEvent("onRowDblClicked", function (id) {
         last = id;
+        globalLayout.cells("b").progressOn();
         globalLayout.cells("b").attachURL("{{ url('arii_Report_requests_result') }}?request="+id);
     });
     globalLayout.attachEvent("onContentLoaded", function(){
         globalLayout.cells("b").progressOff();
+        // globalLayout.cells("a").progressOn();
         myGrid.load( "{{ url('xml_Report_requests_list') }}", function() {
-            globalLayout.cells("a").progressOff();        
+            // globalLayout.cells("a").progressOff();        
         });
     });
     

@@ -40,6 +40,23 @@ class JobsController extends Controller {
         return $this->render("AriiJOCBundle:Jobs:index.html.twig");
     }
 
+    public function listAction()
+    {
+        $state = $this->container->get('arii.joc');
+        list($Chains,$Status) = $state->getJobs($sort=['updated' => 'ASC']);
+                
+        $Render = $this->container->get('arii_core.render');
+        return $Render->Grid($Chains,'SPOOLER,PATH,STATUS,UPDATED','COLOR');
+    }
+
+    public function pieAction() {
+        $state = $this->container->get('arii.joc');
+        list($Chains,$Status) = $state->getJobs($sort=['updated' => 'ASC']);
+                
+        $Render = $this->container->get('arii_core.render');
+        return $Render->Pie($Status,'STATE','COLOR');
+    }
+
     public function formAction()
     {
         $response = new Response();
@@ -54,6 +71,7 @@ class JobsController extends Controller {
         return $this->render('AriiJOCBundle:Jobs:form_spooler.json.twig',array(), $response );
     }
 
+    
     public function targetAction()
     {
         $response = new Response();
@@ -441,49 +459,6 @@ class JobsController extends Controller {
         }
         $list .= "</rows>\n";
         $response->setContent( $list );
-        return $response;
-    }
-
-    public function pieAction($history_max=0,$ordered = 0, $only_warning = 1) {        
-
-        $request = Request::createFromGlobals();
-        if ($request->get('history')>0) {
-            $history_max = $request->get('history');
-        }
-        if ($request->get('chained')!='') {
-            $ordered = $request->get('chained');
-        }
-        if ($request->get('only_warning')!='') {
-            $only_warning = $request->get('only_warning');
-        }
-
-        $state = $this->container->get('arii_joc.state');
-        $Jobs = $state->Jobs($ordered,$only_warning);
-        
-        $State = array();
-        foreach ($Jobs as $k=>$job) {
-            $state = $job['STATE'];
-            if (isset($State[$state]))
-                $State[$state]++;
-            else 
-                $State[$state]=1;
-        }
-        
-        $pie = '<data>';
-        ksort($State);
-        foreach (array_keys($State) as $k) {
-            if (($State[$k]>0) or ($only_warning and ($k=='pending'))) {
-                if (isset($this->ColorStatus[$k])) 
-                    $color = $this->ColorStatus[$k];
-                else
-                    $color = 'black';
-                $pie .= '<item id="'.$k.'"><STATUS>'.$k.'</STATUS><JOBS>'.$State[$k].'</JOBS><COLOR>'.$color.'</COLOR></item>';
-            }
-         }
-        $pie .= '</data>';
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');
-        $response->setContent( $pie );
         return $response;
     }
 

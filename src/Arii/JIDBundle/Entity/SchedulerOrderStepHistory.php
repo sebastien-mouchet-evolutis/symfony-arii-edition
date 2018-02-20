@@ -15,27 +15,32 @@ class SchedulerOrderStepHistory
     /**
      * @var integer
      *
-     * @ORM\Column(name="HISTORY_ID", type="integer", nullable=false)
+     * @ORM\Column(name="ID", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $historyId;
+    private $id;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Arii\JIDBundle\Entity\SchedulerOrderHistory")
+     * @ORM\JoinColumn(name="HISTORY_ID", referencedColumnName="HISTORY_ID", nullable=true)
+     * 
+     */
+    private $history;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Arii\JIDBundle\Entity\SchedulerHistory")
+     * @ORM\JoinColumn(name="TASK_ID", referencedColumnName="ID", nullable=true)
+     *      
+     */
+    private $task;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="STEP", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $step;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="TASK_ID", type="integer", nullable=false)
-     */
-    private $taskId;
 
     /**
      * @var string
@@ -79,31 +84,52 @@ class SchedulerOrderStepHistory
      */
     private $errorText;
 
-
-
     /**
-     * Set historyId
+     * Set history
      *
-     * @param integer $historyId
-     * @return SchedulerOrderStepHistory
+     * @param \Arii\JIDBundle\Entity\SchedulerOrderHistory $history
+     * @return History
      */
-    public function setHistoryId($historyId)
+    public function setHistory(\Arii\JIDBundle\Entity\SchedulerOrderHistory $history = null)
     {
-        $this->historyId = $historyId;
+        $this->history = $history;
 
         return $this;
     }
 
     /**
-     * Get historyId
+     * Get history
      *
-     * @return integer 
+     * @return \Arii\JIDBundle\Entity\SchedulerOrderHistory 
      */
-    public function getHistoryId()
+    public function getHistory()
     {
-        return $this->historyId;
+        return $this->history;
     }
 
+    /**
+     * Set task
+     *
+     * @param \Arii\JIDBundle\Entity\SchedulerHistory $task
+     * @return Task
+     */
+    public function setTask(\Arii\JIDBundle\Entity\SchedulerHistory $task = null)
+    {
+        $this->task = $task;
+
+        return $this;
+    }
+
+    /**
+     * Get task
+     *
+     * @return \Arii\JIDBundle\Entity\SchedulerHistory 
+     */
+    public function getTask()
+    {
+        return $this->task;
+    }
+    
     /**
      * Set step
      *
@@ -125,29 +151,6 @@ class SchedulerOrderStepHistory
     public function getStep()
     {
         return $this->step;
-    }
-
-    /**
-     * Set taskId
-     *
-     * @param integer $taskId
-     * @return SchedulerOrderStepHistory
-     */
-    public function setTaskId($taskId)
-    {
-        $this->taskId = $taskId;
-
-        return $this;
-    }
-
-    /**
-     * Get taskId
-     *
-     * @return integer 
-     */
-    public function getTaskId()
-    {
-        return $this->taskId;
     }
 
     /**

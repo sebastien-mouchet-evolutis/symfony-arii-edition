@@ -18,8 +18,8 @@ class AriiRender
         $xml .= '<rows>';
         $xml .= '<head><afterInit><call command="clearAll"/></afterInit></head>';        
         $Plus = $Fields = array(); // Informations complementaires   
-        
-        foreach ($Data as $id => $Line ) {
+
+        foreach ($Data as $id => $Line ) {            
             if (isset($Line['id']))
                 $xml .= '<row id="'.$Line['id'].'"';
             else
@@ -81,7 +81,7 @@ class AriiRender
     public function form($Data,$fields='*') {
         $xml = "<?xml version='1.0' encoding='iso-8859-1'?>";
         $xml .= '<data>';
-        
+
         if (isset($Data[0])) $Data=$Data[0];
         
         if (!empty($Data)) {
@@ -90,8 +90,7 @@ class AriiRender
             foreach (explode(',',$fields) as $f) {
                 if ($f=='*') {
                     foreach(array_keys($Data) as $k) {
-                        if ($k!='id')
-                            array_push($Fields,$k);
+                        array_push($Fields,$k);
                     }
                 }
                 else {
@@ -99,12 +98,11 @@ class AriiRender
                 }
             }
 
-            if (isset($Data['id']))
-                $xml .= '<id>'.$Data['id'].'</id>';
-
             foreach ($Fields as $k) {            
                 if (isset($Data[$k]) and !(is_array($Data[$k])))
                     $xml .= '<'.$k.'><![CDATA['.$Data[$k].']]></'.$k.'>';
+                else 
+                    $xml .= '<'.$k.'/>';
             }        
         }
         $xml .= '</data>';
@@ -148,7 +146,28 @@ class AriiRender
         $response->setContent( $xml );
         return $response;            
     }
+
+    /********************************
+     * PIE
+     */    
+    public function pie($Data) {
+        $pie = '<data>';
+        foreach ($Data as $k=>$v) {
+            if ($k=='') continue;
+            if (isset($this->Colors[$k]['bgcolor']))
+                $color=$this->Colors[$k]['bgcolor'];
+            else
+                $color='#ffffff';
+            $pie .= '<item id="'.$k.'"><NAME>'.$k.'</NAME><NB>'.$v.'</NB><COLOR>'.$color.'</COLOR></item>';
+        }
+        $pie .= '</data>';
         
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+        $response->setContent( $pie );
+        return $response;
+    }
+    
     /********************************
      * PRIVATE !
      */           

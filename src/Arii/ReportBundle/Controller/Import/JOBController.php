@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 class JOBController extends Controller
 {
 
-    /* Nettoyage des donness */
-    public function cleanAction()
+    /* Nettoyage des donnees */
+    public function cleanAction($limit=10)
     {       
         set_time_limit(3600);        
         ini_set('memory_limit','-1');
@@ -19,11 +19,14 @@ class JOBController extends Controller
 
         $debut = time();
         
+        $date_limit = new \DateTime();
+        $date_limit->sub(new \DateInterval(sprintf("P%dD",$limit)));
+
         $em = $this->getDoctrine()->getManager();
         // Il faut reparser tous les jobs
         // limiter par spooler ? 
         $Jobs = $em->getRepository("AriiReportBundle:JOB")->findAll();
-        $upd_job = 0;
+        $upd_job = $del_job = 0;
         foreach ($Jobs as $Job) {           
             $update = 0;
             
@@ -57,14 +60,41 @@ class JOBController extends Controller
                 }
             }
             
+            // Reprise 
+            // Derniere mise à jour
+/*            
+            $maxdate = clone $Job->getCreated();
+            if ($Job->getLastChange()>$maxdate)
+                $maxdate = $Job->getLastChange();
+            if ($Job->getFirstExecution()>$maxdate)
+                $maxdate = $Job->getFirstExecution();
+            if ($Job->getLastExecution()>$maxdate)
+                $maxdate = $Job->getLastExecution();
+            if ($maxdate > $Job->getUpdated()) {
+                $Job->setUpdated($maxdate);
+                $update++;
+            }
+            
+            // Suppression
+            if ($Job->getUpdated()<$date_limit) {
+                $Job->setDeleted(new \DateTime());
+                $update++;
+            }                  
+*/
             // On ajoute ce job sur tous les mois concernés
             if ($update>0) {
                 $upd_job++;
                 $em->persist($Job);                
             }
+/*            elseif ($Job->getUpdated()<$date_limit) {
+                $del_job++;
+                $Job->setDeleted(new \DateTime());
+                $em->persist($Job);            
+            }
+*/
         }       
         $em->flush();        
-        return new Response("Job clean($upd_job) [".(time()-$debut)."]");
+        return new Response("Job clean ($upd_job) (-$del_job) [".(time()-$debut)."]");
     }
  
     /* Agrégation des jobs par applications et par jours */
@@ -202,6 +232,7 @@ class JOBController extends Controller
             
             $app = $Job['app'];
             $env = $Job['env'];
+            $class = $Job['job_class'];            
             $month = $Job['month'];
             $year = $Job['year'];
             $spooler_name = $Job['spooler_name'];
@@ -211,7 +242,7 @@ class JOBController extends Controller
             
             // truncate ?! si on truncate on perd l'historique
             $JobMonth = $em->getRepository("AriiReportBundle:JOBMonth")->findOneBy(
-                array('app'=>$app,'env' =>$env, 'spooler_name' => $spooler_name, 'month' => $month, 'year' => $year
+                array( 'app'=>$app, 'env' =>$env, 'spooler_name' => $spooler_name, 'month' => $month, 'year' => $year
             ));
 
             if (!$JobMonth) {
@@ -224,6 +255,7 @@ class JOBController extends Controller
             
             $JobMonth->setApp($app);            
             $JobMonth->setEnv($env);
+            $JobMonth->setJobClass($class);
             $JobMonth->setMonth($month);
             $JobMonth->setYear($year);
             

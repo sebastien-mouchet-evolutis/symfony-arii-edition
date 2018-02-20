@@ -158,7 +158,7 @@ class Connection
     /**
      * @var string
      *
-     * @ORM\Column(name="db_owner", type="string", length=32, nullable=true)
+     * @ORM\Column(name="db_owner", type="string", length=64, nullable=true)
      */
     private $owner;
     

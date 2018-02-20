@@ -34,10 +34,12 @@ class AriiDate
         }
         $target_offset = $this->getOffset($this->TZLocal);
 
+
         // pour les spoolers par defaut en 1.5
         $this->DefaultOffset = $this->getOffset($this->TZLocal);
 */
-        $this->DefaultOffset = 0;
+        // Timezone en cours
+        $this->DefaultOffset = date_offset_get(new \DateTime);;
     }
 
     private function getOffset( $tz ) {
@@ -183,6 +185,7 @@ class AriiDate
             $offset = $this->TZOffset[$spooler];
         else 
             $offset = $this->DefaultOffset; // heure GMT par defaut
+        
         $time = strtotime( substr($date,0,10).' '.substr($date,11,8 ));
         if ($short)
             return $this->ShortDate(date( 'Y-m-d H:i:s', $time + $offset));

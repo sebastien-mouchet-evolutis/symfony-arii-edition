@@ -18,7 +18,24 @@ class ProcessClassesController extends Controller {
     {
         return $this->render("AriiJOCBundle:ProcessClasses:index.html.twig");
     }
-    
+
+    public function listAction()
+    {
+        $state = $this->container->get('arii.joc');
+        list($Classes,$Status) = $state->getProcessClasses();
+                
+        $Render = $this->container->get('arii_core.render');
+        return $Render->Grid($Classes,'SPOOLER,PATH,STATUS,REMOTE_SCHEDULER,UPDATED','COLOR');
+    }
+
+    public function pieAction() {
+        $state = $this->container->get('arii.joc');
+        list($Orders,$Status) = $state->getProcessClasses();
+                
+        $Render = $this->container->get('arii_core.render');
+        return $Render->Pie($Status,'STATE','COLOR');
+    }
+        
     public function gridAction()
     {
         $db = $this->container->get("arii_core.db");

@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 class RUN
 {
     /**
-     * @var integer
+     * @var bigint
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="bigint")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -43,20 +43,6 @@ class RUN
     private $job_trigger;
     
     /**
-     * @var string
-     *
-     * @ORM\Column(name="app", type="string", length=5, nullable=true)
-     */
-    private $app;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="env", type="string", length=3, nullable=true)
-     */
-    private $env;
-    
-    /**
      * @ORM\ManyToOne(targetEntity="Arii\ReportBundle\Entity\JOB")
      * @ORM\JoinColumn(nullable=true)
      **/
@@ -65,7 +51,7 @@ class RUN
     /**
      * @var string
      *
-     * @ORM\Column(name="status", type="string", length=24, nullable=true)
+     * @ORM\Column(name="status", type="string", length=64, nullable=true)
      */
     private $status;
 
@@ -499,52 +485,6 @@ class RUN
     public function getSpoolerName()
     {
         return $this->spooler_name;
-    }
-
-    /**
-     * Set app
-     *
-     * @param string $app
-     * @return RUN
-     */
-    public function setApp($app)
-    {
-        $this->app = $app;
-
-        return $this;
-    }
-
-    /**
-     * Get app
-     *
-     * @return string 
-     */
-    public function getApp()
-    {
-        return $this->app;
-    }
-
-    /**
-     * Set env
-     *
-     * @param string $env
-     * @return RUN
-     */
-    public function setEnv($env)
-    {
-        $this->env = $env;
-
-        return $this;
-    }
-
-    /**
-     * Get env
-     *
-     * @return string 
-     */
-    public function getEnv()
-    {
-        return $this->env;
     }
 
     /**

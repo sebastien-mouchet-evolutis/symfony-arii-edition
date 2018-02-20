@@ -124,11 +124,15 @@ class AriiFocus2
             while (isset($Classes[$n])) {
                 
                 $path = $Classes[$n]['attr']['path'];
+                // On evite le null
+                if ($path=='') $path="/";
+                
                 $ProcessClass = $em
                     ->getRepository('AriiJOCBundle:ProcessClasses')
                     ->findOneBy(array(  'spooler' => $Spooler, 
                                         'path' => $path ));
-
+                
+                // On ne prend pas les process class par defaut ?
                 if (!$ProcessClass) {
                     $this->PrintMessage(2,"+ $path");
                     $ProcessClass = new \Arii\JOCBundle\Entity\ProcessClasses();
@@ -168,7 +172,10 @@ class AriiFocus2
                 
                 $Job = $em
                         ->getRepository('AriiJOCBundle:Jobs')
-                        ->findOneBy( array('spooler' => $Spooler, 'path' => $path) );
+                        ->findOneBy( [
+                            'spooler' => $Spooler, 
+                            'path' => $path
+                        ]);
                 if (!$Job) {
                     $this->PrintMessage(2,"+ JOB  $path");
                     $Job = new \Arii\JOCBundle\Entity\Jobs();
@@ -286,9 +293,11 @@ class AriiFocus2
                             $LockUse->setPath  ( $path );
                             $LockUse->setSpoolerId   ( $spooler_id );
                             $LockUse->setExclusive   ( isset($Locks['lock.use'][$nl]['attr']['exclusive'] ) and ( $Locks['lock.use'][$nl]['attr']['exclusive'] == 'yes' ) ? 1:0 );
-                            $LockUse->setIsAvailable ( isset($Locks['lock.use'][$nl]['attr']['is_available'] ) and ( $Locks['lock.use'][$nl]['attr']['is_available'] == 'yes' ) ? 1:0 );
                             $LockUse->setIsMissing   ( isset($Locks['lock.use'][$nl]['attr']['is_missing'] ) and ( $Locks['lock.use'][$nl]['attr']['is_missing'] == 'yes' ) ? 1:0 );
-
+                            if ( isset($Locks['lock.use'][$nl]['attr']['is_available'] ) and ( $Locks['lock.use'][$nl]['attr']['is_available'] == 'no' ))
+                                $LockUse->setIsAvailable(0); 
+                            else
+                                $LockUse->setIsAvailable(1);
                             $LockUse->setUpdated ( new \DateTime( ) );
                             $em->persist($LockUse);
                             
@@ -368,6 +377,10 @@ class AriiFocus2
                 if (!$JobChain) {
                     $this->PrintMessage(2,"+ CHAIN $path");
                     $JobChain = new \Arii\JOCBundle\Entity\JobChains();
+                    $job_chain_id = -1;
+                }
+                else {
+                    $job_chain_id = $JobChain->getId();
                 }
                 
                 $JobChain->setSpooler   ( $Spooler );
@@ -380,7 +393,8 @@ class AriiFocus2
                 $JobChain->setMaxOrders     ( isset($JobChains[$n]['attr']['max_orders']) ? $JobChains[$n]['attr']['max_orders'] : null );	
                 $JobChain->setOrdersRecoverable 
                                             ( isset($JobChains[$n]['attr']['order']) and ($JobChains[$n]['attr']['order'] == 'yes' ) ? 1:0 );
-                $JobChain->setTitle         ( isset($JobChains[$n]['attr']['title']) ? utf8_decode( $JobChains[$n]['attr']['title'] ) : '' );
+//                $JobChain->setTitle         ( isset($JobChains[$n]['attr']['title']) ? utf8_decode( $JobChains[$n]['attr']['title'] ) : '' );
+                $JobChain->setTitle         ( isset($JobChains[$n]['attr']['title']) ?  $JobChains[$n]['attr']['title'] : '' );
                 $JobChain->setOrderIdSpace  ( isset($JobChains[$n]['attr']['order_id_space']) and ($JobChains[$n]['attr']['order_id_space']<>'') ?  $JobChains[$n]['attr']['order_id_space']  : null );
                 $JobChain->setLastWriteTime ( isset($JobChains[$n]['file_based']['attr']['last_write_time']) ? new \DateTime( $JobChains[$n]['file_based']['attr']['last_write_time'] ) : null);
 
@@ -510,7 +524,9 @@ class AriiFocus2
                                 $Order->setIdOrder      ( $id );
                                 $Order->setName         ( $name );
                                 $Order->setPath         ( $path );
+                                // raccourcis
                                 $Order->setSpoolerId    ( $spooler_id );
+                                $Order->setJobChainId   ( $job_chain_id );
                                 
                                 $Order->setState         ( $Orders[$no]['attr']['state'] );
                                 $Order->setTitle         ( isset($Orders[$no]['attr']['title']) ? utf8_decode( $Orders[$no]['attr']['title']) : null );

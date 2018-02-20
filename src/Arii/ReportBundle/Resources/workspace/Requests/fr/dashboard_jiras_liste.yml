@@ -1,0 +1,13 @@
+title:          "Dashboard: Jiras (liste)"
+description:    Liste des Jiras
+header:         ACK,ACK_TIME,APP,ENV,JOB_CLASS,NB,JOB
+icon:           dashboard
+sql:
+    oracle: |
+        select r.ACK,j.APP,j.ENV,j.JOB_CLASS,min(r.ACK_TIME) as ACK_TIME,count(*) as NB,max(j.JOB_NAME) as JOB
+        from REPORT_RUN r
+        left join REPORT_JOB j
+            on r.JOB_ID=j.ID
+        where ACK is not null
+        group by r.ACK,j.APP,j.ENV,j.JOB_CLASS
+        order by r.ACK desc

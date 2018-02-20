@@ -5,7 +5,7 @@ arii_report_bkp_ref:
 arii_Report_bkp_ref_update:
     path:  /bkp_ref/update
     defaults: { _controller: AriiReportBundle:BKP_REF2:update }
-    
+
 arii_Report_index:
     path:  /
     defaults: { _controller: AriiReportBundle:Default:index }
@@ -469,17 +469,34 @@ xml_Report_toolbar_update:
 # JobScheduler
 # --------------------------------------------------------------------------
 # Import par base de données
-html_Report_import_ojs_db:
-    path:  /import/ojs/db/{db}
-    defaults: { _controller: AriiReportBundle:Import\OJS:db }
+html_Report_import_ojs_db_order_runs:
+    path:  /import/ojs/db/{db}/order_runs
+    defaults: { _controller: AriiReportBundle:Import\OJS:db_order_runs }
 
+# Import par base de données
+html_Report_import_ojs_db_job_runs:
+    path:  /import/ojs/db/{db}/job_runs
+    defaults: { _controller: AriiReportBundle:Import\OJS:db_job_runs }
+    
 # --------------------------------------------------------------------------
 # Autosys
 # --------------------------------------------------------------------------
 # Import par base de données
-html_Report_import_ats_db:
-    path:  /import/ats/db/{db}
-    defaults: { _controller: AriiReportBundle:Import\OJS:db }
+html_Report_import_ats_db_job_runs:
+    path:  /import/ats/db/{db}/job_runs
+    defaults: { _controller: AriiReportBundle:Import\ATS:db_job_runs }
+
+html_Report_import_ats_db_jobs:
+    path:  /import/ats/db/{db}/jobs
+    defaults: { _controller: AriiReportBundle:Import\ATS:db_jobs }
+
+html_Report_import_ats_db_jobs_started:
+    path:  /import/ats/db/{db}/spooler/{spooler}/started_jobs
+    defaults: { _controller: AriiReportBundle:Import\ATS:db_started_jobs }
+
+html_Report_import_ats_db_proc_eventvu:
+    path:  /import/ats/db/{db}/proc_eventvu
+    defaults: { _controller: AriiReportBundle:Import\ATS:db_proc_eventvu }
 
 post_Report_run_ats:
     path:  /post/ats/event_demon
@@ -583,11 +600,6 @@ html_Report_runs2rules:
     path:  /cron/run2rules.html
     defaults: { _controller: AriiReportBundle:Import\RUN:Rules }
 
-# mise a jour des apps avec les informations d'executions
-html_Report_runs2apps:
-    path:  /cron/run2apps.html
-    defaults: { _controller: AriiReportBundle:Import\RUN:APP }
-    
 # mise a jour des jobs avec les informations d'executions
 html_Report_runs2jobs:
     path:  /cron/run2jobs.html
@@ -597,7 +609,12 @@ html_Report_runs2jobs:
 html_Report_runs2runhours:
     path:  /cron/run2runhours.html
     defaults: { _controller: AriiReportBundle:Import\RUN:RunHour }
-    
+
+# Ajout des incidents
+html_Report_runs2runhours_issues:
+    path:  /cron/run2runhours_issues.html
+    defaults: { _controller: AriiReportBundle:Import\RUN:Issues }
+
 html_Report_runs2rundays:
     path:  /cron/run2rundays.html
     defaults: { _controller: AriiReportBundle:Import\RUN:RunDay }
@@ -717,9 +734,13 @@ html_Report_ipam_pop:
 rest_Report_import:
     path:  /public/rest/import/{get}.txt
     defaults: { _controller: AriiReportBundle:Import:get }
-    
+
 arii_Report_public:
     path:  /public/external/{req}.{output}
     defaults: { _controller: AriiReportBundle:Requests\Requests:result }
-    
-   
+
+arii_Report_external:
+    path:  /external/{req}.{output}
+    defaults: { _controller: AriiReportBundle:Requests\Requests:result }
+    requirements:
+        req: "[^.]+"

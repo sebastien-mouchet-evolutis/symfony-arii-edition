@@ -15,6 +15,7 @@ class AriiPortal
     protected $translator;
     protected $router;
     protected $parameters;
+    protected $rootDir;
     
     public function __construct(    AriiSession $session, 
                                     UserManager $userManager, 
@@ -31,6 +32,7 @@ class AriiPortal
         
         $this->em = $em;
         $this->parameters = $kernel->getContainer()->getParameterBag()->all();
+        $this->rootDir = $kernel->getRootDir();
     }
 
     // appel de toutes les fonctions de population
@@ -371,7 +373,7 @@ class AriiPortal
             return $this->session->get('Colors');
         
         $Colors = $this->em->getRepository("AriiCoreBundle:Parameter")->findBy($filter,[ 'name'=>'ASC' ]);
-        if (!$Colors) 
+        // if (!$Colors) 
             $Colors = $this->getDefaultColors();
 
         // Tableau 
@@ -421,12 +423,14 @@ class AriiPortal
             'ON_ICE' => '#ccffff',
             'JOB_ON_HOLD' => '#3333ff',
             'ON_HOLD' => '#ccffff',
-            'QUEUED' => '#AAA',
+            'QUEUED' => '#ccffff',
         // CHAINES
             "SUSPENDED" => "red",
             "CHAIN STOP." => "red",
             "SPOOLER STOP." => "red",
-            "SPOOLER PAUSED" => "#fbb4ae",
+            "SPOOLER PAUSED" => "#bbbbbb",
+            "SPOOLER RUNNING" => "#ccebc5",
+            "SPOOLER LOST" => "#fbb4ae",
             "NODE STOP." => "red",
             "NODE SKIP." => "#ffffcc",
             "JOB STOP." => "#fbb4ae",        
@@ -456,6 +460,10 @@ class AriiPortal
             'OPEN' => '#fbb4ae',
             'ACKNOWLEDGED' => '#ffffcc',
             'CLOSED' => '#ccebc5',
+        // LOCK
+            'FREE' => '#ccebc5',
+            'USED' => '#fbb4ae',
+            'MISSING'=> 'red',
         // COMMUN
             'UNKNOW' => '#BBB',
             'unknown' => '#BBB'
@@ -2240,6 +2248,7 @@ class AriiPortal
             if ($Data['domain']=='database')
                 $Databases[$name] = $Data;
         }
+        
         return $this->session->set('Databases',$Databases);
     }
     
@@ -2251,6 +2260,16 @@ class AriiPortal
             return $this->session->set('Database',$Databases[$name]);
         }
         return array();
+    }
+
+    public function getDatabaseByConnection($instance='',$login='') {
+        $Databases = $this->getDatabases();
+        foreach ($Databases as $name=>$Database) {
+            if (($Database['instance']==$instance) and ($Database['login']==$login)) {
+                return $name;
+            }
+        }
+        return;
     }
     
     public function setDatabaseByName($name) {
@@ -2327,7 +2346,31 @@ class AriiPortal
     public function getWorkspace(){
         return $this->getParameter('workspace');
     }
-        
+    
+    // obsolete
+    public function getBaseDir($dir,$bundle='Core') {
+        return $portal->getWorkspace().'/'.$bundle.$dir;        
+    }    
+
+    public function getWorkPaths($dir,$bundle='Core') {
+        return [
+            $this->getWorkspace().'/'.$bundle.$dir,
+            '../src/Arii/'.$bundle.'Bundle/Resources/workspace'.$dir 
+        ];
+    }    
+    
+    public function getWorkFile($file,$bundle='Core') {
+        $Paths = $this->getWorkPaths(dirname($file),$bundle);
+        $File = basename($file);
+
+        // Recherche dans l'espace de travail
+        foreach ($Paths as $path) {
+            if (file_exists($path.'/'.$File)) 
+                return $path.'/'.$File;
+        }
+        return;
+    }    
+    
     /**************************************
      * Appel direct des données en session
      **************************************/

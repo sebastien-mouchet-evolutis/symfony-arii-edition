@@ -259,9 +259,12 @@ dhtmlxEvent(window,"load",function(){
         }
     });
 {% endif %}    
-    myGrid.attachEvent("onRowDblClicked", function(id){        
-        myForm.load("{{ url('xml_JOC_spooler_form') }}?id="+id);
-    } );
+    myGrid.attachEvent("onRowDblClicked", function(id){  
+        globalLayout.cells("c").progressOn();
+        myForm.load("{{ url('xml_JOC_spooler_form') }}?id="+id, function() {
+            globalLayout.cells("c").progressOff();
+        });
+    });
     myGrid.attachEvent("onBeforeContextMenu", function (id) {
         status = myGrid.cells(id,1).getValue();
         if (status=='RUNNING') {

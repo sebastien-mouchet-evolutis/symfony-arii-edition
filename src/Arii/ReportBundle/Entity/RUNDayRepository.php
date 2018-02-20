@@ -44,7 +44,7 @@ class RUNDayRepository extends EntityRepository
         $driver = $this->_em->getConnection()->getDriver()->getName();
         switch ($driver) {
             case 'oci8':
-                $sql = "SELECT EXTRACT(YEAR FROM run.run_date) as run_year,EXTRACT(MONTH FROM run.run_date) as run_month,run.app,run.env,run.spooler_name,run.job_class,sum(run.executions) as runs,sum(run.warnings) as warnings,sum(run.alarms) as alarms,sum(run.acks) as acks
+                $sql = "SELECT EXTRACT(YEAR FROM run.run_date) as run_year,EXTRACT(MONTH FROM run.run_date) as run_month,run.app,run.env,run.job_class,run.spooler_name,run.job_class,sum(run.executions) as runs,sum(run.warnings) as warnings,sum(run.alarms) as alarms,sum(run.acks) as acks
                         FROM REPORT_RUN_DAY run
                         WHERE run.run_date >= :from
                         AND run.run_date <= :to
@@ -55,6 +55,7 @@ class RUNDayRepository extends EntityRepository
                 $rsm->addScalarResult('RUN_MONTH', 'run_month');                
                 $rsm->addScalarResult('APP', 'app');
                 $rsm->addScalarResult('ENV', 'env');
+                $rsm->addScalarResult('JOB_CLASS', 'job_class');
                 $rsm->addScalarResult('SPOOLER_NAME', 'spooler_name');
                 $rsm->addScalarResult('RUNS', 'runs');
                 $rsm->addScalarResult('WARNINGS', 'warnings');                

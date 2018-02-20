@@ -16,7 +16,8 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").setWidth(350); 
     globalLayout.cells("a").hideHeader(); 
     globalLayout.cells("b").setText("{{ "Orders" | trans }}"); 
-    globalLayout.cells("c").hideHeader(); 
+    globalLayout.cells("c").setText("{{ "Detail" | trans }}"); 
+    globalLayout.cells("c").collapse();
     
     globalMenu = globalLayout.cells("a").attachMenu();
     globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
@@ -63,7 +64,7 @@ dhtmlxEvent(window,"load",function(){
                 align:"left"
             } 
     });
-    myDonut.load( "{{ url('xml_JID_orders_pie') }}?chained="+chained+"&only_warning="+only_warning );
+    myAccordion.cells("a1").progressOn();
 /*             
     myTree = myAccordion.cells("a2").attachTree();
 //    myTree = globalLayout.cells("a").attachTree();
@@ -77,7 +78,7 @@ dhtmlxEvent(window,"load",function(){
     myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
     myGrid.setHeader("{{ "Spooler" | trans }},{{ "Folder" | trans }},{{ "Chain" | trans }},{{ "Order" | trans }},{{ "State" | trans }},{{ "Status" | trans }},{{ "Begin" | trans }},{{ "End" | trans }},{{ "Next" | trans }},{{ "Information" | trans }}");
     myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter");
-    myGrid.setInitWidths("120,*,180,160,160,150,160,160,160,*");
+    myGrid.setInitWidths("*,*,180,160,160,150,160,160,160,*");
     myGrid.setColAlign("left,left,left,left,left,center,right,right,right,left");
     myGrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro,ro");
     myGrid.setColSorting("str,str,str,str,str,str,date,date,date,str");
@@ -85,14 +86,14 @@ dhtmlxEvent(window,"load",function(){
     myGrid.attachEvent("onBeforeContextMenu", onShowMenu );
     myGrid.enableAlterCss("","");
     myGrid.init();
-    myGrid.load( "{{ url('xml_JID_orders_grid') }}?chained="+chained+"&only_warning="+only_warning+"&sort="+sort);
     myGrid.enableLightMouseNavigation( true );    
-    myGrid.setColumnHidden(0,true); 
+    // myGrid.setColumnHidden(0,true); 
     myGrid.setColumnHidden(7,true); 
     myGrid.setColumnHidden(8,true); 
     myGrid.enableSmartRendering(true,50);
     myGrid.attachEvent("onRowDblClicked",OrderDetail );
-
+    globalLayout.cells("b").progressOn();
+        
     myDonut.attachEvent("onItemClick",function(id, value){
         status = id;
         myGrid.filterBy(5, status);
@@ -445,19 +446,9 @@ dhtmlxEvent(window,"load",function(){
     myHistory.init();
     myHistory.enableSmartRendering(true,50);
     myHistory.enableAlterCss("","");
-{% if is_granted('ROLE_OPERATOR') %}     
-    myParametersToolbar.attachEvent("onClick",function(itemid){
-        switch(itemid) {
-            case "new":
-                myParameters.addRow(myParameters.getRowsNum()+1,"");
-                break;
-            default:
-                break;
-        }
-        return true;
-    });
-{% endif %}
+
     autorefresh = setInterval( "GlobalRefresh()", update*1000 );
+    GlobalRefresh();
 });
 
 function GlobalRefresh() {
@@ -477,14 +468,15 @@ function GridRefresh(detail) {
     if (seconds < 10){
     seconds = "0" + seconds;
     }
-    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );    
     myGrid.load("{{ url('xml_JID_orders_grid') }}?time="+seconds+"&history="+max_history+"&chained="+chained+"&only_warning="+only_warning+"&sort="+sort, function(){
         globalLayout.cells("b").progressOff();
         myGrid.filterBy(5, status);  
         if (detail>0) OrderDetail(id);
         myDonut.load( "{{ url('xml_JID_orders_pie') }}?chained="+chained+"&only_warning="+only_warning,
             function () {
-                myDonut.refresh();                
+                myDonut.refresh(); 
+                myAccordion.cells("a1").progressOff();
             });
             globalLayout.progressOff();
             globalLayout.cells("a").progressOff();

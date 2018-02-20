@@ -62,7 +62,7 @@ class DefaultController extends Controller
         $portal = $this->container->get('arii_core.portal');
         foreach ($portal->getModules() as $k=>$v) {
             $list .= "  <item id=\"$k\">\n";
-            foreach(array('BUNDLE','role','summary','name','desc','img', 'url') as $t) {
+            foreach(array('BUNDLE','role','summary','name','desc','img', 'url', 'mod') as $t) {
                 $list .= "      <$t>".$v[$t]."</$t>\n";
             }
             $list .= "  </item>\n";

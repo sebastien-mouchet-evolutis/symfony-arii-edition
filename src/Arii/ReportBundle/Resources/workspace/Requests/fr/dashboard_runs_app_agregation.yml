@@ -1,0 +1,11 @@
+title:          "Dashboard: Exécutions (Agrégat)"
+description:    Vérification du remplissage pour l'application {APP} dans l'environnement {ENV}
+header:         APP,ENV,RUN_DATE,RUN_HOUR,JOB_CLASS,RUN_DATE,EXECUTIONS,ALARMS,ACKS,ISSUES
+args:           APP(ARI)&ENV(P)
+icon:           dashboard
+sql:
+    oracle: |
+        select APP,ENV,JOB_CLASS,RUN_DATE,RUN_HOUR,EXECUTIONS,ALARMS,ACKS,ISSUES,UPDATED
+        from REPORT_RUN_HOUR
+        where APP='{APP}' and ENV='{ENV}'
+        order by APP,ENV,RUN_DATE desc,RUN_HOUR desc,JOB_CLASS,UPDATED

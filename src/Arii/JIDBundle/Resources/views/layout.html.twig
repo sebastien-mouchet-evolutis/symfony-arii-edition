@@ -85,7 +85,7 @@ function ClickRibbon (itemid,state) {
         window.location = "{{ url('arii_JID_jobs') }}";
         break;
     case 'menu_order':
-        window.location = "{{ url('arii_JID_orders') }}";
+        window.location = "{{ url('arii_JID_orders', {'db': db }) }}";
         break;
     case 'menu_spooler':
         window.location = "{{ url('arii_JID_spoolers') }}";

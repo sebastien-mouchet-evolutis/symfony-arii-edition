@@ -11,6 +11,7 @@ class AriiDHTMLX
     protected $password;
     protected $instance;
     protected $service;
+    protected $driver;
     
     public function __construct(AriiPortal $portal)
     {    
@@ -19,10 +20,19 @@ class AriiDHTMLX
         # La connexion passe par la session
         $this->portal = $portal;
         $db = $portal->getDatabase();
-       
-        if (!isset($db['id']))
-            throw new \Exception('ARI',1);
+        if (isset($db['id']))
+            $this->setDBInfo($db);
+        $this->dhtmlx_path = '../vendor/dhtmlx/connector-php/codebase';
+    }
 
+    public function setDB($name) {
+        $DBs = $this->portal->getDatabases();
+        if (isset($DBs[$name]))
+            return $this->setDBInfo($DBs[$name]);
+        return;
+    }
+    
+    private function setDBInfo($db) {        
         $this->id           = $db['id'];
         if ($db['protocol']!='')
             $this->driver       = $db['protocol'];        
@@ -35,10 +45,9 @@ class AriiDHTMLX
         $this->user         = $db['login'];
         $this->password     = $db['password'];
         $this->service      = $db['service'];
-
-        $this->dhtmlx_path = '../vendor/dhtmlx/connector-php/codebase';
+        return $db;
     }
-
+        
     public function getDriver() {
         return $this->driver;
     }
@@ -67,7 +76,8 @@ class AriiDHTMLX
             case 'oci8':
             case 'oracle':
             case 'pdo_oci':
-                require_once  $this->dhtmlx_path.'/db_oracle.php';
+                if (!class_exists('OracleDBDataWrapper'))
+                    require_once  $this->dhtmlx_path.'/db_oracle.php';
                 $driver = "Oracle";
                 break;
             case 'mysql':            
@@ -76,13 +86,15 @@ class AriiDHTMLX
                 $driver = "MySQLi";
                 break;
             default:
+                
                 require_once  $this->dhtmlx_path.'/db_pdo.php';
                 $driver = "PDO";
                 break;
         }
         switch ($type) {
             case 'data':
-                require_once $this->dhtmlx_path.'/data_connector.php';
+                if (!class_exists('CommonDataProcessor'))
+                    require_once $this->dhtmlx_path.'/data_connector.php';
                 break;
             case 'grid':
                 require_once $this->dhtmlx_path.'/grid_connector.php';
@@ -123,12 +135,13 @@ class AriiDHTMLX
         switch ($driver) {
             case 'Oracle':
                 if ($this->service)
-                    $conn= @oci_connect( $this->user,  $this->password, $this->host.':'.$this->port.'/'.$this->database  );                
-                else 
-                    $conn= @oci_connect( $this->user,  $this->password, $this->instance  );
+                    $str = $this->host.':'.$this->port.'/'.$this->database;
+                else
+                    $str = $this->instance;
+                $conn= @oci_connect( $this->user,  $this->password, $str );
                 if (!$conn) {
                     $e = oci_error();
-                    throw new \Exception($e['message']);
+                    throw new \Exception($e['message']." ($str)");
                 }
                 
                 // normalement pris en charge par le listener ?

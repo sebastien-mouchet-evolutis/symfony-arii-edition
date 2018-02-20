@@ -27,60 +27,8 @@ class DefaultController extends Controller
 
     public function indexAction()   
     {
-        $session = $this->container->get('arii_core.session');
-        // Une date peut etre passe en get
-        $request = Request::createFromGlobals();
-        if ($request->query->get( 'ref_date' )) {
-            $ref_date   = $request->query->get( 'ref_date' );
-            $session->setRefDate( $ref_date );
-        } else {
-            $ref_date   = $session->getRefDate();
-        }
-        $Timeline['ref_date'] = $ref_date;
         
-        $past   = $session->getRefPast();
-        $future = $session->getRefFuture();
-        
-        // On prend 24 fuseaux entre maintenant et le passe
-        // on trouve le step en minute
-        $step = ($future-$past)*2.5; // heure * 60 minutes / 24 fuseaux
-        if ($step == 0) $step = 1;
-        $Timeline['step'] = $step;
-    
-        // on recalcule la date courante moins la plage de passé 
-        $year = substr($ref_date, 0, 4);
-        $month = substr($ref_date, 5, 2);
-        $day = substr($ref_date, 8, 2);
-        
-        $start = substr($session->getPast(),11,2);
-        $Timeline['start'] = (60/$step)*$start;
-        $Timeline['js_date'] = $year.','.($month - 1).','.$day;
-        
-        $refresh = $session->GetRefresh();
-        
-        // Liste des spoolers pour cette plage
-        $dhtmlx = $this->container->get('arii_core.dhtmlx');
-        $data = $dhtmlx->Connector('data');
-        
-        $sql = $this->container->get('arii_core.sql');
-        $Fields = array (
-            'spooler'    => 'SPOOLER_ID',
-            'start_time' => 'START_TIME',
-            'end_time'   => 'END_TIME' );
-
-        $qry = 'SELECT DISTINCT SPOOLER_ID 
-                FROM SCHEDULER_HISTORY
-                where '.$sql->History($Fields).'
-                ORDER BY SPOOLER_ID';
-        
-        $SPOOLERS = array();
-        $res = $data->sql->query( $qry );
-        while ($line = $data->sql->get_next($res)) {
-            array_push( $SPOOLERS,$line['SPOOLER_ID'] ); 
-        }
-        $Timeline['spoolers'] = $SPOOLERS;
-        
-        return $this->render('AriiJOCBundle:Default:index.html.twig', array('refresh' => $refresh, 'Timeline' => $Timeline ) );
+        return $this->render('AriiJOCBundle:Default:index.html.twig');
     }
 
     public function readmeAction()
@@ -114,11 +62,77 @@ class DefaultController extends Controller
         return $this->render('AriiJOCBundle:Default:ribbon.json.twig',array( 'Requests' => $Requests ), $response );
     }
 
-    public function menuAction()
-    {
-        return $this->render('AriiJOCBundle:Global:menu.xml.twig' );
+    public function menuAction() {
+        
+        // Etat actuel des spoolers
+        $Requests = $this->container->get('arii_core.requests');
+        $JOC = $Requests->readStatus( 'JOC' );
+
+        $spooler_paused = $spooler_lost = 0;
+        if (isset($JOC['JOC:SPOOLERS PAUSED']['results']) and ($JOC['JOC:SPOOLERS PAUSED']['results']>0))
+            $spooler_paused = $JOC['JOC:SPOOLERS PAUSED']['results'];
+        if (isset($JOC['JOC:SPOOLERS LOST']['results']) and ($JOC['JOC:SPOOLERS LOST']['results']>0))
+            $spooler_lost = $JOC['JOC:SPOOLERS LOST']['results'];
+
+        $order_suspended = 0;
+        if (isset($JOC['JOC:SUSPENDED']['results']) and ($JOC['JOC:SUSPENDED']['results']>0))
+            $order_suspended = $JOC['JOC:SUSPENDED']['results'];        
+
+        $chain_stopped = 0;
+        if (isset($JOC['JOC:CHAINS STOPPED']['results']) and ($JOC['JOC:STOPPED']['results']>0))
+            $chain_stopped = $JOC['JOC:CHAINS STOPPED']['results'];        
+        
+        $job_stopped = 0;
+        if (isset($JOC['JOC:JOBS STOPPED']['results']) and ($JOC['JOC:JOBS STOPPED']['results']>0))
+            $job_stopped = $JOC['JOC:JOBS STOPPED']['results'];        
+        
+        $lock_used = $lock_missing = 0;
+        if (isset($JOC['JOC:LOCKS NOT AVAILABLE']['results']) and ($JOC['JOC:LOCKS NOT AVAILABLE']['results']>0))
+            $lock_used = $JOC['JOC:LOCKS NOT AVAILABLE']['results'];
+        if (isset($JOC['JOC:LOCKS_MISSING']['results']) and ($JOC['JOC:LOCKS_MISSING']['results']>0))
+            $lock_missing = $JOC['JOC:LOCKS_MISSING']['results'];
+
+        $response = new Response();        
+        $response->headers->set('Content-Type', 'text/xml');
+        $list = '<?xml version="1.0" encoding="UTF-8"?>';
+        $list .= '<data total_count="2" pos="0">
+           <item id="0">
+                <name>Spoolers</name>
+                <img>spooler</img>
+                <warning>'.$spooler_paused.'</warning>
+                <error>'.$spooler_lost.'</error>
+            </item>
+            <item id="1">
+                <name>Chains</name>
+                <img>job_chain</img>
+                <error>'.$chain_stopped.'</error>
+            </item>
+            <item id="2">
+                <name>Orders</name>
+                <img>order</img>
+                <error>'.$order_suspended.'</error>
+            </item>
+            <item id="3">
+                <name>Jobs</name>
+                <img>job</img>
+                <error>'.$job_stopped.'</error>
+            </item>
+            <item id="4">
+                <name>Process classes</name>
+                <img>process_class</img>
+            </item>
+            <item id="5">
+                <name>Locks</name>
+                <img>lock</img>
+                <warning>'.$lock_used.'</warning>
+                <error>'.$lock_missing.'</error>
+            </item>
+        </data>';
+        $response->setContent( $list );
+        return $response;               
     }
 
+    
     public function plannedAction()
     {
         return $this->render('AriiJOCBundle:Default:planned.html.twig', 
@@ -177,4 +191,5 @@ class DefaultController extends Controller
         return $this->render('AriiJOCBundle:Sidebar:job_info.html.twig');
     }
     
+        
 }

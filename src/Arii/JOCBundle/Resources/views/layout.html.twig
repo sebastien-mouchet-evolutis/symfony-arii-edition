@@ -11,6 +11,54 @@
 {% block body %}
 {% endblock body %}
 {% block script %}
+<style>
+    .arii {
+        background-color: red;
+    }
+    p.title {
+        font-size: 16px;
+        padding: 0;
+        margin: 0;
+    }
+    p.info {
+        font-size: 12px;
+        padding: 0;
+        margin: 0;
+    }   
+.dhx_dataview_arii_item_selected{
+    font-weight:bold !important;
+    background-color: #ffffff;
+}
+.dhx_dataview_arii_item{
+    font-size:12px !important;
+}    
+span.warning {
+  background: orange;
+  border-radius: 1em;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1.2em;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6em;
+  margin-right: 5px;
+  text-align: center;
+  width: 1.6em; 
+}    
+span.error {
+  background: red;
+  border-radius: 1em;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1.2em;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6em;
+  margin-right: 5px;
+  text-align: center;
+  width: 1.6em; 
+}    
+</style>    
 <script>
 setInterval( "SyncAll()",30*1000);
 
@@ -25,7 +73,6 @@ function SyncAll () {
         }
     });
 }
-
 
 function StateRibbon (itemid,state) {
     switch(itemid) {

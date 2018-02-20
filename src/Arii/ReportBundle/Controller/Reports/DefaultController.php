@@ -203,7 +203,7 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $DBRuns = $em->getRepository("AriiReportBundle:RUNDay")->findApps($Filters['start'],$Filters['end'],$Filters['env'],$Filters['job_class'],'runs','DESC');
-        
+
         $portal = $this->container->get('arii_core.portal');
         $App = $portal->getApplications();
 
@@ -211,7 +211,7 @@ class DefaultController extends Controller
         $nb=0;
         foreach ($DBRuns as $run) {
             $a = $run['app'];
-            
+         
             if (!isset($App[$a])) continue;
             $title=$App[$a]['title'];
             if ($App[$a]['active']==0) continue;
@@ -235,10 +235,10 @@ class DefaultController extends Controller
     public function alarmsAction ($radar=false)
     {
         $Filters = $this->container->get('report.filter')->getRequestFilter();
-        
+
         $em = $this->getDoctrine()->getManager();
         $DBRuns = $em->getRepository("AriiReportBundle:RUNHour")->findRuns($Filters['start'],$Filters['end'],$Filters['env'],$Filters['appl'],$Filters['job_class'],'alarms','DESC');
-        
+
         $portal = $this->container->get('arii_core.portal');
         $App = $portal->getApplications();
 
@@ -247,6 +247,7 @@ class DefaultController extends Controller
         $Alias=[];
         $na=0;
         foreach ($DBRuns as $run) {
+            print_r($run);
             $a = $run['app'];
 
             if (!isset($App[$a])) continue;

@@ -12,7 +12,6 @@ class SOSController extends Controller
     
    public function XMLCommandAction( )
    {
-        $audit = $this->container->get('arii_core.audit');        
         $portal = $this->container->get('arii_core.portal');
         $sos = $this->container->get('arii_joc.sos');
         
@@ -279,7 +278,6 @@ class SOSController extends Controller
 
         // Recherche les informations de connexion
         list($protocol,$scheduler,$hostname,$port,$path) = $sos->getConnectInfos($spooler_id);                
-
         if (!isset($cmd)) {
             $portal->ErrorLog("XML Command undefined",0,__FILE__,__LINE__,__FUNCTION__);
             print "Undefined XML Command";
@@ -288,7 +286,6 @@ class SOSController extends Controller
         
         $SOS = $this->container->get('arii_core.sos');
         $result = $SOS->XMLCommand($spooler_id,$hostname,$port,$path,$protocol,$cmd);
-
         if (isset($result['ERROR'])) {
             if (substr($result['ERROR'],0,7) === 'CONNECT') {
                 $t = $this->get('translator')->trans('Connection failed %protocol%://%host%:%port%! Please make sure the JobScheduler have started!', array('%protocol%' => $protocol,'%host%' => $scheduler,'%port%' => $port ));

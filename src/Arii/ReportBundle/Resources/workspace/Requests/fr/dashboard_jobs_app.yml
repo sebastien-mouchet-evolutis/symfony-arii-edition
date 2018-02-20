@@ -1,0 +1,11 @@
+title:          "Dashboard: Jobs (Répartition)"
+description:    Nombre de jobs par mois et par applications pour la production
+header:         SPOOLER_NAME,JOB_NAME,APP,ENV,JOB_CLASS,CREATED,UPDATED,FIRST_EXECUTION,LAST_EXECUTION,DELETED
+args:           APP(ARI)&ENV(P)
+icon:           dashboard
+sql:
+    oracle: |
+        select SPOOLER_NAME,JOB_NAME,APP,ENV,JOB_CLASS,CREATED,UPDATED,FIRST_EXECUTION,LAST_EXECUTION,DELETED
+        from REPORT_JOB
+        where APP='{APP}' and ENV='{ENV}'
+        order by JOB_NAME

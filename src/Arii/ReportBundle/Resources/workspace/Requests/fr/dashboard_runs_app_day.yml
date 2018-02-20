@@ -1,0 +1,11 @@
+title:          "Dashboard: Runs par jour"
+description:    Vérification du remplissage pour l'application {APP} dans l'environnement {ENV}
+header:         APP,ENV,RUN_DATE,ISSUES/JOB_CLASS/EXECUTIONS
+args:           APP(ARI)&ENV(P)
+icon:           dashboard
+sql:
+    oracle: |
+        select APP,ENV,JOB_CLASS,RUN_DATE,EXECUTIONS,ISSUES
+        from REPORT_RUN_DAY
+        where APP='{APP}' and ENV='{ENV}'
+        order by RUN_DATE DESC,ENV,JOB_CLASS        

@@ -1,0 +1,19 @@
+arii_JOC_api_order_history:
+    path:  /order/{id}/history.xml
+    defaults: { _controller: AriiJOCBundle:Order:history, id: -1 }
+
+arii_JOC_api_order_form:
+    path:  /order/{id}/form.xml
+    defaults: { _controller: AriiJOCBundle:Order:form, id: -1 }
+
+html_JOC_api_order_detail:
+    path:  /order/{id}/detail.html
+    defaults: { _controller: AriiJOCBundle:Order:detail, id: -1 }
+
+html_JOC_api_order_diag:
+    path:  /order/{id}/diag.html
+    defaults: { _controller: AriiJOCBundle:Order:diag, id: -1 }
+
+img_JOC_api_order_graph:
+    path:  /order/{id}/graph.svg
+    defaults: { _controller: AriiJOCBundle:Order:graph, id: -1 }

@@ -1,0 +1,11 @@
+cat:            /Dashboard/Vérifications
+title:          "[Dashboard CHECK] Doublons de Jobs"
+description:    Liste des jobs pour WHL
+header:         SPOOLER_NAME,JOB_NAME,NB
+icon:           dashboard
+sql:
+    oracle: |
+        select SPOOLER_NAME,JOB_NAME,count(*) as NB
+        from REPORT_JOB
+        group by SPOOLER_NAME,JOB_NAME
+        having count(*)>1

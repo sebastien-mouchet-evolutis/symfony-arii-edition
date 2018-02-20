@@ -1,0 +1,24 @@
+title:          Erreurs GitBackup
+description:    Erreurs sur l'envoi des informations Autosys vers BitBucket
+header:         APP,JOB_CHAIN,END(localtime),STATE,LOG(log)
+icon:           job
+connection:     jobscheduler
+expected:       0-0
+sql:
+    oracle: |
+        SELECT  ORDER_ID as "APP",
+                JOB_CHAIN,
+                START_TIME,
+                END_TIME as END, 
+                STATE,
+                LOG
+        FROM SCHEDULER_ORDER_HISTORY
+        WHERE HISTORY_ID IN 
+        (
+            SELECT MAX(HISTORY_ID) 
+            FROM SCHEDULER_ORDER_HISTORY 
+            WHERE START_TIME >= SYSDATE - 1 AND JOB_CHAIN like '%GitBackup%'
+            GROUP BY ORDER_ID
+        )
+        AND STATE!='SUCCESS'
+        ORDER BY ORDER_ID		

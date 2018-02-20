@@ -377,11 +377,15 @@ class JadeController extends Controller
         
         $em->persist($delivery);
 
-        // On precise le statut
-        if ($Infos['status']['failed transfers']>0)
-            $status = 'FAILED';
-        elseif ($Infos['status']['skipped transfers']>0) 
-            $status = 'SKIPPED';
+        if (isset($Infos['status'])) {
+            // On precise le statut
+            if ($Infos['status']['failed transfers']>0)
+                $status = 'FAILED';
+            elseif ($Infos['status']['skipped transfers']>0) 
+                $status = 'SKIPPED';
+        }
+        else 
+                $status = 'UNKNOWN';
         
         // Les transmissions
         print "<pre>";

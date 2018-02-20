@@ -176,11 +176,12 @@ var size=400;
     globalLayout.cells("a").hideHeader();    
 });
 function getImageStyle(obj){
+    url = "{{ asset('bundles/') }}arii"+obj.mod+"/icon_128.png";
     if(window._isIE){
-        return "background-image: none;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='{{ asset('bundles/ariicore/images/cover/') }}"+obj.img+"',sizingMethod='crop');";
+        return "background-image: none;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+url+"',sizingMethod='crop');";
     }
     else{
-        return "background-image:url({{ asset('bundles/ariicore/images/cover/') }}"+obj.img+");";	
+        return "background-image:url("+url+");";	
     }
 }	
 </script>

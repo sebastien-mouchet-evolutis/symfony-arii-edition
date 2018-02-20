@@ -1,0 +1,12 @@
+cat:            /Dashboard/Vérifications
+title:          "[Dashboard CHECK] Runs non terminés"
+description:    Exécutions sans date de fin.
+header:         SPOOLER_NAME,JOB_NAME,START_TIME,END_TIME
+icon:           dashboard
+sql:
+    oracle: |
+        select SPOOLER_NAME,JOB_NAME,START_TIME,END_TIME
+        from REPORT_RUN
+        where (START_TIME is null)
+            or (END_TIME is null)
+        order by SPOOLER_NAME,JOB_NAME
