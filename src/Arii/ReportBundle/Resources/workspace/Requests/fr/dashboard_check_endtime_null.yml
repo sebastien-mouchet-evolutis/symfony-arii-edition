@@ -1,0 +1,12 @@
+cat:            /Dashboard/Vérifications
+title:          "[Dashboard CHECK] Jobs sans heure de fin"
+description:    Nombre de jobs sans fin par date
+header:         DATE,NB
+icon:           dashboard
+sql:
+    oracle: |
+        select to_char(start_time,'YYYY-MM-DD') as "DATE",count(*) as NB from report_run 
+        where end_time is null 
+        group by to_char(start_time,'YYYY-MM-DD')
+        order by to_char(start_time,'YYYY-MM-DD')
+

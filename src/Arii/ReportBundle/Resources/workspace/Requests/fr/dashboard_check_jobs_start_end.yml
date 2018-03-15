@@ -1,0 +1,11 @@
+cat:            /Dashboard/Vérifications
+title:          "[Dashboard CHECK] Anomalies fin"
+description:    Fin de job antérieur au début
+header:         SPOOLER_NAME,JOB_NAME,START_TIME,END_TIME
+icon:           dashboard
+sql:
+    oracle: |
+        select SPOOLER_NAME,JOB_NAME,START_TIME,END_TIME
+        from REPORT_RUN
+        where END_TIME<START_TIME
+        order by JOB_NAME,START_TIME desc

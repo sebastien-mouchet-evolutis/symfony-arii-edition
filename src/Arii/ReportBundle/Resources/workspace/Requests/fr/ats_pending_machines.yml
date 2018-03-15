@@ -1,0 +1,17 @@
+title:          "[RUN] Pending machines"
+description:    Machines non disponibles
+header:         JOB_NAME,LAST_START(timestamp),RUNTIME(duration),AVG_RUN_TIME(duration),DESCRIPTION,PID
+icon:           bug
+connection:     ats_db2
+expected:       0
+sql:
+    oracle: |
+        select JOB_TYPE,round((SYSDATE - TO_DATE('01-01-1970 00:00:00', 'DD-MM-YYYY HH24:MI:SS'))*(24 * 60 *60)+a.INT_VAL - j.LAST_START) as RUNTIME,j.JOB_NAME,j.LAST_START,j.DESCRIPTION,j.STATUS,j.PID
+        from UJO_JOBST j
+        left join UJO_ALAMODE a
+            on a.TYPE='gmt_offset'
+        where j.STATUS=14
+        and j.IS_CURRVER=1
+        and JOB_TYPE<>98
+        and JOB_NAME like 'GT%DocDOCUM'
+        order by j.LAST_START

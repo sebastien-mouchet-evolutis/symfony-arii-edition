@@ -1,0 +1,17 @@
+title:          "[JOB] missing calendars"
+description:    Calendriers non définis
+header:         RUN_CALENDAR,LAST_DAY,STATUS,JOBS
+icon:           bug
+connection:     ats_db2
+expected:       0
+sql:
+    oracle: |
+        select RUN_CALENDAR,j.STATUS,max(DAY) as LAST_DAY,count(*) as JOBS
+        from UJO_CALENDAR c
+        left join UJO_JOBST j
+            on c.NAME=j.RUN_CALENDAR
+        where j.RUN_CALENDAR is not null
+        and j.IS_CURRVER=1
+        group by j.RUN_CALENDAR,STATUS
+        having max(DAY)<sysdate and j.STATUS not in (7,11)
+        order by j.RUN_CALENDAR
