@@ -1,0 +1,41 @@
+arii_JOB_index:
+    pattern:  /
+    defaults: { _controller: AriiJOBBundle:Default:index }
+
+arii_JOB_readme:
+    pattern:  /readme
+    defaults: { _controller: AriiJOBBundle:Default:readme }
+
+json_JOB_ribbon:
+    pattern:  /ribbon.json
+    defaults: { _controller: AriiJOBBundle:Default:ribbon }
+
+xml_JOB_toolbar:
+    pattern:  /toolbar.xml
+    defaults: { _controller: AriiJOBBundle:Default:toolbar }
+
+xml_JOB_tree:
+    pattern:  /tree.xml
+    defaults: { _controller: AriiJOBBundle:Default:tree }
+
+# --------------------------------------------------------------------------
+# Edition de la tache
+# --------------------------------------------------------------------------
+arii_JOB_task_edit:
+    path:  /task/edit
+    defaults: { _controller: AriiJOBBundle:Task:index }
+
+xml_JOB_task_toolbar:
+    path:  /task/edit/toolbar.xml
+    defaults: { _controller: AriiJOBBundle:Task:toolbar }
+
+# --------------------------------------------------------------------------
+# Edition du job
+# --------------------------------------------------------------------------
+arii_JOB_job_edit:
+    path:  /job/edit
+    defaults: { _controller: AriiJOBBundle:Form:index }
+
+xml_JOB_job_edit_toolbar:
+    path:  /job/edit/toolbar.xml
+    defaults: { _controller: AriiJOBBundle:Form:toolbar }

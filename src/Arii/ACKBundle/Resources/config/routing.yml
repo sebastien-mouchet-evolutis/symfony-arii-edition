@@ -1,0 +1,19 @@
+arii_ACK_index:
+    pattern:  /
+    defaults: { _controller: AriiACKBundle:Default:index }
+
+arii_ACK_readme:
+    pattern:  /readme
+    defaults: { _controller: AriiACKBundle:Default:readme }
+
+json_ACK_ribbon:
+    pattern:  /ribbon.json
+    defaults: { _controller: AriiACKBundle:Default:ribbon }
+
+xml_ACK_toolbar:
+    pattern:  /toolbar.xml
+    defaults: { _controller: AriiACKBundle:Default:toolbar }
+
+xml_ACK_tree:
+    pattern:  /tree.xml
+    defaults: { _controller: AriiACKBundle:Default:tree }
