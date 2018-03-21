@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<job_chain> 
-      <job_chain_node state="first" job="simple_chained_job1" next_state="next"    error_state="error" /> 
-      <job_chain_node state="next"  job="simple_chained_job2" next_state="success" error_state="error" /> 
-      <job_chain_node state="success" /> 
-      <job_chain_node state="error" /> 
-</job_chain>

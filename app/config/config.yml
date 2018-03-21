@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: site.yml }
     
 framework:
     #esi:             ~
@@ -46,8 +47,58 @@ doctrine:
                 dbname:   "%database_name%"
                 user:     "%database_user%"
                 password: "%database_password%"
+                service:  "%database_service%"
+                servicename: "%database_servicename%"
                 charset:  UTF8
-               
+            local:
+                driver:   pdo_mysql
+                host:     127.0.0.1
+                port:     3306
+                dbname:   arii
+                user:     root
+                password: null
+                charset:  UTF8
+            ojs_db:
+                driver:      "%database_ojs_driver%"
+                host:        "%database_ojs_host%"
+                port:        "%database_ojs_port%"
+                dbname:      "%database_ojs_name%"
+                user:        "%database_ojs_user%"
+                password:    "%database_ojs_password%"
+                service:     "%database_ojs_service%"
+                servicename: "%database_ojs_servicename%"
+                charset:  UTF8
+            ats_db:
+                driver:      "%database_ats_driver%"
+                host:        "%database_ats_host%"
+                port:        "%database_ats_port%"
+                dbname:      "%database_ats_name%"
+                user:        "%database_ats_user%"
+                password:    "%database_ats_password%"
+                service:     "%database_ats_service%"
+                servicename: "%database_ats_servicename%"
+                charset:  UTF8
+                # Pour l'import
+                schema_filter: /^UJO_(ALARM|JOB|JOB_STATUS|JOB_RUNS|JOB_TREE|MACHINE|SCHED_INFO|COMMAND_JOB|FILE_WATCH_JOB|WORKFLOW|CRED|ALAMODE|CALENDAR)$/
+            ats_db2:
+                driver:   "%database_ats2_driver%"
+                host:     "%database_ats2_host%"
+                port:     "%database_ats2_port%"
+                dbname:   "%database_ats2_name%"
+                user:     "%database_ats2_user%"
+                password: "%database_ats2_password%"
+                charset:  UTF8
+                # Pour l'import
+                schema_filter: /^UJO_(ALARM|JOB|JOB_STATUS|JOB_RUNS|JOB_TREE|MACHINE|SCHED_INFO|COMMAND_JOB|FILE_WATCH_JOB|WORKFLOW|CRED|ALAMODE|CALENDAR)$/
+            ojs_db2:
+                driver:   "%database_ojs2_driver%"
+                host:     "%database_ojs2_host%"
+                port:     "%database_ojs2_port%"
+                dbname:   "%database_ojs2_name%"
+                user:     "%database_ojs2_user%"
+                password: "%database_ojs2_password%"
+                charset:  UTF8                
+                
         # if using pdo_sqlite as your database driver, add the path in parameters.yml
         # e.g. database_path: "%kernel.root_dir%/data/data.db3"
         # path:     "%database_path%"
@@ -58,11 +109,64 @@ doctrine:
         entity_managers:
             default:
                 connection: default
-                auto_mapping: true        
+                mappings:
+                    AriiCoreBundle: ~
+                    AriiUserBundle: ~
+                    AriiReportBundle: ~
+                    AriiATSBundle: ~
+                    AriiJOCBundle: ~
+                    AriiSelfBundle: ~
+                    AriiMFTBundle: ~
                 dql:
                     datetime_functions:
                         Hour:  Arii\CoreBundle\DQL\%database_driver%\Hour
                         Date:  Arii\CoreBundle\DQL\%database_driver%\Date
+                        Trunc: Arii\CoreBundle\DQL\%database_driver%\Trunc
+                        Month: Arii\CoreBundle\DQL\%database_driver%\Month
+                        Year:  Arii\CoreBundle\DQL\%database_driver%\Year
+                        Cast:  Arii\CoreBundle\DQL\%database_driver%\Cast
+            ojs_db:
+                connection: ojs_db
+                mappings:
+                    AriiJIDBundle: ~
+                dql:
+                    datetime_functions:
+                        Hour:  Arii\CoreBundle\DQL\%database_ojs_driver%\Hour
+                        Date:  Arii\CoreBundle\DQL\%database_ojs_driver%\Date
+                        Trunc: Arii\CoreBundle\DQL\Trunc
+                        Month: Arii\CoreBundle\DQL\Month
+                        Year:  Arii\CoreBundle\DQL\Year
+                        Cast:  Arii\CoreBundle\DQL\Cast
+            ats_db:
+                connection: ats_db
+                mappings:
+                    AriiATSBundle: ~
+                dql:
+                    datetime_functions:
+                        Hour:  Arii\CoreBundle\DQL\%database_ats_driver%\Hour
+                        Date:  Arii\CoreBundle\DQL\%database_ats_driver%\Date
+                        Trunc: Arii\CoreBundle\DQL\Trunc
+                        Month: Arii\CoreBundle\DQL\Month
+                        Year:  Arii\CoreBundle\DQL\Year
+                        Cast:  Arii\CoreBundle\DQL\Cast
+            ats_db2:
+                connection: ats_db2
+                mappings:
+                    AriiATSBundle: ~
+                dql:
+                    datetime_functions:
+                        Hour:  Arii\CoreBundle\DQL\%database_ats_driver%\Hour
+                        Date:  Arii\CoreBundle\DQL\%database_ats_driver%\Date
+                        Trunc: Arii\CoreBundle\DQL\Trunc
+                        Month: Arii\CoreBundle\DQL\Month
+                        Year:  Arii\CoreBundle\DQL\Year
+                        Cast:  Arii\CoreBundle\DQL\Cast
+            ojs_db2:
+                connection: ojs_db2
+                dql:
+                    datetime_functions:
+                        Hour:  Arii\CoreBundle\DQL\%database_ojs_driver%\Hour
+                        Date:  Arii\CoreBundle\DQL\%database_ojs_driver%\Date
                         Trunc: Arii\CoreBundle\DQL\Trunc
                         Month: Arii\CoreBundle\DQL\Month
                         Year:  Arii\CoreBundle\DQL\Year
@@ -81,11 +185,11 @@ fos_user:
     db_driver:     orm                        # Le type de BDD à utiliser, nous utilisons l'ORM Doctrine depuis le début
     firewall_name: main                       # Le nom du firewall duquel on utilisera ces utilisateurs
     user_class:    Arii\UserBundle\Entity\User # La classe de l'entité User que nous venons de définir
-    from_email:
-        address:        noreply@arii.org
-        sender_name:    Arii
     group:
         group_class: Arii\UserBundle\Entity\Group
+    from_email:
+        address:        admin@arii.com
+        sender_name:    Admin
         
 parameters:
     pdo.db_options:
@@ -96,10 +200,10 @@ parameters:
 
 services:
     # Oracle
-#    oracle.listener:
-#        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
-#        tags:
-#            - { name: doctrine.event_listener, event: postConnect }
+    oracle.listener:
+        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
+        tags:
+            - { name: doctrine.event_listener, event: postConnect }
     
     pdo:
         class: PDO

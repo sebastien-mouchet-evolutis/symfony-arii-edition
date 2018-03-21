@@ -1,7 +1,0 @@
-parameters:
-#    arii_graphviz.example.class: Arii\GraphvizBundle\Example
-
-services:
-    arii_gvz.osj:
-        class: Arii\GraphvizBundle\Service\AriiOSJ 
-        arguments: [ "@arii_core.portal" ]

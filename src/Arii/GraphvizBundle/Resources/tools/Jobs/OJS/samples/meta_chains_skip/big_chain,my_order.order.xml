@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<order id="my_order" job_chain="big_chain">
-  <params>
-    <param name="count" value="1"/>
-  </params>
-            
-  <run_time single_start="20:00"/>
-</order>

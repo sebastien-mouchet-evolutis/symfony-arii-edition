@@ -1,0 +1,33 @@
+parameters:
+
+    database_ojs_driver: oci8
+    database_ojs_host: sgxcnoradg1.vaudoise.ch
+    database_ojs_port: 1521
+    database_ojs_name: AUTO61P
+    database_ojs_user: jobscheduler
+    database_ojs_password: planificator
+    database_ojs_service:  true
+    database_ojs_servicename: TAF_AUTO61P.vaudoise.ch
+
+    database_ats_driver: oci8
+    database_ats_host: sgxcnoradg1.vaudoise.ch
+    database_ats_port: 1521
+    database_ats_name: AUTO61P
+    database_ats_user: aedbadmin    
+    database_ats_password: Aedb_Adm!
+    database_ats_service:  true
+    database_ats_servicename: TAF_AUTO61P.vaudoise.ch
+
+    database_ats2_driver: oci8
+    database_ats2_host: xxtoola.vaudoise.ch
+    database_ats2_port: 1521
+    database_ats2_name: AIAO
+    database_ats2_user: aedbadmin    
+    database_ats2_password: Aedb_Adm!
+    
+    database_ojs2_driver: oci8
+    database_ojs2_host: sgxautodb1.vaudoise.ch
+    database_ojs2_port: 1521
+    database_ojs2_name: AUTO62P
+    database_ojs2_user: jobscheduler
+    database_ojs2_password: planificator

@@ -14,18 +14,34 @@ security:
     providers:
         chain_provider:
             chain:
-                providers: [fos_userbundle, in_memory]
+                providers: [fos_userbundle, app_users, in_memory]
 
         fos_userbundle:
             id: fos_user.user_provider.username
+
+        app_users:
+            ldap:
+                service: app.ldap
+                base_dn: dc=vaudoise,dc=ch
+                search_dn: CN=s-at-devops-ldap,OU=Services,OU=PRD,OU=HQ,DC=vaudoise,DC=ch
+                search_password: IWKc5ck8o6fY8fNnCT7F
+                filter: (sAMAccountName={username})
+                default_roles: ROLE_USER
                 
         in_memory:
             memory:
                 users:
-                    admin: { password:  adminpass, roles: [ 'ROLE_ADMIN' ] }
+                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
                     client: { password: macpass, roles: [ 'ROLE_EXEC' ] }
                 
     firewalls:
+        ldap:
+            provider:  app_users
+            stateless: true
+            pattern:   /doc/
+            http_basic_ldap:
+                service: app.ldap
+                dn_string: "{username}@vaudoise.ch"
 
 #        wsse_secured:
 #            pattern:   /api/.*
@@ -109,6 +125,12 @@ security:
             pattern:    ^/  # Tout est protégé
             provider: app_users
             pattern:  ^/admin
+            form_login_ldap:
+                service: app.ldap
+                dn_string: CN={username},OU=Standard,OU=Users,OU=PRD,OU=HQ,DC=vaudoise,DC=ch
+                check_path: fos_user_security_check
+                login_path: fos_user_security_login
+                remember_me: true            # On active la possibilité du "Se souvenir de moi" (désactivé par défaut)
             form_login:
                 provider:    fos_userbundle  # On lit l'authentification au provider définit plus haut
                 remember_me: true            # On active la possibilité du "Se souvenir de moi" (désactivé par défaut)

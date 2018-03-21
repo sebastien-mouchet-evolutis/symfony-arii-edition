@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<job_chain>
-   <job_chain_node.job_chain state="chain_a" job_chain="chain_a"/>            
-   <job_chain_node.job_chain state="chain_b" job_chain="chain_b"/>
-   <job_chain_node.job_chain state="chain_c" job_chain="chain_c"/>
-   <job_chain_node.end       state="success"/>
-</job_chain>

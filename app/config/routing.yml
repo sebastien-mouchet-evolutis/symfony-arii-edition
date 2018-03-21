@@ -1,7 +1,11 @@
 arii_homepage:
     path:  /
     defaults: {_controller: AriiCoreBundle:Default:default }
-
+    
+arii_Alert_index:
+    path:  /alerts
+    defaults: {_controller: AriiCoreBundle:Default:default }
+    
 arii_home:
     path:  /home/{_locale}
     defaults: { _controller: AriiCoreBundle:Default:index }
@@ -27,11 +31,38 @@ arii_Admin:
         _locale: en|fr|es|de|cn|ar|ru|jp 
 
 # ========================================
+# JOB
+# ----------------------------------------
+arii_JOB:
+    resource: "@AriiJOBBundle/Resources/config/routing.yml"
+    prefix:   /job/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# ACK
+# ----------------------------------------
+arii_ACK:
+    resource: "@AriiACKBundle/Resources/config/routing.yml"
+    prefix:   /ack/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
 # Self
 # ----------------------------------------
 arii_Self:
     resource: "@AriiSelfBundle/Resources/config/routing.yml"
     prefix:   /self/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# Plumb
+# ----------------------------------------
+arii_Plumb:
+    resource: "@AriiPlumbBundle/Resources/config/routing.yml"
+    prefix:   /plumb/{_locale}
     requirements:
         _locale: en|fr|es|de|cn|ar|ru|jp 
 
@@ -66,7 +97,7 @@ arii_mft:
 # Graphviz
 # ----------------------------------------
 arii_GVZ:
-    resource: "@AriiGraphvizBundle/Resources/config/routing.yml"
+    resource: "@AriiGVZBundle/Resources/config/routing.yml"
     prefix:   /gvz/{_locale}
     requirements:
         _locale: en|fr|es|de|cn|ar|ru|jp 
@@ -167,11 +198,21 @@ arii_user:
     requirements:
         _locale: en|fr|es|de|cn|ar|ru|jp
 
+
 # ========================================
 # Time
 # ----------------------------------------
 arii_Time:
     resource: "@AriiTimeBundle/Resources/config/routing.yml"
     prefix:   /time/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# I5
+# ----------------------------------------
+arii_I5:
+    resource: "@AriiI5Bundle/Resources/config/routing.yml"
+    prefix:   /i5/{_locale}
     requirements:
         _locale: en|fr|es|de|cn|ar|ru|jp 
