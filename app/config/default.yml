@@ -1,33 +1,33 @@
 parameters:
 
-    database_ojs_driver: 
-    database_ojs_host: 
-    database_ojs_port: 
-    database_ojs_name: 
-    database_ojs_user: 
-    database_ojs_password: 
-    database_ojs_service:  
-    database_ojs_servicename: 
+    database_ojs_driver: oci8
+    database_ojs_host: HOST1
+    database_ojs_port: 1521
+    database_ojs_name: INSTANCE1
+    database_ojs_user: user
+    database_ojs_password: password
+    database_ojs_service:  true
+    database_ojs_servicename: SERVICE
 
-    database_ats_driver: 
-    database_ats_host: 
-    database_ats_port: 
-    database_ats_name: 
-    database_ats_user: 
-    database_ats_password: 
-    database_ats_service:  
-    database_ats_servicename: 
+    database_ats_driver: oci8
+    database_ats_host: HOST2
+    database_ats_port: 1521
+    database_ats_name: INSTANCE2
+    database_ats_user: user    
+    database_ats_password: password
+    database_ats_service:  true
+    database_ats_servicename: SERVICE
 
-    database_ats2_driver: 
-    database_ats2_host: 
-    database_ats2_port: 
-    database_ats2_name: 
-    database_ats2_user: 
-    database_ats2_password: 
+    database_ats2_driver: oci8
+    database_ats2_host: HOST3
+    database_ats2_port: 1521
+    database_ats2_name: INSTANCE3
+    database_ats2_user: user    
+    database_ats2_password: password
     
-    database_ojs2_driver: 
-    database_ojs2_host: 
-    database_ojs2_port: 
-    database_ojs2_name: 
-    database_ojs2_user: 
-    database_ojs2_password: 
+    database_ojs2_driver: oci8
+    database_ojs2_host: HOST4
+    database_ojs2_port: 1521
+    database_ojs2_name: INSTANCE4
+    database_ojs2_user: user
+    database_ojs2_password: password
