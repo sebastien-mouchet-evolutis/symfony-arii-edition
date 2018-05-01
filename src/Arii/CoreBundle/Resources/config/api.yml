@@ -15,7 +15,7 @@ api_category_retrieve:
     path:  /categories/{id}
     defaults: { _controller: AriiCoreBundle:API\Category:retrieve }
     methods: [GET]
-    
+
 api_category_update:
     path:  /categories/{id}
     defaults: { _controller: AriiCoreBundle:API\Category:update }
@@ -33,7 +33,7 @@ api_application_search:
     path:  /applications
     defaults: { _controller: AriiCoreBundle:API\Application:search }
     methods: [GET]
-    
+
 api_application_create:
     path:  /applications
     defaults: { _controller: AriiCoreBundle:API\Application:create }
@@ -43,7 +43,7 @@ api_application_retrieve:
     path:  /applications/{id}
     defaults: { _controller: AriiCoreBundle:API\Application:retrieve }
     methods: [GET]
-    
+
 api_application_update:
     path:  /applications/{id}
     defaults: { _controller: AriiCoreBundle:API\Application:update }
@@ -53,4 +53,3 @@ api_application_delete:
     path:  /applications/{id}
     defaults: { _controller: AriiCoreBundle:API\Application:delete }
     methods: [DELETE]
-
