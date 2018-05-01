@@ -16,6 +16,7 @@ class AppKernel extends Kernel
         new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
         new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
         new FOS\UserBundle\FOSUserBundle(),
+        new FOS\RestBundle\FOSRestBundle(),
         new Arii\UserBundle\AriiUserBundle(),
         new Arii\CoreBundle\AriiCoreBundle(),
         new Arii\AdminBundle\AriiAdminBundle(),
@@ -39,6 +40,7 @@ class AppKernel extends Kernel
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
+            $bundles[] = new TimeInc\SwaggerBundle\SwaggerBundle();
 //            $bundles[] = new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
         }
 

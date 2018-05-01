@@ -1,0 +1,66 @@
+{# src/Arii/JOBBundle/Resources/views/index.html.twig #}
+{% extends "AriiJOBBundle::layout.html.twig" %}
+{% block body %}
+<!--[if !IE]>start section<![endif]-->	
+<script>
+dhtmlxEvent(window,"load",function(){     
+var size=350;
+var help=true;
+
+    globalLayout = new dhtmlXLayoutObject(document.body, "2U");
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("a").setWidth(350);
+
+    globalMenu = globalLayout.cells("a").attachMenu();
+    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.loadStruct("{{ url('json_JOB_ribbon') }}");
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    globalLayout.cells("b").hideHeader();
+    globalLayout.cells("b").attachURL("{{ url('html_JOB_tasks_welcome') }}");
+    
+    myGrid = globalLayout.cells("a").attachGrid();
+    myGrid.selMultiRows = true;
+    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setHeader("{{ "Task" | trans }},{{ "Type" | trans }}");
+    myGrid.attachHeader("#text_filter,#select_filter");
+    myGrid.setInitWidths("*,100");
+    myGrid.setColAlign("left,left");
+    myGrid.setColTypes("ro,ro");
+    myGrid.setColSorting("str,str");
+    myGrid.enableAlterCss("","");
+    myGrid.init();    
+    myGrid.load("{{ url('xml_JOB_tasks_grid') }}");
+    
+    formData = [
+        {type: "settings", position: "label-left", labelWidth: 80, inputWidth: 350, labelAlign: "right", readonly: 1, position: "label-left" },
+        {type: "hidden", name: 'ID' },
+        {type: "input", name: 'title' },
+        {type: "input", name: 'description', rows: 3 },
+        {type: "input", name: 'code', rows: 10 },
+    ];
+    
+    myGrid.attachEvent("onRowDblClicked", function(id) {
+        if (help) {
+            help = false;
+            myLayout = globalLayout.cells("b").attachLayout("2E");
+            myForm = myLayout.cells("a").attachForm(formData);
+            myFiles = myLayout.cells("b").attachLayout("2U");
+            myFilesGrid = myFiles.cells("a").attachGrid();            
+        }
+        globalLayout.cells("b").progressOn();
+        myForm.load("{{ url('xml_JOB_task_form') }}?id="+id, function() {
+            myFilesGrid.load("{{ url('xml_JOB_task_files_grid') }}?id="+id, function() {
+                globalLayout.cells("b").progressOff();
+            });
+        });
+    });
+    
+});
+</script>
+{% endblock %}

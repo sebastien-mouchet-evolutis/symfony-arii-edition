@@ -16,3 +16,7 @@ _errors:
 
 _main:
     resource: routing.yml
+
+_swagger:
+    resource: "@SwaggerBundle/Resources/config/routing.xml"
+    prefix:   /

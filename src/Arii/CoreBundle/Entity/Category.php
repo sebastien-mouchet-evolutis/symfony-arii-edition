@@ -3,12 +3,16 @@
 namespace Arii\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Swagger\Annotations as SWG;
 
 /**
  * Category
  *
  * @ORM\Table(name="ARII_CATEGORY")
  * @ORM\Entity
+ * 
+ * @SWG\Definition()
  */
 class Category
 {

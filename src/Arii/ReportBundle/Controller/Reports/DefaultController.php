@@ -15,9 +15,18 @@ class DefaultController extends Controller
     }
 
     // Prepare un graphique
-    private function DrawBar($Data) { 
+    // Ajout du filtre et du format
+    private function DrawBar($Data,$Filter=[],$format='xml') { 
         // liste triee
         $xml = "<?xml version='1.0' encoding='iso-8859-1'?><data>";
+        
+        if (!empty($Filter)) {
+            $xml .= '<filter>';        
+            foreach ($Filter as $k=>$data) {
+                $xml .= '<'.$k.'>'.$data.'</'.$k.'>';
+            }
+            $xml .= '</filter>';
+        }
         foreach ($Data as $k=>$data) {
             $xml .= '<item id="'.$k.'">';
             foreach ($data as $k=>$v) {
@@ -166,6 +175,15 @@ class DefaultController extends Controller
         $end = $end->add(\DateInterval::createFromDateString('1 day'));
         $DBJobs = $em->getRepository("AriiReportBundle:JOBDay")->findApps($Filters['start'],$end,$Filters['env'],$Filters['job_class'],true,'jobs','DESC');
         
+        $Parameters = [
+            'repository' => "AriiReportBundle:JOBDay",
+            'start'      => $Filters['start']->format('Y-m-d H:i:s'),
+            'end'        => $Filters['end']->format('Y-m-d H:i:s'),
+            'env'        => $Filters['env'],
+            'app'        => $Filters['appl'],
+            'class'      => $Filters['job_class']
+        ];
+
         $portal = $this->container->get('arii_core.portal');
         $App = $portal->getApplications();
 
@@ -193,7 +211,7 @@ class DefaultController extends Controller
                 'deleted' => $job['deleted']
             ];
         }
-        return $this->DrawBar($Jobs);
+        return $this->DrawBar($Jobs, $Parameters);
     }
 
     // Nombre d'exécution par applications
@@ -388,8 +406,17 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $DBRuns = $em->getRepository("AriiReportBundle:RUNDay")->findByDay($Filters['start'],$Filters['end'],$Filters['env'],$Filters['appl'],$Filters['job_class'],false);
         
-        $Runs = [];
+        $Parameters = [
+            'repository' => "AriiReportBundle:RUNDay",
+            'start'      => $Filters['start']->format('Y-m-d H:i:s'),
+            'end'        => $Filters['end']->format('Y-m-d H:i:s'),
+            'env'        => $Filters['env'],
+            'app'        => $Filters['appl'],
+            'class'      => $Filters['job_class']
+        ];
+        
         $nb=0;
+        $Runs = [];
         foreach ($DBRuns as $run) {
             $a = $run['date']->format('Ymd');
             $Runs[$a] = [
@@ -399,7 +426,7 @@ class DefaultController extends Controller
                 'alarms' =>    $run['alarms']
             ];
         }
-        return $this->DrawBar($Runs);
+        return $this->DrawBar($Runs,$Parameters);
     }
     
 }

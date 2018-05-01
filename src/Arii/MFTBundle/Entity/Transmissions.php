@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Transmissions
 {
+
     /**
      * @var integer
      *
@@ -25,8 +26,8 @@ class Transmissions
      * @ORM\ManyToOne(targetEntity="Arii\MFTBundle\Entity\Deliveries")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      **/
-    private $delivery;    
-    
+    private $delivery; 
+
     /**
      * @var string
      *

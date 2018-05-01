@@ -15,8 +15,12 @@ class JadeController extends Controller
         $Infos = $Files = $File = array();
 
         // On traite le log
-        $log = file_get_contents($_FILES['log']['tmp_name']);
-        $Log = explode("\n",$log);
+        if (isset($_FILES['log']['tmp_name']))
+            $log = file_get_contents($_FILES['log']['tmp_name']);
+        else 
+            $log = file_get_contents('../workspace/MFT/Input/Yade/test.log');
+        // Nettoyage 
+        $Log = explode("\n",str_replace("\r",'',$log));
         $prefix = 'global';
         $time = ''; # derniere heure
         $count=0;
@@ -102,8 +106,12 @@ class JadeController extends Controller
 
         // On traite la sortie pour compléter le csv
         // doublon avec le log ?
-        $Main = array();
-        $log = @file_get_contents($_FILES['out']['tmp_name']);        
+        $Main = array();     
+        if (isset($_FILES['out']['tmp_name']))
+            $log = file_get_contents($_FILES['out']['tmp_name']);
+        else 
+            $log = file_get_contents('../workspace/MFT/Input/Yade/test.out');
+        
         if (trim($log)!='') {
             $Log = explode("\n",$log);
             $prefix = 'global';
@@ -133,7 +141,11 @@ class JadeController extends Controller
         print_r($Main);
         
         // Complement avec le csv
-        $content = @file_get_contents($_FILES['data']['tmp_name']);        
+        if (isset($_FILES['data']['tmp_name']))
+            $content = file_get_contents($_FILES['data']['tmp_name']);
+        else 
+            $content = file_get_contents('../workspace/MFT/Input/Yade/test.csv');
+     
         // Est ce que le fichier csv contient des informations ?
         if (trim($content) != '') {
             $Transfers = explode("\n",$content);

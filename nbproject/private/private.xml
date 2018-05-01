@@ -3,9 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="Perl">
-            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Controller/Import/ATSController.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Entity/RUNRepository.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Controller/Import/RUNController.php</file>
+            <file>file:/C:/xampp56/arii/src/Arii/CoreBundle/Resources/config/api.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/CoreBundle/Entity/Category.php</file>
+            <file>file:/C:/xampp56/arii/app/config/config.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Entity/BKP_REF.php</file>
+            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Service/ImportBKP.php</file>
+            <file>file:/C:/xampp56/arii/src/Arii/CoreBundle/Resources/config/routing.yml</file>
+            <file>file:/C:/xampp56/arii/web/.htaccess</file>
+            <file>file:/C:/xampp56/arii/src/Arii/CoreBundle/Exception/ResourceValidationException.php</file>
+            <file>file:/C:/xampp56/arii/src/Arii/CoreBundle/Controller/API/api-spec.php</file>
+            <file>file:/C:/xampp56/arii/app/config/routing.yml</file>
+            <file>file:/C:/xampp56/arii/app/autoload.php</file>
+            <file>file:/C:/xampp56/arii/app/config/config_dev.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/CoreBundle/Entity/Application.php</file>
+            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Entity/BKP_BAK.php</file>
+            <file>file:/C:/xampp56/arii/src/Arii/CoreBundle/Controller/API/ApplicationController.php</file>
+            <file>file:/C:/xampp56/arii/src/Arii/CoreBundle/Controller/API/CategoryController.php</file>
         </group>
     </open-files>
 </project-private>

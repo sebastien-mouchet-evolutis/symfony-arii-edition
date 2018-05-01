@@ -2365,8 +2365,9 @@ class AriiPortal
 
         // Recherche dans l'espace de travail
         foreach ($Paths as $path) {
-            if (file_exists($path.'/'.$File)) 
-                return $path.'/'.$File;
+            $filename = str_replace('\/','/',"$path/$File");
+            if (file_exists($filename)) 
+                return $filename;
         }
         return;
     }    

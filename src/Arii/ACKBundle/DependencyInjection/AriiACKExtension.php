@@ -1,6 +1,6 @@
 <?php
 
-namespace Arii\DocBundle\DependencyInjection;
+namespace Arii\ACKBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

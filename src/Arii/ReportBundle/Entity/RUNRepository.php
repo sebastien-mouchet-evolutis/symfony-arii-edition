@@ -16,6 +16,20 @@ use Doctrine\DBAL\Query\QueryBuilder;
 class RUNRepository extends EntityRepository
 {
 
+   public function findJobById($Job, \DateTime $start, \DateTime $end )
+   {
+        return $this->createQueryBuilder('run')
+            ->where('run.job = :job')
+            ->andWhere('run.start_time >= :start')
+            ->andWhere('run.end_time <= :end')
+            ->orderBy('run.start_time')
+            ->setParameter('job', $Job)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+   }
+
    public function findJobs(\DateTime $time, $app='%')
    {
         return $this->createQueryBuilder('run')

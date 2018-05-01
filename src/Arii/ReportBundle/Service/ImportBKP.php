@@ -96,8 +96,11 @@ class ImportBKP {
                     print "\tARCHIVED:    ".$Bkp->getDeleted()->format('Y.m.d')."\n";
                 print "\tARCHIVED:    ".$Bkp->getArchived()."\n";
             }
-                        
-            $Ref->setDbType('sqlsrv');
+                    
+            if (isset($Data['db_type'])!='')
+                $Ref->setDbType($Data['db_type']);
+            else
+                $Ref->setDbType('sqlsrv');
             $Ref->setDbEnv($Data['env']);
             $Ref->setDbSystem($Data['system']);
             $Ref->setDbName($Data['database']);

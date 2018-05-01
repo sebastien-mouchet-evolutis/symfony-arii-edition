@@ -1,9 +1,9 @@
 title:          "[RUN] Durées d'exécution actuelles trop longues"
-description:    La durée d'exécution est largment supérieure à la durée moyenne.
+description:    La durée d'exécution est supérieure à la durée moyenne*2 ou supérieur à 15 jours si aucune moyenne n'est disponible.
 header:         JOB_NAME,LAST_START(timestamp),RUNTIME(duration),AVG_RUN_TIME(duration),DESCRIPTION,PID
 icon:           bug
 connection:     ats_db2
-expected:       0
+expected:       0-0
 sql:
     oracle: |
         select JOB_TYPE,round((SYSDATE - TO_DATE('01-01-1970 00:00:00', 'DD-MM-YYYY HH24:MI:SS'))*(24 * 60 *60)+a.INT_VAL - j.LAST_START) as RUNTIME,j.JOB_NAME,j.LAST_START,j.DESCRIPTION,j.STATUS,
@@ -15,6 +15,15 @@ sql:
             on a.TYPE='gmt_offset'
         where j.STATUS=1
         and j.IS_CURRVER=1
-        and JOB_TYPE<>98
-        and round((SYSDATE - TO_DATE('01-01-1970 00:00:00', 'DD-MM-YYYY HH24:MI:SS'))*(24 * 60 *60)+a.INT_VAL - j.LAST_START)>r.AVG_RUN_TIME
+        and JOB_TYPE<>98		
+        and (
+               (
+                 (r.AVG_RUN_TIME>0) 
+                 and (round((SYSDATE - TO_DATE('01-01-1970 00:00:00', 'DD-MM-YYYY HH24:MI:SS'))*(24 * 60 *60)+a.INT_VAL -  j.LAST_START)>r.AVG_RUN_TIME*2)
+               )
+            or (
+                 (r.AVG_RUN_TIME=0) 
+                 and (round((SYSDATE - TO_DATE('01-01-1970 00:00:00', 'DD-MM-YYYY HH24:MI:SS'))*(24 * 60 *60)+a.INT_VAL - j.LAST_START)>86400*15)
+               )
+            )
         order by j.LAST_START

@@ -1,0 +1,19 @@
+{% extends "AriiCoreBundle::base.html.twig" %}
+{% block head %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+<!-- Optional theme -->
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-theme.min.css') }}">
+{% endblock %} 
+{% block body %}
+<body>
+<div class="container-fluid">
+<div class="jumbotron">
+<img style="float: right;" src="{{ asset('arii.png') }}"/>
+  <h1>{{ "Jobs" | trans }}</h1>
+  <p>{{ "Test" | trans }}</p> 
+</div> 
+</div> 
+</body>
+{% endblock %}
+

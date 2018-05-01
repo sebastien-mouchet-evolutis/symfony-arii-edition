@@ -16,8 +16,16 @@ class AppController extends Controller
     }
 
     public function jobsAction()
-    {        
+    {     
         $Filters = $this->container->get('report.filter')->getRequestFilter();
+        $Parameters = [
+            'repository' => "AriiReportBundle:JOBDay",
+            'start'      => $Filters['start']->format('Y-m-d H:i:s'),
+            'end'        => $Filters['end']->format('Y-m-d H:i:s'),
+            'env'        => $Filters['env'],
+            'app'        => $Filters['appl'],
+            'class'      => $Filters['job_class']
+        ];
 
         $em = $this->getDoctrine()->getManager(); 
         $Jobs = $em->getRepository("AriiReportBundle:JOBDay")->findJobs($Filters['start'],$Filters['end'],$Filters['env'],$Filters['appl'],$Filters['job_class'],false);

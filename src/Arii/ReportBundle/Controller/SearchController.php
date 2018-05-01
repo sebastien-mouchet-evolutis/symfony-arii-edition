@@ -40,15 +40,19 @@ class SearchController extends Controller
 
     public function historyAction()
     {
-        $request = Request::createFromGlobals();        
-        $History = $this->getDoctrine()->getRepository("AriiReportBundle:RUN")->findBy( [
-            'job' => $request->get('id')
-        ], [ 'end_time' => 'DESC' ] );
+        $Filters = $this->container->get('report.filter')->getRequestFilter();
 
+        // tous les jobs non supprimés dans la période
+        $em = $this->getDoctrine()->getManager(); 
+        $History = $this->getDoctrine()->getRepository("AriiReportBundle:RUN")->findJobById(
+            $Filters['id'],
+            $Filters['start'],
+            $Filters['end'] );
         $Data = [];
         $portal = $this->container->get('arii_core.portal');
         $ColorStatus = $portal->getColors();
         foreach ($History as $H) {
+
             $status = $H->getStatus();
             if (!in_array($status,['SUCCESS','FAILURE','TERMINATED'])) 
                 continue;

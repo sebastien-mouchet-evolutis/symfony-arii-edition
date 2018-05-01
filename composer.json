@@ -9,7 +9,7 @@
         }
     },
 	"minimum-stability": "dev",
-    "require": {
+        "require": {
         "php": ">=5.6",
         "symfony/symfony": ">=2.8.13,<2.9",
         "doctrine/orm": "~2.2,>=2.2.3,<2.5",
@@ -21,7 +21,8 @@
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
         "incenteev/composer-parameter-handler": "~2.0",
-        "friendsofsymfony/user-bundle": "~2.0@dev",        
+        "friendsofsymfony/user-bundle": "~2.0@dev",  
+        "friendsofsymfony/rest-bundle": "^2.3",        
         "doctrine/dbal": "^2.5",        
         "aura/payload": "^3.0",
         "bfolliot/date": "~1.1.0",
@@ -30,12 +31,12 @@
         "symfony/config" : "^2.7",
         "symfony/filesystem" : "^2.7",
         "bfolliot/filesystem" : "^1.0",
-		"symfony/serializer": "^3.0",
-		"symfony/property-access": "^3.0",
-		"gbprod/uuid-normalizer": "^1.0",				
+        "symfony/serializer": "^3.0",
+	"symfony/property-access": "^3.0",
+	"gbprod/uuid-normalizer": "^1.0",				
         "mtdowling/cron-expression" : "^1.1",
         "mikehaertl/phpwkhtmltopdf" : "^2.1.1",
-		"dhtmlx/connector-php": "~2.0@dev"
+	"dhtmlx/connector-php": "~2.0@dev"        
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

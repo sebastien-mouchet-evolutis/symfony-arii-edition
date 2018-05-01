@@ -1,6 +1,6 @@
 <?php
 
-namespace Arii\DocBundle\DependencyInjection;
+namespace Arii\JOBBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

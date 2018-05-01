@@ -1,14 +1,20 @@
 <?php
-
 namespace Arii\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Swagger\Annotations as SWG;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Autosys
  *
  * @ORM\Table(name="ARII_APPLICATION")
  * @ORM\Entity(repositoryClass="Arii\CoreBundle\Entity\ApplicationRepository")
+ * 
+ *
+ * @SWG\Definition()
+ * 
  */
 class Application
 {
@@ -18,38 +24,57 @@ class Application
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * 
      */
     private $id;
 
     /**
+     * Nom court ou code de l'application
      * @var string
+     * @SWG\Property(description="The product short name")
      *
      * @ORM\Column(name="name", type="string", length=12, unique=true)
+     * 
+     * @Assert\NotBlank(groups={"Create"})
      */
     private $name;
 
     /**
+     * Titre de l'application
      * @var string
+     * @SWG\Property(description="The product short description")
      *
      * @ORM\Column(name="title", type="string", length=64, nullable=true)
+     * 
      */
     private $title;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Arii\CoreBundle\Entity\Category")
-     * @ORM\JoinColumn(nullable=true)
-     **/
-    private $category;
-
-    /**
+     * Description de l'application
+     * 
      * @var string
+     * @SWG\Property(description="The application description")
      *
      * @ORM\Column(name="description", type="string", length=1024, nullable=true)
      */
     private $description;
 
     /**
+     * Catégorie de l'application
+     * 
      * @var string
+     * @SWG\Property(description="The application category")
+     *
+     * @ORM\ManyToOne(targetEntity="Arii\CoreBundle\Entity\Category")
+     * @ORM\JoinColumn(nullable=true)
+     **/
+    private $category;
+
+    /**
+     * Contacts
+     * 
+     * @var string
+     * @SWG\Property(description="List of contacts.")
      *
      * @ORM\Column(name="contact", type="string", length=255, nullable=true)
      */
@@ -64,6 +89,7 @@ class Application
 
     /**
      * @var boolean
+     * @SWG\Property(description="Applivation activated or not")
      *
      * @ORM\Column(name="active", type="boolean", nullable=true )
      */        

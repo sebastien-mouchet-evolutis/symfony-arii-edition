@@ -13,7 +13,7 @@ dhtmlxEvent(window,"load",function(){
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
     myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
-    myRibbon.loadStruct("{{ url('json_Doc_ribbon') }}");
+    myRibbon.loadStruct("{{ url('json_JOB_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 

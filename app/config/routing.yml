@@ -13,6 +13,15 @@ arii_home:
         _locale: en|fr|es|de|cn|ar|ru|jp
 
 # ========================================
+# API Bundle
+# ----------------------------------------
+arii_api:
+    resource: "@AriiCoreBundle/Resources/config/api.yml"
+    prefix:   /api
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp
+    
+# ========================================
 # Core Bundle
 # ----------------------------------------
 arii_core:

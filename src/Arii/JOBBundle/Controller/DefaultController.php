@@ -12,6 +12,11 @@ class DefaultController extends Controller
         return $this->render('AriiJOBBundle:Default:index.html.twig');
     }
 
+    public function welcomeAction()
+    {
+        return $this->render('AriiJOBBundle:Default:welcome.html.twig');
+    }
+    
     public function readmeAction()
     {
         return $this->render('AriiJOBBundle:Default:readme.html.twig');

@@ -99,6 +99,10 @@ class ReportFilter
         $Filters['appl']=$Filters['app'];
         unset($Filters['app']);
         
+        // Complement
+        foreach ([ 'id', 'job_id', 'job_name'] as $f)  {
+            $Filters[$f] = $request->query->get($f);
+        }
         return $Filters;
     }
     

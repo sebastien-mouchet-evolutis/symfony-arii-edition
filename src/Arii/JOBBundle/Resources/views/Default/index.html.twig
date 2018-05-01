@@ -4,10 +4,10 @@
 <!--[if !IE]>start section<![endif]-->	
 <script>
 dhtmlxEvent(window,"load",function(){     
+var size=350;
 
     globalLayout = new dhtmlXLayoutObject(document.body, "2U");
-    globalLayout.cells("a").hideHeader();
-    globalLayout.cells("a").setWidth(420);
+    globalLayout.cells("a").setWidth(size);
 
     globalMenu = globalLayout.cells("a").attachMenu();
     globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
@@ -20,20 +20,16 @@ dhtmlxEvent(window,"load",function(){
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     globalLayout.cells("b").hideHeader();
-    globalLayout.cells("b").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}');
+    globalLayout.cells("b").attachURL("{{ url('html_JOB_welcome') }}");
     
-    myGrid = globalLayout.cells("a").attachGrid();
-    myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
-    myGrid.setHeader("{{ "Type" | trans }},{{ "Folder" | trans }}");
-    myGrid.attachHeader("#select_filter,#text_filter");
-    myGrid.setInitWidths("100,*");
-    myGrid.setColAlign("left,left");
-    myGrid.setColTypes("ro,ro");
-    myGrid.setColSorting("str,str");
-    myGrid.enableAlterCss("","");
-    myGrid.init();
-    
+    mySidebar = globalLayout.cells("a").attachSidebar({
+        {% include "AriiJOBBundle:Default:menu.html.twig" %}
+    });
+    mySidebar.attachEvent("onSelect", function(id, value){
+        document.location.href = "{{ url('arii_JOB_index') }}"+id;
+        return true;
+    });
+    globalLayout.cells("a").hideHeader();
 });
 </script>
 {% endblock %}
