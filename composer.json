@@ -40,7 +40,8 @@
 	"dhtmlx/connector-php": "~2.0@dev"     
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "sensio/generator-bundle": "~2.3",
+        "timeinc/swagger-bundle": "^0.2.2"
     },
     "scripts": {
         "post-root-package-install": [
