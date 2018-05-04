@@ -10,6 +10,7 @@ parameters:
     database_driver: mysqli
     database_service: false
     database_servicename: ~
+    ldap_host: ~
 
     # You should uncomment this if you want use pdo_sqlite
     # database_path: "%kernel.root_dir%/data.db3"
