@@ -1,13 +1,13 @@
 parameters:
 #    arii_core.example.class: Arii\CoreBundle\Example
       
-services: 
+services:
     core.twig.core_extension:
         class: Arii\CoreBundle\Twig\CoreExtension
         arguments: ["%locale%"]
         tags:
             - { name: twig.extension }
-
+            
     arii.repository.connection:
         class: Arii\CoreBundle\Entity\Connection
         factory_service: doctrine.orm.entity_manager

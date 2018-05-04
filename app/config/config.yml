@@ -41,7 +41,9 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
 #    exception_controller:  CoreBundle:Exception:showException
-
+    form_themes:
+        - 'bootstrap_3_horizontal_layout.html.twig'
+        
 # Doctrine Configuration
 doctrine:
     dbal:
@@ -124,6 +126,7 @@ doctrine:
                     AriiJOCBundle: ~
                     AriiSelfBundle: ~
                     AriiMFTBundle: ~
+                    AriiACKBundle: ~
                 dql:
                     datetime_functions:
                         Hour:  Arii\CoreBundle\DQL\%database_driver%\Hour
@@ -208,7 +211,7 @@ fos_rest:
         enabled: true
         validate: true
         validation_errors_argument: violations
-    param_fetcher_listener: true
+    param_fetcher_listener: force
     body_listener: true
     format_listener:
         enabled: true
@@ -223,7 +226,7 @@ fos_rest:
     exception:
         enabled: true
         codes:
-           { Arii\CoreBundle\Exception\ResourceValidationException: 400 }
+           { Arii\CoreBundle\Exception\ResourceValidationException: 400, \Exception: 500 }
         messages:
            { Arii\CoreBundle\Exception\ResourceValidationException: true }
            
@@ -233,13 +236,13 @@ parameters:
         db_id_col:   session_id
         db_data_col: session_value
         db_time_col: session_time
-
+    
 services:
     # Oracle
-    oracle.listener:
-        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
-        tags:
-            - { name: doctrine.event_listener, event: postConnect }
+#    oracle.listener:
+#        class: Doctrine\DBAL\Event\Listeners\OracleSessionInit
+#        tags:
+#            - { name: doctrine.event_listener, event: postConnect }
     
     pdo:
         class: PDO
@@ -254,6 +257,21 @@ services:
     fos_user.doctrine_registry:
         alias: doctrine
 
+    arii.normalizer.resource_validation_exception:
+        class: Arii\CoreBundle\Normalizer\NotFoundHttpExceptionNormalizer
+        arguments:
+            - { type: 'Symfony\Component\HttpKernel\Exception\NotFoundHttpException' }
+        tags:
+            - { name: arii.normalizer }
+ 
+# Avoir compatibilite avec le listener actuel 
+#    arii.exception_subscriber:
+#        class: Arii\CoreBundle\EventSubscriber\ExceptionListener
+#        arguments:
+#            - '@jms_serializer'
+#        tags:
+#            - { name: kernel.event_subscriber }
+            
 # Session en base de donnees
 #    session.handler.pdo:
 #        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler

@@ -33,6 +33,11 @@ dhtmlxEvent(window,"load",function(){
     myGrid.setColSorting("str,str");
     myGrid.enableAlterCss("","");
     myGrid.init();
+
+    myGrid.load( "{{ url('arii_ACK_alarms_list') }}" );
+    myGrid.attachEvent("onRowDblClicked", function (rid) {
+        globalLayout.cells("b").attachURL("{{ url('arii_ACK_alarms_add') }}/"+rid);
+    });
     
 });
 </script>

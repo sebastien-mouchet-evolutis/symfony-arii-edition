@@ -54,6 +54,10 @@ security:
 #                realm: "Secured Area"
 #                provider: fos_userbundle
                 
+        api:
+            pattern:  ^/api/
+            security: false
+
         mft:
             pattern:  ^/mft/
             security: false

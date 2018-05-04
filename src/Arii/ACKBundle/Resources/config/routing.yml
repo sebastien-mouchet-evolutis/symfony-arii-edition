@@ -17,3 +17,11 @@ xml_ACK_toolbar:
 xml_ACK_tree:
     pattern:  /tree.xml
     defaults: { _controller: AriiACKBundle:Default:tree }
+
+arii_ACK_alarms_list:
+    pattern:  /alarms/list.xml
+    defaults: { _controller: AriiACKBundle:Alarms:list }
+
+arii_ACK_alarms_add:
+    pattern:  /alarms/add
+    defaults: { _controller: AriiACKBundle:Alarms:add }

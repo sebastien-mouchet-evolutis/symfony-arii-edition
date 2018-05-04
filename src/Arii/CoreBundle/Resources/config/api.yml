@@ -1,29 +1,29 @@
 # ========================================
-# Categories
+# Alarms
 # ----------------------------------------
-api_category_search:
-    path:  /categories
-    defaults: { _controller: AriiCoreBundle:API\Category:search }
+api_alarm_search:
+    path:  /alarms
+    defaults: { _controller: AriiACKBundle:API\Alarm:search }
     methods: [GET]
 
-api_category_create:
-    path:  /categories
-    defaults: { _controller: AriiCoreBundle:API\Category:create }
+api_alarm_create:
+    path:  /alarms
+    defaults: { _controller: AriiACKBundle:API\Alarm:create }
     methods: [POST]
 
-api_category_retrieve:
-    path:  /categories/{id}
-    defaults: { _controller: AriiCoreBundle:API\Category:retrieve }
+api_alarm_retrieve:
+    path:  /alarms/{id}
+    defaults: { _controller: AriiACKBundle:API\Alarm:retrieve }
     methods: [GET]
 
-api_category_update:
-    path:  /categories/{id}
-    defaults: { _controller: AriiCoreBundle:API\Category:update }
+api_alarm_update:
+    path:  /alarms/{id}
+    defaults: { _controller: AriiACKBundle:API\Alarm:update }
     methods: [PUT]
 
-api_category_delete:
-    path:  /categories/{id}
-    defaults: { _controller: AriiCoreBundle:API\Category:delete }
+api_alarm_delete:
+    path:  /alarms/{id}
+    defaults: { _controller: AriiACKBundle:API\Alarm:delete }
     methods: [DELETE]
 
 # ========================================
@@ -53,3 +53,32 @@ api_application_delete:
     path:  /applications/{id}
     defaults: { _controller: AriiCoreBundle:API\Application:delete }
     methods: [DELETE]
+
+# ========================================
+# Categories
+# ----------------------------------------
+api_category_search:
+    path:  /categories
+    defaults: { _controller: AriiCoreBundle:API\Category:search }
+    methods: [GET]
+
+api_category_create:
+    path:  /categories
+    defaults: { _controller: AriiCoreBundle:API\Category:create }
+    methods: [POST]
+
+api_category_retrieve:
+    path:  /categories/{id}
+    defaults: { _controller: AriiCoreBundle:API\Category:retrieve }
+    methods: [GET]
+
+api_category_update:
+    path:  /categories/{id}
+    defaults: { _controller: AriiCoreBundle:API\Category:update }
+    methods: [PUT]
+
+api_category_delete:
+    path:  /categories/{id}
+    defaults: { _controller: AriiCoreBundle:API\Category:delete }
+    methods: [DELETE]
+

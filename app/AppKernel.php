@@ -17,6 +17,7 @@ class AppKernel extends Kernel
         new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
         new FOS\UserBundle\FOSUserBundle(),
         new FOS\RestBundle\FOSRestBundle(),
+        new JMS\SerializerBundle\JMSSerializerBundle(),            
         new Arii\UserBundle\AriiUserBundle(),
         new Arii\CoreBundle\AriiCoreBundle(),
         new Arii\AdminBundle\AriiAdminBundle(),
