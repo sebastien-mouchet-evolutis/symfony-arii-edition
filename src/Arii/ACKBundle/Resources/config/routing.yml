@@ -23,5 +23,25 @@ arii_ACK_alarms_list:
     defaults: { _controller: AriiACKBundle:Alarms:list }
 
 arii_ACK_alarms_add:
-    pattern:  /alarms/add
+    pattern:  /alarms/add/{id}
     defaults: { _controller: AriiACKBundle:Alarms:add }
+
+#============================================================
+# Network
+#--------------------------------------------------------------------
+arii_ACK_network:
+    path:  /network
+    defaults: { _controller: AriiACKBundle:Network:index }
+
+xml_ACK_network_grid:
+    path:  /network/grid.xml
+    defaults: { _controller: AriiACKBundle:Network:grid }
+
+html_ACK_network_info:
+    path:  /network/info.html
+    defaults: { _controller: AriiACKBundle:Network:info }
+
+#============================================================
+# Synchro
+#--------------------------------------------------------------------
+    

@@ -127,7 +127,7 @@ class ClusterController extends Controller {
         $em->persist($spooler);
         $em->flush();
         
-        return new Response("success");        
+        return new Response("success");
     }
     
     public function formAction()

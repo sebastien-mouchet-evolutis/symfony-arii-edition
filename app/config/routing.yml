@@ -57,6 +57,10 @@ arii_ACK:
     requirements:
         _locale: en|fr|es|de|cn|ar|ru|jp 
 
+arii_ACK_import:
+    resource: "@AriiACKBundle/Resources/config/routing_import.yml"
+    prefix:   /import/ack
+
 # ========================================
 # Self
 # ----------------------------------------

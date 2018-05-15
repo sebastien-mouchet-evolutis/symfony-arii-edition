@@ -26,7 +26,6 @@ class AlarmType extends AbstractType
             ->add('response')
             ->add('state')
             ->add('stateTime')
-            ->add('node')
             ->add('job')
             ->add('user')
         ;

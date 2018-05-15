@@ -8,13 +8,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * UjoAlarm
- *
- * @ORM\Table(name="ARII_ALARM")
- * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\AlarmRepository")
+ * Status
+ * Etat des systemes
+ * 
+ * @ORM\Table(name="ARII_STATUS")
+ * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\StatusRepository")
  * 
  */
-class Alarm
+class Status
 {
     public function __construct()
     {
@@ -32,7 +33,7 @@ class Alarm
      * @Serializer\Groups({"list","detail"})
      */
     private $id;
-    
+   
     /**
      * @var string
      *

@@ -1,0 +1,11 @@
+arii_ACK_import_nagios_downtimes:
+    pattern:  /nagios/downtimes
+    defaults: { _controller: AriiACKBundle:Import\LiveStatus:downtimes }
+  
+arii_ACK_import_nagios_services:
+    pattern:  /nagios/services
+    defaults: { _controller: AriiACKBundle:Import\LiveStatus:services }
+   
+arii_ACK_import_nagios_hosts:
+    pattern:  /nagios/hosts
+    defaults: { _controller: AriiACKBundle:Import\LiveStatus:hosts }

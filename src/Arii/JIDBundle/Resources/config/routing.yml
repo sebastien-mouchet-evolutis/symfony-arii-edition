@@ -1172,13 +1172,6 @@ rss_JID_history_orders:
     path:  /public/{db}/orders.rss
     defaults: { _controller: AriiJIDBundle:Orders:rss, db: 0 }
     
-# --------------------------------------------------------------------------
-# Partie Nagios
-# --------------------------------------------------------------------------
-nagios_JID_jobs:
-    path:  /nagios/jobs
-    defaults: { _controller: AriiJIDBundle:Nagios:jobs }
-
 #----------------------------------------------------------------
 # REST
 #----------------------------------------------------------------
