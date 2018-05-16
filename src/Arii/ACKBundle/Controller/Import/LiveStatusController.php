@@ -55,10 +55,12 @@ class LiveStatusController extends Controller
             $record->setStateInformation     ($Info['plugin_output']);
             
             // Verification IP
+            // Il faudra distinguer synchro rapide et màj
             if (filter_var($Info['address'], FILTER_VALIDATE_IP)) {
                 $record->setIPAddress            ($Info['address']);
             } else {
-                $record->setIPAddress            (gethostbyname($Info['address']));
+                // $record->setIPAddress            (gethostbyname($Info['address']));
+                $record->setIPAddress            (null);
             }
             
             // Chaine speciale
