@@ -56,9 +56,9 @@ class LiveStatusController extends Controller
             
             // Verification IP
             if (filter_var($Info['address'], FILTER_VALIDATE_IP)) {
-                $record->setIPAddress            (gethostbyname($Info['address']));
-            } else {
                 $record->setIPAddress            ($Info['address']);
+            } else {
+                $record->setIPAddress            (gethostbyname($Info['address']));
             }
             
             // Chaine speciale
