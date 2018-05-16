@@ -373,7 +373,7 @@ class AriiPortal
             return $this->session->get('Colors');
         
         $Colors = $this->em->getRepository("AriiCoreBundle:Parameter")->findBy($filter,[ 'name'=>'ASC' ]);
-        // if (!$Colors) 
+        if (!$Colors) 
             $Colors = $this->getDefaultColors();
 
         // Tableau 
@@ -396,6 +396,19 @@ class AriiPortal
         return $this->session->set( 'Colors', $Result);
     }
 
+/*
+PASTELS
+Rouge   #fbb4ae
+Bleu    #b3cde3
+Vert    #ccebc5
+Violet  #decbe4
+Orange  #fed9a6
+Jaune   #ffffcc
+Marron  #e5d8bd
+Rose    #fddaec
+Gris    #f2f2f2
+*/
+    
     public function getDefaultColors() 
     {
         $Default = array(
@@ -437,7 +450,7 @@ class AriiPortal
             "SETBACK" => "lightsalmon",
             "RUNNING" => "#ffffcc",
             "ERROR" => "#fbb4ae",
-            "WARNING" => "#fbb4ae",
+            "WARNING" => "#fed9a6",
             "FAILURE" => "#fbb4ae",
             "FALSE" => "#fbb4ae",
             "ENDED" => "lightblue",
@@ -465,7 +478,9 @@ class AriiPortal
             'USED' => '#fbb4ae',
             'MISSING'=> 'red',
         // COMMUN
+            'DOWNTIME' => '#decbe4',
             'UNKNOW' => '#BBB',
+            'UNKNOWN' => '#BBB',
             'unknown' => '#BBB'
         );
 

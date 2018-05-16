@@ -13,8 +13,7 @@ use Doctrine\ORM\EntityRepository;
 class NetworkRepository extends EntityRepository
 {
     
-    public function listNotOK() {
-        
+    public function listNotOK() {        
         $q = $this
         ->createQueryBuilder('e')
         ->select('e.id,e.name,e.status,e.last_state_change')
@@ -22,7 +21,18 @@ class NetworkRepository extends EntityRepository
         ->orderBy('e.name')
         ->setParameter('status', 'OK')
         ->getQuery();
+        return $q->getResult();
+    }
 
+    public function pieNotOK() {        
+        $q = $this
+        ->createQueryBuilder('e')
+        ->select('e.status as STATUS,count(e) as NB')
+        ->where('e.status != :status')
+        ->orderBy('e.status')
+        ->groupBy('e.status')
+        ->setParameter('status', 'OK')
+        ->getQuery();
         return $q->getResult();
     }
     

@@ -1,15 +1,13 @@
 {% extends "AriiACKBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-var update=30
-
+var update=30;
 dhtmlxEvent(window,"load",function(){
 var size=300;
 
     globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
     globalLayout.cells("a").hideHeader(); 
     globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("b").hideHeader(); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
     globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
@@ -17,7 +15,9 @@ var size=300;
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
     myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
+    myRibbon.loadStruct("{{ url('json_ACK_ribbon') }}", function() {
+        RibbonTime();
+    });
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
@@ -32,13 +32,75 @@ var size=300;
         return true;
     });
     
-    globalLayout.cells("b").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}');    
-    globalLayout.cells("a").hideHeader(); 
+    
+    globalLayout.cells("a").hideHeader();     
+    globalLayout.cells("b").setText('{{ 'Jobs' | trans }}');
+    
+    dashLayout = globalLayout.cells("b").attachLayout('3T');    
+    
+    detailLayout = dashLayout.cells("a").attachLayout('2U');    
+    
+    myJobs =  detailLayout.cells("a").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#NAME#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "#NB#",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#NAME#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+    myJobs.load( "{{ url('xml_ACK_network_pie') }}" );
+
+    myHosts =  dashLayout.cells("b").setText('{{ 'Hosts' | trans }}');
+    myHosts =  dashLayout.cells("b").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#NAME#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "#NB#",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#NAME#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+    myHosts.load( "{{ url('xml_ACK_network_pie') }}" );
+
+    myServices =  dashLayout.cells("c").setText('{{ 'Services' | trans }}');
+    myServices =  dashLayout.cells("c").attachChart({
+            view:"donut",
+            value:"#NB#",
+            label:"",
+            tooltip: "#NAME#",
+            color: "#COLOR#",
+            border:false,
+            pieInnerText: "#NB#",
+            shadow: 0,
+            legend:{
+                width: 0,
+                template: "#NAME#",
+                valign:"top",
+                align:"left"
+            } 
+    });
+    myServices.load( "{{ url('xml_ACK_network_pie') }}" );
     
     autorefresh = setInterval( "GlobalRefresh()",update*1000);
 });
 
 function GlobalRefresh() {
+    RibbonTime();
 }
 </script>
 {% endblock %}

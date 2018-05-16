@@ -8,9 +8,23 @@
             [
                 {   "type": "button", 
                     text:"", 
-                    id: "menu_home",
+                    id: "menu_index",
                     "isbig": true, 
                     "img": "48/ack.png"
+                },
+                {   id: "refresh", 
+                     "type": "buttonSelect", 
+                     "text": "--:--:--", 
+                     "img":  "refresh.png",
+                     "items": 
+                     [ 
+                        { id: "5", text: "5 {{ "seconds" | trans }}" },
+                        { id: "30", text: "30 {{ "seconds" | trans }}" },
+                        { id: "60", text: "1 {{ "minute" | trans }}" },
+                        { id: "300", text: "5 {{ "minutes" | trans }}" },
+                        { id: "1800", text: "15 {{ "minutes" | trans }}" },
+                        { id: "3600", text: "1 {{ "hour" | trans }}" }
+                     ]
                 }
             ]
         }

@@ -37,6 +37,10 @@ xml_ACK_network_grid:
     path:  /network/grid.xml
     defaults: { _controller: AriiACKBundle:Network:grid }
 
+xml_ACK_network_pie:
+    path:  /network/pie.xml
+    defaults: { _controller: AriiACKBundle:Network:pie }
+
 html_ACK_network_info:
     path:  /network/info.html
     defaults: { _controller: AriiACKBundle:Network:info }

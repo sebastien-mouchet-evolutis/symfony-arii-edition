@@ -22,11 +22,36 @@ function ClickRibbon (itemid,state) {
         case 'menu_index':
             window.location = "{{ url('arii_ACK_index') }}";
             break;
+        case '5':
+        case '30':
+        case '60':
+        case '300':
+        case '900':
+        case '1800':
+        case '3600':
+            update = itemid;
+            dhx4.ajax.get( "{{ url('arii_session_update') }}?refresh="+itemid, function() {
+                GlobalRefresh();
+            });
+            break;
         default:
             window.location = "{{ url('arii_ACK_index') }}"+itemid;
     }
 }
 
+function RibbonTime() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+}
 </script>
 {% endblock script %}
 

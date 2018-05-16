@@ -20,9 +20,29 @@ class NetworkController extends Controller
         $Errors = $this->getDoctrine()->getRepository('AriiACKBundle:Network')->listNotOk();
         
         $render = $this->container->get('arii_core.render');     
-        return $render->grid($Errors,'name,status,last_state_change');
+        return $render->grid($Errors,'name,status,last_state_change','status');
     }
 
+    public function pieAction()
+    {
+        $Pie = [
+            'FAILURE' => 0,
+            'WARNING' => 0,
+            'DOWNTIME' => 0,
+            'UNKNOWN' => 0
+        ];
+
+        $Chart = $this->getDoctrine()->getRepository('AriiACKBundle:Network')->pieNotOk();
+        foreach($Chart as $c) {
+            $k = $c['STATUS'];
+            if (!isset($Pie[$k]))
+                continue;
+            $Pie[$k] = $c['NB'];
+        }
+        $render = $this->container->get('arii_core.render');     
+        return $render->pie($Pie);
+    }
+    
     public function infoAction()
     {
         $request = Request::createFromGlobals();

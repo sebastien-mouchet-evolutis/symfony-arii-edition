@@ -1,8 +1,9 @@
-{# src/Arii/JOBBundle/Resources/views/index.html.twig #}
-{% extends "AriiJOBBundle::layout.html.twig" %}
+{# src/Arii/ACKBundle/Resources/views/index.html.twig #}
+{% extends "AriiACKBundle::layout.html.twig" %}
 {% block body %}
 <!--[if !IE]>start section<![endif]-->	
 <script>
+var update=30;
 dhtmlxEvent(window,"load",function(){     
 
     globalLayout = new dhtmlXLayoutObject(document.body, "2U");
@@ -39,6 +40,29 @@ dhtmlxEvent(window,"load",function(){
         globalLayout.cells("b").attachURL("{{ url('html_ACK_network_info') }}?id="+rid);
     });
     
+    // Premier chargement avant le smart rendering
+    GlobalRefresh();
+    autorefresh = setInterval( "GlobalRefresh()",update*1000);
 });
+
+function GlobalRefresh() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    GridRefresh();
+}
+
+function GridRefresh() {
+
+}
+
 </script>
 {% endblock %}
