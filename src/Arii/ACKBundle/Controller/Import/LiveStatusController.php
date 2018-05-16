@@ -43,7 +43,6 @@ class LiveStatusController extends Controller
             $record->setTitle                ($Info['display_name']);
             $record->setDescription          ($Info['alias']);
             $record->setHost                 ($Info['address']);
-            $record->setIPAddress            ($Info['address']);
             $record->setAcknowledged         ($Info['acknowledged']);
             $record->setAcknowledgementType  ($Info['acknowledgement_type']);
             $record->setLastState            ($Info['last_state']);
@@ -54,6 +53,13 @@ class LiveStatusController extends Controller
             $record->setLatency              ($Info['latency']);
             $record->setState                ($Info['state']);
             $record->setStateInformation     ($Info['plugin_output']);
+            
+            // Verification IP
+            if (filter_var($Info['address'], FILTER_VALIDATE_IP)) {
+                $record->setIPAddress            (gethostbyname($Info['address']));
+            } else {
+                $record->setIPAddress            ($Info['address']);
+            }
             
             // Chaine speciale
             if (is_array($Info['downtimes']))
