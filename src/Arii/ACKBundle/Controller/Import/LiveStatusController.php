@@ -9,8 +9,8 @@ class LiveStatusController extends Controller
     public function downtimesAction()
     {
         // On traite le log
-        if (isset($_FILES['csv']['tmp_name']))
-            $log = file_get_contents($_FILES['svc']['tmp_name']);
+        if (isset($_FILES['txt']['tmp_name']))
+            $log = file_get_contents($_FILES['txt']['tmp_name']);
         else 
             $log = file_get_contents('../workspace/ACK/Input/Nagios/downtimes.csv');
         // Nettoyage 
@@ -21,8 +21,8 @@ class LiveStatusController extends Controller
     public function hostsAction()
     {
         // On traite le log
-        if (isset($_FILES['csv']['tmp_name']))
-            $log = file_get_contents($_FILES['svc']['tmp_name']);
+        if (isset($_FILES['txt']['tmp_name']))
+            $log = file_get_contents($_FILES['txt']['tmp_name']);
         else 
             $log = file_get_contents('../workspace/ACK/Input/Nagios/hosts.txt');
 
