@@ -1,29 +1,29 @@
 arii_ACK_index:
-    pattern:  /
+    path:  /
     defaults: { _controller: AriiACKBundle:Default:index }
 
 arii_ACK_readme:
-    pattern:  /readme
+    path:  /readme
     defaults: { _controller: AriiACKBundle:Default:readme }
 
 json_ACK_ribbon:
-    pattern:  /ribbon.json
+    path:  /ribbon.json
     defaults: { _controller: AriiACKBundle:Default:ribbon }
 
 xml_ACK_toolbar:
-    pattern:  /toolbar.xml
+    path:  /toolbar.xml
     defaults: { _controller: AriiACKBundle:Default:toolbar }
 
 xml_ACK_tree:
-    pattern:  /tree.xml
+    path:  /tree.xml
     defaults: { _controller: AriiACKBundle:Default:tree }
 
 arii_ACK_alarms_list:
-    pattern:  /alarms/list.xml
+    path:  /alarms/list.xml
     defaults: { _controller: AriiACKBundle:Alarms:list }
 
 arii_ACK_alarms_add:
-    pattern:  /alarms/add/{id}
+    path:  /alarms/add/{id}
     defaults: { _controller: AriiACKBundle:Alarms:add }
 
 #============================================================
