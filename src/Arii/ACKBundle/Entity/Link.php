@@ -61,17 +61,6 @@ class Link
      */
     private $description;
 
-    /**
-    * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Status")
-    * @ORM\JoinColumn(nullable=true)
-    */
-    private $from;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Status")
-    * @ORM\JoinColumn(nullable=true)
-    */
-    private $to;
 
     /**
      * Get id
@@ -150,51 +139,5 @@ class Link
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set from
-     *
-     * @param \Arii\ACKBundle\Entity\Status $from
-     * @return Link
-     */
-    public function setFrom(\Arii\ACKBundle\Entity\Status $from = null)
-    {
-        $this->from = $from;
-
-        return $this;
-    }
-
-    /**
-     * Get from
-     *
-     * @return \Arii\ACKBundle\Entity\Status 
-     */
-    public function getFrom()
-    {
-        return $this->from;
-    }
-
-    /**
-     * Set to
-     *
-     * @param \Arii\ACKBundle\Entity\Status $to
-     * @return Link
-     */
-    public function setTo(\Arii\ACKBundle\Entity\Status $to = null)
-    {
-        $this->to = $to;
-
-        return $this;
-    }
-
-    /**
-     * Get to
-     *
-     * @return \Arii\ACKBundle\Entity\Status 
-     */
-    public function getTo()
-    {
-        return $this->to;
     }
 }

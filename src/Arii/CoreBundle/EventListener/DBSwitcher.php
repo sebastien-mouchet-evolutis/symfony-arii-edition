@@ -21,7 +21,6 @@ class DBSwitcher {
     }
 
     public function onKernelRequest() {
-        print "((test))";
         $site='jobscheduler';
         
 //        if ($this->request->attributes->has('_site')) {

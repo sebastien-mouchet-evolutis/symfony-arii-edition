@@ -9,3 +9,21 @@ arii_ACK_import_nagios_services:
 arii_ACK_import_nagios_hosts:
     pattern:  /nagios/hosts
     defaults: { _controller: AriiACKBundle:Import\LiveStatus:hosts }
+
+#================================
+# Synchronisation Autosys
+#================================
+arii_ACK_import_autosys_db:
+    pattern:  /autosys/{db}
+    defaults: { _controller: AriiACKBundle:Import\Autosys:db }
+
+arii_ACK_import_autosys_status:
+    pattern:  /autosys/status
+    defaults: { _controller: AriiACKBundle:Import\Autosys:status }
+
+#================================
+# Synchronisation JobScheduler
+#================================
+arii_ACK_import_jobscheduler_db:
+    pattern:  /jobscheduler/{db}
+    defaults: { _controller: AriiACKBundle:Import\JobScheduler:db }

@@ -36,7 +36,7 @@ class Status
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=64)
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      * 
      */
     private $name;
@@ -44,7 +44,7 @@ class Status
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=64)
+     * @ORM\Column(name="title", type="string", length=255)
      * 
      */
     private $title;
@@ -77,7 +77,15 @@ class Status
     /**
      * @var integer
      *
-     * @ORM\Column(name="user", type="string", length=32 )
+     * @ORM\Column(name="instance", type="string", length=32 )
+     * 
+     */
+    private $instance;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="user", type="string", length=32, nullable=true )
      * 
      */
     private $user;    
@@ -88,17 +96,56 @@ class Status
      * @ORM\Column(name="exit_code", type="integer" )
      * 
      */
-    private $exitCode=0;
+    private $exit_code=0;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="run_try", type="float" )
+     * 
+     */
+    private $run_try=0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="status", type="string", nullable=true)
+     * @ORM\Column(name="status", type="string", length=32, nullable=true)
      * 
      */
     private $status;
-    
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="last_start", type="datetime", nullable=true)
+     * 
+     */
+    private $last_start;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="last_end", type="datetime", nullable=true)
+     * 
+     */
+    private $last_end;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="updated", type="datetime")
+     * 
+     */
+    private $updated;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="message", type="string", length=255, nullable=true)
+     * 
+     */
+    private $message;
+    
     /**
      * Get id
      *
@@ -248,26 +295,49 @@ class Status
     }
 
     /**
-     * Set exitCode
+     * Set exit_code
      *
      * @param integer $exitCode
      * @return Status
      */
     public function setExitCode($exitCode)
     {
-        $this->exitCode = $exitCode;
+        $this->exit_code = $exitCode;
 
         return $this;
     }
 
     /**
-     * Get exitCode
+     * Get exit_code
      *
      * @return integer 
      */
     public function getExitCode()
     {
-        return $this->exitCode;
+        return $this->exit_code;
+    }
+
+    /**
+     * Set run_try
+     *
+     * @param float $runTry
+     * @return Status
+     */
+    public function setRunTry($runTry)
+    {
+        $this->run_try = $runTry;
+
+        return $this;
+    }
+
+    /**
+     * Get run_try
+     *
+     * @return float 
+     */
+    public function getRunTry()
+    {
+        return $this->run_try;
     }
 
     /**
@@ -291,5 +361,120 @@ class Status
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set last_start
+     *
+     * @param \DateTime $lastStart
+     * @return Status
+     */
+    public function setLastStart($lastStart)
+    {
+        $this->last_start = $lastStart;
+
+        return $this;
+    }
+
+    /**
+     * Get last_start
+     *
+     * @return \DateTime 
+     */
+    public function getLastStart()
+    {
+        return $this->last_start;
+    }
+
+    /**
+     * Set last_end
+     *
+     * @param \DateTime $lastEnd
+     * @return Status
+     */
+    public function setLastEnd($lastEnd)
+    {
+        $this->last_end = $lastEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get last_end
+     *
+     * @return \DateTime 
+     */
+    public function getLastEnd()
+    {
+        return $this->last_end;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Status
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set instance
+     *
+     * @param string $instance
+     * @return Status
+     */
+    public function setInstance($instance)
+    {
+        $this->instance = $instance;
+
+        return $this;
+    }
+
+    /**
+     * Get instance
+     *
+     * @return string 
+     */
+    public function getInstance()
+    {
+        return $this->instance;
+    }
+
+    /**
+     * Set message
+     *
+     * @param string $message
+     * @return Status
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * Get message
+     *
+     * @return string 
+     */
+    public function getMessage()
+    {
+        return $this->message;
     }
 }

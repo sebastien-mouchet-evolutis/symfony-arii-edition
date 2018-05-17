@@ -12,7 +12,7 @@ class LiveStatusController extends Controller
         if (isset($_FILES['txt']['tmp_name']))
             $log = file_get_contents($_FILES['txt']['tmp_name']);
         else 
-            $log = file_get_contents('../workspace/ACK/Input/Nagios/downtimes.csv');
+            $log = file_get_contents('../workspace/ACK/Input/Nagios/downtimes.txt');
         // Nettoyage 
         $this->csv2array($log);
         exit();

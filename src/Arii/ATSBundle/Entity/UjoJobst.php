@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * UjoJobst
  *
  * @ORM\Table(name="UJO_JOBST")
- * @ORM\Entity(readOnly=true)
+ * @ORM\Entity(readOnly=true,repositoryClass="Arii\ATSBundle\Entity\UjoJobstRepository")
  */
 class UjoJobst
 {
