@@ -97,7 +97,8 @@ class Event
     private $days;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Arii\CoreBundle\Entity\Event")
+     * A quoi ca sert ?
+     * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Event")
      * @ORM\JoinColumn(nullable=true)
      **/
     private $event_link;
