@@ -1,6 +1,6 @@
 <?php
 
-namespace Arii\AdminBundle\Controller;
+namespace Arii\ACKBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,21 +9,21 @@ class EventsController extends Controller{
 
     public function indexAction()
     {
-        return $this->render('AriiAdminBundle:Events:index.html.twig');
+        return $this->render('AriiACKBundle:Events:index.html.twig');
     }
 
     public function toolbarAction()
     {
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
-        return $this->render("AriiAdminBundle:Events:toolbar.xml.twig", array(), $response);
+        return $this->render("AriiACKBundle:Events:toolbar.xml.twig", array(), $response);
     }
     
     public function grid_toolbarAction()
     {
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
-        return $this->render("AriiAdminBundle:Events:grid_toolbar.xml.twig", array(), $response);
+        return $this->render("AriiACKBundle:Events:grid_toolbar.xml.twig", array(), $response);
     }
 
     public function gridAction()

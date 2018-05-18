@@ -1,6 +1,6 @@
 <?php
 
-namespace Arii\CoreBundle\Entity;
+namespace Arii\ACKBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Alert
  *
  * @ORM\Table(name="ARII_ALERT")
- * @ORM\Entity(repositoryClass="Arii\CoreBundle\Entity\AlertRepository")
+ * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\AlertRepository")
  */
 class Alert
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Arii\AdminBundle\Controller;
+namespace Arii\ACKBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,28 +9,28 @@ class AlertsController extends Controller{
 
     public function indexAction()
     {
-        return $this->render('AriiAdminBundle:Alerts:index.html.twig');
+        return $this->render('AriiACKBundle:Alerts:index.html.twig');
     }
 
     public function toolbarAction()
     {
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
-        return $this->render("AriiAdminBundle:Alerts:toolbar.xml.twig", array(), $response);
+        return $this->render("AriiACKBundle:Alerts:toolbar.xml.twig", array(), $response);
     }
     
     public function toolbar2Action()
     {
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
-        return $this->render("AriiAdminBundle:Alerts:toolbar2.xml.twig", array(), $response);
+        return $this->render("AriiACKBundle:Alerts:toolbar2.xml.twig", array(), $response);
     }
 
     public function grid_toolbarAction()
     {
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
-        return $this->render("AriiAdminBundle:Alerts:grid_toolbar.xml.twig", array(), $response);
+        return $this->render("AriiACKBundle:Alerts:grid_toolbar.xml.twig", array(), $response);
     }
 
     public function gridAction()
@@ -139,7 +139,7 @@ class AlertsController extends Controller{
                 );
             }
         }     
-        return $this->render('AriiAdminBundle:Alerts:check.html.twig', array( 'request' => $request, 'result' => $Result));
+        return $this->render('AriiACKBundle:Alerts:check.html.twig', array( 'request' => $request, 'result' => $Result));
     }
     
     public function deleteAction()

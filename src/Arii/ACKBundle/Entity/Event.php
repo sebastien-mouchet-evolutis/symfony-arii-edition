@@ -1,6 +1,6 @@
 <?php
 
-namespace Arii\CoreBundle\Entity;
+namespace Arii\ACKBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Cron
  *
  * @ORM\Table(name="ARII_EVENT")
- * @ORM\Entity(repositoryClass="Arii\CoreBundle\Entity\EventRepository")
+ * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\EventRepository")
  */
 class Event
 {

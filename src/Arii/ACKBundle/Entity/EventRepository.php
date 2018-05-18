@@ -1,6 +1,6 @@
 <?php
 
-namespace Arii\CoreBundle\Entity;
+namespace Arii\ACKBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 

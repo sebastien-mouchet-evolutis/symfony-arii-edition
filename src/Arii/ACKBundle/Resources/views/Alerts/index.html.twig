@@ -1,4 +1,4 @@
-{% extends "AriiAdminBundle::layout.html.twig" %}
+{% extends "AriiACKBundle::layout.html.twig" %}
 {% block body %}
 <script>
 dhtmlxEvent(window,"load",function(){ 
@@ -21,16 +21,16 @@ var size=300;
 
     myToolbar = myTabbar.cells("def").attachToolbar();
     myToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
-    myToolbar.loadStruct("{{ url('xml_Admin_alerts_toolbar') }}");
+    myToolbar.loadStruct("{{ url('xml_ACK_alerts_toolbar') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
     myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
+    myRibbon.loadStruct("{{ url('json_ACK_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
+        {% include "AriiACKBundle:Default:menu.html.twig" %}        
     });
     mySidebar.attachEvent("onBubbleClick", function(id, value){
         // bubble clicked, your code here
@@ -106,7 +106,7 @@ var size=300;
 
     myFormToolbar = globalLayout.cells("c").attachToolbar();
     myFormToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
-    myFormToolbar.loadStruct("{{ url('xml_Admin_alert_toolbar') }}");
+    myFormToolbar.loadStruct("{{ url('xml_ACK_alert_toolbar') }}");
     
     myGrid = myTabbar.cells("def").attachGrid();
     myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
@@ -118,7 +118,7 @@ var size=300;
     myGrid.setColSorting("str,str,str,str,str,str");
     myGrid.enableAlterCss("even_row","odd_row");    
     myGrid.init();
-    myGrid.load( "{{ url('xml_Admin_alerts_grid') }}" );
+    myGrid.load( "{{ url('xml_ACK_alerts_grid') }}" );
     myGrid.attachEvent("onRowDblClicked", function (rid) {
         EditAlert(rid);
     });
@@ -126,13 +126,13 @@ var size=300;
     myToolbar.attachEvent("onClick", function(id){
         switch (id) {
             case 'refresh':
-                myGrid.updateFromXML("{{ url('xml_Admin_alerts_grid') }}");
+                myGrid.updateFromXML("{{ url('xml_ACK_alerts_grid') }}");
                 break;
             case 'download_txt':
-                window.location.href= "{{ url('txt_Admin_alerts') }}";                
+                window.location.href= "{{ url('txt_ACK_alerts') }}";                
                 break;
             case 'download_xls':
-                window.location.href= "{{ url('xls_Admin_alerts') }}";                
+                window.location.href= "{{ url('xls_ACK_alerts') }}";                
                 break;
             default:
                 alert(id);
@@ -149,7 +149,7 @@ var size=300;
                  type: "confirm-error",
                  text: '{{ "Do you confirm the suppression ?" | trans }}',
                  callback: function(answer) { if (answer) {
-                           myForm.send("{{ url('xml_Admin_alert_delete') }}","POST",function(loader,response){
+                           myForm.send("{{ url('xml_ACK_alert_delete') }}","POST",function(loader,response){
                            if(response === "success")
                            {
                              dhtmlx.message({
@@ -204,7 +204,7 @@ var size=300;
                      });
                     return;
                 }
-                myForm.send("{{ url('xml_Admin_alert_save') }}","POST",function(loader,response){
+                myForm.send("{{ url('xml_ACK_alert_save') }}","POST",function(loader,response){
                    if(response === "success")
                    {
                      dhtmlx.message({
@@ -224,7 +224,7 @@ var size=300;
                      });
                      globalLayout.cells("b").attachHTMLString(response);
                    }
-                   myGrid.updateFromXML("{{ url('xml_Admin_alerts_grid') }}");
+                   myGrid.updateFromXML("{{ url('xml_ACK_alerts_grid') }}");
                    globalLayout.progressOff();
                 });
                 break;
@@ -235,7 +235,7 @@ var size=300;
 
     myToolbar2 = myTabbar.cells("chk").attachToolbar();
     myToolbar2.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
-    myToolbar2.loadStruct("{{ url('xml_Admin_alerts_toolbar2') }}");
+    myToolbar2.loadStruct("{{ url('xml_ACK_alerts_toolbar2') }}");
 
     myTabbar.attachEvent("onContentLoaded", function(id){
         myTabbar.cells("chk").progressOff();
@@ -245,7 +245,7 @@ var size=300;
         switch (id) {
             case 'go':
                 myTabbar.cells("chk").progressOn();                
-                myTabbar.cells("chk").attachURL("{{ url('html_Admin_alert_check') }}?job="+this.getValue("input")+"&error="+this.getValue("status")+"&codes="+this.getValue("codes"));
+                myTabbar.cells("chk").attachURL("{{ url('html_ACK_alert_check') }}?job="+this.getValue("input")+"&error="+this.getValue("status")+"&codes="+this.getValue("codes"));
                 break;
             default:
                 alert(id);
@@ -260,7 +260,7 @@ function EditAlert(id) {
     globalLayout.cells("b").progressOn();
     myForm.setItemLabel("fieldset","{{ "Edit alert" | trans }}");
     myForm.clear();
-    myForm.load("{{ url('xml_Admin_alert_form') }}?id="+id, function () {
+    myForm.load("{{ url('xml_ACK_alert_form') }}?id="+id, function () {
         globalLayout.cells("b").progressOff();
     });
 }

@@ -27,6 +27,84 @@ arii_ACK_alarms_add:
     defaults: { _controller: AriiACKBundle:Alarms:add }
 
 #============================================================
+# Alerts
+#------------------------------------------------------------
+arii_ACK_alerts:
+    path:  /alerts
+    defaults: { _controller: AriiACKBundle:Alerts:index }
+    
+xml_ACK_alerts_grid:
+    path:  /alerts/grid.xml
+    defaults: { _controller: AriiACKBundle:Alerts:grid }
+
+xml_ACK_alerts_toolbar:
+    path:  /alerts/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Alerts:grid_toolbar }
+
+xml_ACK_alerts_toolbar2:
+    path:  /alerts/toolbar2.xml
+    defaults: { _controller: AriiACKBundle:Alerts:toolbar2 }
+
+xml_ACK_alerts_tree:
+    path:  /alerts/tree.xml
+    defaults: { _controller: AriiACKBundle:Alerts:tree }
+
+xml_ACK_alerts_select:
+    path:  /alerts/select.xml
+    defaults: { _controller: AriiACKBundle:Alerts:select }
+
+html_ACK_alerts_import:
+    path:  /alerts/import.html
+    defaults: { _controller: AriiACKBundle:Alerts:import }
+
+txt_ACK_alerts:
+    path:  /public/alerts.{ext}
+    defaults: { _controller: AriiACKBundle:Alerts:get, ext: txt }
+    
+xls_ACK_alerts:
+    path:  /alerts.{ext}
+    defaults: { _controller: AriiACKBundle:Alerts:get, ext: xls }
+
+html_ACK_alert_check:
+    path:  /public/alert/check.html
+    defaults: { _controller: AriiACKBundle:Alerts:check}
+
+#============================================================
+# Alert
+#------------------------------------------------------------
+xml_ACK_alert_form:
+    path:  /alert/form.xml
+    defaults: { _controller: AriiACKBundle:Alerts:form}
+
+xml_ACK_alert_save:
+    path:  /alert/save.xml
+    defaults: { _controller: AriiACKBundle:Alerts:save}
+
+xml_ACK_alert_delete:
+    path:  /alert/delete.xml
+    defaults: { _controller: AriiACKBundle:Alerts:delete}
+
+xml_ACK_alert_toolbar:
+    path:  /alert/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Alerts:toolbar}
+
+#============================================================
+# Events
+#------------------------------------------------------------
+arii_ACK_events:
+    path:  /events
+    defaults: { _controller: AriiACKBundle:Events:index }
+    
+xml_ACK_events_grid:
+    path:  /events/grid.xml
+    defaults: { _controller: AriiACKBundle:Events:grid }
+
+xml_ACK_events_toolbar:
+    path:  /events/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Events:grid_toolbar }
+
+
+#============================================================
 # Network
 #--------------------------------------------------------------------
 arii_ACK_network:
