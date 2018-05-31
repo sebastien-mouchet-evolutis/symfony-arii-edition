@@ -104,8 +104,13 @@ class JiraController extends Controller
                     $Action->setName(sprintf("%s-%03d",$name,$c));
                     $Action->setTitle($this->getTitle($Comments[$c]));
 
-                    $Action->setDateTime(new \DateTime($Comments[$c.'_attr']['created']));
-                    $Action->setUser($Comments[$c.'_attr']['author']);
+                    if (isset($Comments[$c.'_attr'])) {
+                        if (isset($Comments[$c.'_attr']['created']))
+                            $Action->setDateTime(new \DateTime($Comments[$c.'_attr']['created']));   
+                        if (isset($Comments[$c.'_attr']['author']))
+                            $Action->setUser($Comments[$c.'_attr']['author']);
+                    }
+                    
                     $Action->setDescription($Comments[$c]);
 
                     $em->persist($Action);
