@@ -137,10 +137,10 @@ class JiraController extends Controller
     
     private function MyState($status) {
         $Conv = [
-            'Fermée' => 128,
-            'Ouverte'=> 0,
-            'Rouverte'=> 0,
-            'En cours'=> 64
+            'Fermée' => 'CLOSE',
+            'Ouverte'=> 'OPEN',
+            'Rouverte'=> 'OPEN',
+            'En cours'=> 'OPEN'
         ];
         if (isset($Conv[$status])) 
             return $Conv[$status]; 

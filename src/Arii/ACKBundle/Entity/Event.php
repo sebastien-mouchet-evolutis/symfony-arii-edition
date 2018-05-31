@@ -105,11 +105,11 @@ class Event
 
     
      /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="state", type="integer")
+     * @ORM\Column(name="state", type="string", length=32, nullable=true)
      */        
-    private $state=0;    
+    private $state;    
     
      /**
      * @var string

@@ -4,8 +4,6 @@ text.JOB: Gestion des procédures de reprises.
 Author: Auteur
 Issue:
     state:
-        - 0: Ouvert
-        - 1: Pris en charge
-        - 2: En attente
-        - 3: Fermé
-        - 4: Hors périmètre
+        - 0:   OPEN
+        - 64:  ACK.
+        - 128: CLOSE

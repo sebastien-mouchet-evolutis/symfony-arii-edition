@@ -22,7 +22,6 @@ class EventsController extends Controller{
     public function gridAction()
     {
         $Errors = $this->getDoctrine()->getRepository('AriiACKBundle:Event')->listNotOk();
-        
         $render = $this->container->get('arii_core.render');     
         return $render->grid($Errors,'name,title,status,state,end_time','status');
     }
