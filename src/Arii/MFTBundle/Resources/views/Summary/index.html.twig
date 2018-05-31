@@ -19,18 +19,18 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setText("{{ "Transfers" | trans }}"); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_MFT_ribbon_edit') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
     
     myPartners = globalLayout.cells("a").attachGrid();
     myPartners.selMultiRows = true;
-    myPartners.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myPartners.setImagePath( "{{ asset('/images/') }}");
     myPartners.setHeader("{{ "Category" | trans }},{{ "Partner" | trans }},{{ "Description" | trans }}");
     myPartners.attachHeader("#select_filter,#text_filter,#text_filter");
     myPartners.setInitWidths("0,*,0");
@@ -41,7 +41,7 @@ dhtmlxEvent(window,"load",function(){
     myPartners.load("{{ url('xml_MFT_partners_grid') }}");
 
     myFormToolbar = globalLayout.cells("c").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myFormToolbar.loadStruct( "{{ url('xml_MFT_summary_toolbar') }}");
 
     formData =
@@ -153,7 +153,7 @@ dhtmlxEvent(window,"load",function(){
     });
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Partner" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Description" | trans }},{{ "Change" | trans }},{{ "User" | trans }},{{ "Env" | trans }}");
     myGrid.attachHeader("#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("0,200,*,200,140,140,100");

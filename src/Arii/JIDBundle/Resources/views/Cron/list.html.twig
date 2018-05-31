@@ -51,7 +51,7 @@
 <!--[if !IE]>end section<![endif]-->
 <script language="javascript">
 var menu = new dhtmlXMenuObject(null);
-menu.setIconsPath( "{{ asset('bundles/ariicore/images/menu/') }}" );
+menu.setIconsPath( "{{ asset('/images/') }}" );
 menu.renderAsContextMenu();
 menu.attachEvent("onClick", onButtonClick);
 menu.loadStruct("{{ url('arii_batchinstaller_contextmenu') }}");
@@ -81,7 +81,7 @@ mygrid.attachEvent( "onRowDblClicked", function(id) {
 
 var toolbar;
 toolbar = new dhtmlXToolbarObject("toolbarObj");
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('arii_batchinstaller_toolbar_list') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {

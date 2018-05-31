@@ -7,11 +7,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").hideHeader();
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");    
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Home_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -24,7 +24,7 @@ dhtmlxEvent(window,"load",function(){
     myDocs.addItem( "Home", "{{ "Ari'i" }}", true);
 
     myTree = myDocs.cells("Home").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load("{{ url('xml_docs_tree') }}?route=arii_Core_index");
     myTree.attachEvent("onClick",function(id){
         globalLayout.cells("b").attachURL("{{ url('html_doc_view') }}?doc="+id);
@@ -36,7 +36,7 @@ dhtmlxEvent(window,"load",function(){
         
     {% for name,info in Modules %}
         myTree{{name}} = myDocs.cells("{{ name }}").attachTree();
-        myTree{{name}}.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+        myTree{{name}}.setImagesPath("{{ asset('/images/') }}");
         myTree{{name}}.load("{{ url('xml_docs_tree') }}?route=arii_{{name}}_index");
         myTree{{name}}.attachEvent("onClick",function(id){
             globalLayout.cells("b").attachURL("{{ url('html_doc_view') }}?doc="+id);
@@ -45,10 +45,10 @@ dhtmlxEvent(window,"load",function(){
 });
 function getImageStyle(obj){
     if(window._isIE){
-        return "background-image: none;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='{{ asset('bundles/ariicore/images/cover/') }}"+obj.img+"',sizingMethod='crop');";
+        return "background-image: none;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='{{ asset('/images/cover/') }}"+obj.img+"',sizingMethod='crop');";
     }
     else{
-        return "background-image:url({{ asset('bundles/ariicore/images/cover/') }}"+obj.img+");";	
+        return "background-image:url({{ asset('/images/cover/') }}"+obj.img+");";	
     }
 }	
 </script>

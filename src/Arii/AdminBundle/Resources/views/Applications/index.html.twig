@@ -13,11 +13,11 @@ var size=300;
     globalLayout.cells("d").setHeight(250); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );    
@@ -30,7 +30,7 @@ var size=300;
     });
 
     myTree = globalLayout.cells("b").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load( "{{ url('xml_Admin_categories_tree') }}" );
     myTree.enableDragAndDrop(true, false);
 
@@ -39,7 +39,7 @@ var size=300;
         height: 35                  // custom height
     });
     myApps = globalLayout.cells("c").attachGrid();
-    myApps.setImagePath("{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myApps.setImagePath("{{ asset('/images/') }}");
     myApps.setHeader("{{ "Title"| trans }},{{ "Code"| trans }},{{ "Category"| trans }},{{ "Description"| trans }},{{ "Contact"| trans }},{{ "Act."| trans }}");
     myApps.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#master_checkbox");
     myApps.setInitWidths("*,100,200,*,200,50");
@@ -102,7 +102,7 @@ var size=300;
     myForm.enableLiveValidation(true);
     
     myToolbar = globalLayout.cells("d").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myToolbar.loadStruct("{{ url('xml_Admin_applications_toolbar') }}", function () {
         myToolbar.hideItem("delete");
     });

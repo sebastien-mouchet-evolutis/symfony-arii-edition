@@ -8,11 +8,11 @@
 		<h2>{{ "Orders" | trans }}</h2>
 <ul  class="section_menu">
 {% if arii_pro %}
-    <li><a href="{{ url('arii_JID_orders_treegrid') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/tree.png') }}"/>&nbsp;{{ "Tree" | trans }}</span></span></a></li>
+    <li><a href="{{ url('arii_JID_orders_treegrid') }}" class=""><span><span><img src="{{ asset('/images/tree.png') }}"/>&nbsp;{{ "Tree" | trans }}</span></span></a></li>
 {% endif %}
-    <li><a href="{{ url('arii_JID_orders_grid') }}" class="active"><span><span><img src="{{ asset('bundles/ariicore/images/wa/list.png') }}"/>&nbsp;{{ "List" | trans }}</span></span></a></li>
-    <li><a href="{{ url('arii_JID_orders_timeline') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/timeline.png') }}"/>&nbsp;{{ "Timeline" | trans }}</span></span></a></li>
-<!--    <li><a href="{{ url('arii_JID_orders_last') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/monitor.png') }}"/>&nbsp;{{ "Monitor" | trans }}</span></span></a></li>
+    <li><a href="{{ url('arii_JID_orders_grid') }}" class="active"><span><span><img src="{{ asset('/images/list.png') }}"/>&nbsp;{{ "List" | trans }}</span></span></a></li>
+    <li><a href="{{ url('arii_JID_orders_timeline') }}" class=""><span><span><img src="{{ asset('/images/timeline.png') }}"/>&nbsp;{{ "Timeline" | trans }}</span></span></a></li>
+<!--    <li><a href="{{ url('arii_JID_orders_last') }}" class=""><span><span><img src="{{ asset('/images/monitor.png') }}"/>&nbsp;{{ "Monitor" | trans }}</span></span></a></li>
 -->
 </ul>
                 <span class="title_wrapper_left"></span>
@@ -54,13 +54,13 @@ var ordered = 0; // que des standalone
 {% endif %}
 
 menu = new dhtmlXMenuObject(null);
-menu.setIconsPath( "{{ asset('bundles/ariicore/images/wa/') }}" );
+menu.setIconsPath( "{{ asset('/images/') }}" );
 menu.renderAsContextMenu();
 menu.loadStruct("{{ url('xml_JID_orders_menu') }}");
 
 var dhxLayout = new dhtmlXLayoutObject("mygrid","2E");
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('xml_JID_orders_toolbar') }}", function() {
 {% if  app.request.get('ordered')>0 %}
 toolbar.setItemState("ordered",true);
@@ -80,7 +80,7 @@ dhxLayout.cells("b").setText( "{{ "Detail" | trans }}" );
     
 var mygrid = dhxLayout.cells("a").attachGrid();
 //mygrid.selMultiRows = true;
-mygrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+mygrid.setImagePath( "{{ asset('/images/') }}");
 // mygrid.enableTreeCellEdit(false);
 mygrid.setHeader("{{ "Spooler" | trans }},{{ "Job chain" | trans }},{{ "Order" | trans }},{{ "Step" | trans }},{{ "State" | trans }},{{ "Status" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Information" | trans }},{{ "Job name" | trans }}");
 mygrid.attachHeader("#select_filter,#text_filter,#text_filter,#numeric_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter");

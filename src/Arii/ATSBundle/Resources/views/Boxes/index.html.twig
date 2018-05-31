@@ -18,11 +18,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setText("{{ "Details" | trans }}"); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -54,16 +54,16 @@ dhtmlxEvent(window,"load",function(){
     } );
     
     myTree = myTab.cells("b2").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     
     myGridMenu = new dhtmlXMenuObject(null);
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_ATS_boxes_menu') }}");
           
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Box" | trans }},{{ "Status" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Duration" | trans }},{{ "Job" | trans }},{{ "Status" | trans }},{{ "Start time" | trans }}");
     myGrid.attachHeader("#text_filter,#select_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#numeric_filter");
     myGrid.setInitWidths("*,120,150,150,80,*,120,150");
@@ -87,7 +87,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_ATS_boxes_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -131,7 +131,7 @@ dhtmlxEvent(window,"load",function(){
     myForm2.loadStruct("{{ url('json_ATS_job_form') }}?type="+jobtype);
 
     myDetailToolbar = myTabbar.cells("job").attachToolbar();
-    myDetailToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myDetailToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myDetailToolbar.loadStruct( "{{ url('xml_ATS_sendevent_toolbar') }}" , function() {
     });
 
@@ -160,7 +160,7 @@ dhtmlxEvent(window,"load",function(){
     
     myHistory = myTabbar.cells("history").attachGrid();
     myHistory.selMultiRows = true;
-    myHistory.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myHistory.setImagePath( "{{ asset('/images/') }}");
     myHistory.setHeader("{{ "Run" | trans }},#cspan,{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Duration" | trans }},{{ "Status" | trans }},{{ "Exit" | trans }},{{ "Machine" | trans }},REPLY_MESSAGE,REPLY_RESPONSE,STD_OUT_FILE,STD_ERR_FILE,EVT_NUM,{{ "Ver." | trans }},OVER_RUN,HAS_EXTENDED_INFO");
     myHistory.attachHeader("#numeric_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     myHistory.setInitWidths("90,50,140,140,100,80,80,120,*,*,*,*,100,80,40,30");

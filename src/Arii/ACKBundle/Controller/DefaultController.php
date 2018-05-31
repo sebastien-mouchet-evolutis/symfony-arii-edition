@@ -16,6 +16,13 @@ class DefaultController extends Controller
     {
         return $this->render('AriiACKBundle:Default:readme.html.twig');
     }
+
+    public function menuAction()
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        return $this->render('AriiACKBundle:Default:menu.json.twig',array(), $response);
+    }
     
     public function ribbonAction()
     {

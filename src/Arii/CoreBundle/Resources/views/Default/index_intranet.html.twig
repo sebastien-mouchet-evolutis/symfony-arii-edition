@@ -3,13 +3,13 @@
 {% block body %}
 <style>
 .dhx_dataview_bundle1_item, .dhx_dataview_bundle1_item_selected{
-        background-image:url({{ asset('/bundles/ariicore/images/cover/bg_1.gif') }});height:136px;width:577px;cursor:default;background-repeat : no-repeat;
+        background-image:url({{ asset('/images/cover/bg_1.gif') }});height:136px;width:577px;cursor:default;background-repeat : no-repeat;
 }
 .dhx_dataview_bundle2_item, .dhx_dataview_bundle2_item_selected{
-        background-image:url({{ asset('/bundles/ariicore/images/cover/bg_2.gif') }});height:136px;width:288px;cursor:default;float:left;background-repeat : no-repeat;
+        background-image:url({{ asset('/images/cover/bg_2.gif') }});height:136px;width:288px;cursor:default;float:left;background-repeat : no-repeat;
 }
 .dhx_dataview_bundle3_item, .dhx_dataview_bundle3_item_selected{
-        background-image:url({{ asset('/bundles/ariicore/images/cover/bg_3.gif') }});height:136px;width:141px;cursor:default;float:left;background-repeat : no-repeat;
+        background-image:url({{ asset('/images/cover/bg_3.gif') }});height:136px;width:141px;cursor:default;float:left;background-repeat : no-repeat;
 }
 
 .dhx_dataview_bundle1_item_selected, .dhx_dataview_bundle2_item_selected, .dhx_dataview_bundle3_item_selected{
@@ -96,11 +96,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").hideHeader();
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");    
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Home_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -118,7 +118,7 @@ dhtmlxEvent(window,"load",function(){
     myTabbar.cells("portal").attachURL("{{ url('html_Core_readme') }}");
 
     myTree = myDocs.cells("Home").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load("{{ url('xml_docs_tree') }}?route=arii_Core_index");
     myTree.attachEvent("onClick",function(id){
         myTabbar.cells("portal").attachURL("{{ url('html_doc_view') }}?doc="+id);
@@ -130,7 +130,7 @@ dhtmlxEvent(window,"load",function(){
         
     myToolbar = myTabbar.cells("bundles").attachToolbar();
 
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/cover/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/cover/') }}");
     myToolbar.loadStruct("{{ url('xml_toolbar') }}");
     myToolbar.attachEvent( "onStateChange", function(id, value) {
         switch (id) {
@@ -196,7 +196,7 @@ dhtmlxEvent(window,"load",function(){
     
     {% for name,info in Modules %}
         myTree{{name}} = myDocs.cells("{{ name }}").attachTree();
-        myTree{{name}}.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+        myTree{{name}}.setImagesPath("{{ asset('/images/') }}");
         myTree{{name}}.load("{{ url('xml_docs_tree') }}?route=arii_{{name}}_index");
         myTree{{name}}.attachEvent("onClick",function(id){
             myTabbar.cells("portal").attachURL("{{ url('html_doc_view') }}?doc="+id);
@@ -205,10 +205,10 @@ dhtmlxEvent(window,"load",function(){
 });
 function getImageStyle(obj){
     if(window._isIE){
-        return "background-image: none;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='{{ asset('bundles/ariicore/images/cover/') }}"+obj.img+"',sizingMethod='crop');";
+        return "background-image: none;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='{{ asset('/images/cover/') }}"+obj.img+"',sizingMethod='crop');";
     }
     else{
-        return "background-image:url({{ asset('bundles/ariicore/images/cover/') }}"+obj.img+");";	
+        return "background-image:url({{ asset('/images/cover/') }}"+obj.img+");";	
     }
 }	
 </script>

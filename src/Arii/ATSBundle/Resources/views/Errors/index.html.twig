@@ -18,22 +18,22 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setHeight(260); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load( "{{ url('xml_ATS_errors_tree') }}" );
     
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     /*
            $list .= '<cell>'.$date->Time2Local($line['ALARM_TIME'],'',true).'</cell>';
             $list .= '<cell>'.$autosys->Alarm($line['ALARM']).'</cell>';
@@ -58,7 +58,7 @@ dhtmlxEvent(window,"load",function(){
     myGrid.attachEvent("onRowDblClicked", Detail );
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_ATS_alarms_grid_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -98,7 +98,7 @@ dhtmlxEvent(window,"load",function(){
     
     myDetail = globalLayout.cells("c").attachGrid();
     myDetail.selMultiRows = true;
-    myDetail.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myDetail.setImagePath( "{{ asset('/images/') }}");
     myDetail.setHeader("{{ "Alarm" | trans }},{{ "Status" | trans }},{{ "Event" | trans }}");
     myDetail.attachHeader("#select_filter,#text_filter,#text_filter");
     myDetail.setInitWidths("80,200,*");

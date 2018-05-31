@@ -14,17 +14,17 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setText("{{ "Step" | trans }}"); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_JID_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load("{{ url('xml_JID_processes_tree') }}");
     myTree.attachEvent("onClick",function(id){
         switch (id.substr(0,1)) {
@@ -50,7 +50,7 @@ dhtmlxEvent(window,"load",function(){
     myChainDetail.cells("b").hideHeader();
 {% if is_granted('ROLE_OPERATOR') %} 
     myChainToolbar = globalLayout.cells("b").attachToolbar();
-    myChainToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myChainToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myChainToolbar.loadStruct( "{{ url('xml_JID_orders_form_toolbar') }}" );
 {% endif %}
     myChainDetail.cells("b").attachURL("{{ url('svg_JID_processes_steps') }}?id="+last);
@@ -128,7 +128,7 @@ dhtmlxEvent(window,"load",function(){
     myOrderForm.load("{{ url('xml_JID_order_form') }}?id="+last);
 {% if is_granted('ROLE_OPERATOR') %}     
     myOrderParametersToolbar = myOrderDetailLayout.cells("b").attachToolbar();
-    myOrderParametersToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myOrderParametersToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myOrderParametersToolbar.loadStruct("{{ url('xml_JID_job_params_toolbar') }}");
 {% endif %}
     myOrderParameters = myOrderDetailLayout.cells("b").attachGrid();
@@ -151,7 +151,7 @@ dhtmlxEvent(window,"load",function(){
     myForm.loadStruct("{{ url('json_JID_jobs_form') }}");
 {% if is_granted('ROLE_OPERATOR') %}  
     myDetailToolbar = myDetailLayout.cells("a").attachToolbar();
-    myDetailToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myDetailToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myDetailToolbar.loadStruct( "{{ url('xml_JID_jobs_form_toolbar') }}" , function(){
         GBCalendar = new dhtmlXCalendarObject(myDetailToolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -159,7 +159,7 @@ dhtmlxEvent(window,"load",function(){
     });
    
     myOrderParametersToolbar = myDetailLayout.cells("b").attachToolbar();
-    myOrderParametersToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myOrderParametersToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myOrderParametersToolbar.loadStruct("{{ url('xml_JID_job_params_toolbar') }}");
 {% endif %} 
     myParameters = myDetailLayout.cells("b").attachGrid();

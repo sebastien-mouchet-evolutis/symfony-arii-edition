@@ -5,12 +5,67 @@
 {% endblock dhtmlx %}
 {% block dhtmlx_plus %}
 {% endblock dhtmlx_plus %}
-{% block body %}
-{% endblock body %}
+{% block onload %}
+<script language="javascript">
+var bundle='ACK';
+var update=30;
+dhtmlxEvent(window,"load",function(){   
+    var size=180;
+    globalLayout = new dhtmlXLayoutObject(document.body,"3T");  
+    globalLayout.cells("a").setHeight(120); 
+    globalLayout.cells("b").setWidth(size); 
+    globalLayout.cells("b").setText("{{ "Menu" | trans }}"); 
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
+    myRibbon.loadStruct("{{ url('json_ARII_ribbon') }}?bundle="+bundle, function() {});
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    mySidebar = globalLayout.cells("b").attachSidebar({
+        icons_path: "{{ asset('/images/') }}",
+        width: size,
+        items:
+        [
+            { id:"monitoring", text: "{{ "Monitoring" | trans }}", icon: "view.png" },
+            { id:"sep1", type: "separator" },
+            { id:"events", text: "{{ "Events" | trans }}", icon: "stopped.png" },
+            { id:"jobs", text: "{{ "Jobs" | trans }}", icon: "job.png" },    
+            { id:"network", text: "{{ "Network" | trans }}", icon: "network.png" },
+            { id:"sep2", type: "separator" },
+            { id:"notifications", text: "{{ "Notifications" | trans }}", icon: "user.png" }
+        ]
+    });
+    mySidebar.attachEvent("onBubbleClick", function(id, value){
+        // bubble clicked, your code here
+        // 'return true' means item allowed to be selected
+        // false - otherwise
+        return true;
+    });    
+    mySidebar.attachEvent("onSelect", function(id, value){
+        document.location.href = "{{ url('arii_ACK_index') }}"+id;
+        return true;
+    });
+    
+    myToolbar = globalLayout.cells("c").attachToolbar();
+    myToolbar.setIconsPath( "{{ asset('/images/') }}" );
+    Init();    
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("c").hideHeader();
+//    autorefresh = setInterval( "GlobalRefresh()",update*1000);
+});
+</script>
+{% endblock onload %}
+{% block body %}{% endblock%}
 {% block script %}
-<script>
+<script language="javascript">      
+function GlobalRefresh() {
+}
+
 function StateRibbon (itemid,state) {
     switch(itemid) {
+        case 'home':
+            
         default:
             alert(itemid);
     }
@@ -18,28 +73,44 @@ function StateRibbon (itemid,state) {
 }
 
 function ClickRibbon (itemid,state) {
-    switch(itemid) {
-        case 'menu_index':
-            window.location = "{{ url('arii_ACK_index') }}";
+    var id = itemid.split('_');
+    switch (id[0]) {
+        case 'BUNDLE':
+            window.location = '{{ path('arii_homepage') }}'+id[1]+'/{{ app.request.locale }}';
             break;
-        case '5':
-        case '30':
-        case '60':
-        case '300':
-        case '900':
-        case '1800':
-        case '3600':
-            update = itemid;
-            dhx4.ajax.get( "{{ url('arii_session_update') }}?refresh="+itemid, function() {
-                GlobalRefresh();
-            });
+        case 'LANG':
+            window.location = '{{ path('arii_homepage') }}'+bundle.toLowerCase()+'/'+id[1];
+            break;
+        case 'USER':
+            switch (id[1]) {
+                case 'logout':
+                    window.location = '{{ path('fos_user_security_logout') }}';
+                    break;
+            }
+            break;
+        case 'HELP':
+            switch (id[1]) {
+                case 'sos':
+                    window.location = 'http://www.sos-paris.com';
+                    break;
+                case 'github':
+                    window.location = 'https://github.com/AriiPortal';
+                    break;
+                case 'readme':
+                    window.location = '{{ path('arii_ACK_readme') }}';
+                    break;
+                default:
+                    alert(id[1]);
+                    break;                    
+            }
             break;
         default:
-            window.location = "{{ url('arii_ACK_index') }}"+itemid;
+            alert(id[0]);
+            break;
     }
 }
 
-function RibbonTime() {
+function ToolbarTime() {
     var currentTime = new Date();
     var hours = currentTime.getHours();
     var minutes = currentTime.getMinutes();
@@ -50,7 +121,7 @@ function RibbonTime() {
     if (seconds < 10){
     seconds = "0" + seconds;
     }
-    myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+    myToolbar.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
 }
 </script>
 {% endblock script %}

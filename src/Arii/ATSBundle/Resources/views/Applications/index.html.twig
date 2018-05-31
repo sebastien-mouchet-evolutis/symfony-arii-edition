@@ -19,11 +19,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").hideHeader(); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -238,12 +238,12 @@ dhtmlxEvent(window,"load",function(){
     myDonut.load( "{{ url('xml_ATS_jobs_pie') }}?only_warning="+only_warning );
     
     myTree = myTab.cells("b2").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load( "{{ url('xml_ATS_jobs_tree') }}" );
     
     myGrid = globalLayout.cells("c").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Folder" | trans }},{{ "Job" | trans }},{{ "Status" | trans }},{{ "Type" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Duration" | trans }},{{ "Exit" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter,#numeric_filter");
     myGrid.setInitWidths("*,300,90,90,150,150,100,80");

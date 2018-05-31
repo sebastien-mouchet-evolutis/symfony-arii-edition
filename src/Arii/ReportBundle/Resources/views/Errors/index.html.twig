@@ -18,7 +18,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").hideHeader();
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     globalMenu = globalLayout.cells("a").attachMenu();
@@ -31,11 +31,11 @@ dhtmlxEvent(window,"load",function(){
     myTabbar.addTab("runs","{{ "Runs" | trans }}","120px");
 
     jobToolbar = myTabbar.cells("jobs").attachToolbar();
-    jobToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    jobToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     jobToolbar.loadStruct("{{ url('xml_Report_errors_jobs_toolbar') }}");
 
     myJobs = myTabbar.cells("jobs").attachGrid();
-    myJobs.setImagePath("{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myJobs.setImagePath("{{ asset('/images/') }}");
     myJobs.setHeader("{{ "Job"| trans }},{{ "App"| trans }},{{ "Env"| trans }},{{ "Class"| trans }}");
     myJobs.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter");
     myJobs.setColAlign("left,left,left,left");
@@ -46,7 +46,7 @@ dhtmlxEvent(window,"load",function(){
     myJobs.init();
 
     myRuns = myTabbar.cells("runs").attachGrid();
-    myRuns.setImagePath("{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRuns.setImagePath("{{ asset('/images/') }}");
     myRuns.setHeader("{{ "Job"| trans }},{{ "App"| trans }},{{ "Env"| trans }},{{ "Class"| trans }}");
     myRuns.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter");
     myRuns.setColAlign("left,left,left,left");

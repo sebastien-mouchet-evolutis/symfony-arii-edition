@@ -96,13 +96,56 @@ class Event
      */
     private $days;
     
-    /**
-     * A quoi ca sert ?
-     * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Event")
-     * @ORM\JoinColumn(nullable=true)
-     **/
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=32, nullable=true)
+     */        
+    private $status;    
+
+    
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="state", type="integer")
+     */        
+    private $state=0;    
+    
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="last_comment", type="text", nullable=true)
+     */        
+    private $last_comment;   
+    
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="comment", type="string", length=255, nullable=true)
+     */        
     private $event_link;
     
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="change_date", type="datetime", nullable=true )
+     */        
+    private $change_date;  
+    
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="change_start", type="datetime", nullable=true )
+     */        
+    private $change_start;  
+    
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="change_end", type="datetime", nullable=true )
+     */        
+    private $change_end;  
+
     /**
      * Get id
      *
@@ -183,6 +226,52 @@ class Event
     }
 
     /**
+     * Set event
+     *
+     * @param string $event
+     * @return Event
+     */
+    public function setEvent($event)
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+    /**
+     * Get event
+     *
+     * @return string 
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * Set event_type
+     *
+     * @param string $eventType
+     * @return Event
+     */
+    public function setEventType($eventType)
+    {
+        $this->event_type = $eventType;
+
+        return $this;
+    }
+
+    /**
+     * Get event_type
+     *
+     * @return string 
+     */
+    public function getEventType()
+    {
+        return $this->event_type;
+    }
+
+    /**
      * Set start_time
      *
      * @param \DateTime $startTime
@@ -226,98 +315,6 @@ class Event
     public function getEndTime()
     {
         return $this->end_time;
-    }
-
-    /**
-     * Set event
-     *
-     * @param string $event
-     * @return Event
-     */
-    public function setEvent($event)
-    {
-        $this->event = $event;
-
-        return $this;
-    }
-
-    /**
-     * Get event
-     *
-     * @return string 
-     */
-    public function getEvent()
-    {
-        return $this->event;
-    }
-
-    /**
-     * Set event_type
-     *
-     * @param integer $eventType
-     * @return Event
-     */
-    public function setEventType($eventType)
-    {
-        $this->event_type = $eventType;
-
-        return $this;
-    }
-
-    /**
-     * Get event_type
-     *
-     * @return integer 
-     */
-    public function getEventType()
-    {
-        return $this->event_type;
-    }
-
-    /**
-     * Set application
-     *
-     * @param \Arii\CoreBundle\Entity\Application $application
-     * @return Event
-     */
-    public function setApplication(\Arii\CoreBundle\Entity\Application $application = null)
-    {
-        $this->application = $application;
-
-        return $this;
-    }
-
-    /**
-     * Get application
-     *
-     * @return \Arii\CoreBundle\Entity\Application 
-     */
-    public function getApplication()
-    {
-        return $this->application;
-    }
-
-    /**
-     * Set domain
-     *
-     * @param \Arii\CoreBundle\Entity\Domain $domain
-     * @return Event
-     */
-    public function setDomain(\Arii\CoreBundle\Entity\Domain $domain = null)
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    /**
-     * Get domain
-     *
-     * @return \Arii\CoreBundle\Entity\Domain 
-     */
-    public function getDomain()
-    {
-        return $this->domain;
     }
 
     /**
@@ -367,12 +364,58 @@ class Event
     }
 
     /**
-     * Set event_link
+     * Set status
      *
-     * @param \Arii\CoreBundle\Entity\Event $eventLink
+     * @param string $status
      * @return Event
      */
-    public function setEventLink(\Arii\CoreBundle\Entity\Event $eventLink = null)
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string 
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set last_comment
+     *
+     * @param string $lastComment
+     * @return Event
+     */
+    public function setLastComment($lastComment)
+    {
+        $this->last_comment = $lastComment;
+
+        return $this;
+    }
+
+    /**
+     * Get last_comment
+     *
+     * @return string 
+     */
+    public function getLastComment()
+    {
+        return $this->last_comment;
+    }
+
+    /**
+     * Set event_link
+     *
+     * @param string $eventLink
+     * @return Event
+     */
+    public function setEventLink($eventLink)
     {
         $this->event_link = $eventLink;
 
@@ -382,10 +425,148 @@ class Event
     /**
      * Get event_link
      *
-     * @return \Arii\CoreBundle\Entity\Event 
+     * @return string 
      */
     public function getEventLink()
     {
         return $this->event_link;
+    }
+
+    /**
+     * Set application
+     *
+     * @param \Arii\CoreBundle\Entity\Application $application
+     * @return Event
+     */
+    public function setApplication(\Arii\CoreBundle\Entity\Application $application = null)
+    {
+        $this->application = $application;
+
+        return $this;
+    }
+
+    /**
+     * Get application
+     *
+     * @return \Arii\CoreBundle\Entity\Application 
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * Set domain
+     *
+     * @param \Arii\CoreBundle\Entity\Domain $domain
+     * @return Event
+     */
+    public function setDomain(\Arii\CoreBundle\Entity\Domain $domain = null)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * Get domain
+     *
+     * @return \Arii\CoreBundle\Entity\Domain 
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * Set change_start
+     *
+     * @param \DateTime $changeStart
+     * @return Event
+     */
+    public function setChangeStart($changeStart)
+    {
+        $this->change_start = $changeStart;
+
+        return $this;
+    }
+
+    /**
+     * Get change_start
+     *
+     * @return \DateTime 
+     */
+    public function getChangeStart()
+    {
+        return $this->change_start;
+    }
+
+    /**
+     * Set change_end
+     *
+     * @param \DateTime $changeEnd
+     * @return Event
+     */
+    public function setChangeEnd($changeEnd)
+    {
+        $this->change_end = $changeEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get change_end
+     *
+     * @return \DateTime 
+     */
+    public function getChangeEnd()
+    {
+        return $this->change_end;
+    }
+
+    /**
+     * Set change_date
+     *
+     * @param \DateTime $changeDate
+     * @return Event
+     */
+    public function setChangeDate($changeDate)
+    {
+        $this->change_date = $changeDate;
+
+        return $this;
+    }
+
+    /**
+     * Get change_date
+     *
+     * @return \DateTime 
+     */
+    public function getChangeDate()
+    {
+        return $this->change_date;
+    }
+
+    /**
+     * Set state
+     *
+     * @param integer $state
+     * @return Event
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return integer 
+     */
+    public function getState()
+    {
+        return $this->state;
     }
 }

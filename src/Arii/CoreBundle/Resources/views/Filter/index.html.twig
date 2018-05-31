@@ -12,11 +12,11 @@ var size=400;
     globalLayout.cells("c").hideHeader();
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Home_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon ); 
@@ -41,17 +41,17 @@ var size=400;
     myForm.enableLiveValidation(true);
     
     myFormToolbar = globalLayout.cells("c").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_filter_toolbar') }}");
 
     myGridMenu = new dhtmlXMenuObject(null);
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_filter_menu') }}");
 
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Filter" | trans }},{{ "Description" | trans }},{{ "Spooler" | trans }},{{ "Job" | trans }},{{ "Chain" | trans }},{{ "Trigger" | trans }},{{ "Status" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     // myGrid.setInitWidths("200,*,100,100,100,100,100,100,100");

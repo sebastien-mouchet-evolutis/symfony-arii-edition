@@ -14,9 +14,9 @@
 	<div class="title_wrapper">
 		<h2>{{ "Events" | trans }}</h2>
 <ul  class="section_menu">
-      <li><a href="{{ url('arii_JID_events') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/list.png') }}"/>&nbsp;{{ "List" | trans }}</span></span></a></li>
-      <li><a href="{{ url('arii_JID_events_timeline') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/timeline.png') }}"/>&nbsp;{{ "Timeline" | trans }}</span></span></a></li>
-    <li><a href="{{ url('arii_JID_events_last') }}" class="active"><span><span><img src="{{ asset('bundles/ariicore/images/wa/monitor.png') }}"/>&nbsp;{{ "Monitor" | trans }}</span></span></a></li>
+      <li><a href="{{ url('arii_JID_events') }}" class=""><span><span><img src="{{ asset('/images/list.png') }}"/>&nbsp;{{ "List" | trans }}</span></span></a></li>
+      <li><a href="{{ url('arii_JID_events_timeline') }}" class=""><span><span><img src="{{ asset('/images/timeline.png') }}"/>&nbsp;{{ "Timeline" | trans }}</span></span></a></li>
+    <li><a href="{{ url('arii_JID_events_last') }}" class="active"><span><span><img src="{{ asset('/images/monitor.png') }}"/>&nbsp;{{ "Monitor" | trans }}</span></span></a></li>
 </ul>
                 <span class="title_wrapper_left"></span>
 		<span class="title_wrapper_right"></span>
@@ -50,7 +50,7 @@
 <script language="javascript">
 var dhxLayout = new dhtmlXLayoutObject("mygrid","2E");
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('xml_JID_toolbar_activities') }}", function() {
 {% if  app.request.get('ordered')>0 %}
 toolbar.setItemState("ordered",true);
@@ -61,7 +61,7 @@ dhxLayout.cells("a").hideHeader();
 dhxLayout.cells("b").setHeight(180);
     
 var mygrid = dhxLayout.cells("a").attachGrid();
-mygrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+mygrid.setImagePath( "{{ asset('/images/') }}");
 mygrid.enableTreeCellEdit(false);
 mygrid.setHeader("{{ "Spooler" | trans }},{{ "Class" | trans }},{{ "Id" | trans }},{{ "Job chain" | trans }},{{ "Order" | trans }},{{ "Job" | trans }},{{ "Exit Code" | trans }},{{ "Created" | trans }}");
 mygrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#text_filter");

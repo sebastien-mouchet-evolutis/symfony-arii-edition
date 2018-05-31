@@ -19,23 +19,20 @@ class EventsController extends Controller{
         return $this->render("AriiACKBundle:Events:toolbar.xml.twig", array(), $response);
     }
     
-    public function grid_toolbarAction()
+    public function gridAction()
     {
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/xml');
-        return $this->render("AriiACKBundle:Events:grid_toolbar.xml.twig", array(), $response);
+        $Errors = $this->getDoctrine()->getRepository('AriiACKBundle:Event')->listNotOk();
+        
+        $render = $this->container->get('arii_core.render');     
+        return $render->grid($Errors,'name,title,status,state,end_time','status');
     }
 
-    public function gridAction()
-    {   
-        $sql = $this->container->get('arii_core.sql');        
-        $qry = $sql->Select(array("id","name","title","description","start_time","end_time","application_id","domain_id"))
-                .$sql->From(array("ARII_EVENT"))
-                .$sql->OrderBy(array('name,title,start_time,end_time'));
+    public function grid2Action()
+    {
+        $Errors = $this->getDoctrine()->getRepository('AriiACKBundle:Event')->listOk();
         
-        $db = $this->container->get('arii_core.db');
-        $data = $db->Connector('grid');
-        $data->render_sql($qry,"id","name,title,start_time,end_time,application_id,domain_id");
+        $render = $this->container->get('arii_core.render');     
+        return $render->grid($Errors,'name,title,status,state,end_time','status');
     }
     
     public function formAction()
@@ -53,7 +50,7 @@ class EventsController extends Controller{
         $data = $db->Connector('form');
         $data->render_sql($qry,"ID","ID,NAME,TITLE,DESCRIPTION,EVENT,START_TIME,END_TIME");
 */
-        list($Event) = $this->getDoctrine()->getRepository("AriiCoreBundle:Event")->Event($id);      
+        list($Event) = $this->getDoctrine()->getRepository("AriiACKBundle:Event")->Event($id);      
         $Event['start_time'] = $Event['start_time']->format('Y-m-d H:i:s');
         $Event['end_time'] = $Event['end_time']->format('Y-m-d H:i:s');
 
@@ -66,7 +63,7 @@ class EventsController extends Controller{
         $request = Request::createFromGlobals();
         $id = $request->get('id');
         
-        $alert = $this->getDoctrine()->getRepository("AriiCoreBundle:Event")->find($id);      
+        $alert = $this->getDoctrine()->getRepository("AriiACKBundle:Event")->find($id);      
         if ($alert) {
             $em = $this->getDoctrine()->getManager();       
             $em->remove($alert);
@@ -82,9 +79,9 @@ class EventsController extends Controller{
         $request = Request::createFromGlobals();
         $id = $request->get('id');
 
-        $alert = new \Arii\CoreBundle\Entity\Event();
+        $alert = new \Arii\ACKBundle\Entity\Event();
         if( $id!="" )
-            $alert = $this->getDoctrine()->getRepository("AriiCoreBundle:Event")->find($id);      
+            $alert = $this->getDoctrine()->getRepository("AriiACKBundle:Event")->find($id);      
   
         $alert->setName($request->get('name'));
         $alert->setTitle($request->get('title'));
@@ -97,11 +94,11 @@ class EventsController extends Controller{
 
         // rattachement
         if ($request->get('application_id')!="") {
-            $db = $this->getDoctrine()->getRepository("AriiCoreBundle:Application")->find($request->get('application_id'));
+            $db = $this->getDoctrine()->getRepository("AriiACKBundle:Application")->find($request->get('application_id'));
             $alert->setApplication($db);
         }
         if ($request->get('domain_id')!="") {
-            $db = $this->getDoctrine()->getRepository("AriiCoreBundle:Domain")->find($request->get('domain_id'));
+            $db = $this->getDoctrine()->getRepository("AriiACKBundle:Domain")->find($request->get('domain_id'));
             $alert->setDomain($db);
         }
         

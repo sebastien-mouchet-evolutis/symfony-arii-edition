@@ -16,13 +16,13 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").setWidth(345);
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     globalMenu = globalLayout.cells("a").attachMenu();
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -143,7 +143,7 @@ dhtmlxEvent(window,"load",function(){
 
     myLayoutJobs.cells("d").setText("{{ "Detail" | trans }}");
     myJobs = myLayoutJobs.cells("d").attachGrid();
-    myJobs.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myJobs.setImagePath( "{{ asset('/images/') }}");
     myJobs.setHeader("{{ "Jobname" | trans }},{{ "Env" | trans }},{{ "Tag" | trans }},{{ "Creation" | trans }},{{ "Update" | trans }},{{ "First exec." | trans }},{{ "Last exec." | trans }},{{ "Deleted" | trans }}");
     myJobs.attachHeader("#text_filter,#select_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     // myJobs.attachFooter("#stat_count");

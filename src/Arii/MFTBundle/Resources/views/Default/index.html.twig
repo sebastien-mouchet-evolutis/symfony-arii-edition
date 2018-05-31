@@ -17,11 +17,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setText("{{ "Detail" | trans }}");
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_MFT_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -63,13 +63,13 @@ dhtmlxEvent(window,"load",function(){
     myDonut.load( "{{ url('xml_MFT_status_pie') }}" );
     
     myGridMenu = new dhtmlXMenuObject(null);
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_MFT_status_grid_menu') }}");
 
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Name" | trans }},{{ "Transfer" | trans }},{{ "State" | trans }},{{ "State time" | trans }},{{ "Operation" | trans }},{{ "Status" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Run" | trans }},{{ "Partner" | trans }},{{ "Progress" | trans }},#cspan,{{ "Next run" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#numeric_filter,#select_filter,#text_filter,#cspan,#text_filter");
     myGrid.setInitWidths("250,*,140,140,200,140,150,150,50,200,80,40,150");
@@ -97,7 +97,7 @@ dhtmlxEvent(window,"load",function(){
     });
     
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_MFT_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -141,12 +141,12 @@ dhtmlxEvent(window,"load",function(){
     myTabbar.addTab("doc","{{ "Doc" | trans }}","150px");
     
     myDeliveryMenu = new dhtmlXMenuObject(null);
-    myDeliveryMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myDeliveryMenu.setIconsPath( "{{ asset('/images/') }}" );
     myDeliveryMenu.renderAsContextMenu();
     myDeliveryMenu.loadStruct("{{ url('xml_MFT_parameters_grid_menu') }}");
           
     myDelivery = myTabbar.cells("delivery").attachGrid();
-    myDelivery.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myDelivery.setImagePath( "{{ asset('/images/') }}");
     myDelivery.setHeader("{{ "Name" | trans }},{{ "Title" | trans }},{{ "Run" | trans }},{{ "Step" | trans }},{{ "Try" | trans }},{{ "Status" | trans }},{{ "Message" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Duration" | trans }},{{ "Source" | trans }},{{ "Target" | trans }},{{ "Files" | trans }},{{ "Count" | trans }},{{ "Size" | trans }},{{ "Transfered" | trans }},{{ "Failed" | trans }},{{ "Skipped" | trans }},{{ "Last error" | trans }}");
     myDelivery.attachHeader("#text_filter,#text_filter,#numeric_filter,#numeric_filter,#numeric_filter,#select_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#numeric_filter,#numeric_filter,#numeric_filter,#numeric_filter,#text_filter");
     myDelivery.setInitWidths("200,200,50,50,50,100,0,150,150,50,*,50,50,50,50,50,50,50,*");
@@ -170,7 +170,7 @@ dhtmlxEvent(window,"load",function(){
     myDelivery.setColumnHidden(17,true);
     
     myHistory = myTabbar.cells("history").attachGrid();
-    myHistory.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myHistory.setImagePath( "{{ asset('/images/') }}");
     myHistory.setHeader("{{ "Status time" | trans }},{{ "Status" | trans }},{{ "Run" | trans }},{{ "Try" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Count" | trans }},{{ "Size" | trans }},{{ "Message" | trans }}");
     myHistory.attachHeader("#text_filter,#select_filter,#numeric_filter,#numeric_filter,#text_filter,#text_filter,#numeric_filter,#numeric_filter,#text_filter");
     myHistory.setInitWidths("140,100,100,80,140,140,100,100,*");

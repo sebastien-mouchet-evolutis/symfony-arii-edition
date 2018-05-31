@@ -17,11 +17,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setHeight(260); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -47,7 +47,7 @@ dhtmlxEvent(window,"load",function(){
     
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Spooler" | trans }},{{ "Folder" | trans }},{{ "Job" | trans }},{{ "Type" | trans }},{{ "Status" | trans }},{{ "Alarm" | trans }},{{ "Start time" | trans }},{{ "Message" | trans }},{{ "Machine" | trans }},{{ "Exit" | trans }},{{ "Run" | trans }},{{ "Try" | trans }},{{ "Key" | trans }},{{ "Value" | trans }}");
     myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("80,*,300,120,120,120,150,*,150,80,90,80,120,120");
@@ -77,7 +77,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_ATS_events_grid_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {

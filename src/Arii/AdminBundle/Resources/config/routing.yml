@@ -862,25 +862,6 @@ html_Admin_vault_view:
     defaults: { _controller: AriiAdminBundle:Vault:view }
     
 #============================================================
-# Event
-#------------------------------------------------------------
-xml_Admin_event_form:
-    path:  /event/form.xml
-    defaults: { _controller: AriiAdminBundle:Events:form}
-
-xml_Admin_event_save:
-    path:  /event/save.xml
-    defaults: { _controller: AriiAdminBundle:Events:save}
-
-xml_Admin_event_delete:
-    path:  /event/delete.xml
-    defaults: { _controller: AriiAdminBundle:Events:delete}
-
-xml_Admin_event_toolbar:
-    path:  /event/toolbar.xml
-    defaults: { _controller: AriiAdminBundle:Events:toolbar}
-
-#============================================================
 # Notify
 #------------------------------------------------------------
 arii_Admin_notify:

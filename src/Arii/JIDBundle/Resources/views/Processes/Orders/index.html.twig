@@ -20,11 +20,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").collapse();
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_JID_ribbon') }}", function() {
         myCalendarFrom = new dhtmlXCalendarObject(myRibbon.getInput("calendar_from"));
         myCalendarFrom.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -39,7 +39,7 @@ dhtmlxEvent(window,"load",function(){
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     myGridMenu = new dhtmlXMenuObject(null);
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_JID_orders_grid_menu') }}");
           
@@ -68,14 +68,14 @@ dhtmlxEvent(window,"load",function(){
 /*             
     myTree = myAccordion.cells("a2").attachTree();
 //    myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.attachEvent("onDblClick", function(id){
         globalLayout.cells("a").progressOn();
         GlobalRefresh();
     });
 */    
     myGrid = globalLayout.cells("b").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Spooler" | trans }},{{ "Folder" | trans }},{{ "Chain" | trans }},{{ "Order" | trans }},{{ "State" | trans }},{{ "Status" | trans }},{{ "Begin" | trans }},{{ "End" | trans }},{{ "Next" | trans }},{{ "Information" | trans }}");
     myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("*,*,180,160,160,150,160,160,160,*");
@@ -101,7 +101,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_JID_orders_grid_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -281,7 +281,7 @@ dhtmlxEvent(window,"load",function(){
 {% if is_granted('ROLE_OPERATOR') %}
     myDetailToolbar = myDetailLayout.cells("a").attachToolbar();
     myDetailLayout.cells("a").setWidth(650); 
-    myDetailToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myDetailToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myDetailToolbar.loadStruct( "{{ url('xml_JID_orders_form_toolbar') }}" , function(){
         GBCalendar = new dhtmlXCalendarObject(myDetailToolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -346,7 +346,7 @@ dhtmlxEvent(window,"load",function(){
     });
     
     myParametersToolbar = myDetailLayout.cells("b").attachToolbar();
-    myParametersToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myParametersToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myParametersToolbar.loadStruct("{{ url('xml_JID_job_params_toolbar') }}");
 {% endif %}
     
@@ -368,7 +368,7 @@ dhtmlxEvent(window,"load",function(){
     });
         
     myChainToolbar = myChainDetail.cells("a").attachToolbar();
-    myChainToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myChainToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myChainToolbar.loadStruct( "{{ url('xml_JID_orders_chain_toolbar') }}" );
 
     myChainToolbar.attachEvent("onClick",function(itemid){

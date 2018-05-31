@@ -3,11 +3,11 @@
     myTab.addTab("status","{{ "Status" | trans }}","120px");
 
     myTree = myTab.cells("queue").attachTree();
-    myTree.setImagePath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagePath("{{ asset('/images/') }}");
     myTree.load( '{{ url('xml_Self_requests_tree') }}');
 
     myMenu = myTab.cells("status").attachGrid();
-    myMenu.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myMenu.setImagePath( "{{ asset('/images/') }}");
     myMenu.setHeader("#text_filter,#numeric_filter");
     myMenu.setInitWidths("*,60");
     myMenu.setColAlign("left,right");

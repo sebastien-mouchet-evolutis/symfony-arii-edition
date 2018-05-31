@@ -13,11 +13,11 @@ var size=300;
     globalLayout.cells("c").setHeight(220); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -51,11 +51,11 @@ var size=300;
     dp.init(myForm);
 
     myFormToolbar = globalLayout.cells("c").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_color_toolbar') }}");
     
     myGrid = globalLayout.cells("b").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Status" | trans }},{{ "Color" | trans }},{{ "Text" | trans }},{{ "Sample" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("*,250,250,400");

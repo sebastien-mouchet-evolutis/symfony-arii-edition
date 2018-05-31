@@ -43,7 +43,7 @@
 dhtmlx.skin = "dhx_{{ skin }}";
 /*
 var menu = new dhtmlXMenuObject(null);
-menu.setIconsPath( "{{ asset('bundles/ariicore/images/menu/') }}" );
+menu.setIconsPath( "{{ asset('/images/') }}" );
 menu.renderAsContextMenu();
 menu.attachEvent("onClick", onButtonClick);
 menu.loadStruct("{{ url('arii_JID_menu_history') }}");
@@ -53,7 +53,7 @@ var myForm;
 var dhxLayout = new dhtmlXLayoutObject("mygrid","1C");
 
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('arii_JID_toolbar') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {
@@ -76,7 +76,7 @@ dhxLayout.cells("a").vs[dhxLayout.cells("a").av].sbHeight = 40;
 sb.setText('<div id="recinfoArea"></div>');
 mygrid = dhxLayout.cells("a").attachGrid();
 mygrid.selMultiRows = true;
-mygrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+mygrid.setImagePath( "{{ asset('/images/') }}");
 //mygrid.enableTreeCellEdit(false);
 mygrid.setHeader("{{ "Spooler" | trans }},{{ "Order" | trans }},{{ "Title" | trans }},{{ "State" | trans }},{{ "State text" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }}");
 mygrid.attachHeader("#select_filter,#select_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter");

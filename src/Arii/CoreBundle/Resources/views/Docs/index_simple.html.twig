@@ -7,11 +7,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").hideHeader();
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");    
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Home_docs_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -22,7 +22,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").hideHeader();
 
     myTree =globalLayout.cells("a").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load("{{ url('xml_docs_tree') }}");
     myTree.attachEvent("onClick",function(id) {
         if (myTree.getItemImage(id,0)=='folder.gif') return true;

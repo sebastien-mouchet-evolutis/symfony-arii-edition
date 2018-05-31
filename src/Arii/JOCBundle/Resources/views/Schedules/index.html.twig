@@ -11,18 +11,18 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").setWidth(410); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_JOC_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     globalLayout.cells("b").hideHeader();
     toolbar =  globalLayout.cells("b").attachToolbar();
-    toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
     toolbar.loadStruct("{{ url('arii_JOC_toolbar') }}");
     toolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {
@@ -42,7 +42,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").hideHeader();
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Spooler" | trans }},{{ "Location" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Act." | trans }}");
     myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("100,*,200,300,50");

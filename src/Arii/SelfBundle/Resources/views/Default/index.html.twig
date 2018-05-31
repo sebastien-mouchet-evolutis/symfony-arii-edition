@@ -12,11 +12,11 @@ var size=300;
     globalLayout.cells("b").hideHeader(); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Self_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -24,7 +24,7 @@ var size=300;
     globalLayout.cells("b").attachURL('{{ url('html_Self_help') }}');     
 
     myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagePath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagePath("{{ asset('/images/') }}");
     myTree.load( '{{ url('xml_Self_tree') }}');
     myTree.attachEvent("onClick", function(id) {
         switch (id.substr(0,1)) {

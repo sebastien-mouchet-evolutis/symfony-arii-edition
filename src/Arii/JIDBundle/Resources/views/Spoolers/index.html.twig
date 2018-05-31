@@ -5,7 +5,7 @@
 dhtmlxEvent(window,"load",function(){
 /*
     menu = new dhtmlXMenuObject(null);
-    menu.setIconsPath( "{{ asset('bundles/ariicore/images/menu/') }}" );
+    menu.setIconsPath( "{{ asset('/images/') }}" );
     menu.renderAsContextMenu();
     menu.attachEvent("onClick", onButtonClick);
     menu.loadStruct("{{ url('xml_JID_spoolers_menu') }}");
@@ -13,17 +13,17 @@ dhtmlxEvent(window,"load",function(){
     globalLayout = new dhtmlXLayoutObject(document.body,"3L");
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon();
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_JID_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 {% if is_granted('ROLE_OPERATOR') %}  
     myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myToolbar.loadStruct("{{ url('xml_JID_spoolers_toolbar') }}");
     myToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {
@@ -93,7 +93,7 @@ dhtmlxEvent(window,"load",function(){
     
 
     myGrid = globalLayout.cells("b").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader( "{{ "Spooler" | trans }},{{ "Status" | trans }},{{ "Begin" | trans }},{{ "Hostname" | trans }},{{ "Port" | trans }}" );
     myGrid.attachHeader("#text_filter,#text_filter,#select_filter,#select_filter,#text_filter");
     myGrid.setInitWidths( "*,100,150,200,80" );
@@ -123,7 +123,7 @@ dhtmlxEvent(window,"load",function(){
     myTasks.cells("a").hideHeader();
     myTasks.cells("b").hideHeader();
     myQueue = myTasks.cells("a").attachGrid();
-    myQueue.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myQueue.setImagePath( "{{ asset('/images/') }}");
     myQueue.setHeader( "{{ "Job" | trans }},{{ "Enqueue" | trans }},{{ "Start" | trans }}" );
     myQueue.attachHeader("#text_filter,#text_filter,#text_filter");
     myQueue.setInitWidths( "*,140,140" );
@@ -134,7 +134,7 @@ dhtmlxEvent(window,"load",function(){
     myQueue.init();
 
     myParams = myTasks.cells("b").attachGrid();
-    myParams.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myParams.setImagePath( "{{ asset('/images/') }}");
     myParams.setHeader( "{{ "Name" | trans }},{{ "Value" | trans }}" );
     myParams.attachHeader("#text_filter,#text_filter");
     myParams.setInitWidths( "200,*" );
@@ -151,7 +151,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myOrders = myTabbar.cells("orders").attachGrid();
-    myOrders.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myOrders.setImagePath( "{{ asset('/images/') }}");
     myOrders.setHeader( "{{ "Order" | trans }},{{ "Chain" | trans }},{{ "State" | trans }},{{ "Message" | trans }}" );
     myOrders.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter");
     myOrders.setInitWidths( "200,*,130,200" );
@@ -162,7 +162,7 @@ dhtmlxEvent(window,"load",function(){
     myOrders.init();
 
     myJobs = myTabbar.cells("jobs").attachGrid();
-    myJobs.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myJobs.setImagePath( "{{ asset('/images/') }}");
     myJobs.setHeader( "{{ "Path" | trans }},!,{{ "Next start" | trans }}" );
     myJobs.attachHeader("#text_filter,#select_filter,#text_filter");
     myJobs.setInitWidths( "*,50,160" );
@@ -173,7 +173,7 @@ dhtmlxEvent(window,"load",function(){
     myJobs.init();
 {% if is_granted('ROLE_OPERATOR') %} 
     myFormToolbar = myTabbar.cells("spooler").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myFormToolbar.loadStruct("{{ url('xml_JID_spooler_form_toolbar') }}", function () {
         this.hideItem('pause_spooler');
         this.hideItem('continue_spooler');

@@ -101,7 +101,7 @@ mygrid = new dhtmlXGridObject( "mygrid" );
 mygrid.selMultiRows = true;
 //mygrid.setImagePath( "dhtmlx/dhtmlxGrid/codebase/imgs/" );
 //mygrid.setImagePath( "{{ asset('bundles/ariicore/dhtmlx/dhtmlxTree/codebase/imgs/csh_dhx_skyblue/') }}");
-mygrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+mygrid.setImagePath( "{{ asset('/images/') }}");
 mygrid.enableTreeCellEdit(false);
 //mygrid.setHeader("Location,StaState,Title,Information,Next run time");
 mygrid.setHeader("{{ "Location" | trans }},{{ "State" | trans }},{{ "Status" | trans }},#cspan,{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Duration" | trans }}");

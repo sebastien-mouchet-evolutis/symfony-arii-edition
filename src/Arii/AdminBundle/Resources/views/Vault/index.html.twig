@@ -18,11 +18,11 @@ var size=300;
     globalLayout.cells("b").setText("{{ "Workspace" | trans }}");
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -43,7 +43,7 @@ var size=300;
     
     globalLayout.cells("b").setText("{{ "Workspace" | trans }}");
     myTree = globalLayout.cells("b").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     globalLayout.cells("b").progressOn();
     myTree.load( "{{ url('xml_Admin_vault_tree') }}", function (id) {
         globalLayout.cells("b").progressOff();

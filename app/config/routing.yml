@@ -13,6 +13,16 @@ arii_home:
         _locale: en|fr|es|de|cn|ar|ru|jp
 
 # ========================================
+# Arii common
+# Utilisé par tous les modules
+# ----------------------------------------
+arii_api:
+    resource: "@AriiCoreBundle/Resources/config/routing_arii.yml"
+    prefix:   /arii
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp
+
+# ========================================
 # API Bundle
 # ----------------------------------------
 arii_api:

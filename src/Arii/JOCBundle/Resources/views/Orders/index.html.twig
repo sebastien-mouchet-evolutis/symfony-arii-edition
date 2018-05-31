@@ -12,7 +12,7 @@ dhtmlxEvent(window,"load",function(){
 var size=410;
 
     menu = new dhtmlXMenuObject(null);
-    menu.setIconsPath( "{{ asset('bundles/ariicore/images/wa/') }}" );
+    menu.setIconsPath( "{{ asset('/images/') }}" );
     menu.renderAsContextMenu();
     menu.loadStruct("{{ url('xml_JOC_orders_menu') }}");
 
@@ -21,11 +21,11 @@ var size=410;
     globalLayout.cells("c").setText("{{ "Detail" | trans }}"); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_JOC_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -59,7 +59,7 @@ var size=410;
     });
 {% if is_granted('ROLE_OPERATOR') %}
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct("{{ url('xml_JOC_orders_toolbar') }}");
 
     myGridToolbar.attachEvent( "onClick", function(id, value) {
@@ -94,7 +94,7 @@ var size=410;
     // globalLayout.cells("c").setHeight(300);
 
     myGrid = globalLayout.cells("b").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Spooler" | trans }},{{ "Chain" | trans }},{{ "Order" | trans }},{{ "State" | trans }},{{ "Output" | trans }},{{ "Status" | trans }},{{ "Start time" | trans }},{{ "Title" | trans }}");
     myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("*,*,*,100,150,100,150,200");
@@ -133,7 +133,7 @@ var size=410;
     myForm.loadStruct("{{ url('json_JOC_orders_form') }}");
 {% if is_granted('ROLE_OPERATOR') %}
     myDetailToolbar = myDetailLayout.cells("a").attachToolbar();
-    myDetailToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myDetailToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myDetailToolbar.loadStruct( "{{ url('xml_JOC_orders_form_toolbar') }}" , function(){
         GBCalendar = new dhtmlXCalendarObject(myDetailToolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -141,7 +141,7 @@ var size=410;
     });
     
     myParametersToolbar = myDetailLayout.cells("b").attachToolbar();
-    myParametersToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myParametersToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myParametersToolbar.loadStruct("{{ url('xml_JOC_job_params_toolbar') }}");
 {% endif %}
     myParameters = myDetailLayout.cells("b").attachGrid();

@@ -99,11 +99,11 @@ dhtmlxEvent(window,"load",function(){
 {% endif %}
 /*    
     globalToolbar = globalLayout.cells("a").attachToolbar();
-    globalToolbar.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalToolbar.setIconsPath( "{{ asset('/images/') }}" );
     globalToolbar.loadStruct("{{ url('xml_User_toolbar') }}?route={{ app.request.attributes.get('_route') }}");
 */
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_User_ribbon') }}");
 
     myDocs = globalLayout.cells("a").attachAccordion();
@@ -112,7 +112,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").attachURL("{{ url('html_Core_readme') }}");
 
     myTree = myDocs.cells("Home").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load("{{ url('xml_docs_tree') }}?route=arii_Core_index");
     myTree.setItemStyle(0,"font-size: 16px !important")
     myTree.attachEvent("onClick",function(id){

@@ -10,7 +10,7 @@ var autorefresh;
 
 dhtmlxEvent(window,"load",function(){ 
     menu = new dhtmlXMenuObject(null);
-    menu.setIconsPath( "{{ asset('bundles/ariicore/images/menu/') }}" );
+    menu.setIconsPath( "{{ asset('/images/') }}" );
     menu.renderAsContextMenu();
     menu.attachEvent("onClick", onButtonClick);
     menu.loadStruct("{{ url('xml_JOC_spoolers_menu') }}");
@@ -20,11 +20,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setHeight(180); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_JOC_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -158,7 +158,7 @@ dhtmlxEvent(window,"load",function(){
 
 {% if is_granted('ROLE_OPERATOR') %}
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct("{{ url('xml_JOC_spoolers_toolbar') }}");
     myGridToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {
@@ -202,7 +202,7 @@ dhtmlxEvent(window,"load",function(){
     myGrid = globalLayout.cells("b").hideHeader();
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader( "{{ "Spooler" | trans }},{{ "Status" | trans }},{{ "Version" | trans }},{{ "Host" | trans }},{{ "Ip Adress" | trans }},{{ "Port" | trans }},{{ "Time" | trans }},{{ "Heartbeat" | trans }},{{ "Updated" | trans }}" );
     myGrid.attachHeader("#text_filter,#select_filter,#select_filter,#select_filter,#select_filter,#select_filter,#text_filter,#numeric_filter,#text_filter");
     myGrid.setInitWidths( "200,120,100,*,140,80,160,120,140" );
@@ -225,7 +225,7 @@ dhtmlxEvent(window,"load",function(){
     myForm.loadStruct("{{ url('json_JOC_spoolers_form') }}");
 {% if is_granted('ROLE_OPERATOR') %}
     myDetailToolbar = globalLayout.cells("c").attachToolbar();
-    myDetailToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myDetailToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myDetailToolbar.loadStruct( "{{ url('xml_JOC_spooler_toolbar') }}" , function(){
     });
     myDetailToolbar.attachEvent("onClick",function(itemid){

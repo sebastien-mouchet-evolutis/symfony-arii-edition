@@ -20,11 +20,11 @@ var size=300;
     globalLayout.cells("c").setHeight(250); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );    
@@ -34,7 +34,7 @@ var size=300;
     globalLayout.cells("a").hideHeader(); 
     
     myApps = globalLayout.cells("b").attachGrid();
-    myApps.setImagePath("{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myApps.setImagePath("{{ asset('/images/') }}");
     myApps.setHeader("{{ "Priority"| trans }},{{ "Input"| trans }},{{ "Output"| trans }},{{ "Description"| trans }}");
     myApps.attachHeader("#numeric_filter,#text_filter,#text_filter,#text_filter");
     myApps.setColAlign("right,left,left,left");
@@ -85,7 +85,7 @@ var size=300;
     myForm.enableLiveValidation(true);
     
     myToolbar = globalLayout.cells("c").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myToolbar.loadStruct("{{ url('xml_Report_rules_toolbar') }}", function () {
         myToolbar.hideItem("delete");
     });

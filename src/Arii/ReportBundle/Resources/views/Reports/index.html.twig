@@ -16,13 +16,13 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").setWidth(345);
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     globalMenu = globalLayout.cells("a").attachMenu();
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -436,7 +436,7 @@ dhtmlxEvent(window,"load",function(){
     
     myLayoutDown.cells("d").setText("{{ "Calendars" | trans }}");
     myCals = myLayoutDown.cells("d").attachGrid();
-    myCals.setImagePath( "/bundles/ariicore/images/treegrid/");
+    myCals.setImagePath( "/images/");
     myCals.setHeader("{{ "Calendar" | trans }},{{ "Next" | trans }},&nbsp;");
     myCals.attachHeader("#text_filter,#text_filter,#master_checkbox");
     myCals.setColAlign("left,right,center");

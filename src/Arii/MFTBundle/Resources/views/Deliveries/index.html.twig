@@ -13,18 +13,18 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").hideHeader(); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_MFT_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
     
     myTransfers = globalLayout.cells("a").attachGrid();
     myTransfers.selMultiRows = true;
-    myTransfers.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myTransfers.setImagePath( "{{ asset('/images/') }}");
     myTransfers.setHeader("{{ "Title" | trans }},{{ "Partner" | trans }},{{ "Description" | trans }}");
     myTransfers.attachHeader("#text_filter,#select_filter,#text_filter");
     myTransfers.setInitWidths("*,100,0");
@@ -35,7 +35,7 @@ dhtmlxEvent(window,"load",function(){
     myTransfers.load("{{ url('xml_MFT_transfers_list') }}");
     
     myGridMenu = new dhtmlXMenuObject(null);
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_MFT_parameters_grid_menu') }}");
 
@@ -44,7 +44,7 @@ dhtmlxEvent(window,"load",function(){
     myGridbar.addTab("chart","{{ "Runtime" | trans }}","100px");
     
     myGrid = myGridbar.cells("grid").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Name" | trans }},{{ "Title" | trans }},{{ "Run" | trans }},{{ "Step" | trans }},{{ "Try" | trans }},{{ "Status" | trans }},{{ "Message" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Duration" | trans }},{{ "Source" | trans }},{{ "Target" | trans }},{{ "Files" | trans }},{{ "Count" | trans }},{{ "Size" | trans }},{{ "Transfered" | trans }},{{ "Failed" | trans }},{{ "Skipped" | trans }},{{ "Last error" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#numeric_filter,#numeric_filter,#numeric_filter,#select_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#numeric_filter,#numeric_filter,#numeric_filter,#numeric_filter,#text_filter");
     myGrid.setInitWidths("200,200,50,50,50,100,0,150,150,50,*,50,50,50,50,50,50,50,*");
@@ -80,7 +80,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = myGridbar.cells("grid").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_MFT_deliveries_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {

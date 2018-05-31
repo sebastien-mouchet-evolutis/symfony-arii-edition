@@ -668,11 +668,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout = new dhtmlXLayoutObject(document.body, "2U");
     globalLayout.cells("a").setWidth(750);
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_JID_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -705,7 +705,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}'); 
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_JID_silent_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(id){
         switch (id) {

@@ -8,18 +8,18 @@ dhtmlxEvent(window,"load",function(){
     var dhxLayout = new dhtmlXLayoutObject(document.body,"2U");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     myTree =globalLayout.cells("a").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load("{{ url('xml_Report_tree') }}");
     
     dhxLayout.cells("a").hideHeader();
     myGrid = dhxLayout.cells("a").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Spooler" | trans }},{{ "Order" | trans }},{{ "Title" | trans }},{{ "State" | trans }},{{ "State text" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }}");
     myGrid.attachHeader("#select_filter,#select_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("120,120,*,80,0,130,130");

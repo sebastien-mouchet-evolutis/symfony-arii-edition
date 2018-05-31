@@ -11,21 +11,21 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").collapse();
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     myTree =globalLayout.cells("a").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load("{{ url('xml_Report_process_tree') }}");
     
     myGrid = globalLayout.cells("b").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Order" | trans }},{{ "Chain" | trans }},{{ "Title" | trans }},{{ "State" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }}");
     myGrid.attachHeader("#select_filter,#select_filter,#text_filter,#select_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("200,*,*,100,140,140");

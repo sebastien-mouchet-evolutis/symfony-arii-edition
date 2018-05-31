@@ -46,14 +46,14 @@
 dhtmlx.skin = "dhx_skyblue";
 
 var menu = new dhtmlXMenuObject(null);
-menu.setIconsPath( "{{ asset('bundles/ariicore/images/menu/') }}" );
+menu.setIconsPath( "{{ asset('/images/') }}" );
 /*menu.setImagePath( "{{ asset('bundles/ariicore/images/menu') }}" );*/
 menu.renderAsContextMenu();
 menu.loadStruct("{{ url('arii_JOC_menu_history') }}");
 
 var toolbar;
 toolbar = new dhtmlXToolbarObject("toolbarObj");
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('arii_JOC_toolbar_history') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {
@@ -68,7 +68,7 @@ toolbar.attachEvent( "onClick", function(id, value) {
 var mygrid;
 
 var mygrid = new dhtmlXGridObject( "mygrid" );
-mygrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+mygrid.setImagePath( "{{ asset('/images/') }}");
 mygrid.setHeader( "{{ "Spooler" | trans }},{{ "Hostname" | trans }},{{ "Port" | trans }}" );
 mygrid.attachHeader("#text_filter,#text_filter,#numeric_filter");
 mygrid.setColumnIds(  "scheduler,HOSTNAME,TCP_PORT" );

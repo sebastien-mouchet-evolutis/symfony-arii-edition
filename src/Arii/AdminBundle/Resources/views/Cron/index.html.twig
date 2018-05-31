@@ -18,11 +18,11 @@ var size=300;
     globalLayout.cells("d").setText("{{ "History" | trans }}");
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -36,13 +36,13 @@ var size=300;
     globalLayout.cells("a").hideHeader();    
     
     myGridMenu = new dhtmlXMenuObject(null);
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_Admin_cron_menu') }}");
 
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Name" | trans }},{{ "Next start" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter");
     myGrid.setInitWidths("*,150");
@@ -57,7 +57,7 @@ var size=300;
     });
 
     myFormToolbar = globalLayout.cells("c").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_cron_toolbar') }}");
 
     formData = [
@@ -136,7 +136,7 @@ var size=300;
 
     myHistory = globalLayout.cells("d").attachGrid();
     myHistory.selMultiRows = true;
-    myHistory.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myHistory.setImagePath( "{{ asset('/images/') }}");
     myHistory.setHeader("{{ "Done" | trans }},{{ "Status" | trans }},{{ "Duration" | trans }},{{ "Message" | trans }}");
     myHistory.attachHeader("#text_filter,#select_filter,#text_filter,#text_filter");
     myHistory.setInitWidths("150,100,100,*");
