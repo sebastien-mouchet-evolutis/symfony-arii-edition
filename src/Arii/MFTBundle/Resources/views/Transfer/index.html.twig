@@ -18,11 +18,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").hideHeader(); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_MFT_ribbon_edit') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -34,7 +34,7 @@ dhtmlxEvent(window,"load",function(){
 
     myGrid = globalLayout.cells("a").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Partner" | trans }},{{ "Name" | trans }},{{ "Title" | trans }}");
     myGrid.attachHeader("#select_filter,#select_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("0,0,*,0");
@@ -45,7 +45,7 @@ dhtmlxEvent(window,"load",function(){
     myGrid.attachEvent("onRowDblClicked", TransferDetail );  
 
     myFormToolbar = myTabbar.cells("transfer").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myFormToolbar.loadStruct( "{{ url('xml_MFT_transfer_toolbar') }}");
 
     myForm = myTabbar.cells("transfer").attachForm();
@@ -103,7 +103,7 @@ dhtmlxEvent(window,"load",function(){
  
     myOperations = myLayout.cells("a").attachGrid();
     myOperations.selMultiRows = true;
-    myOperations.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myOperations.setImagePath( "{{ asset('/images/') }}");
     myOperations.setHeader("{{ "Transfer" | trans }},{{ "Step" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Description" | trans }},{{ "Source" | trans }},{{ "Target" | trans }},{{ "Env" | trans }}");
     myOperations.attachHeader("#select_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#select_filter,#select_filter,#select_filter");
     myOperations.setInitWidths("0,50,200,*,0,150,150,0");
@@ -119,7 +119,7 @@ dhtmlxEvent(window,"load",function(){
     myOpForm.loadStruct("{{ url('json_MFT_operation_form') }}");
 
     myOpFormToolbar = myLayout.cells("b").attachToolbar();
-    myOpFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myOpFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myOpFormToolbar.loadStruct( "{{ url('xml_MFT_operation_toolbar') }}");
 
     myOperations.attachEvent("onRowDblClicked", function(id) {

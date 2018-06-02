@@ -9,11 +9,11 @@
 		<h2>{{ "Orders" | trans }}</h2>
 <ul  class="section_menu">
 {% if arii_pro %}
-    <li><a href="{{ url('arii_JID_orders_treegrid') }}" class="active"><span><span><img src="{{ asset('bundles/ariicore/images/wa/tree.png') }}"/>&nbsp;{{ "Tree" | trans }}</span></span></a></li>
+    <li><a href="{{ url('arii_JID_orders_treegrid') }}" class="active"><span><span><img src="{{ asset('/images/tree.png') }}"/>&nbsp;{{ "Tree" | trans }}</span></span></a></li>
 {% endif %}
-    <li><a href="{{ url('arii_JID_orders_grid') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/list.png') }}"/>&nbsp;{{ "List" | trans }}</span></span></a></li>
-      <li><a href="{{ url('arii_JID_orders_timeline') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/timeline.png') }}"/>&nbsp;{{ "Timeline" | trans }}</span></span></a></li>
-    <li><a href="{{ url('arii_JID_orders_last') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/monitor.png') }}"/>&nbsp;{{ "Monitor" | trans }}</span></span></a></li>
+    <li><a href="{{ url('arii_JID_orders_grid') }}" class=""><span><span><img src="{{ asset('/images/list.png') }}"/>&nbsp;{{ "List" | trans }}</span></span></a></li>
+      <li><a href="{{ url('arii_JID_orders_timeline') }}" class=""><span><span><img src="{{ asset('/images/timeline.png') }}"/>&nbsp;{{ "Timeline" | trans }}</span></span></a></li>
+    <li><a href="{{ url('arii_JID_orders_last') }}" class=""><span><span><img src="{{ asset('/images/monitor.png') }}"/>&nbsp;{{ "Monitor" | trans }}</span></span></a></li>
 </ul> 
 		<span class="title_wrapper_left"></span>
 		<span class="title_wrapper_right"></span>
@@ -40,13 +40,13 @@ var steps = false;
 var rowId; // Index en cours pour le refresh
 
 menu = new dhtmlXMenuObject(null);
-menu.setIconsPath( "{{ asset('bundles/ariicore/images/wa/') }}" );
+menu.setIconsPath( "{{ asset('/images/') }}" );
 menu.renderAsContextMenu();
 menu.loadStruct("{{ url('xml_JID_orders_menu') }}");
 
 var dhxLayout = new dhtmlXLayoutObject("mygrid","2E");
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/wa/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('xml_JID_toolbar_orders') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {
@@ -94,8 +94,8 @@ dhxLayout.cells("a").setHeight(295);
 
 var mygrid = dhxLayout.cells("a").attachGrid();
 mygrid.selMultiRows = true;
-mygrid.setImagePath( "{{ asset('bundles/ariicore/images/wa/') }}");
-mygrid.setIconsPath( "{{ asset('bundles/ariicore/images/wa/') }}");
+mygrid.setImagePath( "{{ asset('/images/') }}");
+mygrid.setIconsPath( "{{ asset('/images/') }}");
 mygrid.enableTreeCellEdit(false);
 mygrid.setHeader("{{ "Location" | trans }},#cspan,{{ "State" | trans }},#cspan,{{ "Status" | trans }},#cspan,#cspan,{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Information" | trans }},{{ "Next start time" | trans }}");
 mygrid.attachHeader("#text_filter,#cspan,#select_filter,#cspan,#select_filter,#select_filter,#cspan,#text_filter,#text_filter,#text_filter,#text_filter");

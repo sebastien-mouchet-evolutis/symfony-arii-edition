@@ -14,11 +14,11 @@ var size=300;
     globalLayout.cells("c").collapse();
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Self_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -29,7 +29,7 @@ var size=300;
     {% include "AriiSelfBundle:Default:menu.html.twig" %}   
 
     myRequests = globalLayout.cells("b").attachGrid();
-    myRequests.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRequests.setImagePath( "{{ asset('/images/') }}");
     myRequests.setHeader("{{ "Requests" | trans }},{{ "Reference" | trans }},{{ "Parameters" | trans }},{{ "Status" | trans }},{{ "Created" | trans }},{{ "Planned" | trans }},{{ "Processed" | trans }},{{ "User" | trans }}");
     myRequests.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#select_filter");
     myRequests.setInitWidths("*,200,*,150,150,150,150,200");

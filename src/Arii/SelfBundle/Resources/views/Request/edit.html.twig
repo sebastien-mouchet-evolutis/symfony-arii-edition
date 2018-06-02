@@ -17,20 +17,20 @@ var size=300;
     globalLayout.cells("a").hideHeader(); 
 
     myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagePath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagePath("{{ asset('/images/') }}");
     myTree.load( '{{ url('xml_Self_tree') }}');
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_Self_toolbar') }}");
 
     myGridMenu = new dhtmlXMenuObject(null);
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_Self_grid_menu') }}");
 
     myReq uests = globalLayout.cells("c").attachGrid();
-    myRequests.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRequests.setImagePath( "{{ asset('/images/') }}");
     myRequests.setHeader("{{ "Requests" | trans }},{{ "Parameters" | trans }},{{ "Status" | trans }},{{ "Exit" | trans }},{{ "Created" | trans }},{{ "Started" | trans }},{{ "Processed" | trans }},{{ "User" | trans }}");
     myRequests.attachHeader("#text_filter,#text_filter,#select_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#select_filter");
     myRequests.setInitWidths("*,*,150,60,150,150,250,200");
@@ -52,7 +52,7 @@ var size=300;
     myTabbar.addTab("history","{{ "History" | trans }}","120px");
 
     myHistory = myTabbar.cells("history").attachGrid();
-    myHistory.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myHistory.setImagePath( "{{ asset('/images/') }}");
     myHistory.setHeader("{{ "Requests" | trans }},{{ "Parameters" | trans }},{{ "Status" | trans }},{{ "Exit" | trans }},{{ "Started" | trans }},{{ "Processed" | trans }},{{ "Client" | trans }}");
     myHistory.attachHeader("#text_filter,#text_filter,#select_filter,#numeric_filter,#text_filter,#text_filter,#select_filter");
     myHistory.setInitWidths("*,*,100,60,150,150,250");

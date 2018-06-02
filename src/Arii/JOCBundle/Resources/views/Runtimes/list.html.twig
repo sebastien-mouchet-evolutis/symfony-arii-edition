@@ -42,7 +42,7 @@ var mygrid;
 var dhxLayout = new dhtmlXLayoutObject("mygrid","1C");
 
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('arii_JOC_toolbar') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {
@@ -67,7 +67,7 @@ sb.setText('<div id="recinfoArea"></div>');
 mygrid = dhxLayout.cells("a").attachGrid();
 mygrid.enableTreeCellEdit(false);
 mygrid.selMultiRows = true;
-mygrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+mygrid.setImagePath( "{{ asset('/images/') }}");
 mygrid.setHeader("{{ "Location" | trans }},{{ "Runtime" | trans }},{{ "Runs" | trans }},{{ "Diff." | trans }},{{ "History ID" | trans }},{{ "Task ID" | trans }},{{ "Updated" | trans }}");
 mygrid.attachHeader("#text_filter,#text_filter,#numeric_filter,#numeric_filter,#numeric_filter,#numeric_filter,#text_filter");
 mygrid.setInitWidths("*,100,60,80,90,90,140");

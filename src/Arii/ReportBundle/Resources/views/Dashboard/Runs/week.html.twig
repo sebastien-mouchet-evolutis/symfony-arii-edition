@@ -16,13 +16,13 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").setWidth(345);
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     globalMenu = globalLayout.cells("a").attachMenu();
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -56,7 +56,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myToolbar.loadStruct("{{ url('xml_Report_toolbar') }}", function() {
         this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
         this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));
@@ -133,7 +133,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").collapse();
     
     myRuns.selMultiRows = true;
-    myRuns.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRuns.setImagePath( "{{ asset('/images/') }}");
     myRuns.setHeader("{{ "Job" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Count" | trans }},{{ "Alarm" | trans }},{{ "Alarm time" | trans }},{{ "Ack" | trans }},{{ "Ack time" | trans }}");
     myRuns.attachHeader("#text_filter,#text_filter,#text_filter,#numeric_filter,#select_filter,#text_filter,#text_filter,#text_filter");
     myRuns.setColAlign("left,left,left,right,left,left,left,left");

@@ -27,7 +27,7 @@ html_Home_readme:
     defaults: { _controller: AriiCoreBundle:Default:readme_html }
     
 json_Home_ribbon:
-    path:  /ribbon.json
+    path:  /home/ribbon.json
     defaults: { _controller: AriiCoreBundle:Default:ribbon }
 
 #--------------------------------------------------------------------

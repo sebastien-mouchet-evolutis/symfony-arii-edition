@@ -1,6 +1,6 @@
 // Gestion dynamique du menu    
 globalMenu = globalLayout.cells("a").attachMenu();
-globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+globalMenu.setIconsPath( "{{ asset('/images/') }}" );
 globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}", function(){
     globalMenu.hideItem("messages");
     getmessages = setInterval( "GetMessages(false)",3000);

@@ -18,11 +18,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setText("{{ "Detail" | trans }}"); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -30,7 +30,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").hideHeader();
     myJobs = globalLayout.cells("a").attachGrid();
     myJobs.selMultiRows = true;
-    myJobs.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myJobs.setImagePath( "{{ asset('/images/') }}");
     myJobs.setHeader("{{ "Job" | trans }},{{ "Note" | trans }}");
     myJobs.attachHeader("#text_filter,#text_filter");
     myJobs.setInitWidths("*,*");
@@ -47,7 +47,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").hideHeader();
     myGrid = globalLayout.cells("c").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Note" | trans }},{{ "Description" | trans }},{{ "Status" | trans }},{{ "Errors" | trans }},{{ "Message" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("*,*,100,*,*");
@@ -65,7 +65,7 @@ dhtmlxEvent(window,"load",function(){
     myGrid.setColumnHidden(2,true);
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_ATS_jobs_grid_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {

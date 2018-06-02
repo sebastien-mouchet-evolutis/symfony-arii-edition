@@ -14,11 +14,11 @@ var size=300;
     globalLayout.cells("d").setHeight(400); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -44,7 +44,7 @@ var size=300;
     myTab.addTab("schema","{{ "Schema" | trans }}","100px");
 
     myGrid = myTab.cells("nodes").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Category" | trans }},{{ "Node" | trans }},{{ "Description" | trans }},{{ "Component" | trans }},{{ "Vendor" | trans }},{{ "Status" | trans }}");
     myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#select_filter,#select_filter");
     myGrid.setInitWidths("200,200,*,200,200,0");
@@ -56,7 +56,7 @@ var size=300;
     myGrid.load( "{{ url('xml_Admin_nodes_grid') }}");
 
     myTree = globalLayout.cells("b").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load( "{{ url('xml_Admin_categories_tree') }}" );
     myTree.enableDragAndDrop(true, false);
     myTree.attachEvent("onClick",function(id){
@@ -115,7 +115,7 @@ var size=300;
     nodeLayout.cells("a").setWidth(450); 
 
     myFormToolbar = nodeLayout.cells("a").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_node_toolbar') }}", function () {
     });    
     
@@ -139,7 +139,7 @@ var size=300;
     myNodeConn.init();
 
     myConnToolbar = nodeLayout.cells("b").attachToolbar();
-    myConnToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myConnToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myConnToolbar.loadStruct("{{ url('xml_Admin_node_toolbar2') }}", function () {
     });    
     

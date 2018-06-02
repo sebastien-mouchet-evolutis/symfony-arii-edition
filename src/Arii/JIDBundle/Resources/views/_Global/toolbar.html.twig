@@ -13,7 +13,7 @@ autorefresh = setInterval( "GlobalRefresh()", refreshing*1000 );
 var GlobalBar,
     GBCalendar;
 GlobalBar = new dhtmlXToolbarObject("GlobalBarObj", "dhx_skyblue");
-GlobalBar.setIconsPath( "{{ asset('bundles/ariicore/images/toolbar/') }}" );
+GlobalBar.setIconsPath( "{{ asset('/toolbar/') }}" );
 GlobalBar.loadXML( "{{ url('xml_toolbar') }}", function(){
     GBCalendar = new dhtmlXCalendarObject(GlobalBar.getInput('ref_date'));
 //    GBCalendar.enableTime (true);

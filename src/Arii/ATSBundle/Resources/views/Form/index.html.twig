@@ -11,17 +11,17 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setHeight(350);
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     myGrid = globalLayout.cells("b").attachGrid();
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Application" | trans }},{{ "Group" | trans }},{{ "Job" | trans }},{{ "Description" | trans }},");
     myGrid.attachHeader("#select_filter,#select_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("100,100,100,*");
@@ -30,7 +30,7 @@ dhtmlxEvent(window,"load",function(){
     myGrid.load( "{{ url('xml_ATS_form_grid') }}");
 
     myToolbar = globalLayout.cells("c").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myToolbar.loadStruct( "{{ url('xml_ATS_form_toolbar') }}" ,function() {
     });
 

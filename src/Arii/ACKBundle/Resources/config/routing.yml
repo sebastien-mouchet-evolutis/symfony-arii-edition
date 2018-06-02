@@ -10,6 +10,10 @@ json_ACK_ribbon:
     path:  /ribbon.json
     defaults: { _controller: AriiACKBundle:Default:ribbon }
 
+json_ACK_menu:
+    path:  /menu.json
+    defaults: { _controller: AriiACKBundle:Default:menu }
+    
 xml_ACK_toolbar:
     path:  /toolbar.xml
     defaults: { _controller: AriiACKBundle:Default:toolbar }
@@ -27,66 +31,62 @@ arii_ACK_alarms_add:
     defaults: { _controller: AriiACKBundle:Alarms:add }
 
 #============================================================
-# Alerts
+# Notifications
 #------------------------------------------------------------
-arii_ACK_alerts:
-    path:  /alerts
-    defaults: { _controller: AriiACKBundle:Alerts:index }
+arii_ACK_notifications:
+    path:  /notifications
+    defaults: { _controller: AriiACKBundle:Notifications:index }
     
-xml_ACK_alerts_grid:
-    path:  /alerts/grid.xml
-    defaults: { _controller: AriiACKBundle:Alerts:grid }
+xml_ACK_notifications_grid:
+    path:  /notifications/grid.xml
+    defaults: { _controller: AriiACKBundle:Notifications:grid }
 
-xml_ACK_alerts_toolbar:
-    path:  /alerts/toolbar.xml
-    defaults: { _controller: AriiACKBundle:Alerts:grid_toolbar }
+xml_ACK_notifications_toolbar2:
+    path:  /notifications/toolbar2.xml
+    defaults: { _controller: AriiACKBundle:Notifications:toolbar2 }
 
-xml_ACK_alerts_toolbar2:
-    path:  /alerts/toolbar2.xml
-    defaults: { _controller: AriiACKBundle:Alerts:toolbar2 }
+xml_ACK_notifications_tree:
+    path:  /notifications/tree.xml
+    defaults: { _controller: AriiACKBundle:Notifications:tree }
 
-xml_ACK_alerts_tree:
-    path:  /alerts/tree.xml
-    defaults: { _controller: AriiACKBundle:Alerts:tree }
+xml_ACK_notifications_select:
+    path:  /notifications/select.xml
+    defaults: { _controller: AriiACKBundle:Notifications:select }
 
-xml_ACK_alerts_select:
-    path:  /alerts/select.xml
-    defaults: { _controller: AriiACKBundle:Alerts:select }
+html_ACK_notifications_import:
+    path:  /notifications/import.html
+    defaults: { _controller: AriiACKBundle:Notifications:import }
 
-html_ACK_alerts_import:
-    path:  /alerts/import.html
-    defaults: { _controller: AriiACKBundle:Alerts:import }
-
-txt_ACK_alerts:
-    path:  /public/alerts.{ext}
-    defaults: { _controller: AriiACKBundle:Alerts:get, ext: txt }
+txt_ACK_notifications:
+    path:  /public/notifications.{ext}
+    defaults: { _controller: AriiACKBundle:Notifications:get, ext: txt }
     
-xls_ACK_alerts:
-    path:  /alerts.{ext}
-    defaults: { _controller: AriiACKBundle:Alerts:get, ext: xls }
+xls_ACK_notifications:
+    path:  /notifications.xls
+    defaults: { _controller: AriiACKBundle:Notifications:get, ext: xls }
 
-html_ACK_alert_check:
-    path:  /public/alert/check.html
-    defaults: { _controller: AriiACKBundle:Alerts:check}
+html_ACK_notifications_check:
+    path:  /public/notifications/check.html
+    defaults: { _controller: AriiACKBundle:Notifications:check}
 
 #============================================================
-# Alert
+# Notification
 #------------------------------------------------------------
-xml_ACK_alert_form:
-    path:  /alert/form.xml
-    defaults: { _controller: AriiACKBundle:Alerts:form}
+xml_ACK_notification_form:
+    path:  /notification/form.xml
+    defaults: { _controller: AriiACKBundle:Notifications:form}
 
-xml_ACK_alert_save:
-    path:  /alert/save.xml
-    defaults: { _controller: AriiACKBundle:Alerts:save}
+xml_ACK_notification_save:
+    path:  /notification/save.xml
+    defaults: { _controller: AriiACKBundle:Notifications:save}
 
-xml_ACK_alert_delete:
-    path:  /alert/delete.xml
-    defaults: { _controller: AriiACKBundle:Alerts:delete}
+xml_ACK_notification_delete:
+    path:  /notification/delete.xml
+    defaults: { _controller: AriiACKBundle:Notifications:delete}
 
-xml_ACK_alert_toolbar:
-    path:  /alert/toolbar.xml
-    defaults: { _controller: AriiACKBundle:Alerts:toolbar}
+xml_ACK_notification_toolbar:
+    path:  /notification/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Notifications:toolbar}
 
 #============================================================
 # Events
@@ -99,9 +99,70 @@ xml_ACK_events_grid:
     path:  /events/grid.xml
     defaults: { _controller: AriiACKBundle:Events:grid }
 
-xml_ACK_events_toolbar:
-    path:  /events/toolbar.xml
-    defaults: { _controller: AriiACKBundle:Events:grid_toolbar }
+xml_ACK_events_grid2:
+    path:  /events/grid2.xml
+    defaults: { _controller: AriiACKBundle:Events:grid2 }
+
+#============================================================
+# Event
+#------------------------------------------------------------
+xml_ACK_event_form:
+    path:  /event/form.xml
+    defaults: { _controller: AriiACKBundle:Events:form}
+
+xml_ACK_event_save:
+    path:  /event/save.xml
+    defaults: { _controller: AriiACKBundle:Events:save}
+
+xml_ACK_event_delete:
+    path:  /event/delete.xml
+    defaults: { _controller: AriiACKBundle:Events:delete}
+
+xml_ACK_event_toolbar:
+    path:  /event/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Events:toolbar}
+
+#============================================================
+# Jobs
+#------------------------------------------------------------
+arii_ACK_jobs:
+    path:  /jobs
+    defaults: { _controller: AriiACKBundle:Jobs:index }
+    
+xml_ACK_jobs_grid:
+    path:  /jobs/grid.xml
+    defaults: { _controller: AriiACKBundle:Jobs:grid }
+
+#============================================================
+# Job
+#------------------------------------------------------------
+xml_ACK_event_form:
+    path:  /job/form.xml
+    defaults: { _controller: AriiACKBundle:Jobs:form}
+
+xml_ACK_event_save:
+    path:  /job/save.xml
+    defaults: { _controller: AriiACKBundle:Jobs:save}
+
+xml_ACK_event_delete:
+    path:  /job/delete.xml
+    defaults: { _controller: AriiACKBundle:Jobs:delete}
+
+xml_ACK_event_toolbar:
+    path:  /job/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Jobs:toolbar}
+
+
+#============================================================
+# Actions
+#------------------------------------------------------------
+arii_ACK_actions:
+    path:  /actions
+    defaults: { _controller: AriiACKBundle:Actions:index }
+    
+xml_ACK_actions_grid:
+    path:  /actions/grid.xml
+    defaults: { _controller: AriiACKBundle:Actions:grid }
 
 
 #============================================================

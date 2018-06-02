@@ -27,17 +27,17 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").hideHeader(); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Time_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );    
     
     dhxGrid = globalLayout.cells("a").attachGrid();
-    dhxGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    dhxGrid.setImagePath( "{{ asset('/images/') }}");
     dhxGrid.setHeader("{{ "Name" | trans }},{{ "Description" | trans }}");
     dhxGrid.setHeader("#text_filter,#text_filter");
     dhxGrid.setInitWidths("180,*");
@@ -57,7 +57,7 @@ dhtmlxEvent(window,"load",function(){
     // myTab.addTab("rules","{{ "Rules" | trans }}","100px");
 
     myGridToolbar = myLayout.cells("a").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_Time_rules_toolbar') }}");
 
    formData = [
@@ -87,7 +87,7 @@ dhtmlxEvent(window,"load",function(){
     myForm = myLayout.cells("a").attachForm(formData);
 
     dhxTest = myLayout.cells("b").attachGrid();
-    dhxTest.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    dhxTest.setImagePath( "{{ asset('/images/') }}");
     // dhxTest.setHeader("{{ "Name" | trans }}");
     dhxTest.setHeader("#text_filter");
     dhxTest.setInitWidths("*");

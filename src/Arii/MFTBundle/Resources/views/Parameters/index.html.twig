@@ -14,18 +14,18 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").hideHeader(); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_MFT_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
     
     myParameters = globalLayout.cells("a").attachGrid();
     myParameters.selMultiRows = true;
-    myParameters.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myParameters.setImagePath( "{{ asset('/images/') }}");
     myParameters.setHeader("{{ "Name" | trans }},{{ "Title" | trans }}");
     myParameters.attachHeader("#text_filter,#text_filter");
     myParameters.setInitWidths("150,*");
@@ -36,7 +36,7 @@ dhtmlxEvent(window,"load",function(){
     myParameters.load("{{ url('xml_MFT_parameters_grid') }}");
 
     myFormToolbar = globalLayout.cells("b").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myFormToolbar.loadStruct( "{{ url('xml_MFT_parameter_toolbar') }}");
 
     myForm = globalLayout.cells("b").attachForm();
@@ -105,7 +105,7 @@ dhtmlxEvent(window,"load",function(){
 
     myOperations = myTabbar.cells("operations").attachGrid();
     myOperations.selMultiRows = true;
-    myOperations.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myOperations.setImagePath( "{{ asset('/images/') }}");
     myOperations.setHeader("{{ "Name" | trans }},{{ "Title" | trans }}");
     myOperations.attachHeader("#text_filter,#text_filter");
     myOperations.setInitWidths("150,*");

@@ -16,13 +16,13 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").setWidth(345);
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     globalMenu = globalLayout.cells("a").attachMenu();
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -42,7 +42,7 @@ dhtmlxEvent(window,"load",function(){
 
     myChart = myTab.cells("list").attachGrid();
     myChart.selMultiRows = true;
-    myChart.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myChart.setImagePath( "{{ asset('/images/') }}");
     myChart.setHeader("{{ "Date" | trans }},{{ "Day" | trans }},{{ "Hour" | trans }},{{ "Env" | trans }},{{ "App" | trans }},{{ "Class" | trans }},{{ "Runs" | trans }},{{ "Warnings" | trans }},{{ "Alarms" | trans }},{{ "Acks" | trans }}");
     myChart.attachHeader("#text_filter,#select_filter,#select_filter,#select_filter,#select_filter,#select_filter,#numeric_filter,#numeric_filter,#numeric_filter,#numeric_filter");
     myChart.setColAlign("right,right,right,right,right,right,right,right,right,right");
@@ -58,7 +58,7 @@ dhtmlxEvent(window,"load",function(){
     myLayout.cells("b").collapse();
     
     myRuns.selMultiRows = true;
-    myRuns.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRuns.setImagePath( "{{ asset('/images/') }}");
     myRuns.setHeader("{{ "Job" | trans }},{{ "Type" | trans }},{{ "Class" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Status" | trans }},{{ "Alarm" | trans }},{{ "Alarm time" | trans }},{{ "Ack" | trans }},{{ "Ack time" | trans }}");
     myRuns.attachHeader("#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter");
     myRuns.setColAlign("left,left,left,right,right,right,left,left,left,left");

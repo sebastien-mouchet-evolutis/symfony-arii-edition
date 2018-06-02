@@ -3,7 +3,7 @@ globalTabbar.addTab("global","{{ "Global" | trans }}","120px",null,true);
 globalTabbar.addTab("applications","{{ "Applications" | trans }}","120px");
 
 globalTree = globalTabbar.cells("global").attachTree();
-globalTree.setImagePath("{{ asset('/bundles/ariicore/images/tree/') }}");
+globalTree.setImagePath("{{ asset('/images/') }}");
 globalTree.load("{{ url('xml_Report_tree_menu') }}");
 globalTree.attachEvent("onClick", function(itemid){
     window.location = "{{ url('arii_Report_index') }}"+itemid;
@@ -12,7 +12,7 @@ globalTree.attachEvent("onClick", function(itemid){
 
 globalApps = globalTabbar.cells("applications").attachGrid();
 globalApps.selMultiRows = true;
-globalApps.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+globalApps.setImagePath( "{{ asset('/images/') }}");
 globalApps.setHeader("{{ "Application" | trans }}");
 globalApps.attachHeader("#text_filter");
 globalApps.setColAlign("left");

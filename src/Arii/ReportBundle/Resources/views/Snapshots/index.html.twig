@@ -27,17 +27,17 @@ var size=345;
     globalLayout.cells("b").setText("{{ "Workspace" | trans }}");
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     MyDocsTree = globalLayout.cells("a").attachTree();
-    MyDocsTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    MyDocsTree.setImagesPath("{{ asset('/images/') }}");
     MyDocsTree.load( "{{ url('xml_Report_snapshots_tree') }}");        
     
     myGrid = globalLayout.cells("b").attachGrid();

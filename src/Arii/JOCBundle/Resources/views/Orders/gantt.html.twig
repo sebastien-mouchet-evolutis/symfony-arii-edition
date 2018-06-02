@@ -55,16 +55,16 @@ gantt_task_line.custom_css  .gantt_task_progress {
         border-right-color: #55d822;
 }
 .gantt_tree_icon.gantt_folder_C_open {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/job_chain.png') }}' );
+    background-image: url( '{{ asset('/images/job_chain.png') }}' );
 }
 .gantt_tree_icon.gantt_folder_C_closed {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/job_chain.png') }}' );
+    background-image: url( '{{ asset('/images/job_chain.png') }}' );
 }
 .gantt_tree_icon.gantt_folder_O_open {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/order.png') }}' );
+    background-image: url( '{{ asset('/images/order.png') }}' );
 } 
 .gantt_tree_icon.gantt_folder_O_closed {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/order.png') }}' );
+    background-image: url( '{{ asset('/images/order.png') }}' );
 } 
 </style>
 <script>
@@ -250,7 +250,7 @@ gantt.load("{{ url('xml_JOC_orders_gantt') }}");
 
 var toolbar;
 toolbar = new dhtmlXToolbarObject("toolbarObj");
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('arii_JOC_toolbar') }}");
 
 gantt.attachEvent("onBeforeTaskDisplay", function(id, task){

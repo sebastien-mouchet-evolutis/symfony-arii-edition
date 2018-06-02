@@ -9,14 +9,14 @@ var steps = false;
 dhtmlxEvent(window,"load",function(){ 
 
     menu = new dhtmlXMenuObject(null);
-    menu.setIconsPath( "{{ asset('bundles/ariicore/images/menu/') }}" );
+    menu.setIconsPath( "{{ asset('/images/') }}" );
     menu.renderAsContextMenu();
     menu.attachEvent("onClick", onButtonClick);
     menu.loadStruct("{{ url('xml_JOC_chains_menu') }}");
 
     var dhxLayout = new dhtmlXLayoutObject("mygrid","2E");
     var toolbar = dhxLayout.attachToolbar();
-    toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
     toolbar.loadStruct("{{ url('xml_JOC_chains_toolbar') }}");
     toolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {
@@ -64,7 +64,7 @@ dhtmlxEvent(window,"load",function(){
 
     var mygrid = dhxLayout.cells("a").attachGrid();
     mygrid.selMultiRows = true;
-    mygrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    mygrid.setImagePath( "{{ asset('/images/') }}");
     mygrid.enableTreeCellEdit(false);
     mygrid.setHeader("{{ "Location" | trans }},#cspan,{{ "Information" | trans }},{{ "Status" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }},{{ "Next start time" | trans }},{{ "Message" | trans }}");
     mygrid.attachHeader("#text_filter,#cspan,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter");
@@ -594,7 +594,7 @@ winLayout.cells("a").hideHeader();
 
 var toolbar;
 toolbar = winLayout.cells("a").attachToolbar();
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('arii_JID_toolbar_start_orders') }}");
 toolbar.attachEvent("onClick",function(buttonId){
     switch (buttonId) {
@@ -668,7 +668,7 @@ function AddOrder(id)
     
     var toolbar;
     toolbar = winLayout.cells('a').attachToolbar();
-    toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_add_order') }}",function(){
         GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -677,7 +677,7 @@ function AddOrder(id)
 
     var toolbar2;
     toolbar2 = winLayout.cells("b").attachToolbar();
-    toolbar2.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    toolbar2.setIconsPath("{{ asset('/toolbar/') }}");
     toolbar2.loadXML("{{ url('xml_JID_toolbar_order_param') }}");
 
     toolbar.attachEvent("onClick",function(itemid){
@@ -979,7 +979,7 @@ function PurgeOrder( id ) {
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_purge_order') }}");
 
     toolbar.attachEvent("onClick",function(itemid){

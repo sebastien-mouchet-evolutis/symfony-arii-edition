@@ -1,0 +1,10 @@
+#--------------------------------------------------------------------
+# Common
+#--------------------------------------------------------------------
+json_ARII_ribbon:
+    path:  /ribbon.json
+    defaults: { _controller: AriiCoreBundle:Common:ribbon }
+
+xml_ARII_toolbar:
+    path:  /toolbar.xml
+    defaults: { _controller: AriiCoreBundle:Common:toolbar }

@@ -2,3 +2,8 @@ module.ACK: Acquittement
 summary.JOB: Suivi des alertes
 text.JOB: Gestion des procédures de reprises.
 Author: Auteur
+Issue:
+    state:
+        - 0:   OPEN
+        - 64:  ACK.
+        - 128: CLOSE

@@ -73,28 +73,28 @@ gantt_task_line.custom_css  .gantt_task_progress {
         border-right-color: #55d822;
 }
 .gantt_tree_icon.gantt_folder_C_open {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/job_chain.png') }}' );
+    background-image: url( '{{ asset('/images/job_chain.png') }}' );
 }
 .gantt_tree_icon.gantt_folder_C_closed {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/job_chain.png') }}' );
+    background-image: url( '{{ asset('/images/job_chain.png') }}' );
 }
 .gantt_tree_icon.gantt_folder_O_open {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/order.png') }}' );
+    background-image: url( '{{ asset('/images/order.png') }}' );
 } 
 .gantt_tree_icon.gantt_folder_O_closed {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/order.png') }}' );
+    background-image: url( '{{ asset('/images/order.png') }}' );
 } 
 .gantt_tree_icon.gantt_folder_S_open {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/spooler.png') }}' );
+    background-image: url( '{{ asset('/images/spooler.png') }}' );
 } 
 .gantt_tree_icon.gantt_folder_S_closed {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/spooler.png') }}' );
+    background-image: url( '{{ asset('/images/spooler.png') }}' );
 } 
 .gantt_tree_icon.gantt_folder_T_open {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/task.png') }}' );
+    background-image: url( '{{ asset('/images/task.png') }}' );
 } 
 .gantt_tree_icon.gantt_folder_T_closed {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/task.png') }}' );
+    background-image: url( '{{ asset('/images/task.png') }}' );
 } 
 .failure .gantt_task_progress, .failure .gantt_task_progress{
         background: red;
@@ -167,7 +167,7 @@ gantt.attachEvent("onTaskClosed",function(id) {
 
 var toolbar;
 toolbar = new dhtmlXToolbarObject("toolbarObj");
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('xml_JOC_toolbar_gantt') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {

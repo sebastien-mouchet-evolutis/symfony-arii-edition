@@ -16,11 +16,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").setText("{{ "Servers" | trans }}"); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -52,7 +52,7 @@ dhtmlxEvent(window,"load",function(){
 
     myGrid = myTab.cells("status").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Time" | trans }},{{ "Role" | trans }},{{ "Hostname" | trans }},{{ "Status" | trans }},{{ "PID" | trans }},{{ "Port" | trans }},{{ "Queue" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("140,120,*,120,120,120,120");
@@ -68,7 +68,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setText("{{ "Application servers" | trans }}"); 
     myGrid2 = globalLayout.cells("c").attachGrid();
     myGrid2.selMultiRows = true;
-    myGrid2.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid2.setImagePath( "{{ asset('/images/') }}");
     myGrid2.setHeader("{{ "Time" | trans }},{{ "Hostname" | trans }},{{ "Status" | trans }},{{ "PID" | trans }},{{ "Port" | trans }},{{ "Queue" | trans }},{{ "Comm." | trans }},{{ "Alias" | trans }}");
     myGrid2.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
     myGrid2.setInitWidths("140,*,120,120,120,120,200,200");

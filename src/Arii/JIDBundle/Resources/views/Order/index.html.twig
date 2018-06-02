@@ -13,11 +13,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("a").hideHeader(); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_JID_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -27,7 +27,7 @@ dhtmlxEvent(window,"load",function(){
 
     globalLayout.cells("b").hideHeader();
     myToolbar = globalLayout.cells("b").attachToolbar(); 
-    myToolbar.setIconsPath( "{{ asset('/bundles/ariicore/images/toolbar/') }}" )
+    myToolbar.setIconsPath( "{{ asset('/images/') }}" )
     myToolbar.addButton('spooler', 1, "{{ spooler }}", "spooler.png");
     myToolbar.addButton('chain', 2, "{{ chain }}", "job_chain.png");
     myToolbar.addButton('order', 3, "{{ order }}", "order.png");

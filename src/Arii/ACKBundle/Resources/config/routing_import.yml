@@ -27,3 +27,14 @@ arii_ACK_import_autosys_status:
 arii_ACK_import_jobscheduler_db:
     pattern:  /jobscheduler/{db}
     defaults: { _controller: AriiACKBundle:Import\JobScheduler:db }
+
+#================================
+# Synchronisation Jira
+#================================
+arii_ACK_import_jira_issues:
+    pattern:  /jira/issues
+    defaults: { _controller: AriiACKBundle:Import\Jira:issues }
+
+arii_ACK_import_jira_changes:
+    pattern:  /jira/changes
+    defaults: { _controller: AriiACKBundle:Import\Jira:changes }

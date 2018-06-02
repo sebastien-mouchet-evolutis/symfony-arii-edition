@@ -561,7 +561,7 @@ dp.init(myForm);
 
 var toolbar;
 toolbar = new dhtmlXToolbarObject("toolbarObj");
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('arii_batchinstaller_toolbar_edit') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {

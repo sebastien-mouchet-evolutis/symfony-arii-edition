@@ -11,11 +11,11 @@ var size=345;
     globalLayout.cells("b").hideHeader(); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -41,7 +41,7 @@ var size=345;
     globalLayout.cells("b").hideHeader();
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Job" | trans }},{{ "Description" | trans }},{{ "Command" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#text_filter");
     myGrid.setInitWidths("*,*,*");
@@ -55,7 +55,7 @@ var size=345;
     });
 */        
     myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myToolbar.loadStruct("{{ url('xml_Report_search_toolbar') }}", function() {
     });
     myToolbar.attachEvent( "onClick", function(id, value) {
@@ -84,7 +84,7 @@ var size=345;
     globalLayout.cells("c").collapse();
     
     myData = historyLayout.cells("a").attachGrid();
-    myData.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myData.setImagePath( "{{ asset('/images/') }}");
     myData.setHeader("{{ "Start" | trans }},{{ "End" | trans }},{{ "Status" | trans }}");
     myData.attachHeader("#text_filter,#text_filter,#select_filter");
     myData.setInitWidths("150,150,*");

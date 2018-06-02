@@ -1,0 +1,128 @@
+{
+   "items":
+   [
+        {   
+            type:       "block", 
+            text:       "{{ BUNDLE.module }}", 
+            text_pos:   "top", 
+            list:
+                [
+                   {   
+                        type:   "button", 
+                        id:     "home",
+                        text:   "", 
+                        isbig:  true, 
+                        img:    "48/{{ BUNDLE.mod }}.png"
+                    },
+                    {   
+                        type:   "buttonSelect", 
+                        id:     "browsing",
+                        text:   "", 
+                        img:    "go.png",
+                        items:
+                        [
+{% for menu in MENU %}
+                            { id:"BUNDLE_{{ menu.mod }}", text: "{{ menu.title | trans }}", img: "{{ menu.mod }}.png" },
+{% endfor %}
+                        ]
+                    }
+                ]
+        },
+     {   "type":"block", 
+          "id": "current_filter",
+          {% if (app.session.get('user_filter')|length) >0 %}
+          {% set filter = app.session.get('user_filter') %}
+          text:"{{ filter.name }}",
+          {% else %}
+          text:"{{ "Filter" | trans }}", 
+          {% endif %}
+          "text_pos": "bottom", 
+          "list":
+          [
+             {   "type": "buttonSelect", 
+                 text:"",
+                 "id": "Filters",
+                 "isbig": true, 
+                 "img": "48/search.png", 
+                 items:
+                 [ 
+     {% if (app.session.get('UserFilters')|length) >0 %}
+    {% set filter = app.session.get('user_filter') %}     
+       {% set filters = app.session.get('UserFilters') %}     
+        {% for k,filter in filters %}
+            { id:"filter_{{ filter.id }}", text: "{{ filter.name }}" },
+        {% endfor %}
+    {% endif %}
+                  ]
+              },
+              {id:"filter_edit","type":"button",text:"","img":"edit.png","tooltip": "{{ "Edit filter" | trans }}" },
+              {id:"filter_all","type":"button",text:"","img":"zoom_out.png"},
+          ]
+      },
+        {   
+            type:       "block", 
+            text:       "{{ "My account" | trans }}", 
+            text_pos:   "bottom", 
+            list:
+                [
+                   {   
+                        type:   "button", 
+                        id:     "my_account",
+                        text:   "", 
+                        isbig:  true, 
+                        img:    "48/me.png"
+                    },
+                    {   
+                        type:   "buttonSelect", 
+                        id:     "lang",
+                        text:   "", 
+                        img:    "flags/{{ app.request.locale }}.png",
+                        items:
+                        [
+{% for lang,info in LANG %}
+                            { id:"LANG_{{ lang }}", text: "{{ info.string }}", img: "{{ lang }}.png" },
+{% endfor %}
+                        ]
+                    },
+                    {   
+                         type:   "button", 
+                         id:     "USER_message",
+                         text:   "{{ "Messages" | trans }}", 
+                         img:    "email.png"
+                    },
+                    {   
+                         type:   "button", 
+                         id:     "USER_message",
+                         text:   "{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}", 
+                         img:    "logout.png"
+                    }
+                ]
+        },
+        {   
+            type:       "block", 
+            text:       "{{ "Help" | trans }}", 
+            text_pos:   "bottom", 
+            list:
+                [
+                    {   
+                         type:   "button", 
+                         id:     "HELP_sos",
+                         text:   "{{ "Contact" | trans }}", 
+                         img:    "contact.png"
+                    },
+                    {   
+                         type:   "button", 
+                         id:     "HELP_github",
+                         text:   "{{ "Code" | trans }}", 
+                         img:    "github.png"
+                    },
+                    {   
+                         type:   "button", 
+                         id:     "HELP_readme",
+                         text:   "{{ "Guide" | trans }}", 
+                         img:    "doc.png"
+                    }
+                 ]
+        }
+   ]
+}

@@ -12,11 +12,11 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").hideHeader(); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_MFT_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -24,7 +24,7 @@ dhtmlxEvent(window,"load",function(){
     window.dhx_globalImgPath = "{{ asset('bundles/ariicore/dhtmlx/dhtmlxCombo/codebase/imgs/') }}";
 
     globalToolbar = globalLayout.cells("b").attachToolbar(); 
-    globalToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
+    globalToolbar.setIconsPath("{{ asset('/images/') }}");
     globalToolbar.loadStruct("{{ url('xml_MFT_transfer_toolbar') }}");
 
     myForm = globalLayout.cells("b").attachForm();

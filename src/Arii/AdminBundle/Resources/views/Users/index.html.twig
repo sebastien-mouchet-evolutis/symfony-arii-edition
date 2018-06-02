@@ -15,11 +15,11 @@ var size=300;
     globalLayout.cells("d").setHeight(180); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );    
@@ -33,12 +33,12 @@ var size=300;
     globalLayout.cells("a").hideHeader();    
 
     myTeam = globalLayout.cells("b").attachTree();
-    myTeam.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTeam.setImagesPath("{{ asset('/images/') }}");
     myTeam.load( "{{ url('xml_Admin_teams_tree') }}" );
         
     myGrid = globalLayout.cells("c").attachGrid();
     myGrid.setMultiRows = true;
-    myGrid.setImagePath("{{ asset('/bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath("{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Username" | trans }},{{ "Name" | trans }},{{ "Email" | trans }},{{ "Team" | trans }},{{ "Role"  | trans }},{{ "Login" | trans }},#cspan");
     myGrid.attachHeader("#text_filter,#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#cspan");
     myGrid.setInitWidths("200,*,150,150,150,140,50");
@@ -111,7 +111,7 @@ var size=300;
     ];
     
     myFormToolbar = globalLayout.cells("d").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_user_toolbar') }}");
     
     myForm = globalLayout.cells("d").attachForm(formData);

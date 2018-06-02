@@ -12,7 +12,26 @@ use Doctrine\ORM\EntityRepository;
  */
 class EventRepository extends EntityRepository
 {
-
+    public function listOK() {        
+        $q = $this
+        ->createQueryBuilder('e')
+        ->select('e.id,e.name,e.title,e.status,e.state,e.end_time')
+        ->where('e.state > 127')
+        ->orderBy('e.end_time','DESC')
+        ->getQuery();
+        return $q->getResult();
+    }
+    
+    public function listNotOK() {        
+        $q = $this
+        ->createQueryBuilder('e')
+        ->select('e.id,e.name,e.title,e.status,e.state,e.end_time')
+        ->where('e.state < 128')
+        ->orderBy('e.end_time','DESC')
+        ->getQuery();
+        return $q->getResult();
+    }
+    
     public function Event($id) {
         
         $q = $this

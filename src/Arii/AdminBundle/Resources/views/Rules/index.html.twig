@@ -12,11 +12,11 @@ var size=300;
     globalLayout.cells("c").setHeight(250); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );    
@@ -30,7 +30,7 @@ var size=300;
     globalLayout.cells("a").hideHeader(); 
     
     myApps = globalLayout.cells("b").attachGrid();
-    myApps.setImagePath("{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myApps.setImagePath("{{ asset('/images/') }}");
     myApps.setHeader("{{ "Job"| trans }},{{ "App"| trans }},{{ "Env"| trans }}");
     myApps.attachHeader("#text_filter,#text_filter,#select_filter");
     myApps.setInitWidths("*,200,100");
@@ -71,7 +71,7 @@ var size=300;
     myForm.enableLiveValidation(true);
     
     myToolbar = globalLayout.cells("c").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myToolbar.loadStruct("{{ url('xml_Admin_rules_toolbar') }}", function () {
         myToolbar.hideItem("delete");
     });

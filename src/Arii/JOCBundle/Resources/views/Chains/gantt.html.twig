@@ -19,10 +19,10 @@
 	<div class="title_wrapper">
 		<h2>{{ "Chains" | trans }}</h2>
 <ul  class="section_menu">
-      <li><a href="{{ url('arii_JOC_orders') }}" class="active"><span><span><img src="{{ asset('bundles/ariicore/images/wa/list.png') }}"/>&nbsp;{{ "List" | trans }}</span></span></a></li>
-      <li><a href="{{ url('arii_JOC_orders_gantt') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/gantt.png') }}"/>&nbsp;{{ "Gantt" | trans }}</span></span></a></li>
-      <li><a href="{{ url('arii_JID_orders_timeline') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/timeline.png') }}"/>&nbsp;{{ "Timeline" | trans }}</span></span></a></li>
-    <li><a href="{{ url('arii_JID_orders_last') }}" class=""><span><span><img src="{{ asset('bundles/ariicore/images/wa/monitor.png') }}"/>&nbsp;{{ "Monitor" | trans }}</span></span></a></li>
+      <li><a href="{{ url('arii_JOC_orders') }}" class="active"><span><span><img src="{{ asset('/images/list.png') }}"/>&nbsp;{{ "List" | trans }}</span></span></a></li>
+      <li><a href="{{ url('arii_JOC_orders_gantt') }}" class=""><span><span><img src="{{ asset('/images/gantt.png') }}"/>&nbsp;{{ "Gantt" | trans }}</span></span></a></li>
+      <li><a href="{{ url('arii_JID_orders_timeline') }}" class=""><span><span><img src="{{ asset('/images/timeline.png') }}"/>&nbsp;{{ "Timeline" | trans }}</span></span></a></li>
+    <li><a href="{{ url('arii_JID_orders_last') }}" class=""><span><span><img src="{{ asset('/images/monitor.png') }}"/>&nbsp;{{ "Monitor" | trans }}</span></span></a></li>
 </ul> 
 		<span class="title_wrapper_left"></span>
 		<span class="title_wrapper_right"></span>
@@ -93,16 +93,16 @@ gantt_task_line.custom_css  .gantt_task_progress {
         border-right-color: #55d822;
 }
 .gantt_tree_icon.gantt_folder_C_open {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/job_chain.png') }}' );
+    background-image: url( '{{ asset('/images/job_chain.png') }}' );
 }
 .gantt_tree_icon.gantt_folder_C_closed {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/job_chain.png') }}' );
+    background-image: url( '{{ asset('/images/job_chain.png') }}' );
 }
 .gantt_tree_icon.gantt_folder_O_open {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/order.png') }}' );
+    background-image: url( '{{ asset('/images/order.png') }}' );
 } 
 .gantt_tree_icon.gantt_folder_O_closed {
-    background-image: url( '{{ asset('bundles/ariicore/images/wa/order.png') }}' );
+    background-image: url( '{{ asset('/images/order.png') }}' );
 } 
 </style>
 <script>
@@ -288,7 +288,7 @@ gantt.load("{{ url('xml_JOC_orders_gantt') }}");
 
 var toolbar;
 toolbar = new dhtmlXToolbarObject("toolbarObj");
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('arii_JOC_toolbar') }}");
 
 gantt.attachEvent("onBeforeTaskDisplay", function(id, task){

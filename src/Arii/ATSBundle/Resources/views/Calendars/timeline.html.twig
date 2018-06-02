@@ -40,18 +40,18 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").collapse();
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_ATS_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     myGrid = globalLayout.cells("a").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Calendar" | trans }},{{ "End" | trans }},{{ "Days" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#numeric_filter");
     myGrid.setInitWidths("*,90,60");
@@ -69,7 +69,7 @@ dhtmlxEvent(window,"load",function(){
 
     myJobs = myTab.cells("b1").attachGrid();
     myJobs.selMultiRows = true;
-    myJobs.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myJobs.setImagePath( "{{ asset('/images/') }}");
     myJobs.setHeader("{{ "Job" | trans }},{{ "Last" | trans }},{{ "Next" | trans }},{{ "Description" | trans }}");
     myJobs.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter");
     myJobs.setInitWidths("200,140,140,*");
@@ -81,7 +81,7 @@ dhtmlxEvent(window,"load",function(){
 
     myExclude = myTab.cells("b2").attachGrid();
     myExclude.selMultiRows = true;
-    myExclude.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myExclude.setImagePath( "{{ asset('/images/') }}");
     myExclude.setHeader("{{ "Job" | trans }},{{ "Last" | trans }},{{ "Next" | trans }},{{ "Description" | trans }}");
     myExclude.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter");
     myExclude.setInitWidths("200,140,140,*");

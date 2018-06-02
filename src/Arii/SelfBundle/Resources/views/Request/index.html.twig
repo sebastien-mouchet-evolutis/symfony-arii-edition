@@ -15,11 +15,11 @@ var size=300;
     globalLayout.cells("c").setText("{{ "Demandes en cours" | trans }}"); 
 
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Self_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -27,10 +27,10 @@ var size=300;
     globalLayout.cells("a").hideHeader(); 
 
     myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagePath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagePath("{{ asset('/images/') }}");
     myTree.load( '{{ url('xml_Self_tree') }}');
     myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagePath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagePath("{{ asset('/images/') }}");
     myTree.load( '{{ url('xml_Self_tree') }}');
     myTree.attachEvent("onClick", function(id) {
         switch (id.substr(0,1)) {
@@ -45,17 +45,17 @@ var size=300;
     });
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_Self_toolbar') }}");
 
     myGridMenu = new dhtmlXMenuObject(null);
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_Self_grid_menu') }}");
 
     // Pour les demandes traites
     myGridMenu2 = new dhtmlXMenuObject(null);
-    myGridMenu2.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    myGridMenu2.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu2.renderAsContextMenu();
     myGridMenu2.loadStruct("{{ url('xml_Self_grid_menu2') }}");
 
@@ -69,7 +69,7 @@ var size=300;
     detailLayout.cells('b').hideHeader();
 
     myRequests = detailLayout.cells('a').attachGrid();
-    myRequests.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myRequests.setImagePath( "{{ asset('/images/') }}");
     myRequests.setHeader("{{ "Request" | trans }},{{ "Reference" | trans }},{{ "Parameters" | trans }},{{ "Status" | trans }},{{ "Created" | trans }},{{ "Planned" | trans }},{{ "Processed" | trans }},{{ "User" | trans }}");
     myRequests.attachHeader("#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#select_filter");
     myRequests.setInitWidths("0,*,0,100,150,150,150,100");
@@ -85,7 +85,7 @@ var size=300;
     myTabbar2.addTab("history","{{ "History" | trans }}","120px");
     
     myParameters = myTabbar2.cells('params').attachGrid();
-    myParameters.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myParameters.setImagePath( "{{ asset('/images/') }}");
     myParameters.setHeader("{{ "Name" | trans }},{{ "Value" | trans }}");
     myParameters.attachHeader("#text_filter,#text_filter");
     myParameters.setInitWidths("*,*");
@@ -95,7 +95,7 @@ var size=300;
     myParameters.init();    
 
     myHistory = myTabbar2.cells('history').attachGrid();
-    myHistory.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myHistory.setImagePath( "{{ asset('/images/') }}");
     myHistory.setHeader("{{ "Status" | trans }},{{ "Start time" | trans }},{{ "End time" | trans }}");
     myHistory.attachHeader("#select_filter,#text_filter,#text_filter");
     myHistory.setInitWidths("100,150,150");
@@ -117,7 +117,7 @@ var size=300;
     });
 
     myProcessed = myTabbar.cells("history").attachGrid();
-    myProcessed.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myProcessed.setImagePath( "{{ asset('/images/') }}");
     myProcessed.setHeader("{{ "Request" | trans }},{{ "Reference" | trans }},{{ "Parameters" | trans }},{{ "Status" | trans }},{{ "Created" | trans }},{{ "Planned" | trans }},{{ "Processed" | trans }},{{ "User" | trans }}");
     myProcessed.attachHeader("#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#select_filter");
     myProcessed.setInitWidths("0,200,*,100,150,150,0,100");

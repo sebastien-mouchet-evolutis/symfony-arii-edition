@@ -38,7 +38,7 @@ var autorefresh = setInterval( "GridRefresh()",30000);
 
 var dhxLayout = new dhtmlXLayoutObject("mygrid","3T");
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/toolbar/') }}");
 toolbar.loadStruct("{{ url('xml_MFT_toolbar') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {
@@ -64,7 +64,7 @@ dhxLayout.cells("a").setHeight(295);
 
 var mygrid = dhxLayout.cells("a").attachGrid();
 mygrid.selMultiRows = true;
-mygrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+mygrid.setImagePath( "{{ asset('/images/') }}");
 mygrid.setHeader(  "{{ "Timestamp" | trans }},{{ "Mandator" | trans }},{{ "Status" | trans }},{{ "Source host" | trans }},{{ "Operation" | trans }},{{ "Target host" | trans }},{{ "Filename" | trans }}" );
 mygrid.attachHeader("#text_filter,#text_filter,#select_filter,#select_filter,#select_filter,#select_filter,#text_filter");
 mygrid.setColumnIds(  "TIMESTAMP,MANDATOR,STATUS,SOURCE_HOST,OPERATION,TARGET_HOST,SOURCE_FILENAME" );

@@ -15,18 +15,18 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").setHeight(300); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_MFT_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
     
     myPartners = globalLayout.cells("a").attachGrid();
     myPartners.selMultiRows = true;
-    myPartners.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myPartners.setImagePath( "{{ asset('/images/') }}");
     myPartners.setHeader("{{ "Category" | trans }},{{ "Title" | trans }},{{ "Description" | trans }}");
     myPartners.attachHeader("#select_filter,#text_filter,#text_filter");
     myPartners.setInitWidths("0,150,*");
@@ -37,7 +37,7 @@ dhtmlxEvent(window,"load",function(){
     myPartners.load("{{ url('xml_MFT_partners_grid') }}");
 
     myGridMenu = new dhtmlXMenuObject(null);
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/wa/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_MFT_transfers_grid_menu') }}");
 
@@ -47,7 +47,7 @@ dhtmlxEvent(window,"load",function(){
     });    
     myGrid = globalLayout.cells("b").attachGrid();
     myGrid.selMultiRows = true;
-    myGrid.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Partner" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Description" | trans }},{{ "Change" | trans }},{{ "User" | trans }},{{ "Env" | trans }}");
     myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#select_filter,#select_filter");
     myGrid.setInitWidths("200,200,*,200,140,140,100");
@@ -74,7 +74,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_MFT_transfers_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -105,7 +105,7 @@ dhtmlxEvent(window,"load",function(){
     myTabbar.addTab("doc","{{ "Doc" | trans }}","150px");
 
     myFormToolbar = myTabbar.cells("detail").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myFormToolbar.loadStruct( "{{ url('xml_MFT_transfer_toolbar') }}");
 
     myForm = myTabbar.cells("detail").attachForm();
@@ -203,7 +203,7 @@ dhtmlxEvent(window,"load",function(){
  
     myOperations = myLayout.cells("a").attachGrid();
     myOperations.selMultiRows = true;
-    myOperations.setImagePath( "{{ asset('bundles/ariicore/images/treegrid/') }}");
+    myOperations.setImagePath( "{{ asset('/images/') }}");
     myOperations.setHeader("{{ "Transfer" | trans }},{{ "Step" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Description" | trans }},{{ "Source" | trans }},{{ "Target" | trans }},{{ "Env" | trans }}");
     myOperations.attachHeader("#select_filter,#numeric_filter,#text_filter,#text_filter,#text_filter,#select_filter,#select_filter,#select_filter");
     myOperations.setInitWidths("0,50,200,*,0,150,150,0");
@@ -220,7 +220,7 @@ dhtmlxEvent(window,"load",function(){
     myOpForm.loadStruct("{{ url('json_MFT_operation_form') }}");
 
     myOpFormToolbar = myLayout.cells("b").attachToolbar();
-    myOpFormToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myOpFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myOpFormToolbar.loadStruct( "{{ url('xml_MFT_operation_toolbar') }}");
 
     myOperations.attachEvent("onRowDblClicked", function(id) {

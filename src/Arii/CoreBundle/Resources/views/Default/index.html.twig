@@ -3,13 +3,13 @@
 {% block body %}
 <style>
 .dhx_dataview_bundle1_item, .dhx_dataview_bundle1_item_selected{
-        background-image:url({{ asset('/bundles/ariicore/images/cover/bg_1.gif') }});height:136px;width:577px;cursor:default;background-repeat : no-repeat;
+        background-image:url({{ asset('/images/cover/bg_1.gif') }});height:136px;width:577px;cursor:default;background-repeat : no-repeat;
 }
 .dhx_dataview_bundle2_item, .dhx_dataview_bundle2_item_selected{
-        background-image:url({{ asset('/bundles/ariicore/images/cover/bg_2.gif') }});height:136px;width:288px;cursor:default;float:left;background-repeat : no-repeat;
+        background-image:url({{ asset('/images/cover/bg_2.gif') }});height:136px;width:288px;cursor:default;float:left;background-repeat : no-repeat;
 }
 .dhx_dataview_bundle3_item, .dhx_dataview_bundle3_item_selected{
-        background-image:url({{ asset('/bundles/ariicore/images/cover/bg_3.gif') }});height:136px;width:141px;cursor:default;float:left;background-repeat : no-repeat;
+        background-image:url({{ asset('/images/cover/bg_3.gif') }});height:136px;width:141px;cursor:default;float:left;background-repeat : no-repeat;
 }
 
 .dhx_dataview_bundle1_item_selected, .dhx_dataview_bundle2_item_selected, .dhx_dataview_bundle3_item_selected{
@@ -99,7 +99,7 @@ var size=400;
     {% include "AriiCoreBundle:Default:menu.html.twig" %}   
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Home_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
@@ -110,7 +110,7 @@ var size=400;
 
     myToolbar = globalLayout.cells("b").attachToolbar();
 
-    myToolbar.setIconsPath("{{ asset('bundles/ariicore/images/cover/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/cover/') }}");
     myToolbar.loadStruct("{{ url('xml_toolbar') }}");
     myToolbar.attachEvent( "onStateChange", function(id, value) {
         switch (id) {

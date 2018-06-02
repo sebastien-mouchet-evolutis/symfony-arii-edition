@@ -9,17 +9,17 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("c").hideHeader(); 
     
     globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
     globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
     myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/bundles/ariicore/images/ribbon/') }}" );
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
     myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagesPath("{{ asset('bundles/ariicore/images/tree/') }}");
+    myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load( "{{ url('xml_Admin_categories_tree') }}" );
     myTree.enableDragAndDrop(true, false);
     myTree.attachEvent("onClick",function(id){
@@ -31,7 +31,7 @@ dhtmlxEvent(window,"load",function(){
     })    
 
     myGridToolbar = globalLayout.cells("c").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
     myGridToolbar.loadStruct("{{ url('xml_Admin_repository_toolbar') }}", function () {
         {%if id == '' %}
             myGridToolbar.hideItem("delete_repository");
@@ -40,7 +40,7 @@ dhtmlxEvent(window,"load",function(){
     myGridToolbar.attachEvent("onClick",onClick);
 
     myGridMenu = new dhtmlXMenuObject();
-    myGridMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+    myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.attachEvent("onClick", onMenuClick);
     myGridMenu.loadStruct("{{ url('xml_Admin_repositories_menu') }}");
