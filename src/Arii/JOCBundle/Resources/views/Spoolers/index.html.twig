@@ -158,7 +158,7 @@ dhtmlxEvent(window,"load",function(){
 
 {% if is_granted('ROLE_OPERATOR') %}
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct("{{ url('xml_JOC_spoolers_toolbar') }}");
     myGridToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {
@@ -225,7 +225,7 @@ dhtmlxEvent(window,"load",function(){
     myForm.loadStruct("{{ url('json_JOC_spoolers_form') }}");
 {% if is_granted('ROLE_OPERATOR') %}
     myDetailToolbar = globalLayout.cells("c").attachToolbar();
-    myDetailToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myDetailToolbar.setIconsPath("{{ asset('/images/') }}");
     myDetailToolbar.loadStruct( "{{ url('xml_JOC_spooler_toolbar') }}" , function(){
     });
     myDetailToolbar.attachEvent("onClick",function(itemid){

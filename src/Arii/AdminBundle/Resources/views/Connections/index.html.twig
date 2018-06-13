@@ -1,50 +1,19 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-dhtmlxEvent(window,"load",function(){  
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"4L");  
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("b").setWidth(300); 
-    globalLayout.cells("c").hideHeader(); 
-    globalLayout.cells("b").setText("{{ "Category" | trans }}");     
-    globalLayout.cells("d").setText("{{ "Detail" | trans }}"); 
-    globalLayout.cells("d").setHeight(330); 
-    // globalLayout.cells("d").collapse(); 
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );    
+function Init() {
     
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onBubbleClick", function(id, value){
-        // bubble clicked, your code here
-        // 'return true' means item allowed to be selected
-        // false - otherwise
-        return true;
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-        return true;
-    });
-    globalLayout.cells("a").hideHeader(); 
-
+    myLayout = globalLayout.cells("c").attachLayout("3L");  
+    myLayout.cells("a").setText("{{ "Categories" | trans }}");
+    myLayout.cells("a").setWidth(300);
+    
     myMenu = new dhtmlXMenuObject();
     myMenu.setIconsPath( "{{ asset('/images/') }}" );
     myMenu.renderAsContextMenu();
     myMenu.attachEvent("onClick", onMenuClick);
     myMenu.loadStruct("{{ url('xml_Admin_connections_menu') }}");
 
-    myGrid = globalLayout.cells("c").attachGrid();
+    myGrid = myLayout.cells("b").attachGrid();
     myGrid.setImagePath("{{ asset('arii/images/treegrid/') }}");
     
     myGrid.setHeader("{{ "Name"| trans }},{{ "Title"| trans }},{{ "Type"| trans }},{{ "Description"| trans }},{{ "Host"| trans }},{{ "Protocol"| trans }},{{ "Login"| trans }}");
@@ -61,15 +30,15 @@ var size=300;
         Edit(rid);
     });
 
-    myTree = globalLayout.cells("b").attachTree();
+    myTree = myLayout.cells("a").attachTree();
     myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load( "{{ url('xml_Admin_categories_tree') }}" );
     myTree.enableDragAndDrop(true, false);
     myTree.attachEvent("onClick",function(id){
-        globalLayout.cells("c").progressOn();
+        myLayout.cells("b").progressOn();
         myGrid.clearAll();
         myGrid.load("{{ url('xml_Admin_connections_grid') }}?category="+id, function() {
-            globalLayout.cells("c").progressOff();
+            myLayout.cells("b").progressOff();
         });
     })    
 
@@ -178,11 +147,11 @@ var size=300;
             label: "{{ "Path"| trans }}"
         }                
     ];
-    myForm = globalLayout.cells("d").attachForm(formData);
+    myForm = myLayout.cells("c").attachForm(formData);
     myForm.enableLiveValidation(true);
     
-    myToolbar = globalLayout.cells("d").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar = myLayout.cells("c").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_Admin_connection_toolbar') }}", function () {
         myToolbar.hideItem("delete_connection");
     });
@@ -216,9 +185,9 @@ var size=300;
                      });
                     return;
                 }
-                globalLayout.cells("c").progressOn();
+                myLayout.cells("b").progressOn();
                 myForm.send("{{ url('xml_Admin_connection_save') }}","POST",function(loader,response){
-                    globalLayout.cells("c").progressOff();
+                    myLayout.cells("b").progressOff();
                     if(response === "success")
                    {
                      dhtmlx.message({
@@ -254,8 +223,9 @@ var size=300;
                 break;
         }
     });
-    
-});
+    myLayout.cells("b").hideHeader(); 
+    myLayout.cells("c").hideHeader();     
+}
 
 function onMenuClick(myMenuitemId, type)
 {
@@ -291,11 +261,11 @@ function New() {
 }
 
 function Edit(id) {
-    globalLayout.cells("d").progressOn();
+    myLayout.cells("c").progressOn();
     myToolbar.showItem("delete");
     myForm.clear();
     myForm.load("{{ url('xml_Admin_connection_form') }}?id="+id, function () {
-        globalLayout.cells("d").progressOff();
+        myLayout.cells("c").progressOff();
     });
 }
 
@@ -307,7 +277,7 @@ function Delete(id) {
             type: "confirm-error",
             text: '{{ "Do you confirm the suppression ?" | trans }}',
             callback: function(answer) { if (answer) {
-                      globalLayout.cells("c").progressOn();
+                      myLayout.cells("b").progressOn();
                       myForm.send("{{ url('xml_Admin_connection_delete') }}","POST",function(loader,response){
                       if(response === "success")
                       {
@@ -318,7 +288,7 @@ function Delete(id) {
                            text: "{{ "Connection deleted" | trans }}"
                         });
                         myGrid.deleteRow(id);
-                        globalLayout.cells("c").progressOff();
+                        myLayout.cells("b").progressOff();
                       }
                       else 
                       {

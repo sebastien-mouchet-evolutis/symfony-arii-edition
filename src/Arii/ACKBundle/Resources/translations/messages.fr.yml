@@ -1,7 +1,7 @@
-module.ACK: Acquittement
-summary.JOB: Suivi des alertes
-text.JOB: Gestion des procédures de reprises.
-Author: Auteur
+module.ACK: Acquittements
+summary.ACK: Suivi des incidents
+text.ACK: Escalade les alertes, route les messages et met à jour les instructions pour les exploitants. 
+Author: E. Angenault
 Issue:
     state:
         - 0:   OPEN

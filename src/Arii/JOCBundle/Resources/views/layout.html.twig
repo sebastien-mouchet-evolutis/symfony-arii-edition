@@ -202,7 +202,7 @@ function ShowWhy( id ) {
     winLayout.cells("a").progressOn();
     
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_job_why') }}");
     toolbar.attachEvent("onClick",function(buttonId){
         switch (buttonId) {

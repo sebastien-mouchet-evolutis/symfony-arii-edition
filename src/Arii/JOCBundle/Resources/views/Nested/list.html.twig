@@ -49,7 +49,7 @@ menu.loadStruct("{{ url('xml_JOC_nested_menu') }}");
 
 var dhxLayout = new dhtmlXLayoutObject("mygrid","2E");
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('xml_JOC_nested_toolbar') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {
@@ -538,7 +538,7 @@ function StartOrder(id,action)
     
     var toolbar;
     toolbar = winLayout.cells('a').attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('xml_JOC_toolbar_start_order') }}",function(){
 /*        GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -548,7 +548,7 @@ function StartOrder(id,action)
 
     var toolbar2;
     toolbar2 = winLayout.cells("b").attachToolbar();
-    toolbar2.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar2.setIconsPath("{{ asset('/images/') }}");
     toolbar2.loadXML("{{ url('xml_JOC_toolbar_order_params') }}");
 
     toolbar.attachEvent("onClick",function(itemid){

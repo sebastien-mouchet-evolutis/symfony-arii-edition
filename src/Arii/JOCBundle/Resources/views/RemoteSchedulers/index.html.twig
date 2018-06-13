@@ -50,7 +50,7 @@ dhtmlxEvent(window,"load",function(){
     myDonut.load( "{{ url('xml_JOC_remote_schedulers_pie') }}" );
 {% if is_granted('ROLE_OPERATOR') %}
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct("{{ url('xml_JOC_remote_schedulers_toolbar') }}");
     myGridToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {

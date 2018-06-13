@@ -27,7 +27,7 @@ class ActionsController extends Controller{
         $Actions = $this->getDoctrine()->getRepository('AriiACKBundle:Action')->getComments($event_id);
         
         $render = $this->container->get('arii_core.render');     
-        return $render->grid($Actions,'user,title,date_time');
+        return $render->grid($Actions,'title,date_time,user');
     }
    
 }

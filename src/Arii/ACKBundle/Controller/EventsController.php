@@ -18,20 +18,27 @@ class EventsController extends Controller{
         $response->headers->set('Content-Type', 'text/xml');
         return $this->render("AriiACKBundle:Events:toolbar.xml.twig", array(), $response);
     }
+
+    public function grid_menuAction()
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+        return $this->render('AriiACKBundle:Events:grid_menu.xml.twig',array(), $response );
+    }
     
     public function gridAction()
     {
-        $Errors = $this->getDoctrine()->getRepository('AriiACKBundle:Event')->listNotOk();
-        $render = $this->container->get('arii_core.render');     
-        return $render->grid($Errors,'name,title,status,state,end_time','status');
-    }
-
-    public function grid2Action()
-    {
-        $Errors = $this->getDoctrine()->getRepository('AriiACKBundle:Event')->listOk();
+        $request = Request::createFromGlobals();
+        $state = $request->get('state');
         
+        $Errors = $this->getDoctrine()->getRepository('AriiACKBundle:Event')->listState($state);
         $render = $this->container->get('arii_core.render');     
-        return $render->grid($Errors,'name,title,status,state,end_time','status');
+        return $render->grid($Errors,'event_type,name,title,status,state,end_time','state');
+    }
+    
+    public function countAction()
+    {
+        return new Response( '{ count: "'.$this->getDoctrine()->getRepository('AriiACKBundle:Event')->getNb().'" }' );
     }
     
     public function formAction()
@@ -39,16 +46,6 @@ class EventsController extends Controller{
         $request = Request::createFromGlobals();
         $id = $request->get('id');
         
-/* DHTMLX
-        $sql = $this->container->get('arii_core.sql');        
-        $qry = $sql->Select(array("ID","NAME","TITLE","DESCRIPTION","EVENT","START_TIME","END_TIME"))
-                .$sql->From(array("ARII_EVENT"))
-                .$sql->Where(array("ID"=>$id));
-        
-        $db = $this->container->get('arii_core.db');
-        $data = $db->Connector('form');
-        $data->render_sql($qry,"ID","ID,NAME,TITLE,DESCRIPTION,EVENT,START_TIME,END_TIME");
-*/
         list($Event) = $this->getDoctrine()->getRepository("AriiACKBundle:Event")->Event($id);      
         $Event['start_time'] = $Event['start_time']->format('Y-m-d H:i:s');
         $Event['end_time'] = $Event['end_time']->format('Y-m-d H:i:s');
@@ -108,6 +105,48 @@ class EventsController extends Controller{
         return new Response("success");
     }
    
+    public function stateAction()
+    {
+        $request = Request::createFromGlobals();
+        $id = $request->get('id');
+        $state = $request->get('state');
+
+        $event = new \Arii\ACKBundle\Entity\Event();
+        $event = $this->getDoctrine()->getRepository("AriiACKBundle:Event")->find($id);      
+        if(!$event) 
+            return new Response("$id ?");
+        
+        $event->setState($state);
+        $event->setStateTime(new \DateTime());
+        
+        // En cas d'escalade en ESC.
+        // On cree une nouvelle alarm ?
+        if ($state == 'ESC.') {
+            $alarm = new \Arii\ACKBundle\Entity\Alarm();
+            $alarm->setState('OPEN');
+            $alarm->setStateTime(new \DateTime());
+            
+            // Retrouver la source 
+            $alarm->setAlarmType('event');
+            $em->persist($alarm);
+            
+            // Cloner les infos
+            $alarm->setName($event->getName());
+            $alarm->setTitle($event->getTitle());
+            $alarm->setDescription($event->getDescription());
+            
+            // On relie l'evenement en cours avec l'alarme
+            $event->setAlarm($alarm);
+            
+        }
+        
+        $em = $this->getDoctrine()->getManager();        
+        $em->persist($event);
+        $em->flush();        
+
+        return new Response("success");
+    }
+    
 }
 
 ?>

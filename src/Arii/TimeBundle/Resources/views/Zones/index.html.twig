@@ -75,7 +75,7 @@ dhtmlxEvent(window,"load",function(){
     
     
     myToolbar = myTab.cells("a").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct( "{{ url('xml_Time_zones_toolbar') }}");
 
     myForm = myTab.cells("a").attachForm(formData);

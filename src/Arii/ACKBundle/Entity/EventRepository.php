@@ -12,22 +12,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class EventRepository extends EntityRepository
 {
-    public function listOK() {        
-        $q = $this
-        ->createQueryBuilder('e')
-        ->select('e.id,e.name,e.title,e.status,e.state,e.end_time')
-        ->where('e.state > 127')
-        ->orderBy('e.end_time','DESC')
-        ->getQuery();
-        return $q->getResult();
+    public function getNb($state='OPEN') {
+        return $this->createQueryBuilder('e')
+            ->select('COUNT(e)')
+            ->where('e.state = :state')
+            ->setParameter('state', $state)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
     
-    public function listNotOK() {        
+    public function listState($state) {        
         $q = $this
         ->createQueryBuilder('e')
-        ->select('e.id,e.name,e.title,e.status,e.state,e.end_time')
-        ->where('e.state < 128')
+        ->select('e.id,e.name,e.title,e.status,e.state,e.end_time,e.event_type')
+        ->where('e.state = :state')
         ->orderBy('e.end_time','DESC')
+        ->setParameter('state',$state)
         ->getQuery();
         return $q->getResult();
     }
@@ -36,7 +36,7 @@ class EventRepository extends EntityRepository
         
         $q = $this
         ->createQueryBuilder('e')
-        ->select("e.id","e.name","e.title","e.description","e.event","e.event_type","e.start_time","e.end_time","(e.application) as application_id","(e.domain) as domain_id")
+        ->select("e.id","e.name","e.title","e.description","e.event","e.event_type","e.start_time","e.end_time")
         ->where('e.id = :id')
         ->setParameter('id', $id)
         ->getQuery();
@@ -48,7 +48,7 @@ class EventRepository extends EntityRepository
         
         $q = $this
         ->createQueryBuilder('e')
-        ->select("e.id","e.name","e.title","e.description","e.event","e.event_type","e.start_time","e.end_time","(e.application) as application_id","(e.domain) as domain_id")
+        ->select("e.id","e.name","e.title","e.description","e.event","e.event_type","e.start_time","e.end_time")
         ->where('e.start_time >= :start')
         ->andWhere('e.end_time <= :end')
         ->setParameter('start', $start)

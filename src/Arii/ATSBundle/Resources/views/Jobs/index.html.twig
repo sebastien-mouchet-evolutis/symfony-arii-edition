@@ -106,7 +106,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_ATS_jobs_grid_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -166,7 +166,7 @@ dhtmlxEvent(window,"load",function(){
     myForm2.loadStruct("{{ url('json_ATS_job_form') }}?type="+jobtype);
 
     myDetailToolbar = myTabbar.cells("job").attachToolbar();
-    myDetailToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myDetailToolbar.setIconsPath("{{ asset('/images/') }}");
     myDetailToolbar.loadStruct( "{{ url('xml_ATS_sendevent_toolbar') }}" , function() {
     });
 
@@ -532,7 +532,7 @@ function EditNote(jobname,description) {
     ];
 
     myFormToolbar = myWin.attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_ATS_note_toolbar') }}", function () {
     });
     

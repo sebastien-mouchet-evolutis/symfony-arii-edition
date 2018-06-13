@@ -99,7 +99,14 @@ class AriiRender
             }
 
             foreach ($Fields as $k) {            
-                if (isset($Data[$k]) and !(is_array($Data[$k])))
+                if ($Data[$k] instanceof \DateTime) {                    
+                    $val = $Data[$k]->format('Y-m-d H:i:s');
+                    if ($val == '1970-01-01 00:00:00')
+                        $xml .= '<'.$k.'/>';
+                    else 
+                        $xml .= '<'.$k.'>'.$val.'</'.$k.'>';
+                }
+                elseif (isset($Data[$k]) and !(is_array($Data[$k])))
                     $xml .= '<'.$k.'><![CDATA['.$Data[$k].']]></'.$k.'>';
                 else 
                     $xml .= '<'.$k.'/>';

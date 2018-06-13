@@ -50,7 +50,7 @@ menu.loadStruct("{{ url('arii_JID_menu_chains') }}");
 
 var dhxLayout = new dhtmlXLayoutObject("mygrid","2E");
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('xml_JID_toolbar_chains') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {
@@ -662,7 +662,7 @@ winLayout.cells("a").hideHeader();
 
 var toolbar;
 toolbar = winLayout.cells("a").attachToolbar();
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('arii_JID_toolbar_start_chains') }}");
 toolbar.attachEvent("onClick",function(buttonId){
     switch (buttonId) {
@@ -817,7 +817,7 @@ function AddOrder(id,chain)
     
     var toolbar;
     toolbar = winLayout.cells('a').attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_add_order') }}",function(){
         GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -826,7 +826,7 @@ function AddOrder(id,chain)
 
     var toolbar2;
     toolbar2 = winLayout.cells("b").attachToolbar();
-    toolbar2.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar2.setIconsPath("{{ asset('/images/') }}");
     toolbar2.load("{{ url('xml_JID_toolbar_order_param') }}");
 
     toolbar.attachEvent("onClick",function(itemid){
@@ -949,7 +949,7 @@ var largeur = 600;
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_start_order') }}",function(){
         GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -958,7 +958,7 @@ var largeur = 600;
 
     var toolbar2;
     toolbar2 = winLayout.cells("b").attachToolbar();
-    toolbar2.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar2.setIconsPath("{{ asset('/images/') }}");
     toolbar2.load("{{ url('xml_JID_toolbar_order_param') }}");
     
     toolbar.attachEvent("onClick",function(itemid){
@@ -1033,7 +1033,7 @@ var largeur = 600;
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_start_order') }}",function(){
         GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -1042,7 +1042,7 @@ var largeur = 600;
 
     var toolbar2;
     toolbar2 = winLayout.cells("b").attachToolbar();
-    toolbar2.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar2.setIconsPath("{{ asset('/images/') }}");
     toolbar2.load("{{ url('xml_JID_toolbar_order_param') }}");
 
     toolbar.attachEvent("onClick",function(itemid){
@@ -1118,7 +1118,7 @@ var largeur = 600;
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_start_order') }}",function(){
         GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -1127,7 +1127,7 @@ var largeur = 600;
 
     var toolbar2;
     toolbar2 = winLayout.cells("b").attachToolbar();
-    toolbar2.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar2.setIconsPath("{{ asset('/images/') }}");
     toolbar2.load("{{ url('xml_JID_toolbar_order_param') }}");
 
     toolbar.attachEvent("onClick",function(itemid){
@@ -1382,7 +1382,7 @@ function PurgeOrder( id ) {
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_purge_order') }}");
 
     toolbar.attachEvent("onClick",function(itemid){

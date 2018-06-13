@@ -12,14 +12,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class NetworkRepository extends EntityRepository
 {
-    
-    public function listNotOK() {        
+    public function getNb($state='OPEN') {
+        return $this->createQueryBuilder('e')
+            ->select('COUNT(e)')
+            ->where('e.state = :state')
+            ->setParameter('state', $state)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function listState($state) {        
         $q = $this
         ->createQueryBuilder('e')
-        ->select('e.id,e.name,e.status,e.last_state_change')
-        ->where('e.status != :status')
-        ->orderBy('e.name')
-        ->setParameter('status', 'OK')
+        ->select('e.id,e.event_type,e.name,e.title,e.description,e.status,e.state,e.status_time')
+        ->where('e.state = :state')
+        ->orderBy('e.status_time','DESC')
+        ->setParameter('state',$state)
         ->getQuery();
         return $q->getResult();
     }
@@ -35,5 +43,18 @@ class NetworkRepository extends EntityRepository
         ->getQuery();
         return $q->getResult();
     }
-    
+
+    public function Network($id) {
+        
+        $q = $this
+        ->createQueryBuilder('e')
+        ->select("e.id","e.name","e.title","e.description","e.host","e.ip_address","e.port","e.status","e.state_time","e.state_information",
+                "e.acknowledged","e.downtimes","e.downtimes_info","e.downtimes_user","e.status_time",
+                "e.last_state_change","e.last_time_up","e.last_time_down","e.last_time_unreachable","e.latency")
+        ->where('e.id = :id')
+        ->setParameter('id', $id)
+        ->getQuery();
+
+        return $q->getResult();
+    }    
 }

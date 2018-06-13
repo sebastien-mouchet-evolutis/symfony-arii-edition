@@ -55,6 +55,7 @@ text.Notifier: Configuration du module de notifications pour la surveillance des
 About me: À propos de moi
 About Ari'i: A propos de Ari'i
 Account: Compte
+Acknowledged: Acquitté
 Action: Action
 Activity: Activité
 Add connection: Ajouter connexion
@@ -102,6 +103,7 @@ Check spooler: Vérifier le moteur
 Check for update: Vérifier la mise à jour
 cluster_options: Options de cluster
 Clean: Nettoyer
+Closed: Fermé
 Code: Code
 Colors: Couleurs
 Commercial: Commercial
@@ -192,6 +194,7 @@ Do you really want to delete this team ?: Voulez-vous vraiment supprimer cette �
 Do you really want to delete this user ?: Voulez-vous vraiment supprimer cet utilisateur ?
 Doc: Doc
 Drag&Drop connections.: Connexions Drag&Drop
+Escalated: Escaladé
 Env: Env
 dow.Friday: Vendredi
 dow.Monday: Lundi

@@ -12,6 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class AlertRepository extends EntityRepository
 {
+    public function listState($state) {        
+        $q = $this
+        ->createQueryBuilder('e')
+        ->select('e.id,e.name,e.title,e.status,e.state,e.end_time,e.event_type')
+        ->where('e.state = :state')
+        ->orderBy('e.end_time','DESC')
+        ->setParameter('state',$state)
+        ->getQuery();
+        return $q->getResult();
+    }
 
     public function Alerts() {
         

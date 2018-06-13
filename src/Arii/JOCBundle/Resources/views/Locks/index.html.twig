@@ -21,7 +21,7 @@ dhtmlxEvent(window,"load",function(){
     myRibbon.attachEvent("onClick", ClickRibbon );
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct("{{ url('xml_JOC_locks_toolbar') }}");
     myGridToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {

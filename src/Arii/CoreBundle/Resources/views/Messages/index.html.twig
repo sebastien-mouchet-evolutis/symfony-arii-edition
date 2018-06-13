@@ -89,7 +89,7 @@ var size=300;
     myForm.enableLiveValidation(true);
 
     myToolbar = globalLayout.cells("d").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_message_toolbar') }}", function () {
         myToolbar.hideItem("delete_category");
     });

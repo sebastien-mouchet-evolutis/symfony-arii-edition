@@ -1,34 +1,11 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-dhtmlxEvent(window,"load",function(){
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"4L");  
-    globalLayout.cells("a").setWidth(410); 
-    globalLayout.cells("b").setText("{{ "Sites" | trans }}"); 
-    globalLayout.cells("b").setWidth(400); 
-    globalLayout.cells("d").setHeight(240); 
-    globalLayout.cells("d").setText("{{ "Detail" | trans }}"); 
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-    });
-
-    myGrid = globalLayout.cells("b").attachGrid();
+function Init() {
+    
+    myLayout = globalLayout.cells("c").attachLayout("3L"); 
+    
+    myGrid = myLayout.cells("a").attachGrid();    
     myGrid.selMultiRows = true;
     myGrid.setImagePath("{{ asset('arii/images/treegrid/') }}");
     myGrid.setHeader("{{ "Site"| trans }},{{ "Description"| trans }}");
@@ -41,7 +18,7 @@ var size=300;
         Edit(rid);
     });
     
-    myTabbar = globalLayout.cells("c").attachTabbar();
+    myTabbar = myLayout.cells("b").attachTabbar();
     myTabbar.addTab("map","{{ "Map" | trans }}","200px",null,true);
     myTabbar.addTab("sites","{{ "List" | trans }}","200px");
 
@@ -104,16 +81,16 @@ var size=300;
         }
     ];
 
-    myFormToolbar = globalLayout.cells("d").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myFormToolbar = myLayout.cells("c").attachToolbar();
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_site_toolbar') }}", function () {});
     myFormToolbar.attachEvent("onClick",onClick);
 
-    myForm = globalLayout.cells("d").attachForm(formData);
+    myForm = myLayout.cells("c").attachForm(formData);
     myForm.enableLiveValidation(true);
 
-    globalLayout.cells("a").hideHeader(); 
-    globalLayout.cells("c").hideHeader(); 
+    myLayout.cells("a").hideHeader(); 
+    myLayout.cells("b").hideHeader(); 
 
     var customparams = {
         center: new google.maps.LatLng(40.719837,-73.992348),
@@ -129,7 +106,7 @@ function showPosition(position) {
     RefreshMap( position.coords.latitude, position.coords.longitude, "");
 }    
     
-});
+}
     
 function onClick(id){
     switch (id){
@@ -161,7 +138,7 @@ function onClick(id){
                  });
                 return;
             }
-            globalLayout.cells("c").progressOn();
+            myLayout.cells("b").progressOn();
             myForm.send("{{ url('xml_Admin_site_save') }}","POST",function(loader,response){
                 if(response === "success")
                 {
@@ -177,7 +154,7 @@ function onClick(id){
                else 
                {
                    alert(response);
-                   globalLayout.cells("c").progressOff();
+                   myLayout.cells("b").progressOff();
                }
             });
             break;
@@ -207,9 +184,9 @@ function onMenuClick(menuitemId, type)
 
 function GridRefresh()
 {
-    globalLayout.cells("a").progressOn();
+    myLayout.cells("a").progressOn();
     mySites.load("{{ url('xml_Admin_sites_grid') }}", function(){
-        globalLayout.cells("a").progressOff();
+        myLayout.cells("a").progressOff();
     });
 }
 
@@ -221,11 +198,11 @@ function New() {
 }
 
 function Edit(id) {
-    globalLayout.cells("d").progressOn();
+    myLayout.cells("c").progressOn();
     myFormToolbar.showItem("delete");
     myForm.clear();
     myForm.load("{{ url('xml_Admin_site_form') }}?id="+id, function () {
-        globalLayout.cells("d").progressOff();
+        myLayout.cells("c").progressOff();
         RefreshMap( myForm.getItemValue("latitude"), myForm.getItemValue("longitude"), myForm.getItemValue("name"));
     });
 }
@@ -240,7 +217,7 @@ function RefreshMap( Lat, Long, Site) {
     //icon     : "marker.gif"
   });
     GMaps.panTo(latLng); 
-    globalLayout.cells("c").progressOff();
+    myLayout.cells("b").progressOff();
 }
 
 function Delete(id) {
@@ -249,7 +226,7 @@ function Delete(id) {
         type: "confirm-error",
         text: "{{ "site.message.delete" | trans }}",
         callback: function(answer) { if (answer) {
-                globalLayout.cells("a").progressOn();
+                myLayout.cells("a").progressOn();
                 dhtmlxAjax.get("{{ url('xml_Admin_site_delete') }}?id="+id,function(loader){
                     mySites.deleteRow(id);
                 }); 

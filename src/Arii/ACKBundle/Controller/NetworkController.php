@@ -1,7 +1,6 @@
 <?php
 
 namespace Arii\ACKBundle\Controller;
-use Arii\ACKBundle\Entity\Alarm;
 use Arii\ACKBundle\Form\AlarmType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -17,12 +16,19 @@ class NetworkController extends Controller
 
     public function gridAction()
     {
-        $Errors = $this->getDoctrine()->getRepository('AriiACKBundle:Network')->listNotOk();
+        $request = Request::createFromGlobals();
+        $state = $request->get('state');
         
+        $Errors = $this->getDoctrine()->getRepository('AriiACKBundle:Network')->listState($state);
         $render = $this->container->get('arii_core.render');     
-        return $render->grid($Errors,'name,status,last_state_change','status');
+        return $render->grid($Errors,'event_type,name,description,status,status_time','state');
     }
 
+    public function countAction()
+    {
+        return new Response( '{ count: "'.$this->getDoctrine()->getRepository('AriiACKBundle:Network')->getNb().'" }' );
+    }
+    
     public function pieAction()
     {
         $Pie = [
@@ -52,6 +58,17 @@ class NetworkController extends Controller
         $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
                 
         return $this->render('AriiACKBundle:Network:bootstrap.html.twig', $serializer->toArray($object) );
+    }
+
+    public function formAction()
+    {   
+        $request = Request::createFromGlobals();
+        $id = $request->get('id');
+        
+        list($Event) = $this->getDoctrine()->getRepository("AriiACKBundle:Network")->Network($id);     
+
+        $dhtmlx = $this->container->get('arii_core.render'); 
+        return $dhtmlx->form($Event);        
     }
     
 }

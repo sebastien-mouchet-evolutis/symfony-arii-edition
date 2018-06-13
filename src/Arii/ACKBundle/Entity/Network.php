@@ -70,26 +70,40 @@ class Network
      */
     private $port;
 
-    /**
-     * @var integer
+     /**
+     * @var string
      *
-     * @ORM\Column(name="state", type="integer")
-     */
-    private $state=0;
+     * @ORM\Column(name="status", type="string", length=32, nullable=true)
+     */        
+    private $status;    
 
+     /**
+     * @var datetime
+     *
+     * @ORM\Column(name="status_time", type="datetime", length=32, nullable=true)
+     */        
+    private $status_time;    
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="state", type="string", length=32, nullable=true)
+     */        
+    private $state;    
+    
+     /**
+     * @var datetime
+     *
+     * @ORM\Column(name="state_time", type="datetime", length=32, nullable=true)
+     */        
+    private $state_time;    
+    
     /**
      * @var string
      *
      * @ORM\Column(name="state_information", type="string", length=255, nullable=true)
      */
     private $state_information;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="status", type="string", length=24)
-     */
-    private $status;
     
     /**
      * @var string
@@ -161,12 +175,25 @@ class Network
      */
     private $latency;
 
-    /**
-     * @var integer
+     /**
+     * @var string
      *
-     * @ORM\Column(name="last_state", type="integer")
-     */
-    private $last_state=0;
+     * @ORM\Column(name="event_source", type="string", length=255, nullable=true )
+     */        
+    private $event_source;
+    
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="event_type", type="string", nullable=true )
+     */        
+    private $event_type;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Alarm")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $alarm;
     
     /**
      * Get id
@@ -271,6 +298,29 @@ class Network
     }
 
     /**
+     * Set ip_address
+     *
+     * @param string $ipAddress
+     * @return Network
+     */
+    public function setIpAddress($ipAddress)
+    {
+        $this->ip_address = $ipAddress;
+
+        return $this;
+    }
+
+    /**
+     * Get ip_address
+     *
+     * @return string 
+     */
+    public function getIpAddress()
+    {
+        return $this->ip_address;
+    }
+
+    /**
      * Set port
      *
      * @param integer $port
@@ -291,29 +341,6 @@ class Network
     public function getPort()
     {
         return $this->port;
-    }
-
-    /**
-     * Set state
-     *
-     * @param integer $state
-     * @return Network
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    /**
-     * Get state
-     *
-     * @return integer 
-     */
-    public function getState()
-    {
-        return $this->state;
     }
 
     /**
@@ -340,26 +367,72 @@ class Network
     }
 
     /**
-     * Set ip_address
+     * Set status_time
      *
-     * @param string $ipAddress
+     * @param \DateTime $statusTime
      * @return Network
      */
-    public function setIpAddress($ipAddress)
+    public function setStatusTime($statusTime)
     {
-        $this->ip_address = $ipAddress;
+        $this->status_time = $statusTime;
 
         return $this;
     }
 
     /**
-     * Get ip_address
+     * Get status_time
+     *
+     * @return \DateTime 
+     */
+    public function getStatusTime()
+    {
+        return $this->status_time;
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $state
+     * @return Network
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
      *
      * @return string 
      */
-    public function getIpAddress()
+    public function getState()
     {
-        return $this->ip_address;
+        return $this->state;
+    }
+
+    /**
+     * Set state_time
+     *
+     * @param \DateTime $stateTime
+     * @return Network
+     */
+    public function setStateTime($stateTime)
+    {
+        $this->state_time = $stateTime;
+
+        return $this;
+    }
+
+    /**
+     * Get state_time
+     *
+     * @return \DateTime 
+     */
+    public function getStateTime()
+    {
+        return $this->state_time;
     }
 
     /**
@@ -434,7 +507,7 @@ class Network
     /**
      * Set downtimes
      *
-     * @param integer $downtimes
+     * @param string $downtimes
      * @return Network
      */
     public function setDowntimes($downtimes)
@@ -447,7 +520,7 @@ class Network
     /**
      * Get downtimes
      *
-     * @return integer 
+     * @return string 
      */
     public function getDowntimes()
     {
@@ -475,6 +548,29 @@ class Network
     public function getDowntimesInfo()
     {
         return $this->downtimes_info;
+    }
+
+    /**
+     * Set downtimes_user
+     *
+     * @param string $downtimesUser
+     * @return Network
+     */
+    public function setDowntimesUser($downtimesUser)
+    {
+        $this->downtimes_user = $downtimesUser;
+
+        return $this;
+    }
+
+    /**
+     * Get downtimes_user
+     *
+     * @return string 
+     */
+    public function getDowntimesUser()
+    {
+        return $this->downtimes_user;
     }
 
     /**
@@ -592,49 +688,73 @@ class Network
         return $this->latency;
     }
 
+
     /**
-     * Set last_state
+     * Set event_source
      *
-     * @param integer $lastState
+     * @param string $eventSource
      * @return Network
      */
-    public function setLastState($lastState)
+    public function setEventSource($eventSource)
     {
-        $this->last_state = $lastState;
+        $this->event_source = $eventSource;
 
         return $this;
     }
 
     /**
-     * Get last_state
-     *
-     * @return integer 
-     */
-    public function getLastState()
-    {
-        return $this->last_state;
-    }
-
-    /**
-     * Set downtimes_user
-     *
-     * @param string $downtimesUser
-     * @return Network
-     */
-    public function setDowntimesUser($downtimesUser)
-    {
-        $this->downtimes_user = $downtimesUser;
-
-        return $this;
-    }
-
-    /**
-     * Get downtimes_user
+     * Get event_source
      *
      * @return string 
      */
-    public function getDowntimesUser()
+    public function getEventSource()
     {
-        return $this->downtimes_user;
+        return $this->event_source;
+    }
+
+    /**
+     * Set event_type
+     *
+     * @param string $eventType
+     * @return Network
+     */
+    public function setEventType($eventType)
+    {
+        $this->event_type = $eventType;
+
+        return $this;
+    }
+
+    /**
+     * Get event_type
+     *
+     * @return string 
+     */
+    public function getEventType()
+    {
+        return $this->event_type;
+    }
+
+    /**
+     * Set alarm
+     *
+     * @param \Arii\ACKBundle\Entity\Alarm $alarm
+     * @return Network
+     */
+    public function setAlarm(\Arii\ACKBundle\Entity\Alarm $alarm = null)
+    {
+        $this->alarm = $alarm;
+
+        return $this;
+    }
+
+    /**
+     * Get alarm
+     *
+     * @return \Arii\ACKBundle\Entity\Alarm 
+     */
+    public function getAlarm()
+    {
+        return $this->alarm;
     }
 }

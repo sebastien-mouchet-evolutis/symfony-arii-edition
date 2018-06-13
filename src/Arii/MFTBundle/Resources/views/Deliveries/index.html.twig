@@ -80,7 +80,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = myGridbar.cells("grid").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_MFT_deliveries_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {

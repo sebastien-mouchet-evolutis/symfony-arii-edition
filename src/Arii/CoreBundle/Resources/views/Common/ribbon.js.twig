@@ -1,0 +1,58 @@
+<script language="javascript">      
+function StateRibbon (itemid,state) {
+    switch(itemid) {        
+        case 'main':
+            window.location = "{{ url('arii_homepage') }}";
+            break;        
+        case 'home':
+            window.location = '{{ path('arii_homepage') }}'+bundle;
+        default:
+            alert(itemid);
+    }
+    GlobalRefresh();    
+}
+
+function ClickRibbon (itemid,state) {
+    var id = itemid.split('_');
+    switch (id[0]) {
+        case 'main':
+            window.location = '{{ path('arii_homepage') }}';
+            break;
+        case 'home':
+            window.location = '{{ path('arii_homepage') }}'+bundle.toLowerCase()+'/{{ app.request.locale }}';        
+            break;
+        case 'BUNDLE':
+            window.location = '{{ path('arii_homepage') }}'+id[1]+'/{{ app.request.locale }}';
+            break;
+        case 'LANG':
+            window.location = '{{ path('arii_homepage') }}'+bundle.toLowerCase()+'/'+id[1];
+            break;
+        case 'USER':
+            switch (id[1]) {
+                case 'logout':
+                    window.location = '{{ path('fos_user_security_logout') }}';
+                    break;
+            }
+            break;
+        case 'HELP':
+            switch (id[1]) {
+                case 'sos':
+                    window.location = 'http://www.sos-paris.com';
+                    break;
+                case 'github':
+                    window.location = 'https://github.com/AriiPortal';
+                    break;
+                case 'readme':
+                    window.location = '{{ path('arii_ACK_readme') }}';
+                    break;
+                default:
+                    alert(id[1]);
+                    break;                    
+            }
+            break;
+        default:
+            alert(id[0]);
+            break;
+    }
+}
+</script>

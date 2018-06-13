@@ -62,7 +62,7 @@ menu.loadStruct("{{ url('xml_JOC_jobs_menu') }}");
 
 var dhxLayout = new dhtmlXLayoutObject("mygrid","2E");
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('xml_JOC_jobs_toolbar') }}", function() {
 {% if  app.request.get('ordered')>0 %}
 toolbar.setItemState("ordered",true);
@@ -257,7 +257,7 @@ toolbar.attachEvent("onStateChange", function(id,state) {
 
 /*
 var toolbarb = dhxLayout.cells("b").attachToolbar();
-toolbarb.setIconsPath("{{ asset('/toolbar/') }}");
+toolbarb.setIconsPath("{{ asset('/images/') }}");
 toolbarb.loadXML("{{ url('xml_JOC_jobs_toolbar') }}");
 */
    
@@ -358,7 +358,7 @@ function StartJob( id ) {
     
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_start_job') }}",function(){
         GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -367,7 +367,7 @@ function StartJob( id ) {
     
     var toolbar2;
     toolbar2 = tabbar.cells("b2").attachToolbar();
-    toolbar2.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar2.setIconsPath("{{ asset('/images/') }}");
     toolbar2.loadXML("{{ url('arii_JID_toolbar_start_job_param') }}");
 
     var dhxgrid =  tabbar.cells("b2").attachGrid();
@@ -440,7 +440,7 @@ function KillJob( id ) {
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_kill_job') }}");
 
     toolbar.attachEvent("onClick",function(itemid){
@@ -482,7 +482,7 @@ function ShowWhy( id ) {
     winLayout.cells("a").progressOn();
     
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_job_why') }}");
     toolbar.attachEvent("onClick",function(buttonId){
         switch (buttonId) {
@@ -518,7 +518,7 @@ function StopJob( id ) {
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_stop_job') }}");
 
     toolbar.attachEvent("onClick",function(itemid){
@@ -562,7 +562,7 @@ function PurgeJob( id ) {
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_purge_job') }}");
 
     toolbar.attachEvent("onClick",function(itemid){
@@ -606,7 +606,7 @@ function UnstopJob( id ) {
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_unstop_job') }}");
 
     toolbar.attachEvent("onClick",function(itemid){

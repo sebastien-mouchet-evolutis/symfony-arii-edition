@@ -99,10 +99,14 @@ xml_ACK_events_grid:
     path:  /events/grid.xml
     defaults: { _controller: AriiACKBundle:Events:grid }
 
-xml_ACK_events_grid2:
-    path:  /events/grid2.xml
-    defaults: { _controller: AriiACKBundle:Events:grid2 }
-
+xml_ACK_events_grid_menu:
+    path:  /events/grid_menu.xml
+    defaults: { _controller: AriiACKBundle:Events:grid_menu}
+    
+json_ACK_events_count:
+    path:  /events/count.json
+    defaults: { _controller: AriiACKBundle:Events:count }
+    
 #============================================================
 # Event
 #------------------------------------------------------------
@@ -122,6 +126,86 @@ xml_ACK_event_toolbar:
     path:  /event/toolbar.xml
     defaults: { _controller: AriiACKBundle:Events:toolbar}
 
+txt_ACK_event_state:
+    path:  /event/state.txt
+    defaults: { _controller: AriiACKBundle:Events:state}
+
+#============================================================
+# Alarms
+#------------------------------------------------------------
+arii_ACK_alarms:
+    path:  /alarms
+    defaults: { _controller: AriiACKBundle:Alarms:index }
+    
+xml_ACK_alarms_grid:
+    path:  /alarms/grid.xml
+    defaults: { _controller: AriiACKBundle:Alarms:grid }
+
+xml_ACK_alarms_grid_menu:
+    path:  /alarms/grid_menu.xml
+    defaults: { _controller: AriiACKBundle:Alarms:grid_menu}
+    
+#============================================================
+# Alarms
+#------------------------------------------------------------
+xml_ACK_alarm_form:
+    path:  /alarm/form.xml
+    defaults: { _controller: AriiACKBundle:Alarms:form}
+
+xml_ACK_alarm_save:
+    path:  /alarm/save.xml
+    defaults: { _controller: AriiACKBundle:Alarms:save}
+
+xml_ACK_alarm_delete:
+    path:  /alarm/delete.xml
+    defaults: { _controller: AriiACKBundle:Alarms:delete}
+
+xml_ACK_alarm_toolbar:
+    path:  /alarm/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Alarms:toolbar}
+
+txt_ACK_alarm_state:
+    path:  /alarm/state.txt
+    defaults: { _controller: AriiACKBundle:Alarms:state}
+
+#============================================================
+# Alerts
+#------------------------------------------------------------
+arii_ACK_alerts:
+    path:  /alerts
+    defaults: { _controller: AriiACKBundle:Alerts:index }
+    
+xml_ACK_alerts_grid:
+    path:  /alerts/grid.xml
+    defaults: { _controller: AriiACKBundle:Alerts:grid }
+
+xml_ACK_alerts_grid_menu:
+    path:  /alerts/grid_menu.xml
+    defaults: { _controller: AriiACKBundle:Alerts:grid_menu}
+    
+#============================================================
+# Alert
+#------------------------------------------------------------
+xml_ACK_alert_form:
+    path:  /alert/form.xml
+    defaults: { _controller: AriiACKBundle:Alerts:form}
+
+xml_ACK_alert_save:
+    path:  /alert/save.xml
+    defaults: { _controller: AriiACKBundle:Alerts:save}
+
+xml_ACK_alert_delete:
+    path:  /alert/delete.xml
+    defaults: { _controller: AriiACKBundle:Alerts:delete}
+
+xml_ACK_alert_toolbar:
+    path:  /alert/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Alerts:toolbar}
+
+txt_ACK_alert_state:
+    path:  /alert/state.txt
+    defaults: { _controller: AriiACKBundle:Alerts:state}
+
 #============================================================
 # Jobs
 #------------------------------------------------------------
@@ -133,22 +217,26 @@ xml_ACK_jobs_grid:
     path:  /jobs/grid.xml
     defaults: { _controller: AriiACKBundle:Jobs:grid }
 
+json_ACK_jobs_count:
+    path:  /jobs/count.json
+    defaults: { _controller: AriiACKBundle:Jobs:count }
+
 #============================================================
 # Job
 #------------------------------------------------------------
-xml_ACK_event_form:
+xml_ACK_job_form:
     path:  /job/form.xml
     defaults: { _controller: AriiACKBundle:Jobs:form}
 
-xml_ACK_event_save:
+xml_ACK_job_save:
     path:  /job/save.xml
     defaults: { _controller: AriiACKBundle:Jobs:save}
 
-xml_ACK_event_delete:
+xml_ACK_job_delete:
     path:  /job/delete.xml
     defaults: { _controller: AriiACKBundle:Jobs:delete}
 
-xml_ACK_event_toolbar:
+xml_ACK_job_toolbar:
     path:  /job/toolbar.xml
     defaults: { _controller: AriiACKBundle:Jobs:toolbar}
 
@@ -184,7 +272,17 @@ html_ACK_network_info:
     path:  /network/info.html
     defaults: { _controller: AriiACKBundle:Network:info }
 
+json_ACK_network_count:
+    path:  /network/count.json
+    defaults: { _controller: AriiACKBundle:Network:count }
+    
+#============================================================
+# Host
+#--------------------------------------------------------------------
+xml_ACK_host_form:
+    path:  /host/form.xml
+    defaults: { _controller: AriiACKBundle:Network:form}
 #============================================================
 # Synchro
 #--------------------------------------------------------------------
-    
+ 

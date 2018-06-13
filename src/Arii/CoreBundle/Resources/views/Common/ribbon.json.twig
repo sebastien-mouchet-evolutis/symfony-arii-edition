@@ -7,22 +7,40 @@
             text_pos:   "top", 
             list:
                 [
-                   {   
+                   {
                         type:   "button", 
                         id:     "home",
                         text:   "", 
                         isbig:  true, 
                         img:    "48/{{ BUNDLE.mod }}.png"
                     },
-                    {   
+                    {
+                        type:   "button", 
+                        id:     "main",
+                        text:   "{{ "Menu" | trans }}", 
+                        img:    "main.png"
+                    },
+                    {
                         type:   "buttonSelect", 
                         id:     "browsing",
                         text:   "", 
-                        img:    "go.png",
+                        img:    "add.png",
                         items:
                         [
 {% for menu in MENU %}
                             { id:"BUNDLE_{{ menu.mod }}", text: "{{ menu.title | trans }}", img: "{{ menu.mod }}.png" },
+{% endfor %}
+                        ]
+                    },
+                    {   
+                        type:   "buttonSelect", 
+                        id:     "lang",
+                        text:   "", 
+                        img:    "flags/{{ app.request.locale }}.png",
+                        items:
+                        [
+{% for lang,info in LANG %}
+                            { id:"LANG_{{ lang }}", text: "{{ info.string }}", img: "{{ lang }}.png" },
 {% endfor %}
                         ]
                     }
@@ -65,7 +83,7 @@
             text_pos:   "bottom", 
             list:
                 [
-                   {   
+                   { 
                         type:   "button", 
                         id:     "my_account",
                         text:   "", 
@@ -73,31 +91,20 @@
                         img:    "48/me.png"
                     },
                     {   
-                        type:   "buttonSelect", 
-                        id:     "lang",
-                        text:   "", 
-                        img:    "flags/{{ app.request.locale }}.png",
-                        items:
-                        [
-{% for lang,info in LANG %}
-                            { id:"LANG_{{ lang }}", text: "{{ info.string }}", img: "{{ lang }}.png" },
-{% endfor %}
-                        ]
-                    },
-                    {   
                          type:   "button", 
                          id:     "USER_message",
                          text:   "{{ "Messages" | trans }}", 
                          img:    "email.png"
                     },
-                    {   
+                    {
                          type:   "button", 
-                         id:     "USER_message",
+                         id:     "USER_logout",
                          text:   "{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}", 
                          img:    "logout.png"
                     }
                 ]
-        },
+        }
+/*        ,
         {   
             type:       "block", 
             text:       "{{ "Help" | trans }}", 
@@ -124,5 +131,6 @@
                     }
                  ]
         }
+*/
    ]
 }

@@ -36,32 +36,67 @@ class LiveStatusController extends Controller
             [
                 'name' => $Info['name']
             ]);
-            if (!$record)
-                $record = new \Arii\ACKBundle\Entity\Network();
             
+            // STATUS Nagios
+            if ($Info['state']==0) {
+                $status = 'OK';
+            } 
+            elseif ($Info['state']==1) {
+                $status = 'WARNING';
+            } 
+            elseif ($Info['state']==4) {
+                $status = 'ERROR';
+            } 
+            else {
+                $status = 'UNKNOWN';
+            }
+                
+            if (!$record) {
+                $record = new \Arii\ACKBundle\Entity\Network();
+                // c'est ouvert
+                $record->setStateTime(new \DateTime());
+                // On calcul l'état initiale
+                $record->setState('OPEN');
+                
+                // Verification IP
+                // Il faudra distinguer synchro rapide et màj
+                if (filter_var($Info['address'], FILTER_VALIDATE_IP)) {
+                    $record->setIPAddress            ($Info['address']);
+                } else {
+                    $record->setIPAddress            (gethostbyname($Info['address']));
+                }                
+            }
+
+            // Si le status est ok, on ferme
+            // même si c'est acquitté
+            if ($Info['downtimes']!='') {
+                $record->setEventType('DOWNTIME');
+                $record->setState('OPEN');
+            }
+            else {
+                $record->setEventType('STATE');
+                if ($status == 'OK')
+                    $record->setState('CLOSE');
+            }
+            
+            // plusieurs Nagios ?
+            $record->setEventSource('NAGIOS');
             $record->setName                 ($Info['name']);
             $record->setTitle                ($Info['display_name']);
             $record->setDescription          ($Info['alias']);
             $record->setHost                 ($Info['address']);
+            if (isset($Info['port']))
+                $record->setPort                 ($Info['port']);
             $record->setAcknowledged         ($Info['acknowledged']);
             $record->setAcknowledgementType  ($Info['acknowledgement_type']);
-            $record->setLastState            ($Info['last_state']);
             $record->setLastStateChange      (new \DateTime('@'.$Info['last_state_change']));
             $record->setLastTimeDown         (new \DateTime('@'.$Info['last_time_down']));
             $record->setLastTimeUnreachable  (new \DateTime('@'.$Info['last_time_unreachable']));
             $record->setLastTimeUp           (new \DateTime('@'.$Info['last_time_up']));
             $record->setLatency              ($Info['latency']);
-            $record->setState                ($Info['state']);
             $record->setStateInformation     ($Info['plugin_output']);
-            
-            // Verification IP
-            // Il faudra distinguer synchro rapide et màj
-            if (filter_var($Info['address'], FILTER_VALIDATE_IP)) {
-                $record->setIPAddress            ($Info['address']);
-            } else {
-                // $record->setIPAddress            (gethostbyname($Info['address']));
-                $record->setIPAddress            (null);
-            }
+            $record->setStatus($status);
+            $record->setStatusTime(new \DateTime('@'.$Info['last_check'])); 
             
             // Chaine speciale
             if (is_array($Info['downtimes']))
@@ -84,24 +119,7 @@ class LiveStatusController extends Controller
                 $record->setDowntimesUser(null);
                 $record->setDowntimesInfo($Info['downtimes_with_info']);
             }            
-            
-            // STATUS ARII
-            if ($Info['downtimes']!='') {
-                $record->setStatus('DOWNTIME');
-            }
-            elseif ($Info['state']==0) {
-                $record->setStatus('OK');
-            } 
-            elseif ($Info['state']==1) {
-                $record->setStatus('WARNING');
-            } 
-            elseif ($Info['state']==4) {
-                $record->setStatus('ERROR');
-            } 
-            else {
-                $record->setStatus('UNKNOWN');
-            }
-            
+                        
             $em->persist($record);
             if ($n++ % 100 == 0)
                 $em->flush();            

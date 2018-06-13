@@ -21,7 +21,7 @@ var size=300;
     myTree.load( '{{ url('xml_Self_tree') }}');
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_Self_toolbar') }}");
 
     myGridMenu = new dhtmlXMenuObject(null);

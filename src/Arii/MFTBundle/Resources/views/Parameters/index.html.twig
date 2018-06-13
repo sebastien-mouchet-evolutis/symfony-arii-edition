@@ -36,7 +36,7 @@ dhtmlxEvent(window,"load",function(){
     myParameters.load("{{ url('xml_MFT_parameters_grid') }}");
 
     myFormToolbar = globalLayout.cells("b").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct( "{{ url('xml_MFT_parameter_toolbar') }}");
 
     myForm = globalLayout.cells("b").attachForm();

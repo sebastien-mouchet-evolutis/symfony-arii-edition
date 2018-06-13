@@ -30,7 +30,7 @@ dhtmlxEvent(window,"load",function(){
     myGrid.load( "{{ url('xml_ATS_form_grid') }}");
 
     myToolbar = globalLayout.cells("c").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct( "{{ url('xml_ATS_form_toolbar') }}" ,function() {
     });
 

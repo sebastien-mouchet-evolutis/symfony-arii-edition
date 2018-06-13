@@ -18,8 +18,8 @@ class Alarm
 {
     public function __construct()
     {
-        $this->alarmTime = new \DateTime();
-        $this->stateTime = new \DateTime();
+        $this->alarm_time = new \DateTime();
+        $this->state_time = new \DateTime();
     }
     
     /**
@@ -43,35 +43,10 @@ class Alarm
     private $name;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=64)
-     * 
-     * @Serializer\Groups({"list"})
-     */
-    private $title;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=255, nullable=true)
-     * @Assert\NotBlank(groups={"Create"})
-     * 
-     * @Serializer\Groups({"detail"})
-     */
-    private $description;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="Arii\CoreBundle\Entity\Node")
+    * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Alarm")
     * @ORM\JoinColumn(nullable=true)
     */
-    private $node;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="Arii\CoreBundle\Entity\Job")
-    * @ORM\JoinColumn(nullable=true)
-    */
-    private $job;
+    private $alarm;
     
     /**
     * @ORM\ManyToOne(targetEntity="Arii\UserBundle\Entity\User")
@@ -95,16 +70,7 @@ class Alarm
      * 
      * @Serializer\Groups({"list"})
      */
-    private $alarmTime;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="exit_code", type="integer" )
-     * 
-     * @Serializer\Groups({"list"})
-     */
-    private $exitCode=0;
+    private $alarm_time;
     
     /**
      * @var string
@@ -116,18 +82,19 @@ class Alarm
     /**
      * @var integer
      *
-     * @ORM\Column(name="state", type="integer", nullable=true)
+     * @ORM\Column(name="state", type="string", length=32, nullable=true)
      * 
      * @Serializer\Groups({"list"})
      */
-    private $state=0;
+    private $state;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="state_time", type="datetime", nullable=true)
      */
-    private $stateTime;
+    private $state_time;
+
 
     /**
      * Get id
@@ -140,52 +107,6 @@ class Alarm
     }
 
     /**
-     * Set alarmType
-     *
-     * @param string $alarmType
-     * @return Alarm
-     */
-    public function setAlarmType($alarmType)
-    {
-        $this->alarmType = $alarmType;
-    
-        return $this;
-    }
-
-    /**
-     * Get alarmType
-     *
-     * @return string 
-     */
-    public function getAlarmType()
-    {
-        return $this->alarmType;
-    }
-
-    /**
-     * Set alarmTime
-     *
-     * @param \DateTime $alarmTime
-     * @return Alarm
-     */
-    public function setAlarmTime($alarmTime)
-    {
-        $this->alarmTime = $alarmTime;
-    
-        return $this;
-    }
-
-    /**
-     * Get alarmTime
-     *
-     * @return \DateTime 
-     */
-    public function getAlarmTime()
-    {
-        return $this->alarmTime;
-    }
-
-    /**
      * Set name
      *
      * @param string $name
@@ -194,7 +115,7 @@ class Alarm
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
@@ -209,49 +130,49 @@ class Alarm
     }
 
     /**
-     * Set title
+     * Set alarmType
      *
-     * @param string $title
+     * @param string $alarmType
      * @return Alarm
      */
-    public function setTitle($title)
+    public function setAlarmType($alarmType)
     {
-        $this->title = $title;
-    
+        $this->alarmType = $alarmType;
+
         return $this;
     }
 
     /**
-     * Get title
+     * Get alarmType
      *
      * @return string 
      */
-    public function getTitle()
+    public function getAlarmType()
     {
-        return $this->title;
+        return $this->alarmType;
     }
 
     /**
-     * Set description
+     * Set alarm_time
      *
-     * @param string $description
+     * @param \DateTime $alarmTime
      * @return Alarm
      */
-    public function setDescription($description)
+    public function setAlarmTime($alarmTime)
     {
-        $this->description = $description;
-    
+        $this->alarm_time = $alarmTime;
+
         return $this;
     }
 
     /**
-     * Get description
+     * Get alarm_time
      *
-     * @return string 
+     * @return \DateTime 
      */
-    public function getDescription()
+    public function getAlarmTime()
     {
-        return $this->description;
+        return $this->alarm_time;
     }
 
     /**
@@ -263,7 +184,7 @@ class Alarm
     public function setResponse($response)
     {
         $this->response = $response;
-    
+
         return $this;
     }
 
@@ -280,20 +201,20 @@ class Alarm
     /**
      * Set state
      *
-     * @param integer $state
+     * @param string $state
      * @return Alarm
      */
     public function setState($state)
     {
         $this->state = $state;
-    
+
         return $this;
     }
 
     /**
      * Get state
      *
-     * @return integer 
+     * @return string 
      */
     public function getState()
     {
@@ -301,72 +222,118 @@ class Alarm
     }
 
     /**
-     * Set stateTime
+     * Set state_time
      *
-     * @param integer $stateTime
+     * @param \DateTime $stateTime
      * @return Alarm
      */
     public function setStateTime($stateTime)
     {
-        $this->stateTime = $stateTime;
-    
+        $this->state_time = $stateTime;
+
         return $this;
     }
 
     /**
-     * Get stateTime
+     * Get state_time
      *
-     * @return integer 
+     * @return \DateTime 
      */
     public function getStateTime()
     {
-        return $this->stateTime;
+        return $this->state_time;
     }
 
     /**
-     * Set node
+     * Set alarm
      *
-     * @param \Arii\CoreBundle\Entity\Node $node
+     * @param \Arii\ACKBundle\Entity\Alarm $alarm
      * @return Alarm
      */
-    public function setNode(\Arii\CoreBundle\Entity\Node $node = null)
+    public function setAlarm(\Arii\ACKBundle\Entity\Alarm $alarm = null)
     {
-        $this->node = $node;
-    
+        $this->alarm = $alarm;
+
         return $this;
     }
 
     /**
-     * Get node
+     * Get alarm
      *
-     * @return \Arii\CoreBundle\Entity\Node 
+     * @return \Arii\ACKBundle\Entity\Alarm 
      */
-    public function getNode()
+    public function getAlarm()
     {
-        return $this->node;
+        return $this->alarm;
     }
 
     /**
-     * Set job
+     * Set event
      *
-     * @param \Arii\CoreBundle\Entity\Job $job
+     * @param \Arii\ACKBundle\Entity\Event $event
      * @return Alarm
      */
-    public function setJob(\Arii\CoreBundle\Entity\Job $job = null)
+    public function setEvent(\Arii\ACKBundle\Entity\Event $event = null)
     {
-        $this->job = $job;
-    
+        $this->event = $event;
+
         return $this;
     }
 
     /**
-     * Get job
+     * Get event
      *
-     * @return \Arii\CoreBundle\Entity\Job 
+     * @return \Arii\ACKBundle\Entity\Event 
      */
-    public function getJob()
+    public function getEvent()
     {
-        return $this->job;
+        return $this->event;
+    }
+
+    /**
+     * Set network
+     *
+     * @param \Arii\ACKBundle\Entity\Network $network
+     * @return Alarm
+     */
+    public function setNetwork(\Arii\ACKBundle\Entity\Network $network = null)
+    {
+        $this->network = $network;
+
+        return $this;
+    }
+
+    /**
+     * Get network
+     *
+     * @return \Arii\ACKBundle\Entity\Network 
+     */
+    public function getNetwork()
+    {
+        return $this->network;
+    }
+
+    /**
+     * Set status
+     *
+     * @param \Arii\ACKBundle\Entity\Status $status
+     * @return Alarm
+     */
+    public function setStatus(\Arii\ACKBundle\Entity\Status $status = null)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return \Arii\ACKBundle\Entity\Status 
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -378,7 +345,7 @@ class Alarm
     public function setUser(\Arii\UserBundle\Entity\User $user = null)
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
@@ -390,74 +357,5 @@ class Alarm
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set exitCode
-     *
-     * @param integer $exitCode
-     * @return Alarm
-     */
-    public function setExitCode($exitCode)
-    {
-        $this->exitCode = $exitCode;
-
-        return $this;
-    }
-
-    /**
-     * Get exitCode
-     *
-     * @return integer 
-     */
-    public function getExitCode()
-    {
-        return $this->exitCode;
-    }
-
-    /**
-     * Set stdout
-     *
-     * @param string $stdout
-     * @return Alarm
-     */
-    public function setStdout($stdout)
-    {
-        $this->stdout = $stdout;
-
-        return $this;
-    }
-
-    /**
-     * Get stdout
-     *
-     * @return string 
-     */
-    public function getStdout()
-    {
-        return $this->stdout;
-    }
-
-    /**
-     * Set stderr
-     *
-     * @param string $stderr
-     * @return Alarm
-     */
-    public function setStderr($stderr)
-    {
-        $this->stderr = $stderr;
-
-        return $this;
-    }
-
-    /**
-     * Get stderr
-     *
-     * @return string 
-     */
-    public function getStderr()
-    {
-        return $this->stderr;
     }
 }

@@ -12,4 +12,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class AlarmRepository extends EntityRepository
 {
+    public function getNb($state='OPEN') {
+        return $this->createQueryBuilder('e')
+            ->select('COUNT(e)')
+            ->where('e.state = :state')
+            ->setParameter('state', $state)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
+    public function listState($state) {        
+        $q = $this
+        ->createQueryBuilder('e')
+        ->select('e.name')
+        ->where('e.state = :state')
+        ->orderBy('e.state_time','DESC')
+        ->setParameter('state',$state)
+        ->getQuery();
+        
+        return $q->getResult();
+    }
+    
 }

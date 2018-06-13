@@ -8,7 +8,7 @@
 {% block onload %}
 <script language="javascript">
 var bundle='ACK';
-var update=30;
+var update=5;
 dhtmlxEvent(window,"load",function(){   
     var size=180;
     globalLayout = new dhtmlXLayoutObject(document.body,"3T");  
@@ -24,16 +24,17 @@ dhtmlxEvent(window,"load",function(){
 
     mySidebar = globalLayout.cells("b").attachSidebar({
         icons_path: "{{ asset('/images/') }}",
+        // template: "tiles",
         width: size,
         items:
         [
-            { id:"monitoring", text: "{{ "Monitoring" | trans }}", icon: "view.png" },
+            { id:"alarms", text: "{{ "Alarms" | trans }}", icon: "alarm.png" },
             { id:"sep1", type: "separator" },
             { id:"events", text: "{{ "Events" | trans }}", icon: "stopped.png" },
             { id:"jobs", text: "{{ "Jobs" | trans }}", icon: "job.png" },    
             { id:"network", text: "{{ "Network" | trans }}", icon: "network.png" },
             { id:"sep2", type: "separator" },
-            { id:"notifications", text: "{{ "Notifications" | trans }}", icon: "user.png" }
+            { id:"alerts", text: "{{ "Alerts" | trans }}", icon: "alert.png" }
         ]
     });
     mySidebar.attachEvent("onBubbleClick", function(id, value){
@@ -47,12 +48,14 @@ dhtmlxEvent(window,"load",function(){
         return true;
     });
     
+    
     myToolbar = globalLayout.cells("c").attachToolbar();
     myToolbar.setIconsPath( "{{ asset('/images/') }}" );
     Init();    
     globalLayout.cells("a").hideHeader();
     globalLayout.cells("c").hideHeader();
-//    autorefresh = setInterval( "GlobalRefresh()",update*1000);
+    GlobalRefresh();
+    autorefresh = setInterval( "GlobalRefresh()",update*1000);
 });
 </script>
 {% endblock onload %}
@@ -60,54 +63,30 @@ dhtmlxEvent(window,"load",function(){
 {% block script %}
 <script language="javascript">      
 function GlobalRefresh() {
-}
-
-function StateRibbon (itemid,state) {
-    switch(itemid) {
-        case 'home':
-            
-        default:
-            alert(itemid);
-    }
-    GlobalRefresh();    
-}
-
-function ClickRibbon (itemid,state) {
-    var id = itemid.split('_');
-    switch (id[0]) {
-        case 'BUNDLE':
-            window.location = '{{ path('arii_homepage') }}'+id[1]+'/{{ app.request.locale }}';
-            break;
-        case 'LANG':
-            window.location = '{{ path('arii_homepage') }}'+bundle.toLowerCase()+'/'+id[1];
-            break;
-        case 'USER':
-            switch (id[1]) {
-                case 'logout':
-                    window.location = '{{ path('fos_user_security_logout') }}';
-                    break;
-            }
-            break;
-        case 'HELP':
-            switch (id[1]) {
-                case 'sos':
-                    window.location = 'http://www.sos-paris.com';
-                    break;
-                case 'github':
-                    window.location = 'https://github.com/AriiPortal';
-                    break;
-                case 'readme':
-                    window.location = '{{ path('arii_ACK_readme') }}';
-                    break;
-                default:
-                    alert(id[1]);
-                    break;                    
-            }
-            break;
-        default:
-            alert(id[0]);
-            break;
-    }
+    var t;
+    dhx4.ajax.get( "{{ url('json_ACK_events_count') }}",function(r1) {  
+        t = dhx4.s2j(r1.xmlDoc.responseText);
+        if (t['count']>0) 
+            mySidebar.cells("events").setBubble(t['count']);
+        else
+            mySidebar.cells("events").clearBubble();     
+        dhx4.ajax.get( "{{ url('json_ACK_jobs_count') }}",function(r2) {  
+            t = dhx4.s2j(r2.xmlDoc.responseText);
+            if (t['count']>0) 
+                mySidebar.cells("jobs").setBubble(t['count']);
+            else
+                mySidebar.cells("jobs").clearBubble();        
+            dhx4.ajax.get( "{{ url('json_ACK_network_count') }}",function(r3) {  
+                t = dhx4.s2j(r3.xmlDoc.responseText);
+                if (t['count']>0)
+                    mySidebar.cells("network").setBubble(t['count']);
+                else
+                    mySidebar.cells("network").clearBubble();        
+            });
+        });
+    });
+    // En parallèle ?
+    // PageRefresh();
 }
 
 function ToolbarTime() {
@@ -124,6 +103,7 @@ function ToolbarTime() {
     myToolbar.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
 }
 </script>
+{% include "AriiCoreBundle:Common:ribbon.js.twig" %}
 {% endblock script %}
 
             

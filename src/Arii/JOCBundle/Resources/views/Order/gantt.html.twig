@@ -167,7 +167,7 @@ gantt.attachEvent("onTaskClosed",function(id) {
 
 var toolbar;
 toolbar = new dhtmlXToolbarObject("toolbarObj");
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('xml_JOC_toolbar_gantt') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {

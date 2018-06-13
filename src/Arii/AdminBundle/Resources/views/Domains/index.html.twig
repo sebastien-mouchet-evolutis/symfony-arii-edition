@@ -1,41 +1,13 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-var bundle='Core';
-dhtmlxEvent(window,"load",function(){  
-var size=300;
-    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("a").hideHeader(); 
-    globalLayout.cells("b").hideHeader(); 
-    globalLayout.cells("c").setText("{{ "Detail" | trans }}"); 
-    globalLayout.cells("c").setHeight(250); 
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );    
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        switch(id) {
-            case 'config':
-                globalLayout.cells("b").attachURL('{{ url('html_Admin_install') }}');   
-                break;
-            default:
-                document.location.href = "{{ url('arii_Admin_index') }}"+id;
-        }
-        return true;
-    });
+function Init() {
+    
+    myLayout = globalLayout.cells("c").attachLayout("2U");  
+    myLayout.cells("a").setWidth(300);
+    myLayout.cells("a").setText("{{ "Categories" | trans }}");
         
-    myDoms = globalLayout.cells("b").attachGrid();
+    myDoms = myLayout.cells("a").attachGrid();
     myDoms.setImagePath("{{ asset('/images/') }}");
     
     myDoms.setHeader("{{ "Name"| trans }},{{ "Title"| trans }},{{ "Description"| trans }}");
@@ -73,11 +45,11 @@ var size=300;
             rows: 5
          }
     ];
-    myForm = globalLayout.cells("c").attachForm(formData);
+    myForm = myLayout.cells("b").attachForm(formData);
     myForm.enableLiveValidation(true);
     
-    myToolbar = globalLayout.cells("c").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar = myLayout.cells("b").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_Admin_domains_toolbar') }}", function () {
         myToolbar.hideItem("delete");
     });
@@ -111,9 +83,9 @@ var size=300;
                      });
                     return;
                 }
-                globalLayout.cells("b").progressOn();
+                myLayout.cells("a").progressOn();
                 myForm.send("{{ url('xml_Admin_domain_save') }}","POST",function(loader,response){
-                    globalLayout.cells("b").progressOff();
+                    myLayout.cells("a").progressOff();
                     if(response === "success")
                    {
                      dhtmlx.message({
@@ -136,8 +108,8 @@ var size=300;
                 break;
         }
     });
-    globalLayout.cells("a").hideHeader();     
-});
+    myLayout.cells("b").hideHeader();     
+}
 
 function GridRefresh()
 {
@@ -152,11 +124,11 @@ function New() {
 }
 
 function Edit(id) {
-    globalLayout.cells("c").progressOn();
+    myLayout.cells("b").progressOn();
     myToolbar.showItem("delete");
     myForm.clear();
     myForm.load("{{ url('xml_Admin_domain_form') }}?id="+id, function () {
-        globalLayout.cells("c").progressOff();
+        myLayout.cells("b").progressOff();
     });
 }
 
@@ -179,7 +151,7 @@ function Delete(id) {
                            text: "{{ "Domain deleted" | trans }}"
                         });
                            myDoms.deleteRow(id);
-                         globalLayout.cells("b").progressOff();
+                         myLayout.cells("a").progressOff();
                       }
                       else 
                       {

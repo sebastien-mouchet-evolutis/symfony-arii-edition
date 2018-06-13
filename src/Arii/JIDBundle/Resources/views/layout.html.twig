@@ -202,7 +202,7 @@ function PurgeJob( id ) {
 
     var toolbar;
     toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_purge_job') }}");
 
     toolbar.attachEvent("onClick",function(itemid){
@@ -252,7 +252,7 @@ function Order( Command, id, Text, Toolbar, Time, chain )
 
     var toolbar;
     toolbar = winLayout.cells('a').attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
 
     toolbar.loadStruct(Toolbar,function(){
         if (Time) {
@@ -264,7 +264,7 @@ function Order( Command, id, Text, Toolbar, Time, chain )
 
     var toolbar2;
     toolbar2 = winbar.cells("b2").attachToolbar();
-    toolbar2.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar2.setIconsPath("{{ asset('/images/') }}");
     toolbar2.loadStruct("{{ url('xml_JID_order_toolbar_params') }}");
 
     var dhxgrid = winbar.cells("b2").attachGrid();
@@ -369,7 +369,7 @@ var largeur = 600;
     winbar.cells("b1").attachURL("{{ url('arii_JID_detail_order') }}?id="+encodeURIComponent(id),true);
 
     var toolbar = winLayout.cells("a").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct(Toolbar ,function(){
         GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -378,7 +378,7 @@ var largeur = 600;
 
     var toolbar2;
     toolbar2 = winbar.cells("b2").attachToolbar();
-    toolbar2.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar2.setIconsPath("{{ asset('/images/') }}");
     toolbar2.load("{{ url('xml_JID_toolbar_order_param') }}");
 
     toolbar.attachEvent("onClick",function(itemid){

@@ -1,44 +1,22 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-var bundle='Core';
-dhtmlxEvent(window,"load",function(){  
-var size=300;
+function Init() {
 
-    globalLayout = new dhtmlXLayoutObject(document.body,"4L");  
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("b").setWidth(300); 
-    globalLayout.cells("b").setText("{{ "Category" | trans }}"); 
-    globalLayout.cells("d").setText("{{ "Detail" | trans }}"); 
-    globalLayout.cells("d").setHeight(250); 
+    myLayout = globalLayout.cells("c").attachLayout("3L");  
+    myLayout.cells("a").setWidth(300);
+    myLayout.cells("a").setText("{{ "Categories" | trans }}");
     
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );    
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-    });
-
-    myTree = globalLayout.cells("b").attachTree();
+    myTree = myLayout.cells("a").attachTree();    
     myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load( "{{ url('xml_Admin_categories_tree') }}" );
     myTree.enableDragAndDrop(true, false);
 
-    myStatus = globalLayout.cells("c").attachStatusBar({
+    myStatus = myLayout.cells("b").attachStatusBar({
         text:   "",   // status bar text
         height: 35                  // custom height
     });
-    myApps = globalLayout.cells("c").attachGrid();
+    myApps = myLayout.cells("b").attachGrid();
     myApps.setImagePath("{{ asset('/images/') }}");
     myApps.setHeader("{{ "Title"| trans }},{{ "Code"| trans }},{{ "Category"| trans }},{{ "Description"| trans }},{{ "Contact"| trans }},{{ "Act."| trans }}");
     myApps.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#master_checkbox");
@@ -54,9 +32,9 @@ var size=300;
     });
 
     myTree.attachEvent("onClick",function(id) {
-        globalLayout.cells("b").progressOn();
+        myLayout.cells("b").progressOn();
         myApps.load("{{ url('xml_Admin_applications_grid') }}", function() {
-            globalLayout.cells("b").progressOff();
+            myLayout.cells("b").progressOff();
         } );
     })    
     
@@ -98,11 +76,11 @@ var size=300;
             label: "{{ "Contact" | trans }}"
         }
     ];
-    myForm = globalLayout.cells("d").attachForm(formData);
+    myForm = myLayout.cells("c").attachForm(formData);
     myForm.enableLiveValidation(true);
     
-    myToolbar = globalLayout.cells("d").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar = myLayout.cells("c").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_Admin_applications_toolbar') }}", function () {
         myToolbar.hideItem("delete");
     });
@@ -136,9 +114,9 @@ var size=300;
                      });
                     return;
                 }
-                globalLayout.cells("b").progressOn();
+                myLayout.cells("b").progressOn();
                 myForm.send("{{ url('xml_Admin_application_save') }}","POST",function(loader,response){
-                    globalLayout.cells("b").progressOff();
+                    myLayout.cells("b").progressOff();
                     if(response === "success")
                    {
                      dhtmlx.message({
@@ -161,10 +139,9 @@ var size=300;
                 break;
         }
     });
-    globalLayout.cells("a").hideHeader(); 
-    globalLayout.cells("c").hideHeader(); 
-
-});
+    myLayout.cells("b").hideHeader(); 
+    myLayout.cells("c").hideHeader(); 
+}
 
 function GridRefresh()
 {
@@ -179,11 +156,11 @@ function New() {
 }
 
 function Edit(id) {
-    globalLayout.cells("d").progressOn();
+    myLayout.cells("d").progressOn();
     myToolbar.showItem("delete");
     myForm.clear();
     myForm.load("{{ url('xml_Admin_application_form') }}?id="+id, function () {
-        globalLayout.cells("d").progressOff();
+        myLayout.cells("d").progressOff();
     });
 }
 
@@ -206,7 +183,7 @@ function Delete(id) {
                            text: "{{ "Application deleted" | trans }}"
                         });
                            myApps.deleteRow(id);
-                         globalLayout.cells("b").progressOff();
+                         myLayout.cells("b").progressOff();
                       }
                       else 
                       {

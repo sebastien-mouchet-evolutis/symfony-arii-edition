@@ -15,7 +15,7 @@ class JiraController extends Controller
         else 
             $log = file_get_contents('../workspace/ACK/Input/Jira/bloquants.xml');
         
-        return $this->XML2DB($log);
+        return $this->XML2DB($log,'ISSUE');
     }
 
     public function ChangesAction() {
@@ -25,10 +25,10 @@ class JiraController extends Controller
         else 
             $log = file_get_contents('../workspace/ACK/Input/Jira/changes.xml');
         
-        return $this->XML2DB($log);
+        return $this->XML2DB($log,'CHANGE');
     }
     
-    public function XML2DB($log)
+    public function XML2DB($log,$event_type)
     {  
         set_time_limit(300);
         $time = time();
@@ -45,8 +45,10 @@ class JiraController extends Controller
             $name= $Issue['key'];
             
             $Event = $em->getRepository("AriiACKBundle:Event")->findOneBy([ 'name' => $name ]);            
-            if (!$Event)
+            if (!$Event) {
                 $Event = new \Arii\ACKBundle\Entity\Event();
+                $Event->setState($this->MyState($Issue['status']));
+            }
             
             $Event->setName($name);
             $Event->setTitle($Issue['summary']);
@@ -56,6 +58,7 @@ class JiraController extends Controller
                 $description = $Issue['description'];
             $Event->setEvent($description); 
             
+            // Est ce que le change est vraiement utile ?
             $Event->setStartTime(new \DateTime($Issue['created']));
             $Event->setEndTime(new \DateTime($Issue['updated']));
             
@@ -71,9 +74,11 @@ class JiraController extends Controller
                             break;
                         case 'Start date':
                             $Event->setChangeStart(new \DateTime($value));
+                            $Event->setStartTime(new \DateTime($value));
                             break;
                         case 'End date':
                             $Event->setChangeEnd(new \DateTime($value));
+                            $Event->setEndTime(new \DateTime($value));
                             break;
                         default:
                             break;
@@ -84,8 +89,9 @@ class JiraController extends Controller
             // A voir comment paramétrer cette partie           
             // Injection dependances ou DB ?
             $Event->setStatus($Issue['status']);            
-            $Event->setState($this->MyState($Issue['status']));      
-
+            $Event->setEventSource('JIRA');
+            $Event->setEventType($event_type);
+            
             $em->persist($Event);
 
             // On sauvegarde les commentaires

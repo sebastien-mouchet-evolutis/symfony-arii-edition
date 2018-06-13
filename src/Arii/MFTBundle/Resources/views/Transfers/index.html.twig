@@ -74,7 +74,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_MFT_transfers_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -105,7 +105,7 @@ dhtmlxEvent(window,"load",function(){
     myTabbar.addTab("doc","{{ "Doc" | trans }}","150px");
 
     myFormToolbar = myTabbar.cells("detail").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct( "{{ url('xml_MFT_transfer_toolbar') }}");
 
     myForm = myTabbar.cells("detail").attachForm();
@@ -220,7 +220,7 @@ dhtmlxEvent(window,"load",function(){
     myOpForm.loadStruct("{{ url('json_MFT_operation_form') }}");
 
     myOpFormToolbar = myLayout.cells("b").attachToolbar();
-    myOpFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myOpFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myOpFormToolbar.loadStruct( "{{ url('xml_MFT_operation_toolbar') }}");
 
     myOperations.attachEvent("onRowDblClicked", function(id) {

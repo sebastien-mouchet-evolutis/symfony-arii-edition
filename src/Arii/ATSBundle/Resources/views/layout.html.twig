@@ -205,7 +205,7 @@ function Sendevent( Job, Event )
             
     var toolbar;
     toolbar = msg.attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct( "{{ url('xml_ATS_sendevent_form_toolbar') }}" ,function(){
         if (Time) {
             GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));

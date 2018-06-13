@@ -56,7 +56,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_Report_toolbar') }}", function() {
         this.setItemText("APP",this.getListOptionText("APP",this.getListOptionSelected("APP")));
         this.setItemText("ENV",this.getListOptionText("ENV",this.getListOptionSelected("ENV")));

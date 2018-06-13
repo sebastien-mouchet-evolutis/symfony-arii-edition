@@ -60,7 +60,7 @@ menu.loadStruct("{{ url('xml_JID_orders_menu') }}");
 
 var dhxLayout = new dhtmlXLayoutObject("mygrid","2E");
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('xml_JID_orders_toolbar') }}", function() {
 {% if  app.request.get('ordered')>0 %}
 toolbar.setItemState("ordered",true);

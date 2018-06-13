@@ -5,7 +5,7 @@ dhtmlxEvent(window,"load",function(){
 
     var dhxLayout = new dhtmlXLayoutObject(document.body,"3U");
     var toolbar = dhxLayout.attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar') }}");
     toolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {

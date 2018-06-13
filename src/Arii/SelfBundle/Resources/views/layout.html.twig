@@ -5,12 +5,58 @@
 {% endblock dhtmlx %}
 {% block dhtmlx_plus %}
 {% endblock dhtmlx_plus %}
-{% block body %}
-{% endblock body %}
+{% block onload %}
+<script language="javascript">
+var bundle='Self';
+var update=30;
+var last="{{ request }}";
+var mode="{{ mode }}";
+
+dhtmlxEvent(window,"load",function(){   
+    var size=350;
+    globalLayout = new dhtmlXLayoutObject(document.body,"3T");  
+    globalLayout.cells("a").setHeight(120); 
+    globalLayout.cells("b").setWidth(size); 
+    globalLayout.cells("b").setText("{{ "Menu" | trans }}"); 
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
+    myRibbon.loadStruct("{{ url('json_ARII_ribbon') }}?bundle="+bundle, function() {});
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    myTree = globalLayout.cells("b").attachTree();
+    myTree.setImagePath("{{ asset('/images/') }}");
+    myTree.load( '{{ url('xml_Self_tree') }}');
+    myTree.attachEvent("onClick", function(id) {
+        switch (id.substr(0,1)) {
+            case 'T':
+                window.location = "{{ url('arii_Self_request') }}?request="+id.substr(1);
+                break;
+            default:
+                return;
+        }
+    });
+    
+    myToolbar = globalLayout.cells("c").attachToolbar();
+    myToolbar.setIconsPath( "{{ asset('/images/') }}" );
+    Init();    
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("c").hideHeader();
+//    autorefresh = setInterval( "GlobalRefresh()",update*1000);
+});
+</script>
+{% endblock onload %}
+{% block body %}{% endblock%}
 {% block script %}
-<script>
+<script language="javascript">      
+function GlobalRefresh() {
+}
+
 function StateRibbon (itemid,state) {
     switch(itemid) {
+        case 'home':
+            
         default:
             alert(itemid);
     }
@@ -18,14 +64,57 @@ function StateRibbon (itemid,state) {
 }
 
 function ClickRibbon (itemid,state) {
-    switch(itemid) {
-    case 'index':
-    case 'request':
-        window.location = "{{ url('arii_Self_index') }}";
-        break;
-    default:
-        window.location = "{{ url('arii_Self_index') }}"+itemid;
+    var id = itemid.split('_');
+    switch (id[0]) {
+        case 'BUNDLE':
+            window.location = '{{ path('arii_homepage') }}'+id[1]+'/{{ app.request.locale }}';
+            break;
+        case 'LANG':
+            window.location = '{{ path('arii_homepage') }}'+bundle.toLowerCase()+'/'+id[1];
+            break;
+        case 'USER':
+            switch (id[1]) {
+                case 'logout':
+                    window.location = '{{ path('fos_user_security_logout') }}';
+                    break;
+            }
+            break;
+        case 'HELP':
+            switch (id[1]) {
+                case 'sos':
+                    window.location = 'http://www.sos-paris.com';
+                    break;
+                case 'github':
+                    window.location = 'https://github.com/AriiPortal';
+                    break;
+                case 'readme':
+                    window.location = '{{ path('arii_ACK_readme') }}';
+                    break;
+                default:
+                    alert(id[1]);
+                    break;                    
+            }
+            break;
+        default:
+            alert(id[0]);
+            break;
     }
+}
+
+function ToolbarTime() {
+    var currentTime = new Date();
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    var seconds = currentTime.getSeconds();
+    if (minutes < 10){
+    minutes = "0" + minutes;
+    }
+    if (seconds < 10){
+    seconds = "0" + seconds;
+    }
+    myToolbar.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
 }
 </script>
 {% endblock script %}
+
+            

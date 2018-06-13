@@ -60,7 +60,7 @@ style="right:280px;"></div>
 dhtmlx.skin = "dhx_skyblue";
 var dhxLayout = new dhtmlXLayoutObject("mygrid","3U");
 var toolbar = dhxLayout.attachToolbar();
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('arii_JID_toolbar') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {

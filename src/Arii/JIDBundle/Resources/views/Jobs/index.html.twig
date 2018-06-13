@@ -99,7 +99,7 @@ dhtmlxEvent(window,"load",function(){
     });
 */
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_JID_jobs_grid_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -242,7 +242,7 @@ dhtmlxEvent(window,"load",function(){
     
 {% if is_granted('ROLE_OPERATOR') %}
     myDetailToolbar = myDetailLayout.cells("a").attachToolbar();
-    myDetailToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myDetailToolbar.setIconsPath("{{ asset('/images/') }}");
     myDetailToolbar.loadStruct( "{{ url('xml_JID_jobs_form_toolbar') }}" , function(){
         GBCalendar = new dhtmlXCalendarObject(myDetailToolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");
@@ -250,7 +250,7 @@ dhtmlxEvent(window,"load",function(){
     });
     
     myParametersToolbar = myDetailLayout.cells("b").attachToolbar();
-    myParametersToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myParametersToolbar.setIconsPath("{{ asset('/images/') }}");
     myParametersToolbar.loadStruct("{{ url('xml_JID_job_params_toolbar') }}");
 {% endif %}
 

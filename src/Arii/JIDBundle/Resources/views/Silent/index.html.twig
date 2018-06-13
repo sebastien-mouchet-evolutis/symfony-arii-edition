@@ -705,7 +705,7 @@ dhtmlxEvent(window,"load",function(){
     globalLayout.cells("b").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}'); 
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_JID_silent_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(id){
         switch (id) {

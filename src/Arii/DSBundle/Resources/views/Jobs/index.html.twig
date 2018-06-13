@@ -87,7 +87,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = myMainTabbar.cells("a").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_DS_jobs_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -122,7 +122,7 @@ dhtmlxEvent(window,"load",function(){
     myForm.loadStruct("{{ url('json_DS_jobs_form') }}");
 {% if is_granted('ROLE_OPERATOR') %}
     myDetailToolbar = myTabbar.cells("b1").attachToolbar();
-    myDetailToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myDetailToolbar.setIconsPath("{{ asset('/images/') }}");
     myDetailToolbar.loadStruct( "{{ url('xml_DS_jobs_form_toolbar') }}" , function(){
 /*        GBCalendar = new dhtmlXCalendarObject(myDetailToolbar.getInput('ref_date'));
         GBCalendar.setDateFormat("%Y-%m-%d %H:%i:%s");

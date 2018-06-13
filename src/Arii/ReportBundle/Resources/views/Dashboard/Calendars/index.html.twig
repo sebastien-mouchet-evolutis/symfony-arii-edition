@@ -67,7 +67,7 @@ dhtmlxEvent(window,"load",function(){
     myLayout.cells("a").hideHeader();
     
     CalToolbar = myLayout.cells("b").attachToolbar();
-    CalToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    CalToolbar.setIconsPath("{{ asset('/images/') }}");
     CalToolbar.loadStruct("{{ url('xml_Report_calendars_toolbar') }}");
     CalToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {

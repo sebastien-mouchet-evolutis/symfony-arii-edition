@@ -22,7 +22,7 @@ class SchedulerHistoryRepository extends EntityRepository
         }
         
         $q = $this->createQueryBuilder('e')
-        ->select('e.jobName,e.steps,e.startTime,e.endTime,e.exitCode,e.spoolerId,e.error,e.errorCode,e.errorText')
+        ->select('e.jobName,e.steps,e.startTime,e.endTime,e.exitCode,e.spoolerId,e.error,e.errorCode,e.errorText,e.log')
         ->where('e.startTime > :past')
         ->orderBy('e.startTime','DESC')
         ->setParameter('past',$past)

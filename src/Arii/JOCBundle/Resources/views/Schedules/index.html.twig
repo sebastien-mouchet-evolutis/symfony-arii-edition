@@ -22,7 +22,7 @@ dhtmlxEvent(window,"load",function(){
 
     globalLayout.cells("b").hideHeader();
     toolbar =  globalLayout.cells("b").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JOC_toolbar') }}");
     toolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {

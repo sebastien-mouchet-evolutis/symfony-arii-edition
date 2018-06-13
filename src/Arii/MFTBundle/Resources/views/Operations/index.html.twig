@@ -76,7 +76,7 @@ dhtmlxEvent(window,"load",function(){
     });
 
     myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_MFT_grid_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
          switch (itemid) {
@@ -112,7 +112,7 @@ dhtmlxEvent(window,"load",function(){
 //    myTabbar.addTab("history","{{ "History" | trans }}","150px");
 
     myFormToolbar = myTabbar.cells("detail").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct( "{{ url('xml_MFT_operation_toolbar') }}");
 
     myForm = myTabbar.cells("detail").attachForm();

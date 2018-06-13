@@ -38,7 +38,7 @@ dhxLayout.cells("a").setHeight(315);
 var toolbar = dhxLayout.cells("a").attachToolbar();
 
 
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('arii_JID_toolbar_refresh') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {

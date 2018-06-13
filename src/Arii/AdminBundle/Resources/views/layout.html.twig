@@ -8,26 +8,78 @@
     type="text/javascript" 
     src="http://maps.google.com/maps/api/js?sensor=false"></script>
 {% endblock dhtmlx_plus %}
-{% block body %}
-{% endblock body %}
-{% block script %}
-<script>
-function StateRibbon (itemid,state) {
-    switch(itemid) {
-        default:
-            alert(itemid);
-    }
-    GlobalRefresh();    
-}
+{% block onload %}
+<script language="javascript">
+var bundle='Admin';
+var update=5;
+dhtmlxEvent(window,"load",function(){   
+    var size=200;
+    globalLayout = new dhtmlXLayoutObject(document.body,"3T");  
+    globalLayout.cells("a").setHeight(120); 
+    globalLayout.cells("b").setWidth(size); 
+    globalLayout.cells("b").setText("{{ "Menu" | trans }}"); 
 
-function ClickRibbon (itemid,state) {
-    switch(itemid) {
-    case 'index':
-        window.location = "{{ url('arii_Admin_index') }}";
-        break;
-    default:
-        window.location = "{{ url('arii_Admin_index') }}"+itemid;
-    }
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
+    myRibbon.loadStruct("{{ url('json_ARII_ribbon') }}?bundle="+bundle, function() {});
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    mySidebar = globalLayout.cells("b").attachSidebar({
+        icons_path: "{{ asset('/images/') }}",
+        width: size,
+        items:
+        [
+            { id:"categories", text: "{{ "Categories" | trans }}", icon: "categories.png" },   
+            { id:"sites", text: "{{ "Sites" | trans }}", icon: "world.png" },
+            { id:"applications", text: "{{ "Applications" | trans }}", icon: "application.png" },
+            { id:"domains", text: "{{ "Domains" | trans }}", icon: "domain.png" },
+            { id:"rules", text: "{{ "Rules" | trans }}", icon: "rule.png" },
+            { id:"sep1", type: "separator" },
+            { id:"connections", text: "{{ "Connections" | trans }}", icon: "connect.png" },
+            { id:"nodes", text: "{{ "Nodes" | trans }}", icon: "agent.png" },    
+            { id:"sep2", type: "separator" },
+            { id:"filters", text: "{{ "Filters" | trans }}", icon: "filter.png" },
+            { id:"users", text: "{{ "Users" | trans }}", icon: "user.png" },
+            { id:"teams", text: "{{ "Teams" | trans }}", icon: "group.png" },
+        /*    { id:"rights", text: "{{ "Rights" | trans }}", icon: "audit.png" }, */
+            { id:"sep3", type: "separator" },
+            { id:"parameters", text: "{{ "Parameters" | trans }}", icon: "params.png" },
+            { id:"colors", text: "{{ "Colors" | trans }}", icon: "color_wheel.png" },
+            { id:"notes", text: "{{ "Notes" | trans }}", icon: "note.png" },
+            { id:"sep5", type: "separator" },
+            { id:"audit", text: "{{ "Audit" | trans }}", icon: "warning.png" },
+            { id:"errors", text: "{{ "Errors" | trans }}", icon: "bug.png" },
+            { id:"sep6", type: "separator" },
+            { id:"vault", text: "{{ "Workspace" | trans }}", icon: "workspace.png" },    
+            { id:"install", text: "{{ "Installation" | trans }}", icon: "config.png" },
+            { id:"bundles", text: "{{ "Bundles" | trans }}", icon: "bundles.png" },    
+            { id:"cron", text: "{{ "Cron" | trans }}", icon: "schedules.png" }    
+        ]
+    });
+    mySidebar.attachEvent("onBubbleClick", function(id, value){
+        // bubble clicked, your code here
+        // 'return true' means item allowed to be selected
+        // false - otherwise
+        return true;
+    });    
+    mySidebar.attachEvent("onSelect", function(id, value){
+        document.location.href = "{{ url('arii_Admin_index') }}"+id;
+        return true;
+    });
+    Init();
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("c").hideHeader();
+    GlobalRefresh();
+    autorefresh = setInterval( "GlobalRefresh()",update*1000);
+});
+</script>
+{% endblock onload %}
+
+{% block script %}
+<script language="javascript">      
+function GlobalRefresh() {
 }
 </script>
+{% include "AriiCoreBundle:Common:ribbon.js.twig" %}
 {% endblock script %}

@@ -284,7 +284,7 @@ gantt.load("{{ url('xml_JOC_orders_gantt') }}");
 
 var toolbar;
 toolbar = new dhtmlXToolbarObject("toolbarObj");
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('arii_JOC_toolbar') }}");
 
 gantt.attachEvent("onBeforeTaskDisplay", function(id, task){

@@ -23,7 +23,7 @@ dhtmlxEvent(window,"load",function(){
     myRibbon.attachEvent("onClick", ClickRibbon );
 {% if is_granted('ROLE_OPERATOR') %}  
     myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_JID_spoolers_toolbar') }}");
     myToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {
@@ -173,7 +173,7 @@ dhtmlxEvent(window,"load",function(){
     myJobs.init();
 {% if is_granted('ROLE_OPERATOR') %} 
     myFormToolbar = myTabbar.cells("spooler").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_JID_spooler_form_toolbar') }}", function () {
         this.hideItem('pause_spooler');
         this.hideItem('continue_spooler');

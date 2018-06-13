@@ -1,35 +1,13 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-var autorefresh; 
-var update=30;
-
-dhtmlxEvent(window,"load",function(){
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"4L");  
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("b").setWidth(300);     
-    globalLayout.cells("d").setHeight(200); 
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-    });
-
-    myTree = globalLayout.cells("b").attachTree();
+function Init() {
+    
+    myLayout = globalLayout.cells("c").attachLayout("3L");
+    myLayout.cells("a").setWidth(300);
+    myLayout.cells("a").setText("{{ "Categories" | trans }}");
+    
+    myTree = myLayout.cells("a").attachTree();
     myTree.setImagesPath("{{ asset('/images/') }}");
     myTree.load( "{{ url('xml_Admin_categories_tree') }}" );
     myTree.enableDragAndDrop(true, false);
@@ -66,15 +44,15 @@ var size=300;
             rows: 5
          }
     ];
-    myForm = globalLayout.cells("d").attachForm(formData);
+    myForm = myLayout.cells("c").attachForm(formData);
     myForm.enableLiveValidation(true);
 
-    myToolbar = globalLayout.cells("d").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar = myLayout.cells("c").attachToolbar();
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_Admin_category_toolbar') }}", function () {
         myToolbar.hideItem("delete_category");
     });
-    myCategories = globalLayout.cells("c").attachGrid();
+    myCategories = myLayout.cells("b").attachGrid();
     myCategories.setImagePath("{{ asset('arii/images/treegrid/') }}");
     
     myCategories.setHeader("{{ "Name"| trans }},{{ "Category" | trans }},{{ "Description"| trans }}");
@@ -118,9 +96,9 @@ var size=300;
                      });
                     return;
                 }
-                globalLayout.cells("c").progressOn();
+                myLayout.cells("b").progressOn();
                 myForm.send("{{ url('xml_Admin_category_save') }}","POST",function(loader,response){
-                    globalLayout.cells("c").progressOff();
+                    myLayout.cells("b").progressOff();
                     if(response === "success")
                    {
                      dhtmlx.message({
@@ -145,9 +123,9 @@ var size=300;
     });
 
     myTree.attachEvent("onDrop",function(id,category_id) {
-        globalLayout.cells("b").progressOn();
+        myLayout.cells("a").progressOn();
         dhx4.ajax.get("{{ url('xml_Admin_category_dragdrop') }}?id="+id+"&category_id="+category_id,function(loader){
-            globalLayout.cells("b").progressOff();
+            myLayout.cells("a").progressOff();
             if(loader.xmlDoc.responseText === "success") {
                 dhtmlx.message({
                    title:"Save",
@@ -164,13 +142,13 @@ var size=300;
         });
     })    
 
-    globalLayout.cells("a").hideHeader(); 
-    globalLayout.cells("b").hideHeader(); 
-    globalLayout.cells("c").hideHeader(); 
-    globalLayout.cells("d").hideHeader(); 
+    myLayout.cells("a").hideHeader(); 
+    myLayout.cells("a").hideHeader(); 
+    myLayout.cells("b").hideHeader(); 
+    myLayout.cells("c").hideHeader(); 
     // Premier chargement avant le smart rendering
     autorefresh = setInterval( "GlobalRefresh()",update*1000);
-});
+}
 
 function GlobalRefresh() {
     myTree.smartRefreshBranch(0,"{{ url('xml_Admin_categories_tree') }}");    
@@ -184,16 +162,16 @@ function New() {
 }
 
 function Edit(id) {
-    globalLayout.cells("c").expand();
-    globalLayout.cells("c").progressOn();
+    myLayout.cells("b").expand();
+    myLayout.cells("b").progressOn();
     myToolbar.showItem("delete");
     myCategories.clearAll();
     myCategories.load("{{ url('xml_Admin_categories_grid') }}", function() {
-        globalLayout.cells("c").progressOff();
-        globalLayout.cells("d").progressOn();
+        myLayout.cells("b").progressOff();
+        myLayout.cells("c").progressOn();
         myForm.clear();
         myForm.load("{{ url('xml_Admin_category_form') }}?id="+id, function () {        
-            globalLayout.cells("d").progressOff();            
+            myLayout.cells("c").progressOff();            
         });
     });
 }
@@ -205,7 +183,7 @@ function Delete(id) {
     text: "{{ "Are you sure ?" | trans }}",
     callback: function(answer) { 
         if (answer) {      
-            globalLayout.progressOn();
+            myLayout.progressOn();
             dhx4.ajax.get("{{ url('xml_Admin_category_delete') }}?id="+id,function(loader){
                 if(loader.xmlDoc.responseText==="success"){
                     myTree.smartRefreshBranch(0,"{{ url('xml_Admin_categories_tree') }}");
@@ -213,7 +191,7 @@ function Delete(id) {
                 else {
                     alert(loader.xmlDoc.responseText);
                 }
-                globalLayout.progressOff();
+                myLayout.progressOff();
             });
         }
     },

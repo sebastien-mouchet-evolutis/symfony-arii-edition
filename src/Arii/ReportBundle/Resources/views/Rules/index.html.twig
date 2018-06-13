@@ -85,7 +85,7 @@ var size=300;
     myForm.enableLiveValidation(true);
     
     myToolbar = globalLayout.cells("c").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_Report_rules_toolbar') }}", function () {
         myToolbar.hideItem("delete");
     });

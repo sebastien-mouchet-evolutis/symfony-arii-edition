@@ -21,7 +21,7 @@ dhtmlxEvent(window,"load",function(){
     myRibbon.attachEvent("onClick", ClickRibbon );
 {% if is_granted('ROLE_OPERATOR') %}
     globalToolbar = globalLayout.cells("b").attachToolbar();
-    globalToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    globalToolbar.setIconsPath("{{ asset('/images/') }}");
     globalToolbar.loadStruct("{{ url('arii_JOC_toolbar') }}");
     globalToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {

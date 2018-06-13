@@ -30,7 +30,7 @@ dhtmlxEvent(window,"load",function(){
     myTabbar.addTab("runs_hour","{{ "Runs by hour" | trans }}","120px",null,true);
 
     myToolbarRunsHour = myTabbar.cells("runs_hour").attachToolbar();
-    myToolbarRunsHour.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbarRunsHour.setIconsPath("{{ asset('/images/') }}");
     myToolbarRunsHour.loadStruct("{{ url('xml_Report_toolbar_update') }}" );
 
     myRunsHour = myTabbar.cells("runs_hour").attachGrid();

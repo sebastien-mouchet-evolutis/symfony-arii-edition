@@ -45,7 +45,7 @@ dhtmlxEvent(window,"load",function(){
     myGrid.attachEvent("onRowDblClicked", TransferDetail );  
 
     myFormToolbar = myTabbar.cells("transfer").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct( "{{ url('xml_MFT_transfer_toolbar') }}");
 
     myForm = myTabbar.cells("transfer").attachForm();
@@ -119,7 +119,7 @@ dhtmlxEvent(window,"load",function(){
     myOpForm.loadStruct("{{ url('json_MFT_operation_form') }}");
 
     myOpFormToolbar = myLayout.cells("b").attachToolbar();
-    myOpFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myOpFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myOpFormToolbar.loadStruct( "{{ url('xml_MFT_operation_toolbar') }}");
 
     myOperations.attachEvent("onRowDblClicked", function(id) {

@@ -117,6 +117,14 @@ class Status
     /**
      * @var integer
      *
+     * @ORM\Column(name="status_time", type="datetime", nullable=true)
+     * 
+     */
+    private $status_time;
+    
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="last_start", type="datetime", nullable=true)
      * 
      */
@@ -145,6 +153,36 @@ class Status
      * 
      */
     private $message;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="state", type="string", length=32, nullable=true)
+     * 
+     */
+    private $state;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="state_time", type="datetime", nullable=true)
+     * 
+     */
+    private $state_time;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="job_log", type="text" )
+     * 
+     */
+    private $job_log;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Alarm")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $alarm;
     
     /**
      * Get id
@@ -476,5 +514,143 @@ class Status
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $state
+     * @return Status
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return string 
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Set state_time
+     *
+     * @param \DateTime $stateTime
+     * @return Status
+     */
+    public function setStateTime($stateTime)
+    {
+        $this->state_time = $stateTime;
+
+        return $this;
+    }
+
+    /**
+     * Get state_time
+     *
+     * @return \DateTime 
+     */
+    public function getStateTime()
+    {
+        return $this->state_time;
+    }
+
+    /**
+     * Set status_time
+     *
+     * @param string $statusTime
+     * @return Status
+     */
+    public function setStatusTime($statusTime)
+    {
+        $this->status_time = $statusTime;
+
+        return $this;
+    }
+
+    /**
+     * Get status_time
+     *
+     * @return string 
+     */
+    public function getStatusTime()
+    {
+        return $this->status_time;
+    }
+
+    /**
+     * Set log
+     *
+     * @param string $log
+     * @return Status
+     */
+    public function setLog($log)
+    {
+        $this->log = $log;
+
+        return $this;
+    }
+
+    /**
+     * Get log
+     *
+     * @return string 
+     */
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    /**
+     * Set job_log
+     *
+     * @param string $jobLog
+     * @return Status
+     */
+    public function setJobLog($jobLog)
+    {
+        $this->job_log = $jobLog;
+
+        return $this;
+    }
+
+    /**
+     * Get job_log
+     *
+     * @return string 
+     */
+    public function getJobLog()
+    {
+        return $this->job_log;
+    }
+
+    /**
+     * Set alarm
+     *
+     * @param \Arii\ACKBundle\Entity\Alarm $alarm
+     * @return Status
+     */
+    public function setAlarm(\Arii\ACKBundle\Entity\Alarm $alarm = null)
+    {
+        $this->alarm = $alarm;
+
+        return $this;
+    }
+
+    /**
+     * Get alarm
+     *
+     * @return \Arii\ACKBundle\Entity\Alarm 
+     */
+    public function getAlarm()
+    {
+        return $this->alarm;
     }
 }

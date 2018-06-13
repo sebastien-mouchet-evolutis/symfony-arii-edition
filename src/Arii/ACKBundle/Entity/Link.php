@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as Serializer;
  * Link
  *
  * @ORM\Table(name="ARII_LINK")
- * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\AlarmRepository")
+ * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\LinkRepository")
  * 
  */
 class Link

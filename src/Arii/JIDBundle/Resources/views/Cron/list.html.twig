@@ -81,7 +81,7 @@ mygrid.attachEvent( "onRowDblClicked", function(id) {
 
 var toolbar;
 toolbar = new dhtmlXToolbarObject("toolbarObj");
-toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+toolbar.setIconsPath("{{ asset('/images/') }}");
 toolbar.loadStruct("{{ url('arii_batchinstaller_toolbar_list') }}");
 toolbar.attachEvent( "onClick", function(id, value) {
     switch (id) {

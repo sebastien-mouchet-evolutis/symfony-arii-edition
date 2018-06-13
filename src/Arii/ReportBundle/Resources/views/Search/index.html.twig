@@ -55,7 +55,7 @@ var size=345;
     });
 */        
     myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_Report_search_toolbar') }}", function() {
     });
     myToolbar.attachEvent( "onClick", function(id, value) {

@@ -89,7 +89,7 @@ dhtmlxEvent(window,"load",function(){
 
     var myToolbar = globalLayout.cells("b").attachToolbar();
 
-    myToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_JID_messages_toolbar') }}");
     myToolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {

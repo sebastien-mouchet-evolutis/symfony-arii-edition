@@ -30,10 +30,10 @@ class JobSchedulerController extends Controller
             if (isset($Done[$name])) continue;
             
             $Status = $em->getRepository("AriiACKBundle:Status")->findOneBy([ 'name' =>   $name ]);
-            if (!$Status)
+            if (!$Status) {
                 $Status = new \Arii\ACKBundle\Entity\Status();
-            
-            $Status->setSource   ($db);
+                $Status->setState('OPEN');
+            }       
             $Status->setInstance ($instance);            
             $Status->setName     ($name);
             $Status->setSource   ('OJS');            
@@ -43,11 +43,19 @@ class JobSchedulerController extends Controller
             $Status->setLastEnd  ($Record['endTime']);
             $Status->setExitCode ($Record['exitCode']);
             $Status->setMessage  ($Record['errorText']);
+            if ($Record['log'])
+                $Status->setJobLog   ( utf8_encode( gzinflate ( substr( stream_get_contents($Record['log']), 10, -8) ) ) );
             
-            if ($Record['error']>0)
+            if ($Record['error']>0) {
                 $Status->setStatus  ('ERROR');
-            else 
+                $Status->setStatusTime($Record['endTime']);               
+            }
+            else {
                 $Status->setStatus  ('SUCCESS');
+                $Status->setState('CLOSE');
+                $Status->setStatusTime($Record['endTime']);
+            }
+            $Status->setStateTime($Record['endTime']);
             
             $Status->setUpdated  (new \DateTime());
             

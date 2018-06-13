@@ -1,4 +1,3 @@
-{# src/Arii/JIDBundle/Resources/views/Default/history.html.twig #}
 {% extends "AriiCoreBundle::layout.html.twig" %}
 {% block body %}
 <style>
@@ -89,26 +88,10 @@ line-height:26px;
 <!--	<div class="role" style="margin:5px 0px 0px 40px;">{obj.role}</div>
 -->
 </div>
-</textarea>
-<script type="text/javascript">
-dhtmlxEvent(window,"load",function(){ 
-var size=400;
-    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
-    globalLayout.cells("a").hideHeader();
-
-    {% include "AriiCoreBundle:Default:menu.html.twig" %}   
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Home_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    globalLayout.cells("a").setWidth(360);
-    globalLayout.cells("b").hideHeader();
-    {% include "AriiCoreBundle:Default:menu.js.twig" %}        
-
-    myToolbar = globalLayout.cells("b").attachToolbar();
+</textarea>    
+<script language="javascript">
+function Init() {
+    myToolbar = globalLayout.cells("c").attachToolbar();
 
     myToolbar.setIconsPath("{{ asset('/images/cover/') }}");
     myToolbar.loadStruct("{{ url('xml_toolbar') }}");
@@ -162,28 +145,23 @@ var size=400;
             margin: 2,
             image:getImageStyle
     });
-    dhxView = globalLayout.cells("b").attachDataView(
-            { type:"bundle2",
-    drag: true, 
-    select:true });
-    dhxView.load("{{ url('xml_modules') }}?"+(new Date()).valueOf(),
-    function () {},"xml");
     
-    dhxView.attachEvent("onSelectChange", function(sid) {
-        var d = dhxView.get(sid);
-	window.location.href = d.url;
-    });
+    dhxView = globalLayout.cells("c").attachDataView( 
+        { 
+            type:"bundle2",
+            drag: true, 
+            select:true 
+        }
+    );
+            
+    dhxView.load( "{{ url('xml_modules') }}?"+(new Date()).valueOf(),
+        dhxView.attachEvent( "onSelectChange", function(sid) {
+            var d = dhxView.get(sid);
+            window.location.href = d.url;
+        })
+    );
+    
     globalLayout.cells("a").hideHeader();    
-});
-function getImageStyle(obj){
-    url = "{{ asset('bundles/') }}arii"+obj.mod+"/icon_128.png";
-    if(window._isIE){
-        return "background-image: none;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+url+"',sizingMethod='crop');";
-    }
-    else{
-        return "background-image:url("+url+");";	
-    }
-}	
+}
 </script>
-</body>
 {% endblock %}

@@ -41,7 +41,7 @@ class Event
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */        
     private $description;
-    
+
      /**
      * @var string
      *
@@ -52,6 +52,13 @@ class Event
      /**
      * @var string
      *
+     * @ORM\Column(name="event_source", type="string", length=255, nullable=true )
+     */        
+    private $event_source;
+    
+     /**
+     * @var string
+     *
      * @ORM\Column(name="event_type", type="string", nullable=true )
      */        
     private $event_type;
@@ -59,7 +66,7 @@ class Event
     /**
      * @var datetime
      *
-     * @ORM\Column(name="start_time", type="datetime", length=3, nullable=true )
+     * @ORM\Column(name="start_time", type="datetime", nullable=true )
      */        
     private $start_time;
 
@@ -70,32 +77,6 @@ class Event
      */        
     private $end_time;    
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Arii\CoreBundle\Entity\Application")
-     * @ORM\JoinColumn(nullable=true)
-     **/
-    private $application;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Arii\CoreBundle\Entity\Domain")
-     * @ORM\JoinColumn(nullable=true)
-     **/
-    private $domain;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="applications", type="array", nullable=true)
-     */
-    private $applications;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="days", type="array", nullable=true)
-     */
-    private $days;
-    
      /**
      * @var string
      *
@@ -103,8 +84,7 @@ class Event
      */        
     private $status;    
 
-    
-     /**
+    /**
      * @var string
      *
      * @ORM\Column(name="state", type="string", length=32, nullable=true)
@@ -112,6 +92,13 @@ class Event
     private $state;    
     
      /**
+     * @var datetime
+     *
+     * @ORM\Column(name="state_time", type="datetime", length=32, nullable=true)
+     */        
+    private $state_time;    
+
+    /**
      * @var string
      *
      * @ORM\Column(name="last_comment", type="text", nullable=true)
@@ -146,6 +133,12 @@ class Event
      */        
     private $change_end;  
 
+    /**
+    * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Alarm")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $alarm;
+    
     /**
      * Get id
      *
@@ -249,6 +242,29 @@ class Event
     }
 
     /**
+     * Set event_source
+     *
+     * @param string $eventSource
+     * @return Event
+     */
+    public function setEventSource($eventSource)
+    {
+        $this->event_source = $eventSource;
+
+        return $this;
+    }
+
+    /**
+     * Get event_source
+     *
+     * @return string 
+     */
+    public function getEventSource()
+    {
+        return $this->event_source;
+    }
+
+    /**
      * Set event_type
      *
      * @param string $eventType
@@ -318,52 +334,6 @@ class Event
     }
 
     /**
-     * Set applications
-     *
-     * @param array $applications
-     * @return Event
-     */
-    public function setApplications($applications)
-    {
-        $this->applications = $applications;
-
-        return $this;
-    }
-
-    /**
-     * Get applications
-     *
-     * @return array 
-     */
-    public function getApplications()
-    {
-        return $this->applications;
-    }
-
-    /**
-     * Set days
-     *
-     * @param array $days
-     * @return Event
-     */
-    public function setDays($days)
-    {
-        $this->days = $days;
-
-        return $this;
-    }
-
-    /**
-     * Get days
-     *
-     * @return array 
-     */
-    public function getDays()
-    {
-        return $this->days;
-    }
-
-    /**
      * Set status
      *
      * @param string $status
@@ -384,6 +354,52 @@ class Event
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $state
+     * @return Event
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return string 
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Set state_time
+     *
+     * @param \DateTime $stateTime
+     * @return Event
+     */
+    public function setStateTime($stateTime)
+    {
+        $this->state_time = $stateTime;
+
+        return $this;
+    }
+
+    /**
+     * Get state_time
+     *
+     * @return \DateTime 
+     */
+    public function getStateTime()
+    {
+        return $this->state_time;
     }
 
     /**
@@ -433,49 +449,26 @@ class Event
     }
 
     /**
-     * Set application
+     * Set change_date
      *
-     * @param \Arii\CoreBundle\Entity\Application $application
+     * @param \DateTime $changeDate
      * @return Event
      */
-    public function setApplication(\Arii\CoreBundle\Entity\Application $application = null)
+    public function setChangeDate($changeDate)
     {
-        $this->application = $application;
+        $this->change_date = $changeDate;
 
         return $this;
     }
 
     /**
-     * Get application
+     * Get change_date
      *
-     * @return \Arii\CoreBundle\Entity\Application 
+     * @return \DateTime 
      */
-    public function getApplication()
+    public function getChangeDate()
     {
-        return $this->application;
-    }
-
-    /**
-     * Set domain
-     *
-     * @param \Arii\CoreBundle\Entity\Domain $domain
-     * @return Event
-     */
-    public function setDomain(\Arii\CoreBundle\Entity\Domain $domain = null)
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    /**
-     * Get domain
-     *
-     * @return \Arii\CoreBundle\Entity\Domain 
-     */
-    public function getDomain()
-    {
-        return $this->domain;
+        return $this->change_date;
     }
 
     /**
@@ -525,48 +518,25 @@ class Event
     }
 
     /**
-     * Set change_date
+     * Set alarm
      *
-     * @param \DateTime $changeDate
+     * @param \Arii\ACKBundle\Entity\Alarm $alarm
      * @return Event
      */
-    public function setChangeDate($changeDate)
+    public function setAlarm(\Arii\ACKBundle\Entity\Alarm $alarm = null)
     {
-        $this->change_date = $changeDate;
+        $this->alarm = $alarm;
 
         return $this;
     }
 
     /**
-     * Get change_date
+     * Get alarm
      *
-     * @return \DateTime 
+     * @return \Arii\ACKBundle\Entity\Alarm 
      */
-    public function getChangeDate()
+    public function getAlarm()
     {
-        return $this->change_date;
-    }
-
-    /**
-     * Set state
-     *
-     * @param integer $state
-     * @return Event
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    /**
-     * Get state
-     *
-     * @return integer 
-     */
-    public function getState()
-    {
-        return $this->state;
+        return $this->alarm;
     }
 }

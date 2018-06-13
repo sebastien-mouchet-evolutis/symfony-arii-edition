@@ -31,7 +31,7 @@ dhtmlxEvent(window,"load",function(){
     myTabbar.addTab("runs","{{ "Runs" | trans }}","120px");
 
     jobToolbar = myTabbar.cells("jobs").attachToolbar();
-    jobToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    jobToolbar.setIconsPath("{{ asset('/images/') }}");
     jobToolbar.loadStruct("{{ url('xml_Report_errors_jobs_toolbar') }}");
 
     myJobs = myTabbar.cells("jobs").attachGrid();

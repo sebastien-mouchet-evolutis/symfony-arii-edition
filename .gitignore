@@ -7,5 +7,6 @@
 !app/logs/.gitkeep
 /app/phpunit.xml
 /bin/
+/icons/
 /vendor/
 /web/bundles/

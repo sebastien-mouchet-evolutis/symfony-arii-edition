@@ -19,7 +19,7 @@ dhtmlxEvent(window,"load",function(){
     myRibbon.attachEvent("onClick", ClickRibbon );
 {% if is_granted('ROLE_OPERATOR') %}
     toolbar = globalLayout.cells("b").attachToolbar();
-    toolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    toolbar.setIconsPath("{{ asset('/images/') }}");
     toolbar.loadStruct("{{ url('arii_JOC_toolbar') }}");
     toolbar.attachEvent( "onClick", function(id, value) {
         switch (id) {

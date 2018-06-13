@@ -3,26 +3,34 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="Perl">
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Entity/AlarmRepository.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/views/Alerts/toolbar.xml.twig</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Entity/AlertRepository.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/views/Alerts/toolbar2.xml.twig</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/views/Events/index.html.twig</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/views/Alerts/menu.xml.twig</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/config/routing.yml</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Entity/Event.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Controller/EventsController.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Entity/EventRepository.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/views/Default/menu.html.twig</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/views/Default/menu.html.twig</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/views/Alerts/grid_toolbar.xml.twig</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/views/Events/menu.xml.twig</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Controller/AlertsController.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/config/routing.yml</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Entity/Alert.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/views/Alerts/index.html.twig</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Entity/Alarm.php</file>
-            <file>file:/C:/xampp56/arii/src/Arii/ACKBundle/Resources/views/Alerts/check.html.twig</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/ats_command.yml</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/inventaire_liste.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/views/Applications/index.html.twig</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/report_prod_applications.yml</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/datadomain_archives.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Controller/NodesController.php</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/ipam_pb_network.yml</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/easy_vista_sans_ipam.yml</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/ipam_network.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/views/Connections/index.html.twig</file>
+            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Service/ImportEZV.php</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/easyvista_liste_globale.yml</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/erreurs_inventaire.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/views/Sites/index.html.twig</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/report_prod_jiras.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/views/Nodes/index.html.twig</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/report_prod_executions.yml</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/cmdb_visa.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/views/Categories/index.html.twig</file>
+            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/views/Connections/schema.html.twig</file>
+            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Controller/ImportController.php</file>
+            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/views/Rules/index.html.twig</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/cmdb_backup_all.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Entity/EZV.php</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/cmdb_missing.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/AdminBundle/Resources/views/Domains/index.html.twig</file>
+            <file>file:/C:/xampp56/arii/workspace/Report/Requests/fr/easy_vista.yml</file>
+            <file>file:/C:/xampp56/arii/src/Arii/ReportBundle/Resources/config/routing.yml</file>
         </group>
     </open-files>
 </project-private>

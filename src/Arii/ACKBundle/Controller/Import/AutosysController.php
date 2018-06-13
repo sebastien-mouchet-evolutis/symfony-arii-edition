@@ -55,9 +55,14 @@ class AutosysController extends Controller
                 'name'   =>   $name
             ]);    
 
-            if (!$Status)
+            if (!$Status) {
                 $Status = new \Arii\ACKBundle\Entity\Status();
+                $Status->setState('OPEN');
+                $Status->setStateTime(new \DateTime());
+            }
             
+            $Status->setState('OPEN');
+                 
             $Status->setInstance ($instance);            
             $Status->setName     ($name);
             $Status->setTitle    ($job_name);

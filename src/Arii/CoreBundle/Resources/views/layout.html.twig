@@ -4,37 +4,106 @@
 <script src="{{ asset('dhtmlx/codebase/dhtmlx.js') }}" type="text/javascript"></script>
 {% endblock dhtmlx %}
 {% block dhtmlx_plus %}
+{% include "AriiCoreBundle:Common:ribbon.js.twig" %}    
 {% endblock dhtmlx_plus %}
-{% block body %}
-{% endblock body %}
-{% block script %}
-<script language="javascript">       
-function StateRibbon (itemid,state) {
-    switch(itemid) {
-        default:
-            alert(itemid);
+{% block onload %}
+<script language="javascript">
+var bundle='Core';
+var update=5;
+dhtmlxEvent(window,"load",function(){   
+    var size=180;
+    globalLayout = new dhtmlXLayoutObject(document.body,"3T");  
+    globalLayout.cells("a").setHeight(120); 
+    globalLayout.cells("b").setWidth(size); 
+    globalLayout.cells("b").setText("{{ "Menu" | trans }}"); 
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );
+    myRibbon.loadStruct("{{ url('json_ARII_ribbon') }}?bundle="+bundle, function() {});
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    mySidebar = globalLayout.cells("b").attachSidebar({
+        template: "tiles",
+        icons_path: "{{ asset('/images/32/') }}",
+        width: size,
+        items:
+        [
+    {% for name,info in Modules %}
+            { id:"{{ name }}", text: "{{ info.name | trans }}", icon: "{{ info.img }}" },   
+    {% endfor %}
+        
+            { id:"sep1", type: "separator" },
+            { id:"profile", text: "{{ "Profile" | trans }}", icon: "user.png" },   
+            { id:"filters", text: "{{ "Filters" | trans }}", icon: "filters.png" },
+            { id:"sep2", type: "separator" },
+            { id:"doc", text: "{{ "Guides" | trans }}", icon: "help.png" },
+            { id:"sep3", type: "separator" },
+            { id:"logout", text: "{{ "Logout" | trans }}", icon: "shut_down.png" },
+        ]
+    });
+    
+    mySidebar.attachEvent("onBubbleClick", function(id, value){
+        // bubble clicked, your code here
+        // 'return true' means item allowed to be selected
+        // false - otherwise
+        return true;
+    });
+    
+    mySidebar.attachEvent("onSelect", function(id, value){
+        switch(id) {
+            case 'profile':
+                document.location.href = "{{ url('arii_my_account') }}";
+                break;
+            case 'filters':
+                document.location.href = "{{ url('arii_filters') }}";
+                break;                    
+            case 'filters':
+                document.location.href = "{{ url('arii_filters') }}";
+                break;                    
+            case 'doc':
+                document.location.href = "{{ url('arii_Home_docs') }}";
+                break;                    
+            case 'session':
+                document.location.href = "{{ url('arii_my_session') }}";
+                break;
+            case 'logout':
+                document.location.href = "{{ url('fos_user_security_logout') }}";
+                break;                
+    {% for name,info in Modules %}
+            case '{{ name }}':
+                document.location.href = "{{ info.url | raw }}";
+                break;
+    {% endfor %}                
+            default:
+                alert(id);
+        }
+        return true;
+    });
+
+    Init();    
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("c").hideHeader();
+    GlobalRefresh();
+    autorefresh = setInterval( "GlobalRefresh()",update*1000);
+});
+
+
+function getImageStyle(obj){
+    url = "{{ asset('bundles/') }}arii"+obj.mod+"/icon_128.png";
+    if(window._isIE){
+        return "background-image: none;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+url+"',sizingMethod='crop');";
+    }
+    else{
+        return "background-image:url("+url+");";	
     }
 }
-function ClickRibbon (itemid,state) {
-    switch(itemid) {
-        case 'home':
-            window.location = "{{ url('arii_Home_index') }}";
-            break;
-        case 'doc':
-            window.location = "{{ url('arii_Home_docs') }}";
-            break;
-        case 'my_account':
-            window.location = "{{ url('arii_my_account') }}";
-            break;
-        case 'filter':
-            window.location = "{{ url('arii_filters') }}";
-            break;
-        case 'message':
-            window.location = "{{ url('arii_messages') }}";
-            break;
-        default:
-            alert(itemid);
-    }
+
+function GlobalRefresh() {
 }
+
 </script>
+{% endblock onload %}
+{% block body %}{% endblock%}
+{% block script %}
 {% endblock script %}

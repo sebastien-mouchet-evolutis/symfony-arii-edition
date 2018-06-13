@@ -1,52 +1,10 @@
 {% extends "AriiSelfBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-var update=10
-var last="{{ request }}";
-var mode="{{ mode }}";
-var last_row=0;
-
-dhtmlxEvent(window,"load",function(){
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
-    globalLayout.cells("a").hideHeader();
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("c").setText("{{ "Demandes en cours" | trans }}"); 
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Self_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    globalLayout.cells("a").hideHeader(); 
-
-    myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagePath("{{ asset('/images/') }}");
-    myTree.load( '{{ url('xml_Self_tree') }}');
-    myTree = globalLayout.cells("a").attachTree();
-    myTree.setImagePath("{{ asset('/images/') }}");
-    myTree.load( '{{ url('xml_Self_tree') }}');
-    myTree.attachEvent("onClick", function(id) {
-        switch (id.substr(0,1)) {
-            case 'T':
-                last = id.substr(1);
-                form(last);
-                // window.location = "{{ url('arii_Self_request') }}?request="+id.substr(1);
-                break;
-            default:
-                return;
-        }
+function Init() {
+    myToolbar.loadStruct('{{ url('xml_ARII_toolbar') }}?refresh=1', function() {
+        ToolbarTime();
     });
-
-    myGridToolbar = globalLayout.cells("b").attachToolbar();
-    myGridToolbar.setIconsPath("{{ asset('/toolbar/') }}");
-    myGridToolbar.loadStruct( "{{ url('xml_Self_toolbar') }}");
 
     myGridMenu = new dhtmlXMenuObject(null);
     myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
@@ -150,20 +108,6 @@ var size=300;
         });
     });
     
-    myGridToolbar.attachEvent("onClick",function(itemid){
-         switch (itemid) {
-            case 'refresh':
-                globalLayout.cells("a").progressOn();
-                globalLayout.cells("b").progressOn();
-                globalLayout.cells("c").progressOn();
-                GridRefresh();
-                break;
-            default:
-                alert(itemid);
-                break;
-        }
-    });    
-
     myGridMenu.attachEvent("onClick", function (menuitemId, type) {
         var data = myRequests.contextID.split("_");
         //rowInd_colInd;
@@ -223,10 +167,9 @@ var size=300;
         return true;
     });
     
-    
-    globalLayout.cells('b').hideHeader();
+    globalLayout.cells('a').hideHeader();
     autorefresh = setInterval( "GridRefresh()",update*1000);        
-});
+}
 
 function form(id) {
     globalLayout.cells("b").progressOn();
@@ -234,7 +177,7 @@ function form(id) {
     var obj = globalLayout.cells("c").getAttachedObject();
     if (typeof(window.dhtmlXFormObject) == "function" && obj instanceof dhtmlXFormObject)
         myForm.clear();
-    myForm = globalLayout.cells("b").attachForm();
+    myForm = globalLayout.cells("c").attachForm();
     myForm.loadStruct("{{ url('json_Self_form') }}?form="+id, function() {
         globalLayout.cells("b").progressOff();
         globalLayout.cells("c").progressOff();
@@ -291,5 +234,7 @@ function GridRefresh() {
         });    
     });    
 }
+</script>
+
 </script>
 {% endblock %}

@@ -41,7 +41,7 @@ dhtmlxEvent(window,"load",function(){
     myPartners.load("{{ url('xml_MFT_partners_grid') }}");
 
     myFormToolbar = globalLayout.cells("b").attachToolbar();
-    myFormToolbar.setIconsPath("{{ asset('/toolbar/') }}");
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct( "{{ url('xml_MFT_partner_toolbar') }}");
 
     myForm = globalLayout.cells("b").attachForm();
