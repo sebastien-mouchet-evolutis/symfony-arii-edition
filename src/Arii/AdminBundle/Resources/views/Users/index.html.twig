@@ -2,41 +2,18 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-dhtmlxEvent(window,"load",function(){  
-var size=300;
+function Init() {
+    
+    myLayout = globalLayout.cells("c").attachLayout("3L"); 
+    myLayout.cells("a").setWidth(300);
+    myLayout.cells("a").setText("{{ "Teams" | trans }}");
+    myLayout.cells("c").setHeight(250);
 
-    globalLayout = new dhtmlXLayoutObject(document.body,"4L");
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("a").hideHeader(); 
-    globalLayout.cells("b").setText("{{ "Teams" | trans }}"); 
-    globalLayout.cells("b").setWidth(250); 
-    globalLayout.cells("c").hideHeader(); 
-    globalLayout.cells("d").hideHeader(); 
-    globalLayout.cells("d").setHeight(180); 
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );    
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-    });
-    globalLayout.cells("a").hideHeader();    
-
-    myTeam = globalLayout.cells("b").attachTree();
+    myTeam = myLayout.cells("a").attachTree();
     myTeam.setImagesPath("{{ asset('/images/') }}");
     myTeam.load( "{{ url('xml_Admin_teams_tree') }}" );
-        
-    myGrid = globalLayout.cells("c").attachGrid();
+
+    myGrid = myLayout.cells("b").attachGrid();
     myGrid.setMultiRows = true;
     myGrid.setImagePath("{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Username" | trans }},{{ "Name" | trans }},{{ "Email" | trans }},{{ "Team" | trans }},{{ "Role"  | trans }},{{ "Login" | trans }},#cspan");
@@ -62,10 +39,10 @@ var size=300;
     myGrid.attachEvent("onDrag",function(sid,tid,sObj,tObj,sInd,tInd){
         var team_id = tid.substr(2);
         var user_id = sid.substr(2);
-        globalLayout.cells("a").progressOn();
+        myLayout.cells("a").progressOn();
         dhtmlxAjax.get("{{ url('xml_Admin_user_drag') }}?team_id="+team_id+"&user_id="+user_id,function(loader){
             myGrid.loadXML("{{ url('xml_Admin_users_grid') }}" );
-            globalLayout.cells("a").progressOff();
+            myLayout.cells("a").progressOff();
         });
     });
 
@@ -110,11 +87,11 @@ var size=300;
         }
     ];
     
-    myFormToolbar = globalLayout.cells("d").attachToolbar();
+    myFormToolbar = myLayout.cells("c").attachToolbar();
     myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_user_toolbar') }}");
     
-    myForm = globalLayout.cells("d").attachForm(formData);
+    myForm = myLayout.cells("c").attachForm(formData);
     myForm.enableLiveValidation(true);
     var dp = new dataProcessor("{{ url('xml_Admin_user_save') }}");
     dp.setUpdateMode("off");
@@ -132,9 +109,9 @@ var size=300;
     });
 */    
     myGrid.attachEvent("onRowDblClicked",function(id,cind){
-        globalLayout.cells("d").progressOn();
+        myLayout.cells("a").progressOn();
          myForm.load("{{ url('xml_Admin_user_form') }}?id="+id, function () {
-            globalLayout.cells("d").progressOff();
+            myLayout.cells("a").progressOff();
         });
     });
     
@@ -142,7 +119,7 @@ var size=300;
         switch (id) {
             case "save_user":
                 if(myForm.validate()){
-                    globalLayout.cells("a").progressOn();
+                    myLayout.cells("a").progressOn();
                     myForm.send("{{ url('xml_Admin_user_save') }}","POST",function(loader,response){
                     if(response === "success")
                         {
@@ -155,10 +132,10 @@ var size=300;
                             myForm.clear();
                             myForm.setItemFocus('username');
                             myGrid.load("{{ url('xml_Admin_users_grid') }}");
-                            globalLayout.cells("a").progressOff();
+                            myLayout.cells("a").progressOff();
                         } else
                         {
-                            globalLayout.cells("a").progressOff();
+                            myLayout.cells("a").progressOff();
                             alert(response);
                         }
                     });
@@ -175,8 +152,8 @@ var size=300;
         }
     });
 
-});    
-    
+}
+
 function GridRefresh()
 {
     myGrid.loadXML("{{ url('xml_Admin_users_grid') }}");

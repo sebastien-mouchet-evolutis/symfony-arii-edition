@@ -1,41 +1,20 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-var update=30
-
-dhtmlxEvent(window,"load",function(){
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"3W");  
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("b").setWidth(size);
-    globalLayout.cells("b").hideHeader(); 
-    globalLayout.cells("c").hideHeader(); 
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-    });
-    globalLayout.cells("a").hideHeader();    
+function Init() {
+    
+    myLayout = globalLayout.cells("c").attachLayout("2U"); 
+    
+    myLayout.cells("a").setWidth(300); 
+    myLayout.cells("a").hideHeader(); 
+    myLayout.cells("b").hideHeader(); 
 
     myGridMenu = new dhtmlXMenuObject(null);
     myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_Admin_bundles_toolbar') }}");
           
-    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid = myLayout.cells("a").attachGrid();
     myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader( "{{ "Module" | trans }},{{ "Activated" | trans }}" );
     myGrid.attachHeader("#text_filter,#select_filter");
@@ -53,13 +32,13 @@ var size=300;
         myGrid.filterByAll();
     });
     
-    globalLayout.attachEvent("onContentLoaded", function(id){
+    myLayout.attachEvent("onContentLoaded", function(id){
         switch (id) {
             case 'b':
-                globalLayout.cells("a").progressOn();
+                myLayout.cells("a").progressOn();
                 myGrid.load( "{{ url('xml_Admin_bundles_grid') }}", function() {
-                    globalLayout.cells("a").progressOff();
-                    globalLayout.cells("c").progressOff();
+                    myLayout.cells("a").progressOff();
+                    myLayout.cells("b").progressOff();
                 } );
                 break;
             default:
@@ -69,12 +48,12 @@ var size=300;
     myGrid.attachEvent("onRowDblClicked", function(id) { 
         var bundle = myGrid.cells(id,0).getValue();
         var activate = myGrid.cells(id,1).getValue();
-        globalLayout.cells("c").progressOn();
-        globalLayout.cells("c").attachURL("{{ url('xml_Admin_bundle_activation') }}?bundle="+bundle+"&activate="+activate);
+        myLayout.cells("b").progressOn();
+        myLayout.cells("b").attachURL("{{ url('xml_Admin_bundle_activation') }}?bundle="+bundle+"&activate="+activate);
     });
 
-    globalLayout.cells("a").hideHeader();
-    globalLayout.cells("c").attachURL("{{ asset('arii.jpg') }}");
+    myLayout.cells("a").hideHeader();
+    myLayout.cells("b").attachURL("{{ asset('arii.jpg') }}");
             
     // V3 ?
     myGridMenu.attachEvent("onClick", function (menuitemId, type) {
@@ -86,7 +65,7 @@ var size=300;
         return true;
     });
     
-});
+}
 
 function GlobalRefresh() {
     GridRefresh();

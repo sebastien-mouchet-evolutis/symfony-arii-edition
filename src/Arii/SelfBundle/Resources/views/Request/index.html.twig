@@ -1,11 +1,28 @@
 {% extends "AriiSelfBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
+var last="{{ request }}";
+var mode="{{ mode }}";    
 function Init() {
-    myToolbar.loadStruct('{{ url('xml_ARII_toolbar') }}?refresh=1', function() {
-        ToolbarTime();
+    
+    myLayout = globalLayout.cells("c").attachLayout("3U");
+    myLayout.cells("a").setText("{{ "Requests" | trans }}");
+    myLayout.cells("a").setWidth(300);
+    myLayout.cells("b").hideHeader();
+            
+    myTree = myLayout.cells("a").attachTree();
+    myTree.setImagePath("{{ asset('/images/') }}");
+    myTree.load( '{{ url('xml_Self_tree') }}');
+    myTree.attachEvent("onClick", function(id) {
+        switch (id.substr(0,1)) {
+            case 'T':
+                window.location = "{{ url('arii_Self_request') }}?request="+id.substr(1);
+                break;
+            default:
+                return;
+        }
     });
-
+        
     myGridMenu = new dhtmlXMenuObject(null);
     myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
@@ -17,7 +34,7 @@ function Init() {
     myGridMenu2.renderAsContextMenu();
     myGridMenu2.loadStruct("{{ url('xml_Self_grid_menu2') }}");
 
-    myTabbar = globalLayout.cells("c").attachTabbar();
+    myTabbar = myLayout.cells("c").attachTabbar();
     myTabbar.addTab("request","{{ "Requests" | trans }}","120px",null,true);
     myTabbar.addTab("history","{{ "Processed" | trans }}","120px");
 
@@ -89,7 +106,7 @@ function Init() {
     {% if request is not empty %}
     form("{{request}}");
     {% else %}
-    globalLayout.cells("b").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}');     
+    globalLayout.cells("c").attachURL('{{ asset('/bundles/ariicore/images/arii.jpg') }}');     
     {% endif %}
 
     myProcessed.attachEvent("onRowDblClicked", function(id) {
@@ -145,6 +162,7 @@ function Init() {
         }
         return true;
     });
+    
     myGridMenu2.attachEvent("onClick", function (menuitemId, type) {
         var data = myProcessed.contextID.split("_");
         //rowInd_colInd;
@@ -167,19 +185,17 @@ function Init() {
         return true;
     });
     
-    globalLayout.cells('a').hideHeader();
     autorefresh = setInterval( "GridRefresh()",update*1000);        
 }
 
 function form(id) {
-    globalLayout.cells("b").progressOn();
+
     globalLayout.cells("c").progressOn();
-    var obj = globalLayout.cells("c").getAttachedObject();
+    var obj = myLayout.cells("b").getAttachedObject();
     if (typeof(window.dhtmlXFormObject) == "function" && obj instanceof dhtmlXFormObject)
         myForm.clear();
-    myForm = globalLayout.cells("c").attachForm();
+    myForm = myLayout.cells("b").attachForm();
     myForm.loadStruct("{{ url('json_Self_form') }}?form="+id, function() {
-        globalLayout.cells("b").progressOff();
         globalLayout.cells("c").progressOff();
         GridRefresh();
     });

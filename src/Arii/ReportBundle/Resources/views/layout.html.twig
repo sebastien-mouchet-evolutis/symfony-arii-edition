@@ -5,8 +5,65 @@
 {% endblock dhtmlx %}
 {% block dhtmlx_plus %}
 {% endblock dhtmlx_plus %}
-{% block body %}
-{% endblock body %}
+{% block onload %}
+<script language="javascript">
+var app="{{ appl }}",
+    env="{{ env }}",
+    job_class="{{ job_class }}",
+    category="{{ category }}",
+    day = {{ day }},
+    month={{ month }},
+    year={{ year }},
+    day_past={{ day_past }},
+    bundle = 'Report';
+    
+dhtmlxEvent(window,"load",function(){    
+var size=180;
+    
+    globalLayout = new dhtmlXLayoutObject(document.body,"3T");
+    globalLayout.cells("a").setHeight(120);
+    globalLayout.cells("b").setWidth(size);
+    globalLayout.cells("a").hideHeader();
+    globalLayout.cells("b").hideHeader();
+
+    myRibbon = globalLayout.cells("a").attachRibbon(); 
+    myRibbon.setIconPath( "{{ asset('/images/') }}" );    
+    myRibbon.loadStruct("{{ url('json_ARII_ribbon') }}?bundle="+bundle, function() {});
+    myRibbon.attachEvent("onStateChange", StateRibbon );
+    myRibbon.attachEvent("onClick", ClickRibbon );
+
+    globalLayout.cells("b").setText("{{ "Menu" | trans }}");
+    mySidebar = globalLayout.cells("b").attachSidebar({
+        icons_path: "{{ asset('/images/') }}",
+        // template: "tiles",
+        width: size,
+        items:
+        [
+            { id:"reports", text: "{{ "Reports" | trans }}", icon: "report.png" },
+            { id:"dashboards", text: "{{ "Dashboards" | trans }}", icon: "dashboard.png" },
+            { id:"snapshots", text: "{{ "Documents" | trans }}", icon: "doc.png" },
+            { id:"sep1", type: "separator" },
+            { id:"search", text: "{{ "Search" | trans }}", icon: "zoom.png" },
+            { id:"requests", text: "{{ "Requests" | trans }}", icon: "table.png" },
+            { id:"rules", text: "{{ "Rules" | trans }}", icon: "rules.png" }
+        ]
+    });
+    mySidebar.attachEvent("onBubbleClick", function(id, value){
+        // bubble clicked, your code here
+        // 'return true' means item allowed to be selected
+        // false - otherwise
+        return true;
+    });    
+    mySidebar.attachEvent("onSelect", function(id, value){
+        document.location.href = "{{ url('arii_Report_index') }}"+id;
+        return true;
+    });
+
+    Init();
+});
+</script>
+{% endblock onload %}
+{% block body %}{% endblock body %}
 {% block script %}
 <script>
 function StateRibbon (itemid,state) {

@@ -1,4 +1,4 @@
-myToolbar = globalLayout.cells("b").attachToolbar();
+myToolbar = myLayout.cells("b").attachToolbar();
 myToolbar.setIconsPath("{{ asset('/images/') }}");
 myToolbar.loadStruct("{{ url('xml_Report_toolbar') }}?env="+env+"&category="+category+"&app="+app+"&joib_class="+job_class+"&day_past="+day_past, function() {
     this.setItemText("CAT",this.getListOptionText("CAT",this.getListOptionSelected("CAT")));

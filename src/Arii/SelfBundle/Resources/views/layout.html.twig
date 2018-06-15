@@ -9,11 +9,8 @@
 <script language="javascript">
 var bundle='Self';
 var update=30;
-var last="{{ request }}";
-var mode="{{ mode }}";
-
 dhtmlxEvent(window,"load",function(){   
-    var size=350;
+    var size=250;
     globalLayout = new dhtmlXLayoutObject(document.body,"3T");  
     globalLayout.cells("a").setHeight(120); 
     globalLayout.cells("b").setWidth(size); 
@@ -25,21 +22,27 @@ dhtmlxEvent(window,"load",function(){
     myRibbon.attachEvent("onStateChange", StateRibbon );
     myRibbon.attachEvent("onClick", ClickRibbon );
 
-    myTree = globalLayout.cells("b").attachTree();
-    myTree.setImagePath("{{ asset('/images/') }}");
-    myTree.load( '{{ url('xml_Self_tree') }}');
-    myTree.attachEvent("onClick", function(id) {
-        switch (id.substr(0,1)) {
-            case 'T':
-                window.location = "{{ url('arii_Self_request') }}?request="+id.substr(1);
-                break;
-            default:
-                return;
-        }
+    mySidebar = globalLayout.cells("b").attachSidebar({
+        icons_path: "{{ asset('/images/') }}",
+        width: size,
+        items:
+        [
+            { id:"request", text: "{{ "New request" | trans }}", icon: "edit.png" },
+            { id:"requests", text: "{{ "Running requests" | trans }}", icon: "cog.png" },
+            { id:"history", text: "{{ "Requests history" | trans }}", icon: "table.png" }
+        ]
+    });
+    mySidebar.attachEvent("onBubbleClick", function(id, value){
+        // bubble clicked, your code here
+        // 'return true' means item allowed to be selected
+        // false - otherwise
+        return true;
+    });    
+    mySidebar.attachEvent("onSelect", function(id, value){
+        document.location.href = "{{ url('arii_Self_index') }}"+id;
+        return true;
     });
     
-    myToolbar = globalLayout.cells("c").attachToolbar();
-    myToolbar.setIconsPath( "{{ asset('/images/') }}" );
     Init();    
     globalLayout.cells("a").hideHeader();
     globalLayout.cells("c").hideHeader();
@@ -88,7 +91,7 @@ function ClickRibbon (itemid,state) {
                     window.location = 'https://github.com/AriiPortal';
                     break;
                 case 'readme':
-                    window.location = '{{ path('arii_ACK_readme') }}';
+                    window.location = '{{ path('arii_Self_readme') }}';
                     break;
                 default:
                     alert(id[1]);
@@ -112,7 +115,7 @@ function ToolbarTime() {
     if (seconds < 10){
     seconds = "0" + seconds;
     }
-    myToolbar.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
+//    myToolbar.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );
 }
 </script>
 {% endblock script %}

@@ -1,47 +1,12 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
-<script>
-dhtmlxEvent(window,"load",function(){ 
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"3L");
-    globalLayout.cells("a").hideHeader();
-    globalLayout.cells("a").setWidth(size);
-    globalLayout.cells("b").hideHeader();
-    globalLayout.cells("c").hideHeader();
-    globalLayout.cells("c").setHeight(380); 
+<script language="javascript">
+function Init() {
     
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myToolbar = globalLayout.cells("b").attachToolbar();
-    myToolbar.setIconsPath("{{ asset('/images/') }}");
-    myToolbar.loadStruct("{{ url('xml_Admin_notes_toolbar') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onBubbleClick", function(id, value){
-        // bubble clicked, your code here
-        // 'return true' means item allowed to be selected
-        // false - otherwise
-        return true;
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        switch(id) {
-            default:
-                document.location.href = "{{ url('arii_Admin_index') }}"+id;
-        }
-        return true;
-    });
-
+    myLayout = globalLayout.cells("c").attachLayout("2E"); 
+    myLayout.cells("a").hideHeader();
+    myLayout.cells("b").hideHeader();
+    
     formData = [
        { type: "settings", position: "label-left", labelWidth: 80, inputWidth: 350, labelAlign: "right", readonly: 1, position: "label-left" },
         {type: "hidden", name: 'ID' },       
@@ -65,13 +30,13 @@ var size=300;
          }
     ];
 
-myForm = globalLayout.cells("c").attachForm(formData);
+    myForm = myLayout.cells("b").attachForm(formData);
 
-    myFormToolbar = globalLayout.cells("c").attachToolbar();
+    myFormToolbar = myLayout.cells("b").attachToolbar();
     myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_note_toolbar') }}");
     
-    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid = myLayout.cells("a").attachGrid();
     myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Name" | trans }},{{ "Title" | trans }},{{ "Description" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#text_filter");
@@ -86,21 +51,11 @@ myForm = globalLayout.cells("c").attachForm(formData);
         EditAlert(rid);
     });
 
-    myToolbar.attachEvent("onClick", function(id){
-        switch (id) {
-            case 'refresh':
-                myGrid.updateFromXML("{{ url('xml_Admin_notes_grid') }}");
-                break;
-            default:
-                alert(id);
-            }
-    });
-    
     myFormToolbar.attachEvent("onClick", function(id){
         switch (id) {
             case 'delete':
                 // On edite pour sauvegarder
-                globalLayout.cells("b").progressOn();
+                myLayout.cells("a").progressOn();
                 dhtmlx.confirm({
                  title: "{{ "Delete alert" | trans }}",
                  type: "confirm-error",
@@ -124,11 +79,11 @@ myForm = globalLayout.cells("c").attachForm(formData);
                                 lifetime: "60000",
                                 text: response
                              });
-                             globalLayout.cells("a").attachHTMLString(response);
+                             myLayout.cells("a").attachHTMLString(response);
                            }
                                 myGrid.deleteRow(myForm.getItemValue('ID'));
                                 myForm.getItemValue('ID','');
-                                globalLayout.cells("b").progressOff();
+                                myLayout.cells("a").progressOff();
                             })
                     }
                 },
@@ -150,7 +105,7 @@ myForm = globalLayout.cells("c").attachForm(formData);
                 
                 break;
             case 'save':
-                globalLayout.progressOn();
+                myLayout.progressOn();
                 if(!myForm.validate())
                 {
                     dhtmlx.message({
@@ -179,10 +134,10 @@ myForm = globalLayout.cells("c").attachForm(formData);
                         lifetime: "60000",
                         text: response
                      });
-                     globalLayout.cells("b").attachHTMLString(response);
+                     myLayout.cells("a").attachHTMLString(response);
                    }
                    myGrid.updateFromXML("{{ url('xml_Admin_notes_grid') }}");
-                   globalLayout.progressOff();
+                   myLayout.progressOff();
                 });
                 break;
             default:
@@ -190,16 +145,14 @@ myForm = globalLayout.cells("c").attachForm(formData);
             }
     });
 
-    globalLayout.cells("a").hideHeader();
-
-});
+}
 
 function EditAlert(id) {
-    globalLayout.cells("b").progressOn();
+    myLayout.cells("a").progressOn();
     myForm.setItemLabel("fieldset","{{ "Edit alert" | trans }}");
     myForm.clear();
     myForm.load("{{ url('xml_Admin_note_form') }}?id="+id, function () {
-        globalLayout.cells("b").progressOff();
+        myLayout.cells("a").progressOff();
     });
 }
 

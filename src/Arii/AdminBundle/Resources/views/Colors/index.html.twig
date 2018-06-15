@@ -2,40 +2,11 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script>
-dhtmlxEvent(window,"load",function(){ 
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"3L");
-    globalLayout.cells("a").hideHeader();
-    globalLayout.cells("a").setWidth(size);
-    globalLayout.cells("b").hideHeader();
-    globalLayout.cells("c").hideHeader();
-    globalLayout.cells("c").setHeight(220); 
+function Init() {
     
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onBubbleClick", function(id, value){
-        // bubble clicked, your code here
-        // 'return true' means item allowed to be selected
-        // false - otherwise
-        return true;
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-        return true;
-    });
-            
+    myLayout = globalLayout.cells("c").attachLayout("2E"); 
+    myLayout.cells("b").hideHeader();
+                
     formData = [
        { type: "settings", position: "label-left", labelWidth: 100, inputWidth: 240, labelAlign: "right", readonly: 1, position: "label-left" },
             {type: "hidden", name: 'id' },
@@ -44,21 +15,21 @@ var size=300;
             {type: "colorpicker", name: 'bgcolor', label:'{{ 'Background' | trans }}' },
         ];
     
-    myForm = globalLayout.cells("c").attachForm(formData);
+    myForm = myLayout.cells("b").attachForm(formData);
     myForm.enableLiveValidation(true);
     
     var dp = new dataProcessor("{{ url('xml_Admin_color_form') }}");
     dp.init(myForm);
 
-    myFormToolbar = globalLayout.cells("c").attachToolbar();
+    myFormToolbar = myLayout.cells("b").attachToolbar();
     myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_color_toolbar') }}");
     
-    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid = myLayout.cells("a").attachGrid();
     myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Status" | trans }},{{ "Color" | trans }},{{ "Text" | trans }},{{ "Sample" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter");
-    myGrid.setInitWidths("*,250,250,400");
+//    myGrid.setInitWidths("*,250,250,300");
     myGrid.setColAlign("left,left,left,left");
     myGrid.setColTypes("ro,ro,ro,ro");
     myGrid.setColSorting("str,str,str,str");
@@ -76,7 +47,7 @@ var size=300;
                 myForm.clear();
                 break;
             case 'save_color':
-                globalLayout.progressOn();
+                myLayout.progressOn();
                 if(!myForm.validate())
                 {
                     dhtmlx.message({
@@ -105,11 +76,11 @@ var size=300;
                         lifetime: "60000",
                         text: response
                      });
-                     // globalLayout.cells("b").attachHTMLString(response);
+                     // myLayout.cells("a").attachHTMLString(response);
                    }
                    myGrid.clearAll();
                    myGrid.load("{{ url('xml_Admin_colors_grid') }}", function() {
-                        globalLayout.progressOff();
+                        myLayout.progressOff();
                    });
                 });
                 break;
@@ -118,22 +89,22 @@ var size=300;
             }
     });
 
-    globalLayout.cells("a").hideHeader();
+    myLayout.cells("a").hideHeader();
 
-});
+}
 
 function EditColor(id) {
-    globalLayout.cells("b").progressOn();
+    myLayout.cells("a").progressOn();
     myForm.setItemLabel("fieldset","{{ "Edit color" | trans }}");
     myForm.clear();
     myForm.load("{{ url('xml_Admin_color_form') }}?id="+id, function () {
-        globalLayout.cells("b").progressOff();
+        myLayout.cells("a").progressOff();
     });
 }
 
 function DeleteColor(id) {
     // On edite pour sauvegarder
-    globalLayout.cells("b").progressOn();
+    myLayout.cells("a").progressOn();
     EditColor(id);
     dhtmlx.confirm({
      title: "{{ "Delete color" | trans }}",
@@ -160,7 +131,7 @@ function DeleteColor(id) {
                  });
                }
                     myGrid.deleteRow(id);
-                    globalLayout.cells("b").progressOff();
+                    myLayout.cells("a").progressOff();
                 })
         }
     },

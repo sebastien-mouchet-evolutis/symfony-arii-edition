@@ -1,38 +1,11 @@
 {# src/Arii/CoreBundle/Resources/views/index.html.twig #}
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
-<script>
-dhtmlxEvent(window,"load",function(){ 
-var size=300;
+<script language="javascript">
+function Init() {
 
-    globalLayout = new dhtmlXLayoutObject(document.body,"3L");
-    globalLayout.cells("a").setWidth(size);
-    globalLayout.cells("b").hideHeader();
-    globalLayout.cells("c").hideHeader();
-    globalLayout.cells("c").setHeight(250); 
+    myLayout = globalLayout.cells("c").attachLayout("2E");
     
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-    
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-    });
-    globalLayout.cells("a").hideHeader();    
-/*
-    myTeam = globalLayout.cells("a").attachTree();
-    myTeam.setImagesPath("{{ asset('/images/') }}");
-    myTeam.load( "{{ url('xml_Admin_teams_tree') }}" );
-*/            
     formData = [
        { type: "settings", position: "label-left", labelWidth: 100, inputWidth: 240, labelAlign: "right", readonly: 1, position: "label-left" },
              {type:"hidden", name: 'id' },
@@ -53,10 +26,10 @@ var size=300;
             {type:"input", name: 'status', label:'{{ 'Status' | trans }}', value: '*'}
         ];
     
-    myForm = globalLayout.cells("c").attachForm(formData);
+    myForm = myLayout.cells("b").attachForm(formData);
     myForm.enableLiveValidation(true);
     
-    myFormToolbar = globalLayout.cells("c").attachToolbar();
+    myFormToolbar = myLayout.cells("a").attachToolbar();
     myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_filter_toolbar') }}");
     
@@ -66,12 +39,12 @@ var size=300;
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{ { url('xml_filter_menu') }}");
 */
-    myStatus = globalLayout.cells("b").attachStatusBar({
+    myStatus = myLayout.cells("a").attachStatusBar({
         text:   "",   // status bar text
         height: 35                  // custom height
     });
     
-    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid = myLayout.cells("a").attachGrid();
     myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Nom" | trans }},{{ "Filter" | trans }},{{ "Env" | trans }},{{ "Job" | trans }},{{ "Chain" | trans }},{{ "Trigger" | trans }},{{ "Status" | trans }},{{ "Type" | trans }},{{ "owner" }}");
     myGrid.attachHeader("#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#numeric_filter,#select_filter");
@@ -95,7 +68,7 @@ var size=300;
                 DeleteFilter(filter);
                 break;
             case 'save_filter':
-                globalLayout.progressOn();
+                myLayout.progressOn();
                 if(!myForm.validate())
                 {
                     dhtmlx.message({
@@ -127,7 +100,7 @@ var size=300;
                         text: response
                      });
                    }
-                    globalLayout.progressOff();
+                    myLayout.progressOff();
                 });
                 break;
             default:
@@ -154,7 +127,7 @@ var size=300;
         return true;
     });
 */
-});
+}
 
 function NewFilter() {
     myForm.clear();
@@ -162,16 +135,16 @@ function NewFilter() {
 }
 
 function EditFilter(id) {
-    globalLayout.cells("b").progressOn();
+    myLayout.cells("a").progressOn();
     myForm.clear();
     myForm.load("{{ url('xml_Admin_filter_form') }}?id="+id, function () {
-        globalLayout.cells("b").progressOff();
+        myLayout.cells("a").progressOff();
     });
 }
 
 function DeleteFilter(id) {
     // On edite pour sauvegarder
-    globalLayout.cells("b").progressOn();
+    myLayout.cells("a").progressOn();
     EditFilter(id);
     dhtmlx.confirm({
      title: "{{ "Delete filter" | trans }}",
@@ -198,7 +171,7 @@ function DeleteFilter(id) {
                  });
                }
                     myGrid.deleteRow(id);
-                    globalLayout.cells("b").progressOff();
+                    myLayout.cells("a").progressOff();
                 })
         }
     },

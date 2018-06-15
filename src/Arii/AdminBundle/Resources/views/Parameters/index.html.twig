@@ -1,41 +1,15 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-var bundle='Core';
-dhtmlxEvent(window,"load",function(){  
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"4L");  
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("a").hideHeader(); 
-    globalLayout.cells("b").hideHeader(); 
-    globalLayout.cells("c").hideHeader(); 
-    globalLayout.cells("d").setText("{{ "Detail" | trans }}"); 
-    globalLayout.cells("d").setHeight(200); 
-    globalLayout.cells("b").setWidth(250); 
-
-    // Pour plus tard si le nombre de paramètres augmente
-    globalLayout.cells("b").collapse(); 
+function Init() {
     
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );    
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-    });
-    globalLayout.cells("a").hideHeader();    
-
-    myGrid = globalLayout.cells("b").attachGrid();
+    myLayout = globalLayout.cells("c").attachLayout("3L"); 
+    myLayout.cells("a").setWidth(300);
+    myLayout.cells("a").hideHeader();
+    myLayout.cells("b").hideHeader();
+    myLayout.cells("c").hideHeader();
+    
+    myGrid = myLayout.cells("a").attachGrid();
     myGrid.setImagePath("{{ asset('arii/images/treegrid/') }}");
     
     myGrid.setHeader("{{ "Bundle"| trans }},{{ "Description"| trans }}");
@@ -51,7 +25,7 @@ var size=300;
         Edit(rid);
     });
     
-    myParams = globalLayout.cells("c").attachGrid();
+    myParams = myLayout.cells("b").attachGrid();
     myParams.setImagePath("{{ asset('arii/images/treegrid/') }}");
     
     myParams.setHeader("{{ "Name"| trans }},{{ "Value"| trans }},{{ "Type"| trans }}");
@@ -102,10 +76,10 @@ var size=300;
             rows: 4
         }       
     ];
-    myForm = globalLayout.cells("d").attachForm(formData);
+    myForm = myLayout.cells("c").attachForm(formData);
     myForm.enableLiveValidation(true);
     
-    myToolbar = globalLayout.cells("d").attachToolbar();
+    myToolbar = myLayout.cells("c").attachToolbar();
     myToolbar.setIconsPath("{{ asset('/images/') }}");
     myToolbar.loadStruct("{{ url('xml_Admin_parameters_toolbar') }}", function () {
         myToolbar.hideItem("delete");
@@ -130,9 +104,9 @@ var size=300;
                      });
                     return;
                 }
-                globalLayout.cells("c").progressOn();
+                myLayout.cells("b").progressOn();
                 myForm.send("{{ url('xml_Admin_parameter_save') }}","POST",function(loader,response){
-                    globalLayout.cells("c").progressOff();
+                    myLayout.cells("b").progressOff();
                     if(response === "success")
                    {
                      dhtmlx.message({
@@ -156,7 +130,7 @@ var size=300;
         }
     });
     
-});
+}
 
 function GridRefresh()
 {
@@ -171,11 +145,11 @@ function New() {
 }
 
 function Edit(id) {
-    globalLayout.cells("d").progressOn();
+    myLayout.cells("c").progressOn();
     myToolbar.showItem("delete");
     myForm.clear();
     myForm.load("{{ url('xml_Admin_parameter_form') }}?id="+id, function () {
-        globalLayout.cells("d").progressOff();
+        myLayout.cells("c").progressOff();
     });
 }
 
@@ -198,7 +172,7 @@ function Delete(id) {
                            text: "{{ "Parameter deleted" | trans }}"
                         });
                            myParams.deleteRow(id);
-                         globalLayout.cells("c").progressOff();
+                         myLayout.cells("b").progressOff();
                       }
                       else 
                       {

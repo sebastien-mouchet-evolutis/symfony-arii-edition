@@ -6,53 +6,25 @@
 <script src="{{ asset('dhtmlx_vault/codebase/swfobject.js') }}"></script>
 {% endblock dhtmlx_plus %}
 {% block body %}
-<script>
-dhtmlxEvent(window,"load",function(){ 
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"3W");
-    globalLayout.cells("a").setWidth(size);
-    globalLayout.cells("c").hideHeader();
-    globalLayout.cells("c").setHeight(220); 
-    globalLayout.cells("b").setWidth(size); 
-    globalLayout.cells("b").setText("{{ "Workspace" | trans }}");
+<script language="javascript">
+function Init() {
     
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onBubbleClick", function(id, value){
-        // bubble clicked, your code here
-        // 'return true' means item allowed to be selected
-        // false - otherwise
-        return true;
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-        return true;
-    });
+    myLayout = globalLayout.cells("c").attachLayout("3L"); 
     
-    globalLayout.cells("b").setText("{{ "Workspace" | trans }}");
-    myTree = globalLayout.cells("b").attachTree();
+    myLayout.cells("b").hideHeader();
+    myLayout.cells("b").setHeight(220); 
+    myLayout.cells("a").setWidth(300); 
+    myLayout.cells("a").setText("{{ "Workspace" | trans }}");
+    
+    myLayout.cells("a").setText("{{ "Workspace" | trans }}");
+    myTree = myLayout.cells("a").attachTree();
     myTree.setImagesPath("{{ asset('/images/') }}");
-    globalLayout.cells("b").progressOn();
+    myLayout.cells("a").progressOn();
     myTree.load( "{{ url('xml_Admin_vault_tree') }}", function (id) {
-        globalLayout.cells("b").progressOff();
+        myLayout.cells("a").progressOff();
     });        
 
-    myLayout = globalLayout.cells("c").attachLayout("2E");
-    myLayout.cells("a").setText("{{ "Files" | trans }}");
-    
-    myGrid = myLayout.cells("a").attachGrid();
+    myGrid = myLayout.cells("b").attachGrid();
     myGrid.setHeader("{{ "File" | trans }},{{ "Type" | trans }},{{ "Date" | trans }},{{ "Size" | trans }}");
     myGrid.attachHeader("#text_filter,#select_filter,#text_filter,#numeric_filter");
     myGrid.setInitWidths("*,180,180,200");
@@ -63,7 +35,7 @@ var size=300;
     myGrid.init();
     myGrid.load("{{ url('xml_Admin_vault_grid') }}");
  
-    myTab = myLayout.cells("b").attachTabbar();
+    myTab = myLayout.cells("c").attachTabbar();
     myTab.addTab("upload","{{ "Send" | trans }}","100px", null, true);
     myTab.addTab("view","{{ "View" | trans }}","100px");
     
@@ -91,10 +63,10 @@ var size=300;
     
     // Clic sur l'arbre => Liste les fichiers    
     myTree.attachEvent("onClick",function(id){
-        globalLayout.cells("c").progressOn();
+        myLayout.cells("b").progressOn();
         myGrid.load("{{ url('xml_Admin_vault_grid') }}?path="+id, function() {
             myTab.cells("view").attachHTMLString('');
-            globalLayout.cells("c").progressOff();            
+            myLayout.cells("b").progressOff();            
         });
     })    
     
@@ -104,8 +76,8 @@ var size=300;
         myTab.tabs("view").setActive();
     });
 
-    globalLayout.cells("a").hideHeader();
-});
+    myLayout.cells("a").hideHeader();
+}
 
 function GlobalRefresh() {
 }

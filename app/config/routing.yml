@@ -239,3 +239,12 @@ arii_I5:
     prefix:   /i5/{_locale}
     requirements:
         _locale: en|fr|es|de|cn|ar|ru|jp 
+
+# ========================================
+# Blockly
+# ----------------------------------------
+arii_Blockly:
+    resource: "@AriiBlocklyBundle/Resources/config/routing.yml"
+    prefix:   /blockly/{_locale}
+    requirements:
+        _locale: en|fr|es|de|cn|ar|ru|jp 

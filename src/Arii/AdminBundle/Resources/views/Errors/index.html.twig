@@ -1,41 +1,12 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-var update=30
-
-dhtmlxEvent(window,"load",function(){
-var size=300;  
-    globalLayout = new dhtmlXLayoutObject(document.body,"3L");  
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("b").hideHeader(); 
-    globalLayout.cells("c").hideHeader();
+function Init() {
     
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onBubbleClick", function(id, value){
-        // bubble clicked, your code here
-        // 'return true' means item allowed to be selected
-        // false - otherwise
-        return true;
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-        return true;
-    });
-
+    myLayout = globalLayout.cells("c").attachLayout("1C"); 
+    myLayout.cells("a").hideHeader();
     
-    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid = myLayout.cells("a").attachGrid();
     myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Timestamp" | trans }},{{ "Error" | trans }},{{ "Code" | trans }},{{ "File" | trans }},{{ "#" | trans }},{{ "Trace" | trans }},{{ "User" | trans }},{{ "IP address" | trans }}");
     myGrid.attachHeader("#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#text_filter,#select_filter,#select_filter");
@@ -46,14 +17,13 @@ var size=300;
 
     myGrid.init();
     myGrid.load( "{{ url('xml_Admin_errors_grid') }}" );
-
     myGrid.attachEvent("onRowDblClicked", function (rid) {
-        globalLayout.cells("c").attachHTMLString("<code>"+myGrid.cells(rid,5).getValue().replace(/\n/g,"<br/>")+"<code>");
+        myLayout.cells("c").attachHTMLString("<code>"+myGrid.cells(rid,5).getValue().replace(/\n/g,"<br/>")+"<code>");
     });
 
-    globalLayout.cells("a").hideHeader();
+    myLayout.cells("a").hideHeader();
     autorefresh = setInterval( "GridRefresh()",update*1000);
-});
+}
 
 function GlobalRefresh() {
     GridRefresh();

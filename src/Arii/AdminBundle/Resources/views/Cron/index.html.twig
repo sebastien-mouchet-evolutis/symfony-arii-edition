@@ -1,46 +1,23 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
-<script>
+<script language="javascript">
 var cron=-1;
-var update=30;
 var autorefresh;
-dhtmlxEvent(window,"load",function(){ 
-var size=300;
-
-    globalLayout = new dhtmlXLayoutObject(document.body,"4L");
-    globalLayout.cells("a").hideHeader();
-    globalLayout.cells("a").setWidth(size);
-    globalLayout.cells("b").hideHeader();
-    globalLayout.cells("b").setWidth(size);    
-    globalLayout.cells("c").hideHeader();
-    globalLayout.cells("d").hideHeader();
-    globalLayout.cells("d").collapse();
-    globalLayout.cells("d").setText("{{ "History" | trans }}");
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-    });
-    globalLayout.cells("a").hideHeader();    
+function Init() {
     
+    myLayout = globalLayout.cells("c").attachLayout("3U"); 
+    myLayout.cells("a").hideHeader();
+    myLayout.cells("a").setWidth(300);    
+    myLayout.cells("b").hideHeader();
+    myLayout.cells("c").collapse();
+    myLayout.cells("c").setText("{{ "History" | trans }}");
+
     myGridMenu = new dhtmlXMenuObject(null);
     myGridMenu.setIconsPath( "{{ asset('/images/') }}" );
     myGridMenu.renderAsContextMenu();
     myGridMenu.loadStruct("{{ url('xml_Admin_cron_menu') }}");
 
-    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid = myLayout.cells("a").attachGrid();
     myGrid.selMultiRows = true;
     myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("{{ "Name" | trans }},{{ "Next start" | trans }}");
@@ -56,7 +33,7 @@ var size=300;
         EditCron(rid);
     });
 
-    myFormToolbar = globalLayout.cells("c").attachToolbar();
+    myFormToolbar = myLayout.cells("b").attachToolbar();
     myFormToolbar.setIconsPath("{{ asset('/images/') }}");
     myFormToolbar.loadStruct("{{ url('xml_Admin_cron_toolbar') }}");
 
@@ -82,14 +59,14 @@ var size=300;
             
         ];
     
-    myForm = globalLayout.cells("c").attachForm(formData);
+    myForm = myLayout.cells("b").attachForm(formData);
     myForm.enableLiveValidation(true);
     
     myFormToolbar.attachEvent("onClick", function (id,value) {
         switch (id) {
             case "save":
                 if(myForm.validate()){
-                    globalLayout.cells("b").progressOn();
+                    myLayout.cells("a").progressOn();
                     myForm.send("{{ url('xml_Admin_cron_save') }}","POST",function(loader,response){
                         dhtmlx.message({
                             title:"Save",
@@ -98,7 +75,7 @@ var size=300;
                             text: response
                         });
                         GlobalRefresh();
-                        globalLayout.cells("b").progressOff();
+                        myLayout.cells("a").progressOff();
                     });
                 }
             break;
@@ -134,7 +111,7 @@ var size=300;
         return true;
     });
 
-    myHistory = globalLayout.cells("d").attachGrid();
+    myHistory = myLayout.cells("c").attachGrid();
     myHistory.selMultiRows = true;
     myHistory.setImagePath( "{{ asset('/images/') }}");
     myHistory.setHeader("{{ "Done" | trans }},{{ "Status" | trans }},{{ "Duration" | trans }},{{ "Message" | trans }}");
@@ -147,7 +124,7 @@ var size=300;
     myHistory.init();
 
     autorefresh = setInterval( "GlobalRefresh()",update*1000);
-});
+}
 
 function NewCron() {
     myForm.clear();
@@ -157,22 +134,22 @@ function NewCron() {
 
 function EditCron(id) {
     cron=id;
-    globalLayout.cells("b").progressOn();
+    myLayout.cells("a").progressOn();
     myForm.setItemLabel("fieldset","{{ "Edit filter" | trans }}");
     myForm.clear();
     myForm.load("{{ url('xml_Admin_cron_form') }}?id="+id, function () {
-        globalLayout.cells("b").progressOff();
-        globalLayout.cells("d").progressOn();
-        globalLayout.cells("d").expand();
+        myLayout.cells("a").progressOff();
+        myLayout.cells("c").progressOn();
+        myLayout.cells("c").expand();
         myHistory.load( "{{ url('xml_Admin_cron_history') }}?id="+id, function () {
-            globalLayout.cells("d").progressOff();
+            myLayout.cells("c").progressOff();
         });        
     });
 }
 
 function DeleteCron(id) {
     // On edite pour sauvegarder
-    globalLayout.cells("b").progressOn();
+    myLayout.cells("a").progressOn();
     EditCron(id);
     dhtmlx.confirm({
      title: "{{ "Delete cron" | trans }}",
@@ -198,7 +175,7 @@ function DeleteCron(id) {
                     text: response
                  });
                }
-                    globalLayout.cells("b").progressOff();
+                    myLayout.cells("a").progressOff();
                     GlobalRefresh();
                 })
         }

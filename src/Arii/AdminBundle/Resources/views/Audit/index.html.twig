@@ -1,40 +1,9 @@
 {% extends "AriiAdminBundle::layout.html.twig" %}
 {% block body %}
 <script language="javascript">
-var update=30
-
-dhtmlxEvent(window,"load",function(){
-var size=300;
-    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
-    globalLayout.cells("a").setWidth(size); 
-    globalLayout.cells("b").hideHeader(); 
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Admin_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    mySidebar = globalLayout.cells("a").attachSidebar({
-        {% include "AriiAdminBundle:Default:menu.html.twig" %}        
-    });
-    mySidebar.attachEvent("onBubbleClick", function(id, value){
-        // bubble clicked, your code here
-        // 'return true' means item allowed to be selected
-        // false - otherwise
-        return true;
-    });
-    mySidebar.attachEvent("onSelect", function(id, value){
-        document.location.href = "{{ url('arii_Admin_index') }}"+id;
-        return true;
-    });
-
+function Init() {
     
-    myGrid = globalLayout.cells("b").attachGrid();
+    myGrid = globalLayout.cells("c").attachGrid();
     myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader( "{{ "Log" | trans }},{{ "Module" | trans }},{{ "User" | trans }},{{ "Action" | trans }},{{ "Status" | trans }},{{ "Message" | trans }},{{ "IP" | trans }}" );
     myGrid.attachHeader("#text_filter,#select_filter,#select_filter,#text_filter,#select_filter,#text_filter,#select_filter");
@@ -53,7 +22,7 @@ var size=300;
 
     globalLayout.cells("a").hideHeader();
     autorefresh = setInterval( "GridRefresh()",update*1000);
-});
+}
 
 function GlobalRefresh() {
     GridRefresh();

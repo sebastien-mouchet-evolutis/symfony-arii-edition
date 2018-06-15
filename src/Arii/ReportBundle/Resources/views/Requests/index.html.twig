@@ -1,35 +1,28 @@
 {% extends "AriiReportBundle::layout.html.twig" %}
 {% block body %}
 <script type="text/javascript">
+function Init() {    
 last='';
-dhtmlxEvent(window,"load",function(){     
-    globalLayout = new dhtmlXLayoutObject(document.body,"2U");  
-    globalLayout.cells("a").setWidth(355); 
-    globalLayout.cells("a").hideHeader(); 
-    globalLayout.cells("b").hideHeader(); 
-    {% if  app.request.query.get('request') is defined %}
-    last = "{{ app.request.query.get('request') }}";
-    {% else %}
-    last = "";
-    {% endif %}
-        
+
+{% if  app.request.query.get('request') is defined %}
+last = "{{ app.request.query.get('request') }}";
+{% else %}
+last = "";
+{% endif %}
+    
+    myLayout = globalLayout.cells("c").attachLayout("2U");
+    myLayout.cells("a").hideHeader();
+    myLayout.cells("b").hideHeader();
+    
+    myLayout.cells("a").setWidth(400);
+    
     if (last == '') {
-        globalLayout.cells("b").attachURL("{{ url('arii_Report_requests_summary') }}");
+        myLayout.cells("b").attachURL("{{ url('arii_Report_requests_summary') }}");
     }
     else
-        globalLayout.cells("b").attachURL("{{ url('arii_Report_requests_result') }}?request="+last );
-
-    globalMenu = globalLayout.cells("a").attachMenu();
-    globalMenu.setIconsPath( "{{ asset('/images/') }}" );
-    globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
-
-    myRibbon = globalLayout.cells("a").attachRibbon(); 
-    myRibbon.setIconPath( "{{ asset('/images/') }}" );
-    myRibbon.loadStruct("{{ url('json_Report_ribbon') }}");
-    myRibbon.attachEvent("onStateChange", StateRibbon );
-    myRibbon.attachEvent("onClick", ClickRibbon );
-
-    myGrid = globalLayout.cells("a").attachGrid();
+        myLayout.cells("b").attachURL("{{ url('arii_Report_requests_result') }}?request="+last );
+    
+    myGrid = myLayout.cells("a").attachGrid();
     myGrid.setImagePath( "{{ asset('/images/') }}");
     myGrid.setHeader("#text_filter,#numeric_filter");
     myGrid.setColAlign("left,right");    
@@ -51,7 +44,7 @@ dhtmlxEvent(window,"load",function(){
         });
     });
     
-    myGridToolbar = globalLayout.cells("b").attachToolbar();
+    myGridToolbar = myLayout.cells("b").attachToolbar();
     myGridToolbar.setIconsPath("{{ asset('/images/') }}");
     myGridToolbar.loadStruct( "{{ url('xml_Report_requests_toolbar') }}");
     myGridToolbar.attachEvent("onClick",function(itemid){
@@ -73,7 +66,7 @@ dhtmlxEvent(window,"load",function(){
                 break;
         }
     });
-});
+}
 
 function GlobalRefresh() {
     var currentTime = new Date();

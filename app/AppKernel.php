@@ -17,7 +17,7 @@ class AppKernel extends Kernel
         new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
         new FOS\UserBundle\FOSUserBundle(),
         new FOS\RestBundle\FOSRestBundle(),
-        new JMS\SerializerBundle\JMSSerializerBundle(),            
+        new JMS\SerializerBundle\JMSSerializerBundle(),
         new Arii\UserBundle\AriiUserBundle(),
         new Arii\CoreBundle\AriiCoreBundle(),
         new Arii\AdminBundle\AriiAdminBundle(),
@@ -31,9 +31,10 @@ class AppKernel extends Kernel
         new Arii\ReportBundle\AriiReportBundle(),
         new Arii\TimeBundle\AriiTimeBundle(),
         new Arii\SelfBundle\AriiSelfBundle(),
-        new Arii\JOBBundle\AriiJOBBundle(),            
+        new Arii\JOBBundle\AriiJOBBundle(),
         new Arii\ACKBundle\AriiACKBundle(),
         new Arii\PlumbBundle\AriiPlumbBundle(),
+        new Arii\BlocklyBundle\AriiBlocklyBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
