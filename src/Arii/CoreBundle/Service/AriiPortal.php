@@ -330,6 +330,7 @@ class AriiPortal
             // Core n'est pas un module
             // compatibilité ascendante
             if ($p=='Core') continue;
+            if ($p == 'GVZ(ROLE_USER)') continue;
             
             if (($d = strpos($p,'('))>0) {
                 $module = substr($p,0,$d);

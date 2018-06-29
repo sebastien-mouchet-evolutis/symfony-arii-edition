@@ -83,11 +83,11 @@ arii_Self:
 # ========================================
 # Plumb
 # ----------------------------------------
-arii_Plumb:
-    resource: "@AriiPlumbBundle/Resources/config/routing.yml"
-    prefix:   /plumb/{_locale}
-    requirements:
-        _locale: en|fr|es|de|cn|ar|ru|jp 
+#arii_Plumb:
+#    resource: "@AriiPlumbBundle/Resources/config/routing.yml"
+#    prefix:   /plumb/{_locale}
+#    requirements:
+#        _locale: en|fr|es|de|cn|ar|ru|jp 
 
 # ========================================
 # JID 
@@ -119,11 +119,11 @@ arii_mft:
 # ========================================
 # Graphviz
 # ----------------------------------------
-arii_GVZ:
-    resource: "@AriiGVZBundle/Resources/config/routing.yml"
-    prefix:   /gvz/{_locale}
-    requirements:
-        _locale: en|fr|es|de|cn|ar|ru|jp 
+#arii_GVZ:
+#    resource: "@AriiGVZBundle/Resources/config/routing.yml"
+#    prefix:   /gvz/{_locale}
+#    requirements:
+#        _locale: en|fr|es|de|cn|ar|ru|jp 
 
 # ========================================
 # JOC
@@ -234,17 +234,17 @@ arii_Time:
 # ========================================
 # I5
 # ----------------------------------------
-arii_I5:
-    resource: "@AriiI5Bundle/Resources/config/routing.yml"
-    prefix:   /i5/{_locale}
-    requirements:
-        _locale: en|fr|es|de|cn|ar|ru|jp 
+#arii_I5:
+#    resource: "@AriiI5Bundle/Resources/config/routing.yml"
+#    prefix:   /i5/{_locale}
+#    requirements:
+#        _locale: en|fr|es|de|cn|ar|ru|jp 
 
 # ========================================
 # Blockly
 # ----------------------------------------
-arii_Blockly:
-    resource: "@AriiBlocklyBundle/Resources/config/routing.yml"
-    prefix:   /blockly/{_locale}
-    requirements:
-        _locale: en|fr|es|de|cn|ar|ru|jp 
+#arii_Blockly:
+#    resource: "@AriiBlocklyBundle/Resources/config/routing.yml"
+#    prefix:   /blockly/{_locale}
+#    requirements:
+#        _locale: en|fr|es|de|cn|ar|ru|jp 

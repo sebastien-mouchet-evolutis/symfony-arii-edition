@@ -23,18 +23,18 @@ class AppKernel extends Kernel
         new Arii\AdminBundle\AriiAdminBundle(),
         new Arii\JIDBundle\AriiJIDBundle(),
         new Arii\DSBundle\AriiDSBundle(),
-        new Arii\I5Bundle\AriiI5Bundle(),
+        //new Arii\I5Bundle\AriiI5Bundle(),
         new Arii\JOCBundle\AriiJOCBundle(),
         new Arii\MFTBundle\AriiMFTBundle(),
-        new Arii\GVZBundle\AriiGVZBundle(),
+        //new Arii\GVZBundle\AriiGVZBundle(),
         new Arii\ATSBundle\AriiATSBundle(),
         new Arii\ReportBundle\AriiReportBundle(),
         new Arii\TimeBundle\AriiTimeBundle(),
         new Arii\SelfBundle\AriiSelfBundle(),
         new Arii\JOBBundle\AriiJOBBundle(),
         new Arii\ACKBundle\AriiACKBundle(),
-        new Arii\PlumbBundle\AriiPlumbBundle(),
-        new Arii\BlocklyBundle\AriiBlocklyBundle()
+        //new Arii\PlumbBundle\AriiPlumbBundle(),
+        //new Arii\BlocklyBundle\AriiBlocklyBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
