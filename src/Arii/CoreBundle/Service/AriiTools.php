@@ -108,7 +108,7 @@ class AriiTools {
 
                     }
                     $last_item_index = $repeated_tag_index[$tag.'_'.$level]-1;
-                    $current = &$current[$tag][$last_item_index];
+                    $current = & $current[$tag][$last_item_index];
                 }
 
             } elseif($type == "complete") { //Tags that ends in 1 line '<tag />'

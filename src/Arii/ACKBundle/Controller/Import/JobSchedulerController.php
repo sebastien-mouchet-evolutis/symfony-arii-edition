@@ -43,8 +43,16 @@ class JobSchedulerController extends Controller
             $Status->setLastEnd  ($Record['endTime']);
             $Status->setExitCode ($Record['exitCode']);
             $Status->setMessage  ($Record['errorText']);
-            if ($Record['log'])
-                $Status->setJobLog   ( utf8_encode( gzinflate ( substr( stream_get_contents($Record['log']), 10, -8) ) ) );
+            if ($Record['log']) {
+                $log = utf8_encode( gzinflate ( substr( stream_get_contents($Record['log']), 10, -8) ) );
+                
+                # Découpage debut et fin ?
+                $log = substr($log,0,10240);
+
+                if ($Record['log'])
+                    $Status->setJobLog   ( $log );
+            }
+            else $Status->setJobLog(null);
             
             if ($Record['error']>0) {
                 $Status->setStatus  ('ERROR');
@@ -60,7 +68,7 @@ class JobSchedulerController extends Controller
             $Status->setUpdated  (new \DateTime());
             
             $em->persist($Status);
-            if ($n++ % 100 == 0)
+            if ($n++ % 10 == 0)
                 $em->flush();
             $Done[$name] = 1;
             print "DONE $name<br/>";

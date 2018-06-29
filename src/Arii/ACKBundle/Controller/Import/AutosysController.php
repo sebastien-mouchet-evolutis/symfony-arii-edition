@@ -42,14 +42,14 @@ class AutosysController extends Controller
         // Info global
         $Info = $ats->getRepository("AriiATSBundle:UjoAlamode")->findOneBy([ 'type' => 'AUTOSERV']);
         $instance = $Info->getStrVal('strVal');
-        
+
         // Referentiel des jobs
         $n = 0;
-        $Records = $ats->getRepository("AriiATSBundle:UjoJobst")->synchroJobst(time()-4*24*3600);
+        $Records = $ats->getRepository("AriiATSBundle:UjoJobst")->synchroJobst(time()-2*24*3600);
         foreach ($Records as $Record) {
             $job_name       = $Record['jobName'];                        
             $name = "$instance#$job_name";
-            
+            print "$name</br>";
             $Status = $this->getDoctrine()->getRepository("AriiACKBundle:Status")->findOneBy(
             [
                 'name'   =>   $name
@@ -61,12 +61,11 @@ class AutosysController extends Controller
                 $Status->setStateTime(new \DateTime());
             }
             
-            $Status->setState('OPEN');
-                 
             $Status->setInstance ($instance);            
             $Status->setName     ($name);
             $Status->setTitle    ($job_name);
             $Status->setSource   ('ATS');
+            $Status->setJobLog   ('?');
             
             $Status->setType     ($Record['jobType']);
             $Status->setLastStart(new \DateTime('@'.$Record['lastStart']));
@@ -74,6 +73,11 @@ class AutosysController extends Controller
             $Status->setExitCode ($Record['exitCode']);
             $status = $Record['status'];
             $Status->setStatus   (isset($this->Status[$status])?$this->Status[$status]:'UNKNOWN');
+            if ($status=='FAILURE' or $status=='TERMINATED')
+                $Status->setState('OPEN');
+            else 
+                $Status->setState('CLOSE');
+            
             $Status->setUpdated  (new \DateTime());
             
             $em->persist($Status);

@@ -32,8 +32,11 @@ dhtmlxEvent(window,"load",function(){
             { id:"sep1", type: "separator" },
             { id:"events", text: "{{ "Events" | trans }}", icon: "stopped.png" },
             { id:"jobs", text: "{{ "Jobs" | trans }}", icon: "job.png" },    
-            { id:"network", text: "{{ "Network" | trans }}", icon: "network.png" },
+            { id:"services", text: "{{ "Services" | trans }}", icon: "server_connect.png" },
+            { id:"network", text: "{{ "Network" | trans }}", icon: "server.png" },
             { id:"sep2", type: "separator" },
+            { id:"objects", text: "{{ "Objects" | trans }}", icon: "object.png" },
+            { id:"links", text: "{{ "Impact" | trans }}", icon: "impact.png" },
             { id:"alerts", text: "{{ "Alerts" | trans }}", icon: "alert.png" }
         ]
     });
@@ -47,8 +50,7 @@ dhtmlxEvent(window,"load",function(){
         document.location.href = "{{ url('arii_ACK_index') }}"+id;
         return true;
     });
-    
-    
+
     myToolbar = globalLayout.cells("c").attachToolbar();
     myToolbar.setIconsPath( "{{ asset('/images/') }}" );
     Init();    
@@ -86,7 +88,7 @@ function GlobalRefresh() {
         });
     });
     // En parallèle ?
-    // PageRefresh();
+    PageRefresh();
 }
 
 function ToolbarTime() {

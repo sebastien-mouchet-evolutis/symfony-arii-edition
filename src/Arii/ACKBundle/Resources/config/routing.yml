@@ -169,6 +169,44 @@ txt_ACK_alarm_state:
     defaults: { _controller: AriiACKBundle:Alarms:state}
 
 #============================================================
+# Links
+#------------------------------------------------------------
+arii_ACK_links:
+    path:  /links
+    defaults: { _controller: AriiACKBundle:Links:index }
+    
+xml_ACK_links_grid:
+    path:  /links/grid.xml
+    defaults: { _controller: AriiACKBundle:Links:grid }
+
+xml_ACK_links_grid_menu:
+    path:  /links/grid_menu.xml
+    defaults: { _controller: AriiACKBundle:Links:grid_menu}
+    
+#============================================================
+# Link
+#------------------------------------------------------------
+xml_ACK_link_form:
+    path:  /link/form.xml
+    defaults: { _controller: AriiACKBundle:Links:form}
+
+xml_ACK_link_save:
+    path:  /link/save.xml
+    defaults: { _controller: AriiACKBundle:Links:save}
+
+xml_ACK_link_delete:
+    path:  /link/delete.xml
+    defaults: { _controller: AriiACKBundle:Links:delete}
+
+xml_ACK_link_toolbar:
+    path:  /link/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Links:toolbar}
+
+txt_ACK_link_state:
+    path:  /link/state.txt
+    defaults: { _controller: AriiACKBundle:Links:state}
+    
+#============================================================
 # Alerts
 #------------------------------------------------------------
 arii_ACK_alerts:
@@ -240,6 +278,44 @@ xml_ACK_job_toolbar:
     path:  /job/toolbar.xml
     defaults: { _controller: AriiACKBundle:Jobs:toolbar}
 
+#============================================================
+# Objects
+#------------------------------------------------------------
+arii_ACK_objects:
+    path:  /objects
+    defaults: { _controller: AriiACKBundle:Objects:index }
+    
+xml_ACK_objects_grid:
+    path:  /objects/grid.xml
+    defaults: { _controller: AriiACKBundle:Objects:grid }
+
+xml_ACK_objects_grid_menu:
+    path:  /objects/grid_menu.xml
+    defaults: { _controller: AriiACKBundle:Objects:grid_menu}
+    
+#============================================================
+# Object
+#------------------------------------------------------------
+xml_ACK_object_form:
+    path:  /object/form.xml
+    defaults: { _controller: AriiACKBundle:Objects:form}
+
+xml_ACK_object_save:
+    path:  /object/save.xml
+    defaults: { _controller: AriiACKBundle:Objects:save}
+
+xml_ACK_object_delete:
+    path:  /object/delete.xml
+    defaults: { _controller: AriiACKBundle:Objects:delete}
+
+xml_ACK_object_toolbar:
+    path:  /object/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Objects:toolbar}
+
+txt_ACK_object_state:
+    path:  /object/state.txt
+    defaults: { _controller: AriiACKBundle:Objects:state}
+
 
 #============================================================
 # Actions
@@ -282,6 +358,45 @@ json_ACK_network_count:
 xml_ACK_host_form:
     path:  /host/form.xml
     defaults: { _controller: AriiACKBundle:Network:form}
+    
+#============================================================
+# Services
+#------------------------------------------------------------
+arii_ACK_services:
+    path:  /services
+    defaults: { _controller: AriiACKBundle:Services:index }
+    
+xml_ACK_services_grid:
+    path:  /services/grid.xml
+    defaults: { _controller: AriiACKBundle:Services:grid }
+
+xml_ACK_services_grid_menu:
+    path:  /services/grid_menu.xml
+    defaults: { _controller: AriiACKBundle:Services:grid_menu}
+    
+#============================================================
+# Service
+#------------------------------------------------------------
+xml_ACK_service_form:
+    path:  /service/form.xml
+    defaults: { _controller: AriiACKBundle:Services:form}
+
+xml_ACK_service_save:
+    path:  /service/save.xml
+    defaults: { _controller: AriiACKBundle:Services:save}
+
+xml_ACK_service_delete:
+    path:  /service/delete.xml
+    defaults: { _controller: AriiACKBundle:Services:delete}
+
+xml_ACK_service_toolbar:
+    path:  /service/toolbar.xml
+    defaults: { _controller: AriiACKBundle:Services:toolbar}
+
+txt_ACK_service_state:
+    path:  /service/state.txt
+    defaults: { _controller: AriiACKBundle:Services:state}
+    
 #============================================================
 # Synchro
 #--------------------------------------------------------------------

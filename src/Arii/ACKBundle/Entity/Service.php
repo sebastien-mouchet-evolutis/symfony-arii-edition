@@ -5,14 +5,14 @@ namespace Arii\ACKBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Network
+ * Service
  * Etat de l'infrastructure
  * 
- * @ORM\Table(name="ARII_NETWORK")
- * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\NetworkRepository")
+ * @ORM\Table(name="ARII_SERVICE")
+ * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\ServiceRepository")
  * 
  */
-class Network
+class Service
 {
     public function __construct()
     {
@@ -48,27 +48,6 @@ class Network
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="host", type="string", length=64, nullable=true)
-     */
-    private $host;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="ip_address", type="string", length=16, nullable=true)
-     */
-    private $ip_address;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="port", type="integer", nullable=true)
-     */
-    private $port;
 
      /**
      * @var string
@@ -189,6 +168,20 @@ class Network
      */        
     private $event_type;
 
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="host_name", type="string", length=255, nullable=true )
+     */        
+    private $host_name;
+    
+    /**
+    * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Network")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $host;
+    
     /**
     * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Alarm")
     * @ORM\JoinColumn(nullable=true)
@@ -785,5 +778,28 @@ class Network
     public function getObject()
     {
         return $this->object;
+    }
+
+    /**
+     * Set host_name
+     *
+     * @param string $hostName
+     * @return Service
+     */
+    public function setHostName($hostName)
+    {
+        $this->host_name = $hostName;
+
+        return $this;
+    }
+
+    /**
+     * Get host_name
+     *
+     * @return string 
+     */
+    public function getHostName()
+    {
+        return $this->host_name;
     }
 }

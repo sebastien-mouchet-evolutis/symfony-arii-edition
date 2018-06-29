@@ -2,23 +2,23 @@
 {% block body %}
 <script language="javascript">
 function Init() {
-    mySidebar.items('jobs').setActive();
+    mySidebar.items('services').setActive();
 
     myToolbar.loadStruct('{{ url('xml_ARII_toolbar') }}?refresh=1', function() {
         ToolbarTime();
     });
 
     myLayout = globalLayout.cells("c").attachLayout('3J');
-    myLayout.cells("a").hideHeader();
+    myLayout.cells("a").setText("{{ "Hosts" | trans }}");
 
     myGrid = myLayout.cells("a").attachGrid();
     myGrid.setImagePath( "{{ asset('/images/') }}");
-    myGrid.setHeader("{{ "Source" | trans }},{{ "Name" | trans }},{{ "Status" | trans }},{{ "Time" | trans }}");
-    myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter");
-    myGrid.setInitWidths("200,*,100,160");
-    myGrid.setColAlign("left,left,center,right");
-    myGrid.setColTypes("ro,ro,ro,ro");
-    myGrid.setColSorting("str,str,str,date");
+    myGrid.setHeader("{{ "Type" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "Time" | trans }}");
+    myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#text_filter");
+    myGrid.setInitWidths("100,100,*,100,160");
+    myGrid.setColAlign("right,left,left,center,right");
+    myGrid.setColTypes("ro,ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,str,str,date");
     myGrid.enableAlterCss("even_row","odd_row");   
     myGrid.enableDragAndDrop(true);    
     myGrid.init();
@@ -37,6 +37,7 @@ function Init() {
     });
 
     myTabbar2 = myLayout.cells("b").attachTabbar();
+
     myTabbar2.addTab("detail","{{ "Job" | trans }}","100px", null, true);
     myTabbar2.addTab("actions","{{ "Actions" | trans }}","100px");
     
@@ -45,25 +46,38 @@ function Init() {
     });
 
     formData = [
-        { type: "settings", position: "label-left", labelWidth: 80, inputWidth: 350, labelAlign: "right", readonly: 1, position: "label-left" },
+        { type: "settings", position: "label-left", labelWidth: 80, inputWidth: 250, labelAlign: "right", readonly: 1, position: "label-left" },
         { type: "hidden", name: 'id' },       
         {   type: "block",
             inputWidth: "auto",
             list: [    
                 {type: "input", name: 'name', label:'{{ 'Name' | trans }}', required: true },
                 {type: "input", name: 'title', label:'{{ 'Title' | trans }}' },
-                {type: "calendar", name: 'start_time', label:'{{ 'Begin' | trans }}', dateFormat: "%Y-%m-%d %H:%i", enableTime: "true" },
-                {type: "calendar", name: 'end_time', label:'{{ 'End' | trans }}', dateFormat: "%Y-%m-%d %H:%i", enableTime: "true" },
+                {type: "input", name: 'description', label:'{{ 'Description' | trans }}', rows: 2 },
+                {type: "input", name: 'host', label:'{{ 'Host' | trans }}' },
+                {type: "input", name: 'ip_address', label:'{{ 'Ip adress' | trans }}' },
+                {type: "input", name: 'port', label:'{{ 'Port' | trans }}' },
+                {type: "input", name: 'status', label:'{{ 'Statut' | trans }}' },
+                {type: "input", name: 'state_time', label:'{{ 'State time' | trans }}' },
+                {type: "input", name: 'state_information', label:'{{ 'Information' | trans }}', rows: 2 },
+                {type: "checkbox", name: 'acknowledged', label:'{{ 'Acknowledged' | trans }}' },
                 {type: "newcolumn" },
-                {type: "input", name: "event_source", label:'{{ 'Source' | trans }}' },
-                {type: "input", name: 'description', label:'{{ 'Description' | trans }}', rows: 6 }                
+                {type: "input", name: 'downtimes', label:'{{ 'Downtimes' | trans }}' },
+                {type: "input", name: 'downtimes_info', label:'{{ 'Downtimes Info' | trans }}' },
+                {type: "input", name: 'downtimes_user', label:'{{ 'Downtimes User' | trans }}' },
+                {type: "input", name: 'status_time', label:'{{ 'Status time' | trans }}', dateFormat: "%Y-%m-%d %H:%i", enableTime: "true" },
+                {type: "input", name: 'last_state_change', label:'{{ 'Last state change' | trans }}', dateFormat: "%Y-%m-%d %H:%i", enableTime: "true" },
+                {type: "input", name: 'last_time_up', label:'{{ 'Last time up' | trans }}', dateFormat: "%Y-%m-%d %H:%i", enableTime: "true" },
+                {type: "input", name: 'last_time_down', label:'{{ 'Last time down' | trans }}', dateFormat: "%Y-%m-%d %H:%i", enableTime: "true" },
+                {type: "input", name: 'last_time_unreachable', label:'{{ 'Last time unreachable' | trans }}', dateFormat: "%Y-%m-%d %H:%i", enableTime: "true" },
+                {type: "input", name: 'latency', label:'{{ 'Latency' | trans }}' },
             ]
         },
-        {   type: 'input',
-            rows: 20,
+        {  type: "newcolumn" },
+        {   type: 'editor', 
              toolbar: true,
              iconsPath: "{{ asset('dhtmlx/skins/terrace/imgs/') }}",
-             name: 'job_log',
+             name: 'event',
              label: "{{ "Event" | trans }}", 
              inputWidth: 800,
              inputHeight: 300
@@ -71,17 +85,17 @@ function Init() {
 
    ];
     myForm = myTabbar2.cells("detail").attachForm(formData);
-
+    
     myToolbar.attachEvent("onClick", function(id){
         switch (id) {
             case 'refresh':
-                myGrid.updateFromXML("{{ url('xml_ACK_jobs_grid') }}");
+                myGrid.updateFromXML("{{ url('xml_ACK_network_grid') }}");
                 break;
             default:
                 alert(id);
             }
     });
-    
+        
     myActions = myTabbar2.cells("actions").attachGrid();
     myActions.setImagePath( "{{ asset('/images/') }}");
     myActions.setHeader("{{ "Title" | trans }},{{ "Time" | trans }},{{ "Name" | trans }}");
@@ -97,16 +111,16 @@ function Init() {
 
     myGridEsc = myTabbar.cells("ack").attachGrid();
     myGridEsc.setImagePath( "{{ asset('/images/') }}");
-    myGridEsc.setHeader("{{ "Type" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "State" | trans }},{{ "Time" | trans }}");
-    myGridEsc.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
-    myGridEsc.setInitWidths("80,0,*,100,0,160");
-    myGridEsc.setColAlign("right,right,left,center,center,right");
-    myGridEsc.setColTypes("ro,ro,ro,ro,ro,ro");
-    myGridEsc.setColSorting("str,str,str,str,str,date");
+    myGridEsc.setHeader("{{ "Type" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "Time" | trans }}");
+    myGridEsc.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#text_filter");
+    myGridEsc.setInitWidths("100,100,*,100,160");
+    myGridEsc.setColAlign("right,left,left,center,right");
+    myGridEsc.setColTypes("ro,ro,ro,ro,ro");
+    myGridEsc.setColSorting("str,str,str,str,date");
     myGridEsc.enableAlterCss("even_row","odd_row"); 
     myGridEsc.enableDragAndDrop(true);    
     myGridEsc.init();
-    myGridEsc.load( "{{ url('xml_ACK_jobs_grid') }}?state=ESC." );
+    myGridEsc.load( "{{ url('xml_ACK_network_grid') }}?state=ESC." );
     myGridEsc.attachEvent("onRowDblClicked", function (rid) {
         EditEvent(rid);
     });
@@ -116,17 +130,16 @@ function Init() {
 
     myGridClose = myTabbar.cells("close").attachGrid();
     myGridClose.setImagePath( "{{ asset('/images/') }}");
-    myGridClose.setHeader("{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "State" | trans }},{{ "Time" | trans }}");
-    myGridClose.setHeader("{{ "Type" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "State" | trans }},{{ "Time" | trans }}");
-    myGridClose.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
-    myGridClose.setInitWidths("80,0,*,100,0,160");
-    myGridClose.setColAlign("right,right,left,center,center,right");
-    myGridClose.setColTypes("ro,ro,ro,ro,ro,ro");
-    myGridClose.setColSorting("str,str,str,str,str,date");
+    myGridClose.setHeader("{{ "Type" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "Time" | trans }}");
+    myGridClose.attachHeader("#select_filter,#text_filter,#text_filter,#select_filter,#text_filter");
+    myGridClose.setInitWidths("100,100,*,100,160");
+    myGridClose.setColAlign("right,left,left,center,right");
+    myGridClose.setColTypes("ro,ro,ro,ro,ro");
+    myGridClose.setColSorting("str,str,str,str,date");
     myGridClose.enableAlterCss("even_row","odd_row");    
     myGridClose.enableDragAndDrop(true);    
     myGridClose.init();
-    myGridClose.load( "{{ url('xml_ACK_jobs_grid') }}?state=CLOSE" );
+    myGridClose.load( "{{ url('xml_ACK_network_grid') }}?state=CLOSE" );
     myGridClose.attachEvent("onRowDblClicked", function (rid) {
         EditEvent(rid);
     });
@@ -137,9 +150,8 @@ function Init() {
 }
 
 function PageRefresh() {
-    myGrid.load( "{{ url('xml_ACK_jobs_grid') }}?state=OPEN" );
+    myGrid.load( "{{ url('xml_ACK_network_grid') }}?state=OPEN" );
 }
-
 
 function changeState(rowId,sgrid,tgrid) {
     var state;
@@ -163,7 +175,7 @@ function changeState(rowId,sgrid,tgrid) {
     layout.progressOn();
     dhx4.ajax.get( "{{ url('txt_ACK_event_state') }}?id="+rowId+'&state='+state, function(loader,response) {  
         // On verifie que c'est bien en base de données
-        tgrid.load( "{{ url('xml_ACK_jobs_grid') }}?state="+state, function() {
+        tgrid.load( "{{ url('xml_ACK_network_grid') }}?state="+state, function() {
             // Si oui , on supprime l'ancien
             sgrid.deleteRow(rowId);
             layout.progressOff();
@@ -174,7 +186,7 @@ function changeState(rowId,sgrid,tgrid) {
 
 function EditEvent (id) {
     myLayout.cells('b').progressOn();
-    myForm.load("{{ url('xml_ACK_job_form') }}?id="+id,function(){
+    myForm.load("{{ url('xml_ACK_host_form') }}?id="+id,function(){
         myActions.load("{{ url('xml_ACK_actions_grid') }}?event_id="+id, function (rid) {
             myLayout.cells('b').progressOff();
         });
