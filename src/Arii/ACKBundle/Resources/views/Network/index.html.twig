@@ -9,7 +9,7 @@ function Init() {
     });
 
     myLayout = globalLayout.cells("c").attachLayout('3J');
-    myLayout.cells("a").hideHeader();
+    myLayout.cells("a").setText("{{ "Hosts" | trans }}");
 
     myGrid = myLayout.cells("a").attachGrid();
     myGrid.setImagePath( "{{ asset('/images/') }}");
@@ -37,6 +37,7 @@ function Init() {
     });
 
     myTabbar2 = myLayout.cells("b").attachTabbar();
+
     myTabbar2.addTab("detail","{{ "Job" | trans }}","100px", null, true);
     myTabbar2.addTab("actions","{{ "Actions" | trans }}","100px");
     

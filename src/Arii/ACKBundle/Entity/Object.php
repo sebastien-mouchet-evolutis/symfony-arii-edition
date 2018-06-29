@@ -8,18 +8,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Link
+ * Object
  *
- * @ORM\Table(name="ARII_LINK")
- * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\LinkRepository")
+ * @ORM\Table(name="ARII_OBJECT")
+ * @ORM\Entity(repositoryClass="Arii\ACKBundle\Entity\ObjectRepository")
  * 
  */
-class Link
+class Object
 {
     public function __construct()
     {
-        $this->alarmTime = new \DateTime();
-        $this->stateTime = new \DateTime();
     }
     
     /**
@@ -60,19 +58,14 @@ class Link
      * @Serializer\Groups({"detail"})
      */
     private $description;
-
-
-    /**
-    * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Object")
-    * @ORM\JoinColumn()
-    */
-    private $object;
     
     /**
-    * @ORM\ManyToOne(targetEntity="Arii\ACKBundle\Entity\Object")
-    * @ORM\JoinColumn(nullable=true)
-    */
-    private $impact;
+     * @var string
+     *
+     * @ORM\Column(name="obj_type", type="string", length=24)
+     * 
+     */
+    private $obj_type;
     
 
     /**
@@ -89,7 +82,7 @@ class Link
      * Set name
      *
      * @param string $name
-     * @return Link
+     * @return Object
      */
     public function setName($name)
     {
@@ -112,7 +105,7 @@ class Link
      * Set title
      *
      * @param string $title
-     * @return Link
+     * @return Object
      */
     public function setTitle($title)
     {
@@ -135,7 +128,7 @@ class Link
      * Set description
      *
      * @param string $description
-     * @return Link
+     * @return Object
      */
     public function setDescription($description)
     {
@@ -155,48 +148,25 @@ class Link
     }
 
     /**
-     * Set object
+     * Set obj_type
      *
-     * @param \Arii\ACKBundle\Entity\Object $object
-     * @return Link
+     * @param string $objType
+     * @return Object
      */
-    public function setObject(\Arii\ACKBundle\Entity\Object $object = null)
+    public function setObjType($objType)
     {
-        $this->object = $object;
+        $this->obj_type = $objType;
 
         return $this;
     }
 
     /**
-     * Get object
+     * Get obj_type
      *
-     * @return \Arii\ACKBundle\Entity\Object 
+     * @return string 
      */
-    public function getObject()
+    public function getObjType()
     {
-        return $this->object;
-    }
-
-    /**
-     * Set impact
-     *
-     * @param \Arii\ACKBundle\Entity\Object $impact
-     * @return Link
-     */
-    public function setImpact(\Arii\ACKBundle\Entity\Object $impact = null)
-    {
-        $this->impact = $impact;
-
-        return $this;
-    }
-
-    /**
-     * Get impact
-     *
-     * @return \Arii\ACKBundle\Entity\Object 
-     */
-    public function getImpact()
-    {
-        return $this->impact;
+        return $this->obj_type;
     }
 }

@@ -50,7 +50,10 @@ class LiveStatusController extends Controller
             else {
                 $status = 'UNKNOWN';
             }
-                
+
+            // Status UNKNOWN, c'est utile ?
+            if ($status == 'UNKNOWN') continue;
+            
             if (!$record) {
                 $record = new \Arii\ACKBundle\Entity\Network();
                 // c'est ouvert
@@ -65,8 +68,30 @@ class LiveStatusController extends Controller
                 } else {
                     $record->setIPAddress            (gethostbyname($Info['address']));
                 }                
-            }
 
+            }
+            
+            // si aucun object n'est attaché
+            if (!$record->getObject()) {
+                // on retrouve l'objet HOST
+                $host = $this->getDoctrine()->getRepository("AriiACKBundle:Object")->findOneBy(
+                [
+                    'name' => $Info['name'],
+                    'obj_type' => 'HOST'
+                ]);
+                
+                if (!$host) {
+                    $host = new \Arii\ACKBundle\Entity\Object();
+                    $host->setName($Info['name']);
+                    $host->setTitle($Info['name']);
+                    $host->setObjType('HOST');
+                    $host->setDescription($Info['alias']);
+                    
+                    $em->persist($host);                    
+                }
+                $record->setObject($host);
+            }
+            
             // Si le status est ok, on ferme
             // même si c'est acquitté
             if ($Info['downtimes']!='') {
@@ -119,25 +144,132 @@ class LiveStatusController extends Controller
                 $record->setDowntimesUser(null);
                 $record->setDowntimesInfo($Info['downtimes_with_info']);
             }            
-                        
+                     
             $em->persist($record);
             if ($n++ % 100 == 0)
                 $em->flush();            
         }
         $em->flush();
+        print "($n)";
+        
         return new Response("success");        
     }
 
     public function servicesAction()
     {
+        set_time_limit(300);        
         // On traite le log
         if (isset($_FILES['csv']['tmp_name']))
             $log = file_get_contents($_FILES['svc']['tmp_name']);
         else 
-            $log = file_get_contents('../workspace/ACK/Input/Nagios/services.csv');
-        // Nettoyage 
-        print_r($this->csv2array($log));
-        exit();
+            $log = file_get_contents('../workspace/ACK/Input/Nagios/services.txt');
+
+        $Infos = $this->csv2array($log);
+        $update_time = new \DateTime();
+        
+        $em = $this->getDoctrine()->getManager();
+        $n = 0;
+        foreach ($Infos as $Info) {
+            
+            $host_name = $Info['host_name'];
+            // on retourne le composant réseau
+            $host = $this->getDoctrine()->getRepository("AriiACKBundle:Network")->findOneBy(
+            [
+                'name' => $host_name
+            ]);
+            // Pas d'hote, on sort
+            if (!$host) continue;
+            
+            // On boucle sur les services
+            foreach ($Info['host_services_with_fullstate'] as $k=>$Service) {
+
+                list($service_name,$state,$ext,$description,$ack,$try,$attempt,$downtimes,$d,$e) = $Service;
+                $id = $host_name.'#'.$service_name;
+                
+                // on retrouve le service
+                $record = $this->getDoctrine()->getRepository("AriiACKBundle:Service")->findOneBy(
+                [
+                    'name' => $id,
+                    'host' => $host
+                ]);
+
+                if (!$record) {
+                    $record = new \Arii\ACKBundle\Entity\Service();
+                    $record->setName($id);                    
+                    // c'est ouvert
+                    $record->setStateTime(new \DateTime());
+                    // On calcul l'état initiale
+                }
+                
+                // STATUS Nagios
+                if ($state==0) {
+                    $status = 'OK';
+                    $record->setState('CLOSE');
+                } 
+                elseif ($state==1) {
+                    $status = 'WARNING';
+                    $record->setState('OPEN');
+                } 
+                elseif ($state==4) {
+                    $status = 'ERROR';
+                    $record->setState('OPEN');
+                } 
+                else {
+                    $status = 'UNKNOWN';
+                    $record->setState('OPEN');                    
+                }
+                
+                $record->setStatusTime($update_time);
+                
+                // on attache le host
+                $host_name = $Info['host_name'];
+                
+                $record->setHostName($host_name);
+                $record->setHost($host);
+
+                // si aucun object n'est attaché
+                if (!$record->getObject()) {
+                    // on retrouve l'objet SERVICE
+                    $host_service = $this->getDoctrine()->getRepository("AriiACKBundle:Object")->findOneBy(
+                    [
+                        'name' =>$id,
+                        'obj_type' => 'SERVICE'
+                    ]);
+
+                    if (!$host_service) {
+                        $host_service = new \Arii\ACKBundle\Entity\Object();
+                        $host_service->setName($id);
+                        $host_service->setTitle($service_name);
+                        $host_service->setObjType('SERVICE');
+                        $host_service->setDescription($description);
+
+                        $em->persist($host_service);                    
+                    }
+                    $record->setObject($host_service);
+                }
+
+                // plusieurs Nagios ?
+                $record->setEventSource('NAGIOS');
+                $record->setTitle                ($service_name);
+                $record->setDescription          ($description);
+                $record->setAcknowledged         ($ack);
+
+                // Chaine speciale
+                $record->setDowntimes($downtimes);
+
+                $em->persist($record);
+            }
+            if ($n++ % 100 == 0)
+                $em->flush();            
+        }
+        
+        // $update_time
+        $em->flush();
+        
+        // Purge
+        $this->getDoctrine()->getRepository("AriiACKBundle:Service")->purge($update_time);        
+        
+        return new Response("success");        
     }
     
     // Symfony3 offre un serializer

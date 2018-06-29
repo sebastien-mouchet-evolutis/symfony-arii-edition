@@ -1,0 +1,314 @@
+{% extends "AriiACKBundle::layout.html.twig" %}
+{% block body %}
+<script language="javascript">
+function Init() {
+    mySidebar.items('links').setActive();
+
+    myToolbar.loadStruct('{{ url('xml_ARII_toolbar') }}?refresh=1', function() {
+        ToolbarTime();
+    });
+
+    myLayout = globalLayout.cells("c").attachLayout('3J');
+    myLayout.cells("a").hideHeader();
+
+    myGrid = myLayout.cells("a").attachGrid();
+    myGrid.setImagePath( "{{ asset('/images/') }}");
+    myGrid.setHeader("{{ "Type" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "State" | trans }},{{ "Time" | trans }}");
+    myGrid.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
+    myGrid.setInitWidths("80,0,*,100,0,160");
+    myGrid.setColAlign("right,right,left,center,center,right");
+    myGrid.setColTypes("ro,ro,ro,ro,ro,ro");
+    myGrid.setColSorting("str,str,str,str,str,date");
+    myGrid.enableAlterCss("even_row","odd_row");   
+    myGrid.enableDragAndDrop(true);    
+    myGrid.init();
+    myGrid.load( "{{ url('xml_ACK_alarms_grid') }}?state=OPEN" );
+    myGrid.attachEvent("onRowDblClicked", function (rid) {
+        EditEvent(rid);
+    });
+    myGrid.attachEvent("onDrag", function(sId,tId,sObj,tObj,sInd,tInd){
+        changeState(sId,sObj,tObj);
+    });
+    
+    myTabbar = myLayout.cells("c").attachTabbar();
+    myTabbar.addTab("ack","{{ "Acknowledged" | trans }}","150px", null, true);
+    myTabbar.addTab("close","{{ "Closed" | trans }}","150px");
+    myTabbar.attachEvent("onContentLoaded", function(id){
+        myTabbar.cells(id).progressOff();
+    });
+
+    myTabbar2 = myLayout.cells("b").attachTabbar();
+    myTabbar2.addTab("detail","{{ "Job" | trans }}","100px", null, true);
+    myTabbar2.addTab("actions","{{ "Actions" | trans }}","100px");
+    
+    myTabbar2.attachEvent("onContentLoaded", function(id){
+        myTabbar2.cells(id).progressOff();
+    });
+
+    formData = [
+        { type: "settings", position: "label-left", labelWidth: 80, inputWidth: 350, labelAlign: "right", readonly: 1, position: "label-left" },
+        { type: "hidden", name: 'id' },       
+        {   type: "block",
+            inputWidth: "auto",
+            list: [    
+                {type: "input", name: 'name', label:'{{ 'Name' | trans }}', required: true },
+                {type: "input", name: 'title', label:'{{ 'Title' | trans }}' },
+                {type: "calendar", name: 'start_time', label:'{{ 'Begin' | trans }}', dateFormat: "%Y-%m-%d %H:%i", enableTime: "true" },
+                {type: "calendar", name: 'end_time', label:'{{ 'End' | trans }}', dateFormat: "%Y-%m-%d %H:%i", enableTime: "true" },
+                {  type: "newcolumn" },
+                {  type: "select",
+                   name: "event_type",
+                   label: "{{ "Source"| trans }}",
+                   connector: "{{ url('xml_Admin_eventtypes_select') }}"
+                },
+                {  type: "select",
+                   name: "application_id",
+                   label: "{{ "Application"| trans }}",
+                   connector: "{{ url('xml_Admin_applications_select') }}"
+                },
+                {  type: "select",
+                   name: "domain_id",
+                   label: "{{ "Domain"| trans }}",
+                   connector: "{{ url('xml_Admin_domains_select') }}"
+                },
+                {type: "input", name: 'description', label:'{{ 'Description' | trans }}', rows: 6 }                
+            ]
+        },
+        {  type: "newcolumn" },
+        {   type: 'editor', 
+             toolbar: true,
+             iconsPath: "{{ asset('dhtmlx/skins/terrace/imgs/') }}",
+             name: 'event',
+             label: "{{ "Event" | trans }}", 
+             inputWidth: 800,
+             inputHeight: 300
+         }
+
+   ];
+    myForm = myTabbar2.cells("detail").attachForm(formData);
+    
+    myFormToolbar = myTabbar2.cells("detail").attachToolbar();
+    myFormToolbar.setIconsPath("{{ asset('/images/') }}");
+    myFormToolbar.loadStruct("{{ url('xml_ACK_event_toolbar') }}");
+    
+    myToolbar.attachEvent("onClick", function(id){
+        switch (id) {
+            case 'refresh':
+                myGrid.updateFromXML("{{ url('xml_ACK_alarms_grid') }}");
+                break;
+            default:
+                alert(id);
+            }
+    });
+    
+    myFormToolbar.attachEvent("onClick", function(id){
+        switch (id) {
+            case 'delete':
+                // On edite pour sauvegarder
+                globalLayout.cells("b").progressOn();
+                dhtmlx.confirm({
+                 title: "{{ "Delete alert" | trans }}",
+                 type: "confirm-error",
+                 text: '{{ "Do you confirm the suppression ?" | trans }}',
+                 callback: function(answer) { if (answer) {
+                           myForm.send("{{ url('xml_ACK_event_delete') }}","POST",function(loader,response){
+                           if(response === "success")
+                           {
+                             dhtmlx.message({
+                                title:"{{ "Save" | trans }}",
+                                type: "Notice",
+                                lifetime: "60000",
+                                text: "{{ "Alert deleted" | trans }}"
+                             });
+                           }
+                           else 
+                           {
+                             dhtmlx.message({
+                                title:"{{ "Delete" | trans }}",
+                                type: "error",
+                                lifetime: "60000",
+                                text: response
+                             });
+                             globalLayout.cells("a").attachHTMLString(response);
+                           }
+                                myGrid.deleteRow(myForm.getItemValue('id'));
+                                myForm.getItemValue('ID','');
+                                globalLayout.cells("b").progressOff();
+                            })
+                    }
+                },
+                 cancel: "{{ "No" | trans }}",
+                 ok: "{{ "Yes" | trans }}" });
+                   break;
+            case 'new':
+            case 'add':
+                myForm.clear();
+                break;
+            case "copy":
+                myForm.setItemValue("id",'');
+                dhtmlx.message({
+                        title:"Copy",
+                        type: "Notice",
+                        lifetime: "60000",
+                        text: "{{ "Copy" | trans }}"
+                     });
+                
+                break;
+            case 'save':
+                globalLayout.progressOn();
+                if(!myForm.validate())
+                {
+                    dhtmlx.message({
+                        title:"Error",
+                        type: "error",
+                        lifetime: "60000",
+                        text: "{{ "Please type in all the required fields!" | trans }}"
+                     });
+                    globalLayout.progressOff();
+                    return;
+                }
+                myForm.send("{{ url('xml_ACK_event_save') }}","POST",function(loader,response){
+                   if(response === "success")
+                   {
+                        dhtmlx.message({
+                            title:"{{ "Save" | trans }}",
+                            type: "Notice",
+                            lifetime: "60000",              
+                            text: "{{ "Saved" | trans }}"
+                        });
+                        myGrid.updateFromXML("{{ url('xml_ACK_alarms_grid') }}");
+                   }
+                   else 
+                   {
+                        dhtmlx.message({
+                           title:"{{ "Save" | trans }}",
+                           type: "alert-error",
+                           lifetime: "60000",
+                           width: "800px",
+                           text: response
+                        });
+                   }
+                   globalLayout.progressOff();
+                });
+                break;
+            default:
+                alert(id);
+            }
+    });
+    
+    myActions = myTabbar2.cells("actions").attachGrid();
+    myActions.setImagePath( "{{ asset('/images/') }}");
+    myActions.setHeader("{{ "Title" | trans }},{{ "Time" | trans }},{{ "Name" | trans }}");
+    myActions.attachHeader("#text_filter,#text_filter,#select_filter");
+    myActions.setInitWidths("*,140,160");
+    myActions.setColAlign("left,left,right");
+    myActions.setColTypes("ro,ro,ro");
+    myActions.setColSorting("str,date,str");
+    myActions.enableAlterCss("even_row","odd_row");    
+    myActions.init();    
+    myActions.attachEvent("onRowDblClicked", function (rid) {
+    });   
+    
+    myGridAck = myTabbar.cells("ack").attachGrid();
+    myGridAck.setImagePath( "{{ asset('/images/') }}");
+    myGridAck.setHeader("{{ "Type" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "State" | trans }},{{ "Time" | trans }}");
+    myGridAck.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
+    myGridAck.setInitWidths("80,0,*,100,0,160");
+    myGridAck.setColAlign("right,right,left,center,center,right");
+    myGridAck.setColTypes("ro,ro,ro,ro,ro,ro");
+    myGridAck.setColSorting("str,str,str,str,str,date");
+    myGridAck.enableAlterCss("even_row","odd_row"); 
+    myGridAck.enableDragAndDrop(true);    
+    myGridAck.init();
+    myGridAck.load( "{{ url('xml_ACK_alarms_grid') }}?state=ACK." );
+    myGridAck.attachEvent("onRowDblClicked", function (rid) {
+        EditEvent(rid);
+    });
+    myGridAck.attachEvent("onDrag", function(sId,tId,sObj,tObj,sInd,tInd){
+        changeState(sId,sObj,tObj);
+    });
+
+    myGridClose = myTabbar.cells("close").attachGrid();
+    myGridClose.setImagePath( "{{ asset('/images/') }}");
+    myGridClose.setHeader("{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "State" | trans }},{{ "Time" | trans }}");
+    myGridClose.setHeader("{{ "Type" | trans }},{{ "Name" | trans }},{{ "Title" | trans }},{{ "Status" | trans }},{{ "State" | trans }},{{ "Time" | trans }}");
+    myGridClose.attachHeader("#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter");
+    myGridClose.setInitWidths("80,0,*,100,0,160");
+    myGridClose.setColAlign("right,right,left,center,center,right");
+    myGridClose.setColTypes("ro,ro,ro,ro,ro,ro");
+    myGridClose.setColSorting("str,str,str,str,str,date");
+    myGridClose.enableAlterCss("even_row","odd_row");    
+    myGridClose.enableDragAndDrop(true);    
+    myGridClose.init();
+    myGridClose.load( "{{ url('xml_ACK_alarms_grid') }}?state=CLOSE" );
+    myGridClose.attachEvent("onRowDblClicked", function (rid) {
+        EditEvent(rid);
+    });
+    myGridClose.attachEvent("onDrag", function(sId,tId,sObj,tObj,sInd,tInd){
+        changeState(sId,sObj,tObj);
+    });
+    
+}
+
+function changeState(rowId,sgrid,tgrid) {
+    var state;
+    var text;
+    var layout;
+    if (tgrid == myGridAck) {
+        state = 'ACK.';
+        text= 'OPEN -> ACK.';
+        layout = myLayout.cells('c');
+    }
+    else if (tgrid == myGridClose) {
+        state = 'CLOSE';
+        text= 'OPEN -> CLOSE';
+        layout = myLayout.cells('c');
+    }
+    else if (tgrid == myGrid) {
+        state = 'OPEN';
+        text= 'OPEN';
+        layout = myLayout.cells('a');
+    }
+    layout.progressOn();
+    dhx4.ajax.get( "{{ url('txt_ACK_event_state') }}?id="+rowId+'&state='+state, function(loader,response) {  
+        // On verifie que c'est bien en base de données
+        tgrid.load( "{{ url('xml_ACK_alarms_grid') }}?state="+state, function() {
+            // Si oui , on supprime l'ancien
+            sgrid.deleteRow(rowId);
+            layout.progressOff();
+        });        
+    });
+    return;
+}
+
+function EditEvent (id) {
+    myLayout.cells('b').progressOn();
+    myForm.load("{{ url('xml_ACK_event_form') }}?id="+id,function(){
+        myActions.load("{{ url('xml_ACK_actions_grid') }}?event_id="+id, function (rid) {
+            myLayout.cells('b').progressOff();
+        });
+    });
+}
+
+function ClickToolbar (itemid,state) {
+    var id = itemid.split('_');    
+    switch (id[0]) {
+        case 'refresh':
+            myGrid.updateFromXML("{{ url('xml_ACK_notifications_grid') }}");
+            break;
+        case 'EXPORT':
+            switch (id[1]) {
+                case 'xls':
+                    alert("{{ url('xls_ACK_notifications') }}");
+                    window.location.href= "{{ url('xls_ACK_notifications') }}";                
+                    break;
+                default:
+                    alert(id);
+            }
+            break;
+        default:
+            alert(id);
+        }
+}
+</script>
+{% endblock %}

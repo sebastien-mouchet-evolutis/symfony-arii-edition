@@ -42,7 +42,7 @@ class JobsController extends Controller{
         list($Job) = $this->getDoctrine()->getRepository("AriiACKBundle:Status")->Job($id);      
 
         $dhtmlx = $this->container->get('arii_core.render'); 
-        return $dhtmlx->form($Job);        
+        return $dhtmlx->form($Job);
     }
 
     public function deleteAction()
