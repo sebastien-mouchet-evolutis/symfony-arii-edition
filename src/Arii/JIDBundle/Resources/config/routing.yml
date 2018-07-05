@@ -296,7 +296,7 @@ xml_JID_order_steps:
 
 xml_JID_order_log:
     path:  /order/log.xml
-    defaults: { _controller: AriiJIDBundle:Order:log }
+    defaults: { _controller: AriiJIDBundle:Order:log, db: ojs_db }
 
 arii_JID_orders_timeline:
     path:  /orders/timeline
