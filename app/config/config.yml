@@ -3,7 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: services.yml }
 # Configuration Exemple
-    - { resource: default.yml, ignore_errors: true }
+    #- { resource: default.yml, ignore_errors: true }
 # Configuration Site
     - { resource: site.yml, ignore_errors: true }
     

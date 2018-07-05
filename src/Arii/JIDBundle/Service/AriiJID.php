@@ -45,22 +45,27 @@ class AriiJID
     public function getOrderHistory( $spooler, $job_chain, $order_id, $db='', $output='xml') {
         $em = $this->doctrine->getManager($db);        
         $OrderHistory = $em->getRepository("AriiJIDBundle:SchedulerOrderHistory")->findBy( [
-                'spooler'  => $spooler,
+                'spoolerId'  => $spooler,
                 'jobChain' => $job_chain,
-                '$orderId' => $order_id 
+                'orderId' => $order_id 
             ] );
         
         if (!$OrderHistory)
             throw new \Exception("No history");
         
-        return [
-            'ID' => $OrderHistory->getId(),
-            'SPOOLER_ID' => $OrderHistory->getSpoolerId(),
-            'JOB_CHAIN' => $OrderHistory->getJobChain(),
-            'START_TIME' => $OrderHistory->getStartTime(),
-            'END_TIME' => $OrderHistory->getEndTime(),
-            'STATE' => $OrderHistory->getState()
-        ];
+        $orderHistoryArray = array();
+        foreach($OrderHistory as $orderHistoryItem) {
+            $orderHistoryArray[] = [
+                //'ID' => $orderHistoryItem->getId(),
+                'SPOOLER_ID' => $orderHistoryItem->getSpoolerId(),
+                'JOB_CHAIN' => $orderHistoryItem->getJobChain(),
+                'START_TIME' => $orderHistoryItem->getStartTime(),
+                'END_TIME' => $orderHistoryItem->getEndTime(),
+                'STATE' => $orderHistoryItem->getState()
+            ];
+        }
+        
+        return $orderHistoryArray;
     }
     
     public function getTaskLog($history_id, $db='', $output='html') {

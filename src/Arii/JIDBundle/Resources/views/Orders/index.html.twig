@@ -519,11 +519,19 @@ function OrderDetail(id) {
         myTabbar.cells("order").progressOff();
         mySteps.clearAndLoad("{{ url('xml_JID_order_steps') }}?id="+id, function() {
             myTabbar.cells("chain").progressOff();
-                myHistory.clearAndLoad("{{ url('xml_JID_order_history') }}?id="+id, function() {                   
-                    myTabbar.cells("history").progressOff();    
-                    globalLayout.cells("c").progressOff(); 
-                    autorefresh = setInterval( "GridRefresh()", update*1000 );
-                });  
+            var spooler = myGrid.cells(id, 0).getValue();
+            var folder = myGrid.cells(id, 1).getValue();
+            var chain = myGrid.cells(id, 2).getValue();
+            var order = myGrid.cells(id, 3).getValue();
+            var orderHistoryUrl = "{{ url('xml_JID_order_history') }}?id="+id;
+            orderHistoryUrl += "&spooler="+encodeURIComponent(spooler);
+            orderHistoryUrl += "&job_chain="+encodeURIComponent(folder + "/" + chain);
+            orderHistoryUrl += "&order="+encodeURIComponent(order);
+            myHistory.clearAndLoad(orderHistoryUrl, function() {
+                myTabbar.cells("history").progressOff();    
+                globalLayout.cells("c").progressOff(); 
+                autorefresh = setInterval( "GridRefresh()", update*1000 );
+            });  
         });
   });
 }

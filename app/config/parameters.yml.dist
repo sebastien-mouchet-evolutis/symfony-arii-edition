@@ -3,8 +3,8 @@
 # http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
     database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
+    database_port:     3306
+    database_name:     arii
     database_user:     root
     database_password: ~
     database_driver: mysqli
@@ -23,3 +23,35 @@ parameters:
     locale:            fr
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    database_ojs_driver: mysqli
+    database_ojs_host: 127.0.0.1
+    database_ojs_port: 3306
+    database_ojs_name: arii
+    database_ojs_user: root
+    database_ojs_password: null
+    database_ojs_service: false
+    database_ojs_servicename: null
+
+    database_ats_driver: mysqli
+    database_ats_host: 127.0.0.1
+    database_ats_port: 3306
+    database_ats_name: arii
+    database_ats_user: root    
+    database_ats_password: null
+    database_ats_service: false
+    database_ats_servicename: null
+
+    database_ats2_driver: mysqli
+    database_ats2_host: 127.0.0.1
+    database_ats2_port: 3306
+    database_ats2_name: arii
+    database_ats2_user: root    
+    database_ats2_password: null
+    
+    database_ojs2_driver: mysqli
+    database_ojs2_host: 127.0.0.1
+    database_ojs2_port: 3306
+    database_ojs2_name: arii
+    database_ojs2_user: root
+    database_ojs2_password: null

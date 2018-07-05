@@ -303,9 +303,9 @@ class OrderController extends Controller {
         $portal = $this->container->get('arii_core.portal');
         $db = $portal->getDatabase();
         if (($db['driver']=='postgres') or ($db['driver']=='postgre') or ($db['driver']=='pdo_pgsql'))
-            $data->render_sql($qry,'"HISTORY_ID"','FOLDER,HISTORY_ID,STATUS,JOB_CHAIN,ORDER_ID,SPOOLER_ID,TITLE,STATE,STATE_TEXT,START_TIME,END_TIME');
+            $data->render_sql($qry,'HISTORY_ID','FOLDER,HISTORY_ID,STATUS,JOB_CHAIN,ORDER_ID,SPOOLER_ID,TITLE,STATE,STATE_TEXT,START_TIME,END_TIME');
         else
-            $data->render_sql($qry,'"HISTORY_ID"','FOLDER,HISTORY_ID,STATUS,JOB_CHAIN,ORDER_ID,SPOOLER_ID,TITLE,STATE,STATE_TEXT,START_TIME,END_TIME');
+            $data->render_sql($qry,'HISTORY_ID','FOLDER,HISTORY_ID,STATUS,JOB_CHAIN,ORDER_ID,SPOOLER_ID,TITLE,STATE,STATE_TEXT,START_TIME,END_TIME');
         
       }
 

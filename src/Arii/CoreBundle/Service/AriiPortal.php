@@ -1600,10 +1600,10 @@ Gris    #f2f2f2
                 $AriiSchedulerFS = new \Arii\CoreBundle\Entity\NodeConnection();
             
             $AriiSchedulerFS->setNode($AriiScheduler);
-            $AriiSchedulerFS->setConnection($FS);
+            $AriiSchedulerFS->setConnection($Config);
             $AriiSchedulerFS->setPriority(0);
             $AriiSchedulerFS->setDisabled(false);
-            $AriiSchedulerFS->setDescription($AriiScheduler->getName().' -> '.$FS->getName());
+            $AriiSchedulerFS->setDescription($AriiScheduler->getName().' -> '.$Config->getName());
             $this->em->persist($AriiSchedulerFS);
             
             $this->em->flush();                    
@@ -2268,7 +2268,7 @@ Gris    #f2f2f2
         return $this->session->set('Databases',$Databases);
     }
     
-    public function getDatabase($name='') {
+    public function getDatabase($name='arii_db') {
         if ($this->session->get('Database')!='')
             return $this->session->get('Database');
         $Databases = $this->getDatabases();        

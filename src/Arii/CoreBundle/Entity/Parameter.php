@@ -24,7 +24,7 @@ class Parameter
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=32, unique=true)
+     * @ORM\Column(name="name", type="string", length=32, unique=true, options={"collation":"utf8_bin"})
      */
     private $name;
 
