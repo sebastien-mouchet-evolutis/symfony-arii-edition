@@ -32,7 +32,7 @@ class JobsController extends Controller
         if ($request->query->get( 'ref_date' )!='')
             $User['ref_date'] = $request->query->get( 'ref_date' );
             
-        $ref_date = $User['ref_date'];
+        $ref_date = $User['ref_date']->format('Y-m-d H:i:s');
         $past   = $User['past'];
         $future = $User['future'];
         $refresh = $User['refresh'];
