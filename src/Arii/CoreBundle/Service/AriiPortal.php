@@ -414,10 +414,7 @@ Gris    #f2f2f2
     {
         $Default = array(
         // TRANSFERTS
-            'unknown' => '#ffffff',
-            'success' => '#ccebc5',
-            'error' =>   '#fbb4ae',
-            'transfer_aborted' =>   '#ff66cc',
+            'TRANSFER_ABORTED' =>   '#ff66cc',
         // JOBS
             'REFUSED' => '#fbb4ae',
             'SUCCESS'  => '#ccebc5',
@@ -482,7 +479,6 @@ Gris    #f2f2f2
             'DOWNTIME' => '#decbe4',
             'UNKNOW' => '#BBB',
             'UNKNOWN' => '#BBB',
-            'unknown' => '#BBB'
         );
 
         // On stocke dans la base de données
