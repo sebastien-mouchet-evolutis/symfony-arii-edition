@@ -16,12 +16,14 @@ class OrdersController extends Controller
           $this->images = $request->getUriForPath('/../bundles/ariicore/images/wa');  
     }
 
-    public function indexAction($db)
+    public function indexAction()
     {
+        $request = Request::createFromGlobals();
+        $db = $request->get('db');
         return $this->render('AriiJIDBundle:Orders:index.html.twig', [ 'db' => $db ]);
     }
 
-    public function pieAction($db,$history_max=0,$nested=false,$only_warning=true)
+    public function pieAction($history_max=0,$nested=false,$only_warning=true)
     {
         $request = Request::createFromGlobals();
         if ($request->get('history')>0) {
@@ -31,7 +33,10 @@ class OrdersController extends Controller
         $only_warning = $request->get('only_warning');
 
         $history = $this->container->get('arii_jid.history');
-        $history->setDB($db);        
+        $db = $request->get('db');
+        if($db) {
+            $history->setDB($db);
+        }
         $Orders = $history->Orders($history_max,$nested,$only_warning);
         
         foreach ($Orders as $k=>$order) {
@@ -63,7 +68,7 @@ class OrdersController extends Controller
         return $response;
     }
 
-    public function gridAction($db,$history_max=0,$nested=false,$only_warning=true,$sort='last')
+    public function gridAction($history_max=0,$nested=false,$only_warning=true,$sort='last')
     {
         $request = Request::createFromGlobals();
         if ($request->get('history')>0) {
@@ -74,7 +79,10 @@ class OrdersController extends Controller
         $sort = $request->get('sort');
 
         $history = $this->container->get('arii_jid.history');
-        $history->setDB($db);
+        $db = $request->get('db');
+        if($db) {
+            $history->setDB($db);
+        }
         $Orders = $history->Orders($history_max,$nested,$only_warning,$sort);
 
         $response = new Response();

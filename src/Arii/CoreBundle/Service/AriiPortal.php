@@ -2264,13 +2264,22 @@ Gris    #f2f2f2
         return $this->session->set('Databases',$Databases);
     }
     
-    public function getDatabase($name='arii_db') {
+    public function getDatabase($name='') {
         if ($this->session->get('Database')!='')
             return $this->session->get('Database');
         $Databases = $this->getDatabases();        
         if (isset($Databases[$name])) {
+            // TODO : y a-t-il un seul endroit où on a un paramètre $name non vide ?
+            // Si non, supprimer ce paramètre (et ce "if")
             return $this->session->set('Database',$Databases[$name]);
+        } else if(isset($Databases['ojs_db'])) {
+            // Si on a une base "ojs_db", on prend celle là
+            return $this->session->set('Database', $Databases['ojs_db']);
+        } else if(count($Databases) == 1) {
+            // Si on n'a qu'une seule base (typiquement "arii_db"), on prend celle là
+            return $this->session->set('Database', array_values($Databases)[0]);
         }
+        
         return array();
     }
 

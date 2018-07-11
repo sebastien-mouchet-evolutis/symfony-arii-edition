@@ -23,15 +23,21 @@ class DefaultController extends Controller
         $this->CurrentDate = date('Y-m-d');
     }
 
-    public function indexAction($db)
+    public function indexAction()
     {
-        return $this->render('AriiJIDBundle:Default:index.html.twig', [ 'db' => $db ]);
+        return $this->render('AriiJIDBundle:Default:index.html.twig');
     }
 
-    public function summaryAction($db)
+    public function summaryAction()
     {
         $portal = $this->container->get('arii_core.portal');
         $Module = $portal->getModule('JID');
+        
+        $db = '';
+        $database = $portal->getDatabase();
+        if(isset($database['name'])) {
+            $db = $database['name'];
+        }
         
         // On recupère les requetes
         $yaml = new Parser();

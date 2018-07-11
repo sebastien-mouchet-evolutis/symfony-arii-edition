@@ -27,8 +27,10 @@ class AriiDHTMLX
 
     public function setDB($name) {
         $DBs = $this->portal->getDatabases();
-        if (isset($DBs[$name]))
+        if (isset($DBs[$name])) {
+            $this->portal->setDatabaseByName($name);
             return $this->setDBInfo($DBs[$name]);
+        }
         return;
     }
     

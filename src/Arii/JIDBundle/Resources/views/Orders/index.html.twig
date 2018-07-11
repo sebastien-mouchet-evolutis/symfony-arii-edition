@@ -469,11 +469,11 @@ function GridRefresh(detail) {
     seconds = "0" + seconds;
     }
     myRibbon.setItemText( "refresh", hours + ":" + minutes + ":" +  seconds );    
-    myGrid.load("{{ url('xml_JID_orders_grid') }}?time="+seconds+"&history="+max_history+"&chained="+chained+"&only_warning="+only_warning+"&sort="+sort, function(){
+    myGrid.load("{{ url('xml_JID_orders_grid') }}?db={{ db }}&time="+seconds+"&history="+max_history+"&chained="+chained+"&only_warning="+only_warning+"&sort="+sort, function(){
         globalLayout.cells("b").progressOff();
         myGrid.filterBy(5, status);  
         if (detail>0) OrderDetail(id);
-        myDonut.load( "{{ url('xml_JID_orders_pie') }}?chained="+chained+"&only_warning="+only_warning,
+        myDonut.load( "{{ url('xml_JID_orders_pie') }}?db={{ db }}&chained="+chained+"&only_warning="+only_warning,
             function () {
                 myDonut.refresh(); 
                 myAccordion.cells("a1").progressOff();
